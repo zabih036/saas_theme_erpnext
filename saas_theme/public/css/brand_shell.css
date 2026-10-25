@@ -1,5 +1,5 @@
 /*
- * SaaS Theme — Company branding and workspace shell cleanup
+ * SaaS Theme — Company branding and desk shell cleanup
  * Loaded after the existing theme so it can refine Frappe v16 without core patches.
  */
 
@@ -119,5 +119,95 @@
 	[data-page-route="Workspaces"] .layout-main-section {
 		padding-left: 10px !important;
 		padding-right: 10px !important;
+	}
+}
+
+/* =========================================================
+   PERSISTENT SIDEBAR COLLAPSE / EXPAND CONTROL
+   The button lives in .body-sidebar-bottom, outside the scrolling menu area,
+   so it stays visible while the module list scrolls.
+   ========================================================= */
+.body-sidebar .body-sidebar-bottom {
+	flex-shrink: 0;
+}
+
+.body-sidebar .st-sidebar-persist-toggle {
+	width: 100%;
+	height: 38px;
+	min-height: 38px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0 10px;
+	margin: 4px 0 2px;
+	border-radius: var(--st-radius, 6px);
+	color: var(--st-text-muted, var(--ink-gray-6));
+	background: transparent;
+	transition: background-color 0.15s ease, color 0.15s ease;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.body-sidebar .st-sidebar-persist-toggle:hover,
+.body-sidebar .st-sidebar-persist-toggle:focus-visible {
+	background: var(--st-item-hover, var(--surface-gray-2));
+	color: var(--st-text-primary, var(--ink-gray-9));
+	text-decoration: none;
+	outline: none;
+}
+
+.body-sidebar .st-sidebar-persist-toggle:focus-visible {
+	box-shadow: 0 0 0 2px rgba(0, 82, 255, 0.18);
+}
+
+.st-sidebar-persist-toggle-icon {
+	width: 28px;
+	height: 28px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.st-sidebar-persist-toggle-icon svg,
+.st-sidebar-persist-toggle-icon .icon {
+	width: 17px !important;
+	height: 17px !important;
+	color: currentColor !important;
+	stroke: currentColor !important;
+}
+
+.st-sidebar-persist-toggle-label {
+	font-size: 13px;
+	font-weight: 480;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* In collapsed desktop mode, keep the control as an icon-only square in the rail. */
+.body-sidebar-container:not(.expanded) .body-sidebar .st-sidebar-persist-toggle {
+	width: 44px;
+	height: 40px;
+	min-height: 40px;
+	padding: 0;
+	margin: 4px auto 2px;
+	justify-content: center;
+	gap: 0;
+}
+
+.body-sidebar-container:not(.expanded) .body-sidebar .st-sidebar-persist-toggle-label {
+	display: none !important;
+}
+
+.body-sidebar-container:not(.expanded) .body-sidebar .st-sidebar-persist-toggle-icon {
+	width: 20px;
+	height: 20px;
+}
+
+/* The bottom control is desktop-only; mobile keeps Frappe's drawer behavior. */
+@media (max-width: 767px) {
+	.body-sidebar .st-sidebar-persist-toggle {
+		display: none !important;
 	}
 }
