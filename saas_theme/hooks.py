@@ -30,6 +30,7 @@ categories = ["Customization", "UI/UX"]
 app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css?v=64",
 	"/assets/saas_theme/css/professional_ui.css?v=1",
+	"/assets/saas_theme/css/form_controls.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
