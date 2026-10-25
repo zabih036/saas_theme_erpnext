@@ -85,7 +85,7 @@ app_include_js = [
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
 
-# automatically load and sync documents of this doctype from downstream apps
+# automatically load and sync documents from downstream apps
 # importable_doctypes = [doctype_1]
 
 # Jinja
