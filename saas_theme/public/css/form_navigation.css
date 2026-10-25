@@ -1,0 +1,246 @@
+/*
+ * SaaS Theme — Form Navigation Polish
+ *
+ * Frappe v16 keeps form tabs and section content directly under the standard
+ * form layout. These rules intentionally target those native selectors so the
+ * polished treatment is reliable without changing Frappe templates.
+ */
+
+/* =========================================================
+   FULL-WIDTH FORM CONTENT
+   Remove Frappe's remaining page-max-width cap so section bars and fields
+   use the professional form card width instead of stopping around two-thirds.
+   ========================================================= */
+.form-page .std-form-layout .section-head,
+.form-page .std-form-layout .section-body,
+.std-form-layout .section-head,
+.std-form-layout .section-body {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+.form-page .form-layout .form-section,
+.form-layout .form-section {
+	box-sizing: border-box;
+}
+
+/* =========================================================
+   FORM TABS
+   Soft blue rail + solid blue active pill, matching the reference UI.
+   The selectors are deliberately not dependent on .form-layout because
+   Frappe v16 renders .form-tabs-list at the form-page level.
+   ========================================================= */
+.form-page .form-tabs-list,
+.std-form-layout .form-tabs-list,
+.form-tabs-list {
+	margin: 7px 10px 9px !important;
+	padding: 6px 7px !important;
+	background: var(--st-form-primary-soft, #eaf4ff) !important;
+	border: 1px solid rgba(11, 130, 246, 0.045) !important;
+	border-radius: 9px !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52) !important;
+	overflow: hidden !important;
+}
+
+.form-page .form-tabs-list .form-tabs,
+.std-form-layout .form-tabs-list .form-tabs,
+.form-tabs-list .form-tabs {
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	overflow-x: auto !important;
+	overflow-y: hidden !important;
+	scrollbar-width: none;
+}
+
+.form-tabs-list .form-tabs::-webkit-scrollbar {
+	display: none;
+}
+
+.form-page .form-tabs-list .nav-tabs,
+.std-form-layout .form-tabs-list .nav-tabs,
+.form-tabs-list .nav-tabs {
+	display: flex !important;
+	align-items: center !important;
+	flex-wrap: nowrap !important;
+	gap: 4px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+
+.form-page .form-tabs-list .nav-item,
+.std-form-layout .form-tabs-list .nav-item,
+.form-tabs-list .nav-item {
+	margin: 0 !important;
+	padding: 0 !important;
+	white-space: nowrap !important;
+}
+
+.form-page .form-tabs-list .nav-link,
+.std-form-layout .form-tabs-list .nav-link,
+.form-tabs-list .nav-link {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-height: 34px !important;
+	padding: 7px 11px !important;
+	margin: 0 !important;
+	border: 0 !important;
+	border-bottom: 0 !important;
+	border-radius: 7px !important;
+	background: transparent !important;
+	color: var(--st-form-label, #4f5f73) !important;
+	font-size: 12.5px !important;
+	font-weight: 600 !important;
+	line-height: 1.2 !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+	transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+
+.form-page .form-tabs-list .nav-link:hover:not(.active),
+.std-form-layout .form-tabs-list .nav-link:hover:not(.active),
+.form-tabs-list .nav-link:hover:not(.active) {
+	background: rgba(255, 255, 255, 0.72) !important;
+	color: var(--st-form-text, #1f2937) !important;
+}
+
+.form-page .form-tabs-list .nav-link.active,
+.std-form-layout .form-tabs-list .nav-link.active,
+.form-tabs-list .nav-link.active {
+	background: var(--st-form-primary, #0b82f6) !important;
+	color: #ffffff !important;
+	font-weight: 650 !important;
+	border: 0 !important;
+	border-bottom: 0 !important;
+	box-shadow: 0 2px 6px rgba(11, 130, 246, 0.23), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+}
+
+.form-page .form-tabs-list .nav-link.active::after,
+.std-form-layout .form-tabs-list .nav-link.active::after,
+.form-tabs-list .nav-link.active::after {
+	display: none !important;
+	content: none !important;
+}
+
+.form-page .form-tabs-list .nav-link:focus-visible,
+.std-form-layout .form-tabs-list .nav-link:focus-visible,
+.form-tabs-list .nav-link:focus-visible {
+	outline: none !important;
+	box-shadow: 0 0 0 3px rgba(11, 130, 246, 0.16) !important;
+}
+
+/* =========================================================
+   COLLAPSIBLE SECTION BARS
+   Full-width soft-blue bars with the chevron next to the title, instead of
+   placing it at the far-right edge of the section.
+   ========================================================= */
+.form-page .form-section > .section-head.collapsible,
+.std-form-layout .form-section > .section-head.collapsible,
+.form-layout .form-section > .section-head.collapsible {
+	width: 100% !important;
+	max-width: none !important;
+	min-height: 48px !important;
+	box-sizing: border-box !important;
+	margin: 7px 0 5px !important;
+	padding: 0 16px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	gap: 10px !important;
+	border: 1px solid rgba(11, 130, 246, 0.045) !important;
+	border-radius: 8px !important;
+	background: var(--st-form-primary-soft, #eaf4ff) !important;
+	color: var(--st-form-primary, #0b82f6) !important;
+	font-size: 14px !important;
+	font-weight: 650 !important;
+	line-height: 1.25 !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+	transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+.form-page .form-section > .section-head.collapsible:hover,
+.std-form-layout .form-section > .section-head.collapsible:hover,
+.form-layout .form-section > .section-head.collapsible:hover {
+	background: #e2f0ff !important;
+	border-color: rgba(11, 130, 246, 0.085) !important;
+}
+
+.form-page .form-section > .section-head.collapsible .collapse-indicator,
+.std-form-layout .form-section > .section-head.collapsible .collapse-indicator,
+.form-layout .form-section > .section-head.collapsible .collapse-indicator {
+	position: static !important;
+	order: 2 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	color: #334155 !important;
+	line-height: 1 !important;
+}
+
+.form-page .form-section > .section-head.collapsible .collapse-indicator svg,
+.std-form-layout .form-section > .section-head.collapsible .collapse-indicator svg,
+.form-layout .form-section > .section-head.collapsible .collapse-indicator svg {
+	width: 15px !important;
+	height: 15px !important;
+	color: #334155 !important;
+	stroke: #334155 !important;
+}
+
+/* Keep the section content aligned with the new full-width headers. */
+.form-page .form-section > .section-body,
+.std-form-layout .form-section > .section-body,
+.form-layout .form-section > .section-body {
+	width: 100% !important;
+	max-width: none !important;
+}
+
+[data-theme="dark"] .form-tabs-list {
+	background: rgba(77, 148, 255, 0.12) !important;
+	border-color: rgba(77, 148, 255, 0.10) !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+}
+
+[data-theme="dark"] .form-tabs-list .nav-link:hover:not(.active) {
+	background: rgba(255, 255, 255, 0.055) !important;
+}
+
+[data-theme="dark"] .form-section > .section-head.collapsible {
+	background: rgba(77, 148, 255, 0.13) !important;
+	border-color: rgba(77, 148, 255, 0.09) !important;
+}
+
+[data-theme="dark"] .form-section > .section-head.collapsible:hover {
+	background: rgba(77, 148, 255, 0.18) !important;
+}
+
+[data-theme="dark"] .form-section > .section-head.collapsible .collapse-indicator,
+[data-theme="dark"] .form-section > .section-head.collapsible .collapse-indicator svg {
+	color: #c6d4e5 !important;
+	stroke: #c6d4e5 !important;
+}
+
+@media (max-width: 767px) {
+	.form-page .form-tabs-list,
+	.std-form-layout .form-tabs-list,
+	.form-tabs-list {
+		margin-left: 5px !important;
+		margin-right: 5px !important;
+		padding: 5px !important;
+	}
+
+	.form-tabs-list .nav-link {
+		min-height: 32px !important;
+		padding: 6px 9px !important;
+	}
+
+	.form-page .form-section > .section-head.collapsible,
+	.std-form-layout .form-section > .section-head.collapsible,
+	.form-layout .form-section > .section-head.collapsible {
+		min-height: 44px !important;
+		padding-left: 12px !important;
+		padding-right: 12px !important;
+	}
+}
