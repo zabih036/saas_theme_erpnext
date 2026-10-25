@@ -3,8 +3,9 @@
  *
  * Keeps the customization outside Frappe core:
  * - uses the default Company's Company Logo for desk branding
- * - removes Frappe Support from the desktop avatar menu
+ * - removes Frappe Support and About from desktop profile menus
  * - removes Help from the workspace/sidebar header menu
+ * - adds a persistent bottom sidebar collapse/expand control
  */
 (function () {
 	"use strict";
@@ -104,7 +105,7 @@
 	function remove_row(element) {
 		const $element = $(element);
 		const $row = $element.closest(
-			".dropdown-menu-item, .dropdown-item, li, [role='menuitem']"
+			".es-menu__item, .dropdown-menu-item, .dropdown-item, li, [role='menuitem']"
 		);
 		($row.length ? $row : $element).remove();
 	}
@@ -117,7 +118,7 @@
 	function remove_frappe_support(root) {
 		const support_label = String(__("Frappe Support") || "Frappe Support").toLowerCase();
 		const selector =
-			".dropdown-menu-item, .dropdown-item, .dropdown-menu a, [role='menuitem'], a[href*='support.frappe.io']";
+			".es-menu__item, .dropdown-menu-item, .dropdown-item, .dropdown-menu a, [role='menuitem'], a[href*='support.frappe.io']";
 
 		candidates(root, selector).each(function () {
 			const text = normalized_text(this);
@@ -129,6 +130,40 @@
 			) {
 				remove_row(this);
 			}
+		});
+	}
+
+	function remove_desktop_about(root) {
+		if (!$(".desktop-wrapper").length && !$("body").hasClass("desktop-page")) return;
+
+		const edit_profile = String(__("Edit Profile") || "Edit Profile").toLowerCase();
+		const toggle_theme = String(__("Toggle Theme") || "Toggle Theme").toLowerCase();
+		const about_label = String(__("About") || "About").toLowerCase();
+		const $root = root ? $(root) : $(document);
+		const $menus = $root
+			.filter(".es-menu, .dropdown-menu")
+			.add($root.find(".es-menu, .dropdown-menu"))
+			.add($root.closest(".es-menu, .dropdown-menu"));
+
+		$menus.each(function () {
+			const $menu = $(this);
+			const labels = $menu
+				.find(".es-menu__item, .dropdown-menu-item, .dropdown-item, [role='menuitem']")
+				.map(function () {
+					return normalized_text(this);
+				})
+				.get();
+
+			// The desktop avatar menu is identified by two stable built-in rows so an
+			// unrelated menu with an "About" item is never modified.
+			if (!labels.includes(edit_profile) || !labels.includes(toggle_theme)) return;
+
+			$menu
+				.find(".es-menu__item, .dropdown-menu-item, .dropdown-item, [role='menuitem']")
+				.each(function () {
+					const text = normalized_text(this);
+					if (text === "about" || text === about_label) remove_row(this);
+				});
 		});
 	}
 
@@ -164,9 +199,86 @@
 		proto.__saas_theme_help_removed = true;
 	}
 
+	function patch_sidebar_collapse_behavior() {
+		const proto = frappe.ui?.Sidebar?.prototype;
+		if (
+			!proto ||
+			proto.__saas_theme_persistent_icon_rail ||
+			typeof proto.hides_when_collapsed !== "function"
+		) {
+			return;
+		}
+
+		const original_hides_when_collapsed = proto.hides_when_collapsed;
+		proto.hides_when_collapsed = function () {
+			// On desktop, keep a narrow icon rail visible after collapse so the user
+			// always has a visible control to expand it again. Mobile keeps Frappe's
+			// normal drawer behavior.
+			if (!frappe.is_mobile()) return false;
+			return original_hides_when_collapsed.call(this);
+		};
+		proto.__saas_theme_persistent_icon_rail = true;
+
+		const sidebar = frappe.app?.sidebar;
+		if (sidebar?.wrapper && !sidebar.sidebar_expanded) {
+			if (typeof sidebar.refit_collapsed_sidebar === "function") {
+				sidebar.refit_collapsed_sidebar();
+			} else if (typeof sidebar.apply_expanded_state === "function") {
+				sidebar.apply_expanded_state();
+			}
+		}
+	}
+
+	function update_sidebar_toggle() {
+		const sidebar = frappe.app?.sidebar;
+		const $toggle = $(".st-sidebar-persist-toggle");
+		if (!$toggle.length || !sidebar) return;
+
+		const expanded = sidebar.sidebar_expanded !== false;
+		const label = expanded ? __("Collapse menu") : __("Expand menu");
+		const icon = expanded ? "chevron-left" : "chevron-right";
+
+		$toggle.attr({ title: label, "aria-label": label });
+		$toggle.find(".st-sidebar-persist-toggle-icon").html(
+			frappe.utils.icon(icon, "sm", "", "", "current-color", true)
+		);
+		$toggle.find(".st-sidebar-persist-toggle-label").text(label);
+		$toggle.toggleClass("is-collapsed", !expanded);
+	}
+
+	function ensure_sidebar_toggle() {
+		const sidebar = frappe.app?.sidebar;
+		const $bottom = $(".body-sidebar .body-sidebar-bottom").first();
+		if (!sidebar || !$bottom.length || frappe.is_mobile()) return;
+
+		let $toggle = $bottom.children(".st-sidebar-persist-toggle").first();
+		if (!$toggle.length) {
+			$toggle = $(
+				`<button type="button" class="btn-reset st-sidebar-persist-toggle">
+					<span class="st-sidebar-persist-toggle-icon" aria-hidden="true"></span>
+					<span class="st-sidebar-persist-toggle-label"></span>
+				</button>`
+			);
+
+			const $user = $bottom.children(".dropdown-navbar-user").first();
+			if ($user.length) $toggle.insertBefore($user);
+			else $bottom.append($toggle);
+
+			$toggle.on("click.saas_brand_shell", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				frappe.app?.sidebar?.toggle_width?.();
+				setTimeout(update_sidebar_toggle, 0);
+			});
+		}
+
+		update_sidebar_toggle();
+	}
+
 	function clean_menus(root) {
 		patch_sidebar_help_menu();
 		remove_frappe_support(root);
+		remove_desktop_about(root);
 		remove_open_sidebar_help(root);
 	}
 
@@ -186,6 +298,13 @@
 					) {
 						apply_company_logo();
 					}
+
+					if (
+						$node.is(".body-sidebar, .body-sidebar-bottom") ||
+						$node.find(".body-sidebar-bottom").length
+					) {
+						ensure_sidebar_toggle();
+					}
 				}
 			}
 		});
@@ -195,14 +314,17 @@
 
 	function refresh() {
 		patch_sidebar_help_menu();
+		patch_sidebar_collapse_behavior();
 		apply_company_logo();
 		clean_menus(document);
+		ensure_sidebar_toggle();
 		setup_observer();
 	}
 
 	// Public helpers are useful for troubleshooting from the browser console.
 	saas_theme.brand_shell.refresh = refresh;
 	saas_theme.brand_shell.apply_company_logo = apply_company_logo;
+	saas_theme.brand_shell.update_sidebar_toggle = update_sidebar_toggle;
 
 	$(document)
 		.off("desktop_screen.saas_brand_shell")
@@ -211,6 +333,10 @@
 	$(document)
 		.off("sidebar_setup.saas_brand_shell")
 		.on("sidebar_setup.saas_brand_shell", () => setTimeout(refresh, 20));
+
+	$(document)
+		.off("sidebar-expand.saas_brand_shell")
+		.on("sidebar-expand.saas_brand_shell", () => setTimeout(update_sidebar_toggle, 0));
 
 	$(document)
 		.off("toolbar_setup.saas_brand_shell")
