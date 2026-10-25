@@ -116,7 +116,7 @@ app_include_js = [
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
-# Name of app being uninstalled is passed as an argument
+# Name of the app being uninstalled is passed as an argument
 
 # before_app_uninstall = "saas_theme.utils.before_app_uninstall"
 # after_app_uninstall = "saas_theme.utils.after_app_uninstall"
@@ -225,7 +225,7 @@ app_include_js = [
 # 	{
 # 		"doctype": "{doctype_1}",
 # 		"filter_by": "{filter_by}",
-# 		"redact_fields": ["redact_fields"],
+# 		"redact_fields": ["{field_1}", "{field_2}"],
 # 		"partial": 1,
 # 	},
 # 	{
@@ -260,3 +260,4 @@ app_include_js = [
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
