@@ -33,10 +33,12 @@ app_include_css = [
 	"/assets/saas_theme/css/form_controls.css?v=1",
 	"/assets/saas_theme/css/form_navigation.css?v=1",
 	"/assets/saas_theme/css/list_view.css?v=1",
+	"/assets/saas_theme/css/home_dashboard.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
 	"/assets/saas_theme/js/professional_ui.js?v=1",
+	"/assets/saas_theme/js/home_dashboard.js?v=1",
 ]
 
 # include js, css files in header of web template
