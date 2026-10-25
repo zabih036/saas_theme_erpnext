@@ -34,11 +34,13 @@ app_include_css = [
 	"/assets/saas_theme/css/form_navigation.css?v=1",
 	"/assets/saas_theme/css/list_view.css?v=1",
 	"/assets/saas_theme/css/home_dashboard.css?v=1",
+	"/assets/saas_theme/css/home_analytics.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
 	"/assets/saas_theme/js/professional_ui.js?v=1",
 	"/assets/saas_theme/js/home_dashboard.js?v=1",
+	"/assets/saas_theme/js/home_analytics.js?v=1",
 ]
 
 # include js, css files in header of web template
@@ -83,7 +85,7 @@ app_include_js = [
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
 
-# automatically load and sync documents of this doctype from downstream apps
+# automatically load and sync documents from downstream apps
 # importable_doctypes = [doctype_1]
 
 # Jinja
@@ -262,4 +264,3 @@ app_include_js = [
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-
