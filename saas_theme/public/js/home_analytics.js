@@ -39,6 +39,16 @@
 		try { return saas_theme.professional_ui?.get_workspaces?.() || []; } catch (e) { return []; }
 	}
 
+	function visible_workspaces(items) {
+		const pages = frappe.boot?.workspaces?.pages || [];
+		const hidden = new Set();
+		pages.forEach((page) => {
+			if (!page || (page.hidden !== 1 && page.is_hidden !== 1 && page.hide_custom !== 1)) return;
+			[page.name, page.title, page.label].filter(Boolean).forEach((value) => hidden.add(String(value)));
+		});
+		return (items || []).filter((item) => item?.name && item?.route && !hidden.has(String(item.name)) && !hidden.has(String(item.title || "")));
+	}
+
 	function find_workspace(items, aliases) {
 		const needles = aliases.map((value) => value.toLowerCase());
 		return items.find((item) => {
@@ -69,6 +79,13 @@
 	function quick_html(item) {
 		const workspace_attr = item.name ? ` data-workspace-name="${esc(item.name)}"` : "";
 		return `<a class="st-hub-quick-card" href="${esc(item.route)}"${workspace_attr}><span class="st-hub-quick-icon">${icon(item.icon)}</span><span class="st-hub-quick-copy"><strong>${esc(item.title)}</strong><small>${__("Open module")}</small></span><span class="st-hub-quick-arrow">${arrow()}</span></a>`;
+	}
+
+	function workspace_navigation_html(items) {
+		const visible = visible_workspaces(items);
+		if (!visible.length) return "";
+		const rows = visible.map((item) => `<a class="st-hub-recent-item st-hub-workspace-nav-item" href="${esc(item.route)}" data-workspace-name="${esc(item.name)}"><span class="st-hub-recent-icon">${icon(item.icon)}</span><span class="st-hub-recent-copy"><strong>${esc(__(item.title || item.name))}</strong><small>${esc(__(item.module || __("Workspace")))}</small></span><span class="st-hub-recent-arrow">${arrow()}</span></a>`).join("");
+		return `<section class="st-hub-side-card st-hub-workspace-nav"><div class="st-hub-side-head"><div><span>${__("Workspaces")}</span><small>${__("Navigate to available work areas")}</small></div></div><div class="st-hub-recent-list st-hub-workspace-nav-list" style="max-height:min(430px,44vh);overflow-y:auto;overscroll-behavior:contain;padding-right:2px;">${rows}</div></section>`;
 	}
 
 	function metric_html(key, title, icon_name, route) {
@@ -202,14 +219,16 @@
 	async function load_analytics($home, token) {
 		const range = period();
 		const submitted = [["docstatus", "=", 1], ["posting_date", ">=", range.start], ["posting_date", "<=", range.end]];
+		const sum_field = (field, alias = "value") => ({ SUM: field, as: alias });
+		const count_field = (field = "name", alias = "count") => ({ COUNT: field, as: alias });
 		const [sales, purchases, primary_payments, stock] = await Promise.all([
-			get_list("Sales Invoice", ["posting_date", "sum(base_grand_total) as value", "count(name) as count"], submitted, "posting_date"),
-			get_list("Purchase Invoice", ["posting_date", "sum(base_grand_total) as value", "count(name) as count"], submitted, "posting_date"),
-			get_list("Payment Entry", ["posting_date", "sum(base_paid_amount) as value", "count(name) as count"], submitted, "posting_date"),
-			get_list("Stock Entry", ["posting_date", "count(name) as value"], submitted, "posting_date"),
+			get_list("Sales Invoice", ["posting_date", sum_field("base_grand_total"), count_field()], submitted, "posting_date"),
+			get_list("Purchase Invoice", ["posting_date", sum_field("base_grand_total"), count_field()], submitted, "posting_date"),
+			get_list("Payment Entry", ["posting_date", sum_field("base_paid_amount"), count_field()], submitted, "posting_date"),
+			get_list("Stock Entry", ["posting_date", count_field("name", "value")], submitted, "posting_date"),
 		]);
 		let payments = primary_payments;
-		if (payments === null) { payments = await get_list("Payment Entry", ["posting_date", "sum(paid_amount) as value", "count(name) as count"], submitted, "posting_date"); }
+		if (payments === null) { payments = await get_list("Payment Entry", ["posting_date", sum_field("paid_amount"), count_field()], submitted, "posting_date"); }
 		if (token !== enhance_token || !$home.closest("body").length) return;
 
 		const sales_current = (sales || []).filter((row) => String(row.posting_date || "") >= range.current);
@@ -245,6 +264,10 @@
 
 		$home.find(".st-hub-quick-section .st-hub-section-head p").text(__("Buying, sales, assets, payments, accounting and stock"));
 		$home.find(".st-hub-quick-grid").html(quick_items(items).map(quick_html).join(""));
+
+		const $sidebar = $home.find(".st-hub-sidebar");
+		$sidebar.find(".st-hub-workspace-nav").remove();
+		$sidebar.append(workspace_navigation_html(items));
 
 		const $workspace_section = $home.find(".st-hub-workspaces-section");
 		$workspace_section.removeClass("st-hub-workspaces-section").addClass("st-hub-analytics-section").html(analytics_html());
