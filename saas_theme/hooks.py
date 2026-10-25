@@ -31,6 +31,8 @@ app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css?v=64",
 	"/assets/saas_theme/css/professional_ui.css?v=1",
 	"/assets/saas_theme/css/form_controls.css?v=1",
+	"/assets/saas_theme/css/form_navigation.css?v=1",
+	"/assets/saas_theme/css/list_view.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -114,7 +116,7 @@ app_include_js = [
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
-# Name of the app being uninstalled is passed as an argument
+# Name of app being uninstalled is passed as an argument
 
 # before_app_uninstall = "saas_theme.utils.before_app_uninstall"
 # after_app_uninstall = "saas_theme.utils.after_app_uninstall"
@@ -207,7 +209,7 @@ app_include_js = [
 # ignore_links_on_delete = ["Communication", "ToDo"]
 
 # Request Events
-# ----------------
+# ------------------
 # before_request = ["saas_theme.utils.before_request"]
 # after_request = ["saas_theme.utils.after_request"]
 
@@ -223,7 +225,7 @@ app_include_js = [
 # 	{
 # 		"doctype": "{doctype_1}",
 # 		"filter_by": "{filter_by}",
-# 		"redact_fields": ["{field_1}", "{field_2}"],
+# 		"redact_fields": ["redact_fields"],
 # 		"partial": 1,
 # 	},
 # 	{
@@ -258,4 +260,3 @@ app_include_js = [
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-
