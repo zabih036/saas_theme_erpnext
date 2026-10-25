@@ -1,0 +1,123 @@
+/*
+ * SaaS Theme — Company branding and workspace shell cleanup
+ * Loaded after the existing theme so it can refine Frappe v16 without core patches.
+ */
+
+/* =========================================================
+   COMPANY LOGO
+   ========================================================= */
+.desktop-wrapper .navbar-home,
+.navbar-brand.st-company-brand {
+	display: flex;
+	align-items: center;
+}
+
+.desktop-wrapper #brand-logo.st-company-logo,
+.navbar-brand img.app-logo.st-company-logo,
+.navbar-brand .app-logo img.st-company-logo,
+.navbar-brand .st-company-logo-image {
+	width: auto !important;
+	height: 30px !important;
+	max-width: 120px !important;
+	object-fit: contain !important;
+	object-position: left center !important;
+	border-radius: 6px;
+	background: transparent !important;
+}
+
+/* Some Frappe v16 navbar builds render .app-logo as an icon host instead of an img.
+   Preserve the host (and its click handler) while replacing only its visual contents. */
+.navbar-brand .app-logo.st-company-logo-host {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: flex-start;
+	width: auto !important;
+	min-width: 30px;
+	height: 32px;
+	overflow: visible;
+}
+
+.navbar-brand .app-logo.st-company-logo-host > :not(.st-company-logo-image) {
+	display: none !important;
+}
+
+.desktop-wrapper .navbar-home {
+	min-width: 40px;
+}
+
+@media (max-width: 767px) {
+	.desktop-wrapper #brand-logo.st-company-logo,
+	.navbar-brand img.app-logo.st-company-logo,
+	.navbar-brand .app-logo img.st-company-logo,
+	.navbar-brand .st-company-logo-image {
+		height: 26px !important;
+		max-width: 92px !important;
+	}
+}
+
+/* =========================================================
+   WORKSPACE PAGE — USE THE AVAILABLE CANVAS
+   Frappe v16 centres Workspaces inside --page-max-width on lg+.
+   This is useful for article-like pages, but creates a large empty gutter
+   for dashboard workspaces. Keep comfortable padding, but remove the cap.
+   ========================================================= */
+[data-page-route="Workspaces"] .layout-main {
+	width: 100% !important;
+	max-width: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+[data-page-route="Workspaces"] .page-head .container,
+[data-page-route="Workspaces"] .page-body > .container,
+[data-page-route="Workspaces"] .page-body .container {
+	width: 100% !important;
+	max-width: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+[data-page-route="Workspaces"] .layout-main-section-wrapper,
+[data-page-route="Workspaces"] .layout-main-section,
+[data-page-route="Workspaces"] .editor-js-container,
+[data-page-route="Workspaces"] .codex-editor,
+[data-page-route="Workspaces"] .codex-editor__redactor {
+	width: 100% !important;
+	max-width: none !important;
+}
+
+[data-page-route="Workspaces"] .layout-main-section {
+	padding-left: clamp(16px, 1.6vw, 26px) !important;
+	padding-right: clamp(16px, 1.6vw, 26px) !important;
+}
+
+/* Prevent an invisible/collapsed sidebar placeholder from reserving a blank column. */
+[data-page-route="Workspaces"] .body-sidebar-container.sidebar-hidden,
+[data-page-route="Workspaces"] .body-sidebar-container.sidebar-hidden .body-sidebar-placeholder {
+	width: 0 !important;
+	min-width: 0 !important;
+	max-width: 0 !important;
+}
+
+[data-page-route="Workspaces"] .body-sidebar-container.sidebar-hidden .body-sidebar {
+	width: 0 !important;
+	min-width: 0 !important;
+	border-right-width: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+/* Keep content professional on very wide displays rather than stretching edge to edge. */
+@media (min-width: 1800px) {
+	[data-page-route="Workspaces"] .layout-main-section {
+		padding-left: 32px !important;
+		padding-right: 32px !important;
+	}
+}
+
+@media (max-width: 767px) {
+	[data-page-route="Workspaces"] .layout-main-section {
+		padding-left: 10px !important;
+		padding-right: 10px !important;
+	}
+}
