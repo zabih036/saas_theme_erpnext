@@ -31,6 +31,8 @@ app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css?v=64",
 	"/assets/saas_theme/css/professional_ui.css?v=1",
 	"/assets/saas_theme/css/form_controls.css?v=1",
+	"/assets/saas_theme/css/form_navigation.css?v=1",
+	"/assets/saas_theme/css/list_view.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -207,7 +209,7 @@ app_include_js = [
 # ignore_links_on_delete = ["Communication", "ToDo"]
 
 # Request Events
-# ----------------
+# ------------------
 # before_request = ["saas_theme.utils.before_request"]
 # after_request = ["saas_theme.utils.after_request"]
 
