@@ -36,6 +36,7 @@ app_include_css = [
 	"/assets/saas_theme/css/home_dashboard.css?v=1",
 	"/assets/saas_theme/css/home_analytics.css?v=1",
 	"/assets/saas_theme/css/brand_shell.css?v=1",
+	"/assets/saas_theme/css/form_palette.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
