@@ -42,6 +42,7 @@ app_include_css = [
 	"/assets/saas_theme/css/interface_refinement.css?v=1",
 	"/assets/saas_theme/css/mobile_shell.css?v=1",
 	"/assets/saas_theme/css/workspace_shell_polish.css?v=1",
+	"/assets/saas_theme/css/dark_mode_refinement.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -53,6 +54,7 @@ app_include_js = [
 	"/assets/saas_theme/js/route_loader.js?v=1",
 	"/assets/saas_theme/js/mobile_shell.js?v=2",
 	"/assets/saas_theme/js/workspace_shell_polish.js?v=1",
+	"/assets/saas_theme/js/final_shell_cleanup.js?v=1",
 ]
 
 # include js, css files in header of web template
@@ -137,8 +139,8 @@ web_include_js = [
 # To clean up dependencies/integrations with other apps
 # Name of the app being uninstalled is passed as an argument
 
-# before_app_uninstall = "saas_theme.utils.before_app_uninstall"
-# after_app_uninstall = "saas_theme.utils.after_app_uninstall"
+# before_app_uninstall = "saas_theme.uninstall.before_app_uninstall"
+# after_app_uninstall = "saas_theme.uninstall.after_app_uninstall"
 
 # Desk Notifications
 # ------------------
