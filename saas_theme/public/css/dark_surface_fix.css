@@ -1,65 +1,118 @@
 /* SaaS Theme — targeted final dark-surface fixes */
 
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] .form-control,
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] .form-control,
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] .form-control,
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] .input-with-feedback,
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] .input-with-feedback,
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] .input-with-feedback,
+/* =========================================================
+   ALL DESK FORM CONTROLS IN DARK MODE
+   Frappe renders read-only Link/Select/Currency fields with
+   .like-disabled-input rather than the native input element.
+   Keep checkboxes/radios out of this surface rule.
+   ========================================================= */
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .form-control,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .input-with-feedback,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .control-input input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .control-input select,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .control-input textarea,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .like-disabled-input,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .control-value.like-disabled-input,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]):not([data-fieldtype="Table"]) .read-only-input,
 [data-theme="dark"] .date-field .form-control,
 [data-theme="dark"] .time-field .form-control,
 [data-theme="dark"] input[type="date"],
 [data-theme="dark"] input[type="time"],
 [data-theme="dark"] input[type="datetime-local"] {
 	background: #172033 !important;
+	background-color: #172033 !important;
 	border-color: #2A3A52 !important;
 	color: #F8FAFC !important;
 	-webkit-text-fill-color: #F8FAFC !important;
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .015) !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .018), 0 1px 2px rgba(0, 0, 0, .12) !important;
 	color-scheme: dark !important;
 	opacity: 1 !important;
 }
 
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] input:disabled,
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] input:disabled,
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] input:disabled,
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] input[readonly],
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] input[readonly],
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] input[readonly],
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] .like-disabled-input,
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] .like-disabled-input,
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] .like-disabled-input {
-	background: #172033 !important;
-	border-color: #2A3A52 !important;
-	color: #E5E7EB !important;
-	-webkit-text-fill-color: #E5E7EB !important;
+/* Submitted/read-only values should still look intentionally filled instead
+   of becoming a bright white disabled field. */
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) input:disabled,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) input[readonly],
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) select:disabled,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) textarea:disabled,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .like-disabled-input,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .control-value.like-disabled-input,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .read-only-input {
+	background: #131C2A !important;
+	background-color: #131C2A !important;
+	border-color: #26364D !important;
+	color: #DCE5F2 !important;
+	-webkit-text-fill-color: #DCE5F2 !important;
 	opacity: 1 !important;
 }
 
-[data-theme="dark"] .frappe-control[data-fieldtype="Date"] .control-label,
-[data-theme="dark"] .frappe-control[data-fieldtype="Datetime"] .control-label,
-[data-theme="dark"] .frappe-control[data-fieldtype="Time"] .control-label {
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .form-control:focus,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .input-with-feedback:focus {
+	border-color: #4F8CFF !important;
+	box-shadow: 0 0 0 3px rgba(79, 140, 255, .14) !important;
+}
+
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) .form-control::placeholder,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) input::placeholder,
+[data-theme="dark"] .frappe-control:not([data-fieldtype="Check"]) textarea::placeholder {
+	color: #77869A !important;
+	-webkit-text-fill-color: #77869A !important;
+}
+
+[data-theme="dark"] .frappe-control .control-label,
+[data-theme="dark"] .frappe-control .control-label label,
+[data-theme="dark"] .frappe-control .help-box,
+[data-theme="dark"] .frappe-control .description {
 	color: #E5E7EB !important;
 }
 
-/* ui_finish.js applies a light analytics header with !important.  This selector
-   deliberately has higher specificity so dark mode always wins. */
+[data-theme="dark"] .frappe-control .help-box,
+[data-theme="dark"] .frappe-control .description {
+	color: #94A3B8 !important;
+}
+
+/* Link values stay readable without the bright browser-blue treatment. */
+[data-theme="dark"] .frappe-control .like-disabled-input a,
+[data-theme="dark"] .frappe-control .control-value a,
+[data-theme="dark"] .frappe-control .link-btn,
+[data-theme="dark"] .frappe-control .link-btn a {
+	color: #8CB4FF !important;
+}
+
+/* Native calendar/time glyphs should follow the dark control color. */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+	filter: invert(.82) sepia(.08) saturate(.7) hue-rotate(180deg) !important;
+	opacity: .85 !important;
+}
+
+/* ui_finish.js applies a light analytics header with !important. These selectors
+   deliberately have higher specificity so dark mode always wins. */
 [data-theme="dark"] .st-home-dashboard .st-analytics-card > .st-analytics-card-head,
-[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head {
+[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card > header,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header {
 	background: #111827 !important;
+	background-image: none !important;
 	border-color: #223047 !important;
 	color: #F8FAFC !important;
 }
 
 [data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head strong,
 [data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head h3,
-[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head h4 {
+[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head h4,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header strong,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header h3,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header h4 {
 	background: transparent !important;
 	color: #F8FAFC !important;
 }
 
 [data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head small,
-[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head p {
+[data-theme="dark"] .st-home-dashboard .st-analytics-card .st-analytics-card-head p,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header small,
+[data-theme="dark"] .st-home-dashboard .st-analytics-card header p {
 	background: transparent !important;
 	color: #94A3B8 !important;
 }

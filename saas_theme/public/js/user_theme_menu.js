@@ -1,0 +1,106 @@
+/* SaaS Theme — restore Toggle Theme in the Frappe v16 sidebar user menu. */
+(function () {
+	"use strict";
+
+	if (typeof frappe === "undefined") return;
+	if (window.__saas_theme_user_theme_menu__) return;
+	window.__saas_theme_user_theme_menu__ = true;
+
+	const state = { observer: null, timer: null };
+
+	function label_for(row) {
+		return String(
+			row?.querySelector?.(".es-menu__label")?.textContent || row?.textContent || ""
+		)
+			.replace(/\s+/g, " ")
+			.trim();
+	}
+
+	function make_theme_row() {
+		const is_dark = document.documentElement.getAttribute("data-theme") === "dark";
+		const row = document.createElement("button");
+		row.type = "button";
+		row.className = "es-menu__item st-theme-toggle-menu-item";
+		row.setAttribute("role", "menuitem");
+		row.setAttribute("tabindex", "-1");
+
+		try {
+			row.insertAdjacentHTML(
+				"beforeend",
+				frappe.utils.icon(is_dark ? "sun" : "moon", "sm", "", "", "current-color", true)
+			);
+		} catch (e) {
+			// The label still provides a usable action if an icon cannot be rendered.
+		}
+
+		const label = document.createElement("span");
+		label.className = "es-menu__label";
+		label.textContent = __("Toggle Theme");
+		row.appendChild(label);
+
+		row.addEventListener("click", (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+
+			/* Close the owning menu through its trigger so Frappe's Dropdown state
+			   remains synchronized, then open the native ThemeSwitcher. */
+			const trigger = document.querySelector(
+				'.st-top-profile-button[aria-expanded="true"], .sidebar-user-button[aria-expanded="true"], .desktop-avatar[aria-expanded="true"]'
+			);
+			if (trigger) trigger.click();
+
+			setTimeout(() => {
+				try {
+					new frappe.ui.ThemeSwitcher().show();
+				} catch (error) {
+					console.warn("SaaS Theme: could not open Theme Switcher", error);
+				}
+			}, 20);
+		});
+
+		return row;
+	}
+
+	function ensure_theme_row(menu) {
+		if (!(menu instanceof Element) || !menu.matches('.es-menu[role="menu"], .es-menu')) return;
+
+		const rows = Array.from(menu.querySelectorAll(".es-menu__item"));
+		if (!rows.length) return;
+
+		const labels = new Set(rows.map(label_for));
+		const settings = __("Settings");
+		const reload = __("Reload");
+		const logout = __("Logout");
+		const toggle = __("Toggle Theme");
+
+		/* This signature identifies Frappe v16's sidebar/top-profile user menu.
+		   Desktop Home already ships its own Toggle Theme row and is left alone. */
+		if (!labels.has(settings) || !labels.has(reload) || !labels.has(logout)) return;
+		if (labels.has(toggle)) return;
+
+		const reload_row = rows.find((row) => label_for(row) === reload);
+		if (!reload_row?.parentElement) return;
+
+		reload_row.insertAdjacentElement("beforebegin", make_theme_row());
+	}
+
+	function refresh() {
+		document.querySelectorAll('.es-menu[role="menu"], .es-menu').forEach(ensure_theme_row);
+	}
+
+	function schedule(delay = 0) {
+		clearTimeout(state.timer);
+		state.timer = setTimeout(refresh, delay);
+	}
+
+	$(function () {
+		refresh();
+		if (!document.body) return;
+		state.observer = new MutationObserver(() => schedule(0));
+		state.observer.observe(document.body, { childList: true, subtree: true });
+	});
+
+	$(document)
+		.off("page-change.saas_theme_menu sidebar_setup.saas_theme_menu")
+		.on("page-change.saas_theme_menu sidebar_setup.saas_theme_menu", () => schedule(10));
+})();
