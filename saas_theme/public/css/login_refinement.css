@@ -119,6 +119,45 @@
 	letter-spacing: -0.025em !important;
 }
 
+/* If Frappe's native successful-login handler briefly replaces the body with
+   splash_screen.html, never show its Frappe/ERPNext logo. */
+body > .centered.splash,
+body > .splash.centered {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	background: #F7F9FC !important;
+}
+
+body > .centered.splash img,
+body > .splash.centered img {
+	display: none !important;
+	visibility: hidden !important;
+	opacity: 0 !important;
+}
+
+body > .centered.splash::before,
+body > .splash.centered::before {
+	content: "" !important;
+	width: 34px !important;
+	height: 34px !important;
+	border: 3px solid rgba(6, 74, 219, .16) !important;
+	border-top-color: #064ADB !important;
+	border-radius: 50% !important;
+	animation: st-login-splash-spin .72s linear infinite !important;
+}
+
+@keyframes st-login-splash-spin {
+	to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body > .centered.splash::before,
+	body > .splash.centered::before {
+		animation-duration: 1.4s !important;
+	}
+}
+
 /* Validation may color the border red, but must not move the icon. */
 .st-login-form-col .page-card-body.invalid .email-field,
 .st-login-form-col .page-card-body.invalid .password-field {
