@@ -43,6 +43,7 @@ app_include_css = [
 	"/assets/saas_theme/css/mobile_shell.css?v=1",
 	"/assets/saas_theme/css/workspace_shell_polish.css?v=1",
 	"/assets/saas_theme/css/dark_mode_refinement.css?v=1",
+	"/assets/saas_theme/css/dark_surface_fix.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -54,14 +55,14 @@ app_include_js = [
 	"/assets/saas_theme/js/route_loader.js?v=1",
 	"/assets/saas_theme/js/mobile_shell.js?v=2",
 	"/assets/saas_theme/js/workspace_shell_polish.js?v=1",
-	"/assets/saas_theme/js/final_shell_cleanup.js?v=1",
+	"/assets/saas_theme/js/final_shell_cleanup.js?v=2",
 ]
 
 # include js, css files in header of web template
-web_include_css = "/assets/saas_theme/css/login_refinement.css?v=1"
+web_include_css = "/assets/saas_theme/css/login_refinement.css?v=2"
 web_include_js = [
 	"/assets/saas_theme/js/route_loader.js?v=2",
-	"/assets/saas_theme/js/login_fix.js?v=1",
+	"/assets/saas_theme/js/login_fix.js?v=2",
 ]
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -75,10 +76,10 @@ web_include_js = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
-# doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+# doctype_js = {"doctype": "public/js/doctype.js"}
+# doctype_list_js = {"doctype": "public/js/doctype_list.js"}
+# doctype_tree_js = {"doctype": "public/js/doctype_tree.js"}
+# doctype_calendar_js = {"doctype": "public/js/doctype_calendar.js"}
 
 # Svg Icons
 # ------------------

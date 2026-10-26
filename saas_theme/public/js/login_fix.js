@@ -1,9 +1,10 @@
 /*
- * SaaS Theme — Login transition fixes
+ * SaaS Theme — Login transition and branding fixes
  *
  * - stop the custom loader immediately when credentials/validation fail
  * - preserve Frappe's validation messages
  * - skip Frappe's default splash screen after successful login
+ * - replace Frappe login branding with the default Company's name/logo
  */
 (function () {
 	"use strict";
@@ -13,6 +14,7 @@
 
 	let patched = false;
 	let tries = 0;
+	let branding_promise = null;
 
 	function loader_done() {
 		try {
@@ -28,6 +30,67 @@
 		} catch (e) {
 			// Ignore loader failures and allow authentication to continue.
 		}
+	}
+
+	async function get_login_branding() {
+		if (branding_promise) return branding_promise;
+
+		branding_promise = (async () => {
+			try {
+				if (window.frappe?.call) {
+					const response = await frappe.call({
+						method: "saas_theme.branding.get_company_branding",
+						type: "GET",
+					});
+					return response?.message || {};
+				}
+
+				const response = await fetch(
+					"/api/method/saas_theme.branding.get_company_branding",
+					{ credentials: "same-origin", headers: { Accept: "application/json" } }
+				);
+				if (!response.ok) return {};
+				const data = await response.json();
+				return data?.message || {};
+			} catch (e) {
+				return {};
+			}
+		})();
+
+		return branding_promise;
+	}
+
+	async function apply_login_branding() {
+		const branding = await get_login_branding();
+		const company = String(branding?.company || "").trim();
+		const logo = String(branding?.company_logo || "").trim();
+
+		if (logo) {
+			document.querySelectorAll(".page-card-head .app-logo, .login-content .app-logo").forEach((image) => {
+				if (!(image instanceof HTMLImageElement)) return;
+				image.src = logo;
+				image.alt = company || "Company Logo";
+				image.classList.add("st-login-company-logo");
+			});
+		}
+
+		const title = company ? `Login to ${company}` : "Login";
+		const login_headings = document.querySelectorAll(
+			".for-login .page-card-head h4, .for-email-login .page-card-head h4, .st-login-form-col .page-card-head h4"
+		);
+		login_headings.forEach((heading) => {
+			heading.textContent = title;
+			heading.classList.add("st-login-company-title");
+		});
+
+		// Compatibility with older/custom login templates that render the literal
+		// "Login to Frappe" outside the standard page-card-head structure.
+		document.querySelectorAll("h1, h2, h3, h4").forEach((heading) => {
+			if (/^\s*login\s+to\s+frappe\s*$/i.test(heading.textContent || "")) {
+				heading.textContent = title;
+				heading.classList.add("st-login-company-title");
+			}
+		});
 	}
 
 	function patch_login() {
@@ -122,16 +185,24 @@
 		true
 	);
 
-	document.addEventListener("login_rendered", () => patch_login(), { passive: true });
+	document.addEventListener("login_rendered", () => {
+		patch_login();
+		setTimeout(apply_login_branding, 0);
+	}, { passive: true });
 
 	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", patch_login, { once: true });
+		document.addEventListener("DOMContentLoaded", () => {
+			patch_login();
+			apply_login_branding();
+		}, { once: true });
 	} else {
 		patch_login();
+		apply_login_branding();
 	}
 
 	const timer = setInterval(() => {
 		tries += 1;
+		apply_login_branding();
 		if (patch_login() || tries > 40) clearInterval(timer);
 	}, 125);
 })();
