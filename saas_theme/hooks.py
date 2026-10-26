@@ -39,6 +39,7 @@ app_include_css = [
 	"/assets/saas_theme/css/form_palette.css?v=1",
 	"/assets/saas_theme/css/palette_refinement.css?v=1",
 	"/assets/saas_theme/css/ui_finish.css?v=1",
+	"/assets/saas_theme/css/interface_refinement.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -47,11 +48,12 @@ app_include_js = [
 	"/assets/saas_theme/js/home_analytics.js?v=1",
 	"/assets/saas_theme/js/brand_shell.js?v=1",
 	"/assets/saas_theme/js/ui_finish.js?v=1",
+	"/assets/saas_theme/js/route_loader.js?v=1",
 ]
 
 # include js, css files in header of web template
 web_include_css = "/assets/saas_theme/css/login_refinement.css?v=1"
-# web_include_js = "/assets/saas_theme/js/saas_theme.js"
+web_include_js = "/assets/saas_theme/js/route_loader.js?v=1"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "saas_theme/public/scss/website"
