@@ -2,14 +2,16 @@ import frappe
 from frappe.defaults import get_user_default
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_company_branding():
-    """Return the logged-in user's default company branding for the Desk shell."""
+    """Return safe company branding for Desk and the public login screen."""
 
-    if frappe.session.user == "Guest":
-        return {"company": None, "company_logo": None}
+    company = None
 
-    company = get_user_default("Company") or frappe.db.get_single_value(
+    if frappe.session.user != "Guest":
+        company = get_user_default("Company")
+
+    company = company or frappe.db.get_single_value(
         "Global Defaults", "default_company"
     )
 
