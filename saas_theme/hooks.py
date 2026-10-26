@@ -41,6 +41,7 @@ app_include_css = [
 	"/assets/saas_theme/css/ui_finish.css?v=1",
 	"/assets/saas_theme/css/interface_refinement.css?v=1",
 	"/assets/saas_theme/css/mobile_shell.css?v=1",
+	"/assets/saas_theme/css/workspace_shell_polish.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -50,7 +51,8 @@ app_include_js = [
 	"/assets/saas_theme/js/brand_shell.js?v=1",
 	"/assets/saas_theme/js/ui_finish.js?v=1",
 	"/assets/saas_theme/js/route_loader.js?v=1",
-	"/assets/saas_theme/js/mobile_shell.js?v=1",
+	"/assets/saas_theme/js/mobile_shell.js?v=2",
+	"/assets/saas_theme/js/workspace_shell_polish.js?v=1",
 ]
 
 # include js, css files in header of web template
