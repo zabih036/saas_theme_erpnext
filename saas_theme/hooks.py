@@ -209,7 +209,7 @@ app_include_js = [
 
 # exempt linked doctypes from being automatically cancelled
 #
-# auto_cancel_exempted_doctypes = ["Communication", "ToDo"]
+# auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
