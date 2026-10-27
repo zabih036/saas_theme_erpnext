@@ -45,6 +45,8 @@ app_include_css = [
 	"/assets/saas_theme/css/dark_mode_refinement.css?v=1",
 	"/assets/saas_theme/css/dark_surface_fix.css?v=2",
 	"/assets/saas_theme/css/desktop_navbar_refinement.css?v=1",
+	"/assets/saas_theme/css/tree_view_refinement.css?v=1",
+	"/assets/saas_theme/css/home_clarity_refinement.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -132,7 +134,7 @@ web_include_js = [
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
-# Name of the app being installed is passed as an argument
+# Name of app being installed is passed as an argument
 
 # before_app_install = "saas_theme.utils.before_app_install"
 # after_app_install = "saas_theme.utils.after_app_install"
@@ -140,7 +142,7 @@ web_include_js = [
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
-# Name of the app being uninstalled is passed as an argument
+# Name of app being uninstalled is passed as an argument
 
 # before_app_uninstall = "saas_theme.uninstall.before_app_uninstall"
 # after_app_uninstall = "saas_theme.uninstall.after_app_uninstall"
