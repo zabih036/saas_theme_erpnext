@@ -21,6 +21,26 @@
 		}
 	})();
 
+	/* Precision v4 is deliberately last: it corrects only the current UI regressions
+	   without changing the broader theme layers that already look good. */
+	(function load_precision_v4_assets() {
+		if (!document.getElementById("st-ui-precision-v4-css")) {
+			const link = document.createElement("link");
+			link.id = "st-ui-precision-v4-css";
+			link.rel = "stylesheet";
+			link.href = "/assets/saas_theme/css/ui_precision_v4.css?v=1";
+			document.head.appendChild(link);
+		}
+
+		if (!document.getElementById("st-ui-precision-v4-js")) {
+			const script = document.createElement("script");
+			script.id = "st-ui-precision-v4-js";
+			script.src = "/assets/saas_theme/js/ui_precision_v4.js?v=1";
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+	})();
+
 	if (typeof frappe === "undefined") return;
 	if (window.__saas_theme_user_theme_menu__) return;
 	window.__saas_theme_user_theme_menu__ = true;
