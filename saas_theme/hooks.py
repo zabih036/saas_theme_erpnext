@@ -50,6 +50,7 @@ app_include_css = [
 	"/assets/saas_theme/css/control_precision_fix.css?v=1",
 	"/assets/saas_theme/css/exact_ui_followup.css?v=1",
 	"/assets/saas_theme/css/final_precision_v2.css?v=1",
+	"/assets/saas_theme/css/form_experience_refinement.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
