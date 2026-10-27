@@ -8,14 +8,14 @@
 			const link = document.createElement("link");
 			link.id = "st-stability-refinement-v3-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=1";
+			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=2";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-stability-refinement-v3-js")) {
 			const script = document.createElement("script");
 			script.id = "st-stability-refinement-v3-js";
-			script.src = "/assets/saas_theme/js/stability_refinement_v3.js?v=1";
+			script.src = "/assets/saas_theme/js/stability_refinement_v3.js?v=2";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -61,8 +61,6 @@
 			event.preventDefault();
 			event.stopPropagation();
 
-			/* Close the owning menu through its trigger so Frappe's Dropdown state
-			   remains synchronized, then open the native ThemeSwitcher. */
 			const trigger = document.querySelector(
 				'.st-top-profile-button[aria-expanded="true"], .sidebar-user-button[aria-expanded="true"], .desktop-avatar[aria-expanded="true"]'
 			);
@@ -92,8 +90,6 @@
 		const logout = __("Logout");
 		const toggle = __("Toggle Theme");
 
-		/* This signature identifies Frappe v16's sidebar/top-profile user menu.
-		   Desktop Home already ships its own Toggle Theme row and is left alone. */
 		if (!labels.has(settings) || !labels.has(reload) || !labels.has(logout)) return;
 		if (labels.has(toggle)) return;
 
