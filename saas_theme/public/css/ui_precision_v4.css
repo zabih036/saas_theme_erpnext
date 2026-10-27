@@ -1,0 +1,503 @@
+/*
+ * SaaS Theme — UI Precision v4
+ * Focused final layer for profile/header reliability, report checkbox/header polish,
+ * child-table depth, and typography consistency.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-v4-page: #F7F9FC;
+	--st-v4-surface: #FFFFFF;
+	--st-v4-soft: #F8FAFC;
+	--st-v4-soft-blue: #F5F8FF;
+	--st-v4-text: #101828;
+	--st-v4-body: #344054;
+	--st-v4-muted: #667085;
+	--st-v4-border: #E2E8F0;
+	--st-v4-border-strong: #D0D7E2;
+	--st-v4-primary: #155EEF;
+	--st-v4-shadow-xs: 0 1px 2px rgba(16, 24, 40, .04);
+	--st-v4-shadow-sm: 0 1px 2px rgba(16, 24, 40, .035), 0 4px 12px rgba(16, 24, 40, .045);
+}
+
+[data-theme="dark"] {
+	--st-v4-page: #0B1220;
+	--st-v4-surface: #111827;
+	--st-v4-soft: #172033;
+	--st-v4-soft-blue: #15213A;
+	--st-v4-text: #F8FAFC;
+	--st-v4-body: #D0D8E6;
+	--st-v4-muted: #94A3B8;
+	--st-v4-border: #2B394B;
+	--st-v4-border-strong: #3A4A5F;
+	--st-v4-primary: #6B91FF;
+	--st-v4-shadow-xs: 0 1px 2px rgba(0, 0, 0, .18);
+	--st-v4-shadow-sm: 0 4px 14px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   1. TYPOGRAPHY SYSTEM
+   ========================================================= */
+
+body,
+input,
+select,
+textarea,
+button,
+.form-control,
+.btn {
+	font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* Sidebar module title and navigation labels. */
+.body-sidebar .sidebar-header,
+.body-sidebar .sidebar-header-title,
+.body-sidebar .sidebar-title,
+.body-sidebar .sidebar-label {
+	font-size: 15px !important;
+	font-weight: 650 !important;
+	line-height: 1.3 !important;
+	letter-spacing: -.01em !important;
+}
+
+.body-sidebar .sidebar-item,
+.body-sidebar .sidebar-item a,
+.body-sidebar .sidebar-item-label,
+.body-sidebar .sidebar-item-control,
+.body-sidebar .standard-sidebar-item,
+.body-sidebar .desk-sidebar-item {
+	font-size: 13.5px !important;
+	font-weight: 520 !important;
+	line-height: 1.35 !important;
+	letter-spacing: 0 !important;
+}
+
+/* Page breadcrumb/title: compact but still clearly stronger than form text. */
+.page-head .navbar-breadcrumbs,
+.page-head .navbar-breadcrumbs li,
+.page-head .navbar-breadcrumbs a,
+.page-head .title-area {
+	font-size: 15px !important;
+	line-height: 1.3 !important;
+}
+
+.page-head .navbar-breadcrumbs li,
+.page-head .navbar-breadcrumbs a {
+	font-weight: 500 !important;
+}
+
+.page-head .navbar-breadcrumbs li:last-child,
+.page-head .navbar-breadcrumbs li:last-child a,
+.page-head .title-area .title-text {
+	color: var(--st-v4-text) !important;
+	font-size: 16px !important;
+	font-weight: 620 !important;
+	letter-spacing: -.01em !important;
+}
+
+/* Keep action text compact enough that the utility cluster always fits. */
+.page-head .btn,
+.page-head .dropdown-toggle,
+.page-head .actions-btn-group .btn,
+.page-head .secondary-action,
+.page-head .primary-action {
+	font-size: 12.75px !important;
+	font-weight: 560 !important;
+	line-height: 1 !important;
+}
+
+/* Form hierarchy. */
+.form-page .frappe-control .control-label,
+.form-layout .frappe-control .control-label,
+.std-form-layout .frappe-control .control-label {
+	font-size: 12.5px !important;
+	font-weight: 610 !important;
+	line-height: 1.35 !important;
+	letter-spacing: 0 !important;
+}
+
+.form-page .frappe-control .form-control,
+.form-layout .frappe-control .form-control,
+.form-page .frappe-control .input-with-feedback,
+.form-layout .frappe-control .input-with-feedback,
+.form-page .frappe-control .like-disabled-input,
+.form-layout .frappe-control .like-disabled-input {
+	font-size: 13px !important;
+	font-weight: 470 !important;
+	line-height: 1.4 !important;
+}
+
+.form-page .section-head,
+.form-layout .section-head,
+.std-form-layout .section-head {
+	font-size: 13.5px !important;
+	font-weight: 650 !important;
+	line-height: 1.3 !important;
+}
+
+.form-tabs-list .nav-link,
+.form-page .form-tabs-list .nav-link {
+	font-size: 13px !important;
+	font-weight: 590 !important;
+}
+
+/* =========================================================
+   2. PAGE HEADER — NEVER LOSE PROFILE / UTILITIES
+   ========================================================= */
+
+.page-head .page-head-content {
+	display: flex !important;
+	align-items: center !important;
+	flex-wrap: nowrap !important;
+	width: 100% !important;
+	gap: 6px !important;
+}
+
+.page-head .page-title {
+	flex: 1 1 0 !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	overflow: hidden !important;
+}
+
+.page-head .standard-items-section {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex: 0 0 auto !important;
+	min-width: 0 !important;
+	max-width: calc(100% - 120px) !important;
+	margin-left: auto !important;
+	gap: 4px !important;
+	overflow: visible !important;
+}
+
+.page-head .page-actions,
+.page-head .standard-actions,
+.page-head .custom-actions,
+.page-head .custom-mobile-actions {
+	min-width: 0 !important;
+	flex: 0 1 auto !important;
+	gap: 4px !important;
+}
+
+.page-head .st-page-utility-actions {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex: 0 0 auto !important;
+	order: 999 !important;
+	min-width: max-content !important;
+	margin-left: 4px !important;
+	gap: 3px !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	overflow: visible !important;
+}
+
+.page-head .st-top-profile,
+.page-head .st-top-profile-button,
+.page-head .st-top-notification,
+.page-head .st-top-search,
+.page-head #small-search-button {
+	display: inline-flex !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	flex: 0 0 auto !important;
+}
+
+.page-head .st-top-profile {
+	position: relative !important;
+	z-index: 3 !important;
+}
+
+.page-head .st-top-profile-button {
+	width: 34px !important;
+	height: 34px !important;
+	min-width: 34px !important;
+	min-height: 34px !important;
+	padding: 0 !important;
+	border-radius: 50% !important;
+	overflow: visible !important;
+}
+
+.page-head .st-top-profile-button .avatar,
+.page-head .st-top-profile-button .avatar-frame,
+.page-head .st-top-profile-button img,
+.page-head .st-profile-fallback-avatar {
+	width: 30px !important;
+	height: 30px !important;
+	min-width: 30px !important;
+	min-height: 30px !important;
+	border-radius: 50% !important;
+}
+
+.page-head .st-profile-fallback-avatar {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	background: #CFF5DD !important;
+	color: #087443 !important;
+	font-size: 12px !important;
+	font-weight: 700 !important;
+	line-height: 1 !important;
+}
+
+[data-theme="dark"] .page-head .st-profile-fallback-avatar {
+	background: #164E3B !important;
+	color: #A7F3D0 !important;
+}
+
+/* =========================================================
+   3. REPORT FILTERS — RELIABLE NATIVE CHECKBOXES
+   ========================================================= */
+
+/* Undo custom checkbox painting. Native browser/Frappe rendering is reliable,
+   while accent-color gives us the theme color without breaking checked state. */
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] .checkbox,
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] .checkbox > label {
+	margin: 0 !important;
+}
+
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] .checkbox > label {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	min-height: 28px !important;
+	padding: 2px 1px !important;
+	font-size: 12.5px !important;
+	font-weight: 500 !important;
+	line-height: 1.35 !important;
+	cursor: pointer !important;
+}
+
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] .input-area {
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	flex: 0 0 16px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] input[type="checkbox"] {
+	-webkit-appearance: checkbox !important;
+	appearance: auto !important;
+	accent-color: var(--st-v4-primary) !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: initial !important;
+	border-radius: 4px !important;
+	background: initial !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	cursor: pointer !important;
+}
+
+.page-container:has(.report-wrapper) .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:focus-visible {
+	outline: 2px solid color-mix(in srgb, var(--st-v4-primary) 32%, transparent) !important;
+	outline-offset: 2px !important;
+	box-shadow: none !important;
+}
+
+/* Cleaner report filter card. */
+.page-container:has(.report-wrapper) .page-form {
+	border: 1px solid var(--st-v4-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-v4-surface) !important;
+	box-shadow: var(--st-v4-shadow-sm) !important;
+}
+
+.page-container:has(.report-wrapper) .page-form .check-filter-area:not([style*="display: none"]) {
+	padding-top: 9px !important;
+	border-top: 1px solid var(--st-v4-border) !important;
+	gap: 5px 14px !important;
+}
+
+/* Report result header/table: cleaner contrast, tighter geometry. */
+.page-container:has(.report-wrapper) .datatable,
+.page-container:has(.report-wrapper) .dt-scrollable {
+	border-color: var(--st-v4-border) !important;
+}
+
+.page-container:has(.report-wrapper) .dt-header,
+.page-container:has(.report-wrapper) .dt-row-header,
+.page-container:has(.report-wrapper) .dt-cell--header {
+	background: var(--st-v4-soft-blue) !important;
+	color: var(--st-v4-text) !important;
+}
+
+.page-container:has(.report-wrapper) .dt-row-header,
+.page-container:has(.report-wrapper) .dt-cell--header {
+	min-height: 40px !important;
+	border-color: var(--st-v4-border) !important;
+}
+
+.page-container:has(.report-wrapper) .dt-cell--header .dt-cell__content,
+.page-container:has(.report-wrapper) .dt-header .dt-cell__content {
+	padding-top: 10px !important;
+	padding-bottom: 9px !important;
+	color: var(--st-v4-text) !important;
+	font-size: 12.5px !important;
+	font-weight: 650 !important;
+	line-height: 1.25 !important;
+	letter-spacing: 0 !important;
+}
+
+.page-container:has(.report-wrapper) .dt-row-filter,
+.page-container:has(.report-wrapper) .dt-row-filter .dt-cell {
+	background: var(--st-v4-surface) !important;
+	border-color: var(--st-v4-border) !important;
+}
+
+.page-container:has(.report-wrapper) .dt-row-filter input,
+.page-container:has(.report-wrapper) .dt-filter {
+	height: 30px !important;
+	min-height: 30px !important;
+	border: 1px solid var(--st-v4-border) !important;
+	border-radius: 7px !important;
+	background: var(--st-v4-soft) !important;
+	box-shadow: none !important;
+	font-size: 12px !important;
+}
+
+/* =========================================================
+   4. CHILD TABLES — SUBTLE CELL DEPTH, NOT HEAVY BOXES
+   ========================================================= */
+
+.form-grid {
+	border-color: var(--st-v4-border) !important;
+	box-shadow: var(--st-v4-shadow-sm) !important;
+	overflow: hidden !important;
+}
+
+.form-grid .grid-heading-row,
+.form-grid .grid-heading-row .grid-static-col,
+.form-grid .grid-heading-row .row-index,
+.form-grid .grid-heading-row .row-check {
+	background: var(--st-v4-soft-blue) !important;
+	color: var(--st-v4-text) !important;
+	border-color: var(--st-v4-border) !important;
+}
+
+.form-grid .grid-body .grid-row {
+	position: relative !important;
+	background: var(--st-v4-surface) !important;
+	box-shadow: 0 1px 0 rgba(16, 24, 40, .035) !important;
+	transition: background-color .14s ease, box-shadow .14s ease, transform .14s ease !important;
+}
+
+.form-grid .grid-body .grid-static-col,
+.form-grid .grid-body .row-index,
+.form-grid .grid-body .row-check {
+	background: var(--st-v4-surface) !important;
+	border-color: var(--st-v4-border) !important;
+	box-shadow: inset -1px 0 0 rgba(16, 24, 40, .025), inset 0 -1px 0 rgba(16, 24, 40, .025) !important;
+	transition: background-color .14s ease, box-shadow .14s ease !important;
+}
+
+.form-grid .grid-body .grid-row:hover {
+	z-index: 2 !important;
+	box-shadow: 0 3px 10px rgba(16, 24, 40, .07) !important;
+}
+
+.form-grid .grid-body .grid-row:hover .grid-static-col,
+.form-grid .grid-body .grid-row:hover .row-index,
+.form-grid .grid-body .grid-row:hover .row-check {
+	background: #FBFCFE !important;
+}
+
+.form-grid .editable-row .form-control,
+.form-grid .editable-row .input-with-feedback,
+.form-grid .grid-row-open .form-control,
+.form-grid .grid-row-open .input-with-feedback {
+	border-color: var(--st-v4-border-strong) !important;
+	background: var(--st-v4-surface) !important;
+	box-shadow: 0 1px 3px rgba(16, 24, 40, .07) !important;
+}
+
+.form-grid .editable-row .form-control:focus,
+.form-grid .editable-row .input-with-feedback:focus,
+.form-grid .grid-row-open .form-control:focus,
+.form-grid .grid-row-open .input-with-feedback:focus {
+	border-color: var(--st-v4-primary) !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--st-v4-primary) 10%, transparent), 0 2px 5px rgba(16, 24, 40, .07) !important;
+}
+
+[data-theme="dark"] .form-grid .grid-body .grid-static-col,
+[data-theme="dark"] .form-grid .grid-body .row-index,
+[data-theme="dark"] .form-grid .grid-body .row-check {
+	box-shadow: inset -1px 0 0 rgba(255, 255, 255, .025), inset 0 -1px 0 rgba(255, 255, 255, .02) !important;
+}
+
+[data-theme="dark"] .form-grid .grid-body .grid-row:hover .grid-static-col,
+[data-theme="dark"] .form-grid .grid-body .grid-row:hover .row-index,
+[data-theme="dark"] .form-grid .grid-body .grid-row:hover .row-check {
+	background: #162033 !important;
+}
+
+/* =========================================================
+   5. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+	.page-head .standard-items-section {
+		max-width: calc(100% - 72px) !important;
+	}
+
+	.page-head .btn,
+	.page-head .dropdown-toggle,
+	.page-head .actions-btn-group .btn,
+	.page-head .secondary-action,
+	.page-head .primary-action {
+		font-size: 12px !important;
+	}
+
+	.page-head .navbar-breadcrumbs,
+	.page-head .navbar-breadcrumbs li,
+	.page-head .navbar-breadcrumbs a,
+	.page-head .title-area {
+		font-size: 14px !important;
+	}
+
+	.page-head .navbar-breadcrumbs li:last-child,
+	.page-head .navbar-breadcrumbs li:last-child a,
+	.page-head .title-area .title-text {
+		font-size: 15px !important;
+	}
+}
+
+@media (max-width: 600px) {
+	.body-sidebar .sidebar-item,
+	.body-sidebar .sidebar-item a,
+	.body-sidebar .sidebar-item-label,
+	.body-sidebar .standard-sidebar-item,
+	.body-sidebar .desk-sidebar-item {
+		font-size: 13px !important;
+	}
+
+	.page-head .st-top-profile-button {
+		width: 32px !important;
+		height: 32px !important;
+		min-width: 32px !important;
+		min-height: 32px !important;
+	}
+
+	.page-head .st-top-profile-button .avatar,
+	.page-head .st-top-profile-button .avatar-frame,
+	.page-head .st-top-profile-button img,
+	.page-head .st-profile-fallback-avatar {
+		width: 28px !important;
+		height: 28px !important;
+		min-width: 28px !important;
+		min-height: 28px !important;
+	}
+}
