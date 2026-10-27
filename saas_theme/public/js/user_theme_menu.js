@@ -2,6 +2,25 @@
 (function () {
 	"use strict";
 
+	/* Final stability layer is loaded here so it runs after the older theme passes. */
+	(function load_stability_assets() {
+		if (!document.getElementById("st-stability-refinement-v3-css")) {
+			const link = document.createElement("link");
+			link.id = "st-stability-refinement-v3-css";
+			link.rel = "stylesheet";
+			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=2";
+			document.head.appendChild(link);
+		}
+
+		if (!document.getElementById("st-stability-refinement-v3-js")) {
+			const script = document.createElement("script");
+			script.id = "st-stability-refinement-v3-js";
+			script.src = "/assets/saas_theme/js/stability_refinement_v3.js?v=2";
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+	})();
+
 	if (typeof frappe === "undefined") return;
 	if (window.__saas_theme_user_theme_menu__) return;
 	window.__saas_theme_user_theme_menu__ = true;
