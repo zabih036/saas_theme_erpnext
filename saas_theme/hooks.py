@@ -53,6 +53,7 @@ app_include_css = [
 	"/assets/saas_theme/css/form_experience_refinement.css?v=1",
 	"/assets/saas_theme/css/professional_form_card_fix.css?v=1",
 	"/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
+	"/assets/saas_theme/css/report_and_form_shell.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
