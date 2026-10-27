@@ -1,0 +1,248 @@
+/* SaaS Theme — modern Tree View refinement */
+
+:root,
+[data-theme="light"] {
+	--st-tree-bg: #f8fafc;
+	--st-tree-surface: #ffffff;
+	--st-tree-soft: #f8fafc;
+	--st-tree-soft-strong: #f1f5f9;
+	--st-tree-border: #e2e8f0;
+	--st-tree-border-strong: #cbd5e1;
+	--st-tree-text: #0f172a;
+	--st-tree-muted: #64748b;
+	--st-tree-primary: #2563eb;
+	--st-tree-primary-soft: #eff6ff;
+	--st-tree-shadow: 0 1px 2px rgba(15, 23, 42, .035), 0 10px 28px rgba(15, 23, 42, .035);
+}
+
+[data-theme="dark"] {
+	--st-tree-bg: #0f141b;
+	--st-tree-surface: #151c25;
+	--st-tree-soft: #19222e;
+	--st-tree-soft-strong: #202b39;
+	--st-tree-border: #2b394b;
+	--st-tree-border-strong: #3b4b61;
+	--st-tree-text: #f8fafc;
+	--st-tree-muted: #94a3b8;
+	--st-tree-primary: #60a5fa;
+	--st-tree-primary-soft: rgba(59, 130, 246, .12);
+	--st-tree-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+}
+
+.treeview .page-container,
+.treeview .page-body {
+	background: var(--st-tree-bg) !important;
+}
+
+.treeview .layout-main-section {
+	max-width: none !important;
+	padding: 14px 18px 28px !important;
+}
+
+.treeview .page-form {
+	margin: 0 0 14px !important;
+	padding: 12px 14px !important;
+	border: 1px solid var(--st-tree-border) !important;
+	border-radius: 14px !important;
+	background: var(--st-tree-surface) !important;
+	box-shadow: var(--st-tree-shadow) !important;
+}
+
+.treeview .page-form .standard-filter-section {
+	gap: 10px !important;
+	align-items: center !important;
+}
+
+.treeview .page-form .frappe-control:not([data-fieldtype="Check"]) {
+	min-width: 220px !important;
+	max-width: 280px !important;
+}
+
+.treeview .page-form .form-control,
+.treeview .page-form .input-with-feedback,
+.treeview .page-form select {
+	height: 38px !important;
+	border: 1px solid var(--st-tree-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-tree-soft) !important;
+	color: var(--st-tree-text) !important;
+	box-shadow: none !important;
+}
+
+.treeview .page-form .form-control:focus,
+.treeview .page-form .input-with-feedback:focus,
+.treeview .page-form select:focus {
+	border-color: rgba(37, 99, 235, .55) !important;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, .09) !important;
+}
+
+.treeview .page-form .control-label,
+.treeview .page-form label,
+.treeview .page-form .checkbox label {
+	color: var(--st-tree-text) !important;
+	font-weight: 550 !important;
+}
+
+.treeview .tree-toolbar-actions .btn,
+.treeview .page-form .btn {
+	height: 38px !important;
+	padding-inline: 13px !important;
+	border: 1px solid var(--st-tree-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-tree-soft) !important;
+	color: var(--st-tree-text) !important;
+	box-shadow: none !important;
+	font-weight: 600 !important;
+}
+
+.treeview .tree-toolbar-actions .btn:hover,
+.treeview .page-form .btn:hover {
+	background: var(--st-tree-soft-strong) !important;
+	border-color: var(--st-tree-border-strong) !important;
+}
+
+.treeview .tree-view-body {
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+.treeview .tree {
+	margin: 0 !important;
+	padding: 14px !important;
+	border: 1px solid var(--st-tree-border) !important;
+	border-radius: 14px !important;
+	background: var(--st-tree-surface) !important;
+	box-shadow: var(--st-tree-shadow) !important;
+	font-size: 14px !important;
+}
+
+.treeview .tree.tree-rows li.tree-node {
+	margin: 2px 0 !important;
+}
+
+.treeview .tree.tree-rows .tree-link {
+	min-height: 40px !important;
+	padding: 5px 10px !important;
+	border-radius: 9px !important;
+	color: var(--st-tree-text) !important;
+	font-size: 14px !important;
+	font-weight: 560 !important;
+	transition: background .14s ease, color .14s ease, box-shadow .14s ease;
+}
+
+.treeview .tree.tree-rows .tree-link:hover,
+.treeview .tree.tree-rows .tree-link[data-state="open"],
+.treeview .tree.tree-rows .tree-link.active {
+	background: var(--st-tree-primary-soft) !important;
+	color: var(--st-tree-text) !important;
+	box-shadow: inset 3px 0 0 var(--st-tree-primary) !important;
+}
+
+.treeview .tree .tree-label,
+.treeview .tree .tree-label a,
+.treeview .tree .tree-link a {
+	color: var(--st-tree-text) !important;
+	text-decoration: none !important;
+	font-weight: inherit !important;
+}
+
+.treeview .tree .tree-link:hover .tree-label,
+.treeview .tree .tree-link:hover .tree-label a,
+.treeview .tree .tree-link[data-state="open"] .tree-label,
+.treeview .tree .tree-link[data-state="open"] .tree-label a {
+	color: var(--st-tree-text) !important;
+}
+
+.treeview .tree .tree-link .node-parent {
+	color: var(--st-tree-muted) !important;
+}
+
+.treeview .tree .tree-link:hover .node-parent,
+.treeview .tree .tree-link[data-state="open"] .node-parent {
+	color: var(--st-tree-primary) !important;
+}
+
+.treeview .tree.tree-rows ul.tree-children {
+	padding-left: 26px !important;
+}
+
+.treeview .tree.tree-rows ul.tree-children > li.tree-node::before,
+.treeview .tree.tree-rows ul.tree-children > li.tree-node::after {
+	border-color: var(--st-tree-border) !important;
+}
+
+.treeview .tree.tree-rows li.tree-node > .balance-area {
+	min-height: 40px !important;
+	padding: 5px 12px !important;
+	border-radius: 0 9px 9px 0 !important;
+	color: #334155 !important;
+	font-size: 13px !important;
+	font-weight: 620 !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+[data-theme="dark"] .treeview .tree.tree-rows li.tree-node > .balance-area {
+	color: #cbd5e1 !important;
+}
+
+.treeview .tree.tree-rows .tree-link:hover + .balance-area,
+.treeview .tree.tree-rows .tree-link[data-state="open"] + .balance-area {
+	background: var(--st-tree-primary-soft) !important;
+}
+
+.treeview .tree .text-muted,
+.treeview .tree .text-extra-muted,
+.treeview .tree .small {
+	color: var(--st-tree-muted) !important;
+}
+
+.treeview .tree .tree-link .text-muted {
+	display: inline-flex !important;
+	align-items: center !important;
+	min-height: 24px !important;
+	padding: 2px 8px !important;
+	margin-left: 8px !important;
+	border-radius: 999px !important;
+	background: var(--st-tree-soft-strong) !important;
+	color: #475569 !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+}
+
+[data-theme="dark"] .treeview .tree .tree-link .text-muted {
+	color: #cbd5e1 !important;
+}
+
+.treeview .page-head .page-title .title-text,
+.treeview .page-head .page-title h3,
+.treeview .page-head .page-title h4 {
+	color: var(--st-tree-text) !important;
+	font-weight: 700 !important;
+	letter-spacing: -.015em !important;
+}
+
+@media (max-width: 767px) {
+	.treeview .layout-main-section {
+		padding: 10px 8px 20px !important;
+	}
+
+	.treeview .page-form {
+		padding: 10px !important;
+		border-radius: 12px !important;
+	}
+
+	.treeview .page-form .frappe-control:not([data-fieldtype="Check"]) {
+		min-width: 100% !important;
+		max-width: none !important;
+	}
+
+	.treeview .tree {
+		padding: 8px !important;
+		border-radius: 12px !important;
+	}
+
+	.treeview .tree.tree-rows li.tree-node > .balance-area {
+		font-size: 12px !important;
+		padding-inline: 8px !important;
+	}
+}
