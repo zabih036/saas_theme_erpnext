@@ -47,6 +47,7 @@ app_include_css = [
 	"/assets/saas_theme/css/desktop_navbar_refinement.css?v=1",
 	"/assets/saas_theme/css/tree_view_refinement.css?v=1",
 	"/assets/saas_theme/css/home_clarity_refinement.css?v=1",
+	"/assets/saas_theme/css/control_precision_fix.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
