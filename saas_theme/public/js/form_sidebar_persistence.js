@@ -1,17 +1,18 @@
 (() => {
+	"use strict";
+
 	const STORAGE_KEY = "saas_theme.form_sidebar_collapsed";
+	const ROOT_CLASS = "st-form-sidebar-pref-collapsed";
+	const BODY_CLASS = "st-form-sidebar-collapsed";
 	const BUTTON_CLASS = "st-form-sidebar-toggle";
+
+	let preferred_collapsed = read_state();
 	let apply_timer = null;
+	let observer = null;
+	let applying = false;
 
-	function is_form_route() {
-		const body_route = document.body?.dataset?.route || "";
-		if (body_route.startsWith("Form")) return true;
-
-		try {
-			return window.frappe?.get_route?.()?.[0] === "Form";
-		} catch (error) {
-			return false;
-		}
+	function t(message) {
+		return typeof window.__ === "function" ? window.__(message) : message;
 	}
 
 	function read_state() {
@@ -30,15 +31,39 @@
 		}
 	}
 
+	function sync_root_preference_class() {
+		document.documentElement?.classList.toggle(ROOT_CLASS, preferred_collapsed);
+	}
+
+	// Apply the saved preference before the form DOM is painted. The CSS that
+	// consumes this class is route-scoped, so it is harmless on non-form pages.
+	sync_root_preference_class();
+
+	function is_form_route() {
+		const body_route = document.body?.dataset?.route || "";
+		if (body_route.startsWith("Form")) return true;
+
+		try {
+			return window.frappe?.get_route?.()?.[0] === "Form";
+		} catch (error) {
+			return false;
+		}
+	}
+
 	function get_active_page() {
 		const pages = Array.from(document.querySelectorAll(".page-container"));
 		for (let index = pages.length - 1; index >= 0; index -= 1) {
 			const page = pages[index];
-			if (page.offsetParent !== null && !page.classList.contains("hide")) {
-				return page;
-			}
+			if (page.offsetParent !== null && !page.classList.contains("hide")) return page;
 		}
 		return document.querySelector(".page-container:not(.hide)");
+	}
+
+	function attachment_preview_open(page) {
+		const preview = page?.querySelector(
+			".layout-side-section .attachment-preview:not(.hidden)"
+		);
+		return Boolean(preview && preview.offsetParent !== null);
 	}
 
 	function get_icon(collapsed) {
@@ -59,22 +84,30 @@
 			</svg>`;
 	}
 
-	function attachment_preview_open(page) {
-		const preview = page?.querySelector(
-			".layout-side-section .attachment-preview:not(.hidden)"
-		);
-		return Boolean(preview && preview.offsetParent !== null);
+	function update_button(button, effective_collapsed, preview_open) {
+		const visual_state = `${effective_collapsed ? "collapsed" : "expanded"}:${preview_open ? "preview" : "normal"}`;
+		if (button.dataset.visualState !== visual_state) {
+			button.dataset.visualState = visual_state;
+			button.dataset.collapsed = effective_collapsed ? "true" : "false";
+			button.setAttribute("aria-pressed", effective_collapsed ? "true" : "false");
+			button.innerHTML = get_icon(effective_collapsed);
+		}
+
+		button.disabled = preview_open;
+		const label = preview_open
+			? t("Close attachment preview before hiding the details sidebar")
+			: effective_collapsed
+				? t("Show details sidebar")
+				: t("Hide details sidebar");
+		button.setAttribute("aria-label", label);
+		button.title = label;
 	}
 
-	function update_button(button, collapsed) {
-		button.dataset.collapsed = collapsed ? "true" : "false";
-		button.setAttribute("aria-pressed", collapsed ? "true" : "false");
-		button.setAttribute(
-			"aria-label",
-			collapsed ? __("Show details sidebar") : __("Hide details sidebar")
-		);
-		button.title = collapsed ? __("Show details sidebar") : __("Hide details sidebar");
-		button.innerHTML = get_icon(collapsed);
+	function set_preference(collapsed) {
+		preferred_collapsed = Boolean(collapsed);
+		write_state(preferred_collapsed);
+		sync_root_preference_class();
+		apply_state();
 	}
 
 	function create_button(page) {
@@ -90,10 +123,8 @@
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
 			event.stopPropagation();
-
-			const next_state = !read_state();
-			write_state(next_state);
-			apply_state();
+			if (button.disabled) return;
+			set_preference(!preferred_collapsed);
 		});
 
 		actions.appendChild(button);
@@ -102,83 +133,92 @@
 
 	function remove_stale_buttons(active_page) {
 		document.querySelectorAll(`.${BUTTON_CLASS}`).forEach((button) => {
-			if (!active_page || !active_page.contains(button)) {
-				button.remove();
-			}
+			if (!active_page || !active_page.contains(button)) button.remove();
 		});
 	}
 
 	function apply_state() {
-		const form_route = is_form_route();
-		const page = get_active_page();
-		remove_stale_buttons(page);
+		if (applying) return;
+		applying = true;
 
-		if (!form_route || !page || !page.querySelector(".form-sidebar")) {
-			document.body.classList.remove("st-form-sidebar-collapsed");
-			return;
-		}
+		try {
+			const page = get_active_page();
+			const form_route = is_form_route();
+			remove_stale_buttons(page);
 
-		const collapsed = read_state();
-		const preview_open = attachment_preview_open(page);
-		const effective_collapsed = collapsed && !preview_open;
-
-		document.body.classList.toggle("st-form-sidebar-collapsed", effective_collapsed);
-
-		const button = create_button(page);
-		if (button) {
-			update_button(button, effective_collapsed);
-			button.disabled = preview_open;
-			if (preview_open) {
-				button.title = __("Close attachment preview before hiding the details sidebar");
+			if (!form_route || !page || !page.querySelector(".form-sidebar")) {
+				document.body?.classList.remove(BODY_CLASS);
+				return;
 			}
+
+			const preview_open = attachment_preview_open(page);
+			const effective_collapsed = preferred_collapsed && !preview_open;
+			document.body?.classList.toggle(BODY_CLASS, effective_collapsed);
+
+			const button = create_button(page);
+			if (button) update_button(button, effective_collapsed, preview_open);
+		} finally {
+			applying = false;
 		}
 	}
 
-	function schedule_apply(delay = 80) {
+	function schedule_apply(delay = 0) {
 		window.clearTimeout(apply_timer);
 		apply_timer = window.setTimeout(apply_state, delay);
 	}
 
 	function setup_router_listener() {
 		try {
-			if (window.frappe?.router?.on) {
-				window.frappe.router.on("change", () => schedule_apply(120));
+			if (window.frappe?.router?.on && !window.__saas_theme_form_sidebar_router_bound__) {
+				window.__saas_theme_form_sidebar_router_bound__ = true;
+				window.frappe.router.on("change", () => schedule_apply(0));
 			}
 		} catch (error) {
-			// Older/newer Frappe shells may initialize the router later.
+			// The router may initialize after this asset; the delayed setup below retries it.
 		}
 	}
 
 	function setup_observer() {
+		if (observer || !window.MutationObserver) return;
 		const target = document.querySelector(".main-section") || document.body;
-		if (!target || !window.MutationObserver) return;
+		if (!target) return;
 
-		const observer = new MutationObserver(() => schedule_apply(80));
-		observer.observe(target, {
-			childList: true,
-			subtree: true,
-			attributes: true,
-			attributeFilter: ["class", "data-route"],
+		observer = new MutationObserver((mutations) => {
+			const relevant = mutations.some((mutation) => {
+				if (mutation.type !== "childList") return false;
+				return mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0;
+			});
+			if (relevant) schedule_apply(20);
 		});
+		observer.observe(target, { childList: true, subtree: true });
 	}
 
 	window.addEventListener("storage", (event) => {
-		if (event.key === STORAGE_KEY) schedule_apply(0);
+		if (event.key !== STORAGE_KEY) return;
+		preferred_collapsed = read_state();
+		sync_root_preference_class();
+		schedule_apply(0);
 	});
 
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", () => {
-			setup_router_listener();
-			setup_observer();
-			schedule_apply(120);
-		});
-	} else {
-		setup_router_listener();
-		setup_observer();
-		schedule_apply(120);
+	if (window.jQuery) {
+		window.jQuery(document)
+			.off("page-change.saas_form_sidebar_persistence")
+			.on("page-change.saas_form_sidebar_persistence", () => schedule_apply(0));
 	}
 
-	// Frappe can initialize the router after custom assets execute.
-	window.setTimeout(setup_router_listener, 700);
-	window.setTimeout(() => schedule_apply(0), 800);
+	function init() {
+		setup_router_listener();
+		setup_observer();
+		schedule_apply(0);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", init, { once: true });
+	} else {
+		init();
+	}
+
+	// Frappe can initialize its router after custom assets execute.
+	window.setTimeout(setup_router_listener, 350);
+	window.setTimeout(() => schedule_apply(0), 450);
 })();
