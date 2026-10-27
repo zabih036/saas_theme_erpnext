@@ -1,0 +1,379 @@
+/*
+ * SaaS Theme — Stability Refinement v3
+ * Final override layer for no-tab forms, query reports, page-head actions,
+ * and native sidebar toggle cleanup.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-v3-bg: #F7F9FC;
+	--st-v3-surface: #FFFFFF;
+	--st-v3-soft: #F8FAFC;
+	--st-v3-soft-blue: #F3F7FF;
+	--st-v3-text: #111827;
+	--st-v3-title: #14213D;
+	--st-v3-muted: #667085;
+	--st-v3-border: #DDE5EF;
+	--st-v3-border-strong: #C8D4E2;
+	--st-v3-primary: #064ADB;
+	--st-v3-shadow: 0 1px 2px rgba(20, 33, 61, .035), 0 8px 24px rgba(20, 33, 61, .055);
+	--st-v3-shadow-sm: 0 1px 2px rgba(20, 33, 61, .035), 0 4px 12px rgba(20, 33, 61, .045);
+}
+
+[data-theme="dark"] {
+	--st-v3-bg: #0B1220;
+	--st-v3-surface: #111827;
+	--st-v3-soft: #172033;
+	--st-v3-soft-blue: #14213D;
+	--st-v3-text: #F8FAFC;
+	--st-v3-title: #FFFFFF;
+	--st-v3-muted: #94A3B8;
+	--st-v3-border: #27364B;
+	--st-v3-border-strong: #34465E;
+	--st-v3-primary: #5E8CFF;
+	--st-v3-shadow: 0 10px 28px rgba(0, 0, 0, .22), 0 1px 2px rgba(0, 0, 0, .16);
+	--st-v3-shadow-sm: 0 4px 12px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   1. PAGE HEADER — HOME LEFT, ACTIONS RIGHT
+   ========================================================= */
+
+/* The theme already provides a Home control; remove Frappe's duplicate sidebar toggle. */
+.page-head .sidebar-toggle-btn.navbar-brand,
+.page-head .page-title > .sidebar-toggle-btn.navbar-brand {
+	display: none !important;
+}
+
+.page-head .page-head-content,
+.page-head .page-head-content > .row,
+.page-head .page-header,
+.page-head .container {
+	width: 100% !important;
+	max-width: none !important;
+}
+
+.page-head .page-head-content > .row,
+.page-head .page-header,
+.page-head .container {
+	display: flex !important;
+	align-items: center !important;
+	flex-wrap: nowrap !important;
+}
+
+.page-head .page-title,
+.page-head .title-area {
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	margin-right: 14px !important;
+}
+
+.page-head .page-actions {
+	flex: 0 0 auto !important;
+	margin-left: auto !important;
+	justify-content: flex-end !important;
+	white-space: nowrap !important;
+}
+
+.page-head .standard-actions,
+.page-head .custom-actions,
+.page-head .standard-items-section,
+.page-head .st-page-utility-actions {
+	flex: 0 0 auto !important;
+	align-items: center !important;
+}
+
+.page-head .standard-items-section,
+.page-head .st-page-utility-actions {
+	margin-left: 6px !important;
+}
+
+.page-head .st-page-home-button {
+	margin-left: 0 !important;
+	margin-right: 7px !important;
+}
+
+/* =========================================================
+   2. FLAT / NO-TAB FORMS — FIX THE ACTUAL FRAPPE DOM
+   .form-layout > .form-page > .form-section
+   ========================================================= */
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list))) .layout-main-section,
+.page-container:has(.form-layout:not(:has(.form-tabs-list))) .form-layout {
+	background: var(--st-v3-bg) !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) > .form-page {
+	padding: 14px 16px 20px !important;
+	background: var(--st-v3-bg) !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) > .form-page > .form-section:not(.hide-control):not(.empty-section) {
+	margin: 0 0 14px !important;
+	padding: 0 !important;
+	border: 1px solid var(--st-v3-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-v3-surface) !important;
+	box-shadow: var(--st-v3-shadow-sm) !important;
+	overflow: hidden !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) > .form-page > .form-section > .section-head {
+	min-height: 44px !important;
+	margin: 0 !important;
+	padding: 13px 16px 10px !important;
+	border-bottom: 1px solid var(--st-v3-border) !important;
+	background: var(--st-v3-surface) !important;
+	color: var(--st-v3-title) !important;
+	font-size: 13.5px !important;
+	font-weight: 680 !important;
+	line-height: 1.25 !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) > .form-page > .form-section > .section-body {
+	padding: 14px 16px 16px !important;
+	background: var(--st-v3-surface) !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .form-column {
+	padding-left: 7px !important;
+	padding-right: 7px !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .frappe-control {
+	margin-bottom: 10px !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .form-grid {
+	margin-top: 6px !important;
+	border: 1px solid var(--st-v3-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-v3-surface) !important;
+	box-shadow: none !important;
+	overflow: hidden !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .grid-heading-row {
+	background: #F5F7FA !important;
+}
+
+[data-theme="dark"] .page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .grid-heading-row {
+	background: #172033 !important;
+}
+
+.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+.form-layout:not(:has(.form-tabs-list)) .grid-footer {
+	padding: 7px 10px !important;
+	border-top: 1px solid var(--st-v3-border) !important;
+	background: var(--st-v3-soft) !important;
+}
+
+/* =========================================================
+   3. QUERY / SCRIPT REPORT FILTERS — CLEAN GRID, READABLE CHECKS
+   ========================================================= */
+
+.page-container:has(.report-wrapper) .page-form {
+	margin: 12px 16px 14px !important;
+	padding: 14px !important;
+	display: grid !important;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	gap: 10px 12px !important;
+	align-items: end !important;
+	border: 1px solid var(--st-v3-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-v3-surface) !important;
+	box-shadow: var(--st-v3-shadow) !important;
+}
+
+.page-container:has(.report-wrapper) .page-form > .frappe-control,
+.page-container:has(.report-wrapper) .page-form > .form-group {
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	float: none !important;
+}
+
+.page-container:has(.report-wrapper) .page-form .input-max-width,
+.page-container:has(.report-wrapper) .page-form .control-input,
+.page-container:has(.report-wrapper) .page-form .control-value,
+.page-container:has(.report-wrapper) .page-form .form-control,
+.page-container:has(.report-wrapper) .page-form .input-with-feedback,
+.page-container:has(.report-wrapper) .page-form .like-disabled-input {
+	width: 100% !important;
+	max-width: none !important;
+	min-width: 0 !important;
+}
+
+.page-container:has(.report-wrapper) .page-form .form-control,
+.page-container:has(.report-wrapper) .page-form .input-with-feedback,
+.page-container:has(.report-wrapper) .page-form .like-disabled-input {
+	height: 38px !important;
+	min-height: 38px !important;
+	padding: 8px 11px !important;
+	border: 1px solid var(--st-v3-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-v3-soft) !important;
+	color: var(--st-v3-text) !important;
+	font-size: 12.75px !important;
+	font-weight: 540 !important;
+	box-shadow: none !important;
+}
+
+.page-container:has(.report-wrapper) .page-form .form-control:focus,
+.page-container:has(.report-wrapper) .page-form .input-with-feedback:focus {
+	border-color: var(--st-v3-primary) !important;
+	background: var(--st-v3-surface) !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--st-v3-primary) 11%, transparent) !important;
+	outline: none !important;
+}
+
+/* Respect Frappe's native display:none when check filters are collapsed. */
+.page-container:has(.report-wrapper) .page-form .check-filter-area[style*="display: none"] {
+	display: none !important;
+}
+
+.page-container:has(.report-wrapper) .page-form .check-filter-area:not([style*="display: none"]) {
+	grid-column: 1 / -1 !important;
+	display: grid !important;
+	grid-template-columns: repeat(3, minmax(240px, 1fr)) !important;
+	gap: 8px 10px !important;
+	margin: 2px 0 0 !important;
+	padding: 12px !important;
+	border: 1px solid var(--st-v3-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-v3-soft) !important;
+}
+
+.page-container:has(.report-wrapper) .check-filter-area .frappe-control,
+.page-container:has(.report-wrapper) .check-filter-area .checkbox {
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.page-container:has(.report-wrapper) .check-filter-area .checkbox label,
+.page-container:has(.report-wrapper) .check-filter-area .frappe-control[data-fieldtype="Check"] label {
+	min-height: 42px !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 9px !important;
+	margin: 0 !important;
+	padding: 9px 10px !important;
+	border: 1px solid transparent !important;
+	border-radius: 9px !important;
+	background: transparent !important;
+	color: var(--st-v3-text) !important;
+	font-size: 12.5px !important;
+	font-weight: 520 !important;
+	line-height: 1.35 !important;
+	white-space: normal !important;
+}
+
+.page-container:has(.report-wrapper) .check-filter-area .checkbox label:hover,
+.page-container:has(.report-wrapper) .check-filter-area .frappe-control[data-fieldtype="Check"] label:hover {
+	border-color: var(--st-v3-border) !important;
+	background: var(--st-v3-surface) !important;
+}
+
+.page-container:has(.report-wrapper) .check-filter-area input[type="checkbox"] {
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	margin: 0 !important;
+	flex: 0 0 16px !important;
+}
+
+/* Do not allow old report styles to squeeze controls into tiny squares. */
+.page-container:has(.report-wrapper) .page-form .frappe-control[data-fieldtype]:not([data-fieldtype="Check"]) {
+	min-height: 38px !important;
+}
+
+/* =========================================================
+   4. REPORT TABLE / CHART SHELL — KEEP IT CLEAN, NOT HEAVY
+   ========================================================= */
+.page-container:has(.report-wrapper) .chart-wrapper,
+.page-container:has(.report-wrapper) .report-summary,
+.page-container:has(.report-wrapper) .report-wrapper {
+	border-color: var(--st-v3-border) !important;
+	background: var(--st-v3-surface) !important;
+	box-shadow: var(--st-v3-shadow-sm) !important;
+}
+
+.page-container:has(.report-wrapper) .dt-header,
+.page-container:has(.report-wrapper) .dt-row-header,
+.page-container:has(.report-wrapper) .dt-cell--header {
+	background: #F4F7FB !important;
+}
+
+[data-theme="dark"] .page-container:has(.report-wrapper) .dt-header,
+[data-theme="dark"] .page-container:has(.report-wrapper) .dt-row-header,
+[data-theme="dark"] .page-container:has(.report-wrapper) .dt-cell--header {
+	background: #172033 !important;
+}
+
+/* =========================================================
+   5. RESPONSIVE
+   ========================================================= */
+@media (max-width: 1200px) {
+	.page-container:has(.report-wrapper) .page-form {
+		grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+	}
+
+	.page-container:has(.report-wrapper) .page-form .check-filter-area:not([style*="display: none"]) {
+		grid-template-columns: repeat(2, minmax(240px, 1fr)) !important;
+	}
+}
+
+@media (max-width: 820px) {
+	.page-container:has(.report-wrapper) .page-form {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+		margin-left: 8px !important;
+		margin-right: 8px !important;
+	}
+
+	.page-container:has(.report-wrapper) .page-form .check-filter-area:not([style*="display: none"]) {
+		grid-template-columns: 1fr !important;
+	}
+
+	.page-head .page-title,
+	.page-head .title-area {
+		margin-right: 8px !important;
+	}
+}
+
+@media (max-width: 560px) {
+	.page-container:has(.report-wrapper) .page-form {
+		grid-template-columns: 1fr !important;
+		padding: 10px !important;
+		gap: 8px !important;
+	}
+
+	.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+	.form-layout:not(:has(.form-tabs-list)) > .form-page {
+		padding: 8px 6px 12px !important;
+	}
+
+	.page-container:has(.form-layout:not(:has(.form-tabs-list)))
+	.form-layout:not(:has(.form-tabs-list)) > .form-page > .form-section:not(.hide-control):not(.empty-section) {
+		border-radius: 10px !important;
+	}
+
+	.page-head .page-title,
+	.page-head .title-area {
+		min-width: 0 !important;
+	}
+}
