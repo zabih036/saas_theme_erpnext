@@ -49,6 +49,7 @@ app_include_css = [
 	"/assets/saas_theme/css/home_clarity_refinement.css?v=1",
 	"/assets/saas_theme/css/control_precision_fix.css?v=1",
 	"/assets/saas_theme/css/exact_ui_followup.css?v=1",
+	"/assets/saas_theme/css/final_precision_v2.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -62,7 +63,8 @@ app_include_js = [
 	"/assets/saas_theme/js/workspace_shell_polish.js?v=1",
 	"/assets/saas_theme/js/final_shell_cleanup.js?v=2",
 	"/assets/saas_theme/js/user_theme_menu.js?v=1",
-	"/assets/saas_theme/js/form_sidebar_persistence.js?v=1",
+	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
+	"/assets/saas_theme/js/quick_access_preferences.js?v=1",
 ]
 
 # include js, css files in header of web template
