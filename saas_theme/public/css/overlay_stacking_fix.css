@@ -110,13 +110,3 @@ body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete
 .navbar-search-bar .awesomplete > ul {
 	z-index: 2 !important;
 }
-
-/* =========================================================
-   DATE / SELECT POPUPS
-   These remain local UI and must never outrank global search.
-   ========================================================= */
-.datepicker,
-.dropdown-menu,
-.popover {
-	max-z-index: none;
-}
