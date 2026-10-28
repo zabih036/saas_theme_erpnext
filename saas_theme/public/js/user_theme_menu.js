@@ -93,6 +93,19 @@
 		}
 	})();
 
+	/* v6.5 is intentionally CSS-only and scoped to Frappe's tagged child-row
+	   editor. It removes the remaining chaotic section/card styling without
+	   touching the working v6.2 search/dropdown behavior. */
+	(function load_child_row_editor_v65() {
+		if (!document.getElementById("st-child-row-editor-v65-css")) {
+			const link = document.createElement("link");
+			link.id = "st-child-row-editor-v65-css";
+			link.rel = "stylesheet";
+			link.href = "/assets/saas_theme/css/child_row_editor_refinement_v65.css?v=1";
+			document.head.appendChild(link);
+		}
+	})();
+
 	if (typeof frappe === "undefined") return;
 	if (window.__saas_theme_user_theme_menu__) return;
 	window.__saas_theme_user_theme_menu__ = true;
