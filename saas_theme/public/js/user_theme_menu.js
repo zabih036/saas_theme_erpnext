@@ -81,6 +81,18 @@
 		}
 	})();
 
+	/* Precision v6.2 owns the final inline-search interaction and exact report
+	   filter-cell sizing. It waits for v6 before applying its overrides. */
+	(function load_ui_precision_v6_2_assets() {
+		if (!document.getElementById("st-ui-precision-v6-2-js")) {
+			const script = document.createElement("script");
+			script.id = "st-ui-precision-v6-2-js";
+			script.src = "/assets/saas_theme/js/ui_precision_v6_2.js?v=1";
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+	})();
+
 	if (typeof frappe === "undefined") return;
 	if (window.__saas_theme_user_theme_menu__) return;
 	window.__saas_theme_user_theme_menu__ = true;
