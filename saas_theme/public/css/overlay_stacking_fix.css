@@ -1,0 +1,112 @@
+/*
+ * SaaS Theme — Overlay / Stacking Context Fix
+ *
+ * Frappe's Awesome Bar is a Bootstrap modal. Form Link controls also use
+ * Awesomplete. A previous child-row refinement promoted each Awesomplete
+ * wrapper to z-index: 8000, which promoted the input itself above Frappe's
+ * modal/backdrop and caused form/grid inputs to paint through global search.
+ *
+ * Layer contract:
+ *   1. Normal controls never create a high stacking layer.
+ *   2. Field suggestion lists may rise above nearby fields, but only locally.
+ *   3. Global modal surfaces (especially Awesome Bar) always sit above forms,
+ *      child tables, row editors, date pickers and local autocomplete menus.
+ */
+
+:root {
+	--st-local-popup-layer: 120;
+	--st-awesomebar-backdrop-layer: 29990;
+	--st-awesomebar-layer: 30000;
+}
+
+/* =========================================================
+   NORMAL FORM / GRID CONTROLS
+   Never promote an input wrapper above page-level overlays.
+   ========================================================= */
+.form-page .frappe-control .awesomplete,
+.form-layout .frappe-control .awesomplete,
+.std-form-layout .frappe-control .awesomplete,
+.form-grid .frappe-control .awesomplete,
+.grid-row-open .form-in-grid .frappe-control .awesomplete,
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete {
+	position: relative !important;
+	z-index: auto !important;
+}
+
+/* A field's own suggestions can still cover adjacent fields in the same form. */
+.form-page .frappe-control .awesomplete > ul,
+.form-layout .frappe-control .awesomplete > ul,
+.std-form-layout .frappe-control .awesomplete > ul,
+.form-grid .frappe-control .awesomplete > ul,
+.grid-row-open .form-in-grid .frappe-control .awesomplete > ul,
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul {
+	z-index: var(--st-local-popup-layer) !important;
+}
+
+/* The row editor header only needs to stay above its own scrolling body. */
+.grid-row-open .form-in-grid.st-grid-row-editor .grid-form-heading {
+	z-index: 40 !important;
+}
+
+/* Do not let individual controls manufacture page-level stacking contexts. */
+.form-page .frappe-control,
+.form-layout .frappe-control,
+.std-form-layout .frappe-control,
+.form-grid .frappe-control,
+.grid-row-open .form-in-grid .frappe-control {
+	z-index: auto !important;
+}
+
+/* =========================================================
+   FRAPPE AWESOME BAR / COMMAND SEARCH
+   Frappe v16 renders it as a modal containing .navbar-modal-wrapper.
+   Put that modal and its backdrop above every themed form/editor layer.
+   ========================================================= */
+body:has(.modal.show .navbar-modal-wrapper) > .modal-backdrop.show {
+	z-index: var(--st-awesomebar-backdrop-layer) !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) {
+	z-index: var(--st-awesomebar-layer) !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) .modal-dialog,
+body > .modal.show:has(.navbar-modal-wrapper) .modal-content,
+body > .modal.show:has(.navbar-modal-wrapper) .modal-body,
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper {
+	isolation: auto !important;
+}
+
+/* Inside the already-topmost Awesome Bar modal, use small local values only. */
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete > ul {
+	position: relative !important;
+	z-index: 2 !important;
+}
+
+/* =========================================================
+   DESKTOP NAVBAR SEARCH FALLBACK
+   Some v16 layouts/themes still expose the inline .search-bar variant.
+   Keep its results above the Desk page without raising ordinary fields.
+   ========================================================= */
+.navbar,
+.navbar-search-bar,
+.search-bar {
+	position: relative;
+	z-index: 2000;
+}
+
+.search-bar .awesomplete,
+.navbar-search-bar .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+.search-bar .awesomplete > ul,
+.navbar-search-bar .awesomplete > ul {
+	z-index: 2 !important;
+}
