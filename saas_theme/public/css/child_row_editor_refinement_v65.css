@@ -1,73 +1,78 @@
 /*
- * SaaS Theme — Child Row Editor Refinement v6.5
- * Focused correction for Frappe v16 fixed child-row editors.
- * Keeps existing grid/dropdown behavior and only refines hierarchy, spacing,
- * section headers, field rhythm and responsive presentation.
+ * SaaS Theme — Child Row Editor Refinement v6.6
+ * Rebuilds Frappe v16 child-row editor into one compact professional sheet.
+ * No business logic changes; CSS only.
  */
 
 :root,
 [data-theme="light"] {
-	--st-v65-surface: #FFFFFF;
-	--st-v65-page: #F7F9FC;
-	--st-v65-soft: #F8FAFC;
-	--st-v65-text: #14213D;
-	--st-v65-body: #344054;
-	--st-v65-muted: #667085;
-	--st-v65-border: #E1E7EF;
-	--st-v65-border-strong: #C9D5E5;
-	--st-v65-primary: #064ADB;
-	--st-v65-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 22px rgba(16, 24, 40, .055);
-	--st-v65-control-shadow: 0 1px 2px rgba(16, 24, 40, .045), 0 3px 8px rgba(16, 24, 40, .035);
+	--st-row-surface: #FFFFFF;
+	--st-row-page: #F8FAFC;
+	--st-row-soft: #F4F6F9;
+	--st-row-text: #14213D;
+	--st-row-body: #344054;
+	--st-row-muted: #667085;
+	--st-row-border: #DDE5EF;
+	--st-row-border-strong: #C7D2E2;
+	--st-row-primary: #064ADB;
+	--st-row-control-shadow: 0 1px 2px rgba(16,24,40,.045), 0 2px 7px rgba(16,24,40,.035);
+	--st-row-sheet-shadow: 0 28px 70px rgba(15,23,42,.22);
 }
 
 [data-theme="dark"] {
-	--st-v65-surface: #111827;
-	--st-v65-page: #0F1724;
-	--st-v65-soft: #172033;
-	--st-v65-text: #F8FAFC;
-	--st-v65-body: #D0D8E6;
-	--st-v65-muted: #94A3B8;
-	--st-v65-border: #2B394B;
-	--st-v65-border-strong: #3A4A5F;
-	--st-v65-primary: #6B91FF;
-	--st-v65-shadow: 0 16px 38px rgba(0, 0, 0, .28);
-	--st-v65-control-shadow: 0 2px 8px rgba(0, 0, 0, .20);
+	--st-row-surface: #111827;
+	--st-row-page: #0F1724;
+	--st-row-soft: #172033;
+	--st-row-text: #F8FAFC;
+	--st-row-body: #D0D8E6;
+	--st-row-muted: #94A3B8;
+	--st-row-border: #2B394B;
+	--st-row-border-strong: #3A4A5F;
+	--st-row-primary: #6B91FF;
+	--st-row-control-shadow: 0 2px 8px rgba(0,0,0,.18);
+	--st-row-sheet-shadow: 0 28px 70px rgba(0,0,0,.40);
 }
 
 /* =========================================================
-   EDITOR SHELL
+   SHEET
    ========================================================= */
 .grid-row-open .form-in-grid.st-grid-row-editor {
-	top: 3vh !important;
-	width: min(92vw, 1120px) !important;
-	max-width: min(1120px, calc(100vw - 28px)) !important;
-	max-height: 94vh !important;
-	border: 1px solid var(--st-v65-border) !important;
-	border-radius: 16px !important;
-	background: var(--st-v65-surface) !important;
-	box-shadow: 0 28px 70px rgba(15, 23, 42, .24) !important;
+	top: 22px !important;
+	width: min(1060px, calc(100vw - 44px)) !important;
+	max-width: min(1060px, calc(100vw - 44px)) !important;
+	max-height: calc(100dvh - 44px) !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-row-border) !important;
+	border-radius: 14px !important;
+	background: var(--st-row-surface) !important;
+	box-shadow: var(--st-row-sheet-shadow) !important;
 	overflow: hidden !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .grid-form-heading {
-	min-height: 60px !important;
-	padding: 12px 18px !important;
-	border-bottom: 1px solid var(--st-v65-border) !important;
-	background: var(--st-v65-surface) !important;
-	box-shadow: 0 1px 0 rgba(16, 24, 40, .03) !important;
+	position: sticky !important;
+	top: 0 !important;
+	z-index: 40 !important;
+	min-height: 58px !important;
+	padding: 11px 16px !important;
+	border-bottom: 1px solid var(--st-row-border) !important;
+	background: var(--st-row-surface) !important;
+	box-shadow: 0 1px 0 rgba(16,24,40,.025) !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .grid-header-toolbar {
 	display: flex !important;
 	align-items: center !important;
 	justify-content: space-between !important;
-	gap: 14px !important;
+	gap: 12px !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .panel-title {
-	color: var(--st-v65-text) !important;
-	font-size: 18px !important;
-	font-weight: 650 !important;
+	margin: 0 !important;
+	color: var(--st-row-text) !important;
+	font-size: 17px !important;
+	font-weight: 700 !important;
+	line-height: 1.2 !important;
 	letter-spacing: -.015em !important;
 }
 
@@ -81,83 +86,101 @@
 
 .grid-row-open .form-in-grid.st-grid-row-editor .row-actions .btn,
 .grid-row-open .form-in-grid.st-grid-row-editor .row-actions .es-button {
-	height: 32px !important;
-	min-height: 32px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	height: 34px !important;
+	min-height: 34px !important;
 	padding: 0 11px !important;
-	border: 1px solid var(--st-v65-border) !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-row-border) !important;
 	border-radius: 8px !important;
-	background: var(--st-v65-soft) !important;
-	color: var(--st-v65-body) !important;
+	background: var(--st-row-soft) !important;
+	color: var(--st-row-body) !important;
 	font-size: 12.5px !important;
-	font-weight: 550 !important;
+	font-weight: 600 !important;
 	box-shadow: none !important;
 }
 
+.grid-row-open .form-in-grid.st-grid-row-editor .row-actions .btn:hover,
+.grid-row-open .form-in-grid.st-grid-row-editor .row-actions .es-button:hover {
+	border-color: var(--st-row-border-strong) !important;
+	background: var(--st-row-surface) !important;
+}
+
 .grid-row-open .form-in-grid.st-grid-row-editor .row-actions .btn-danger,
-.grid-row-open .form-in-grid.st-grid-row-editor .row-actions [data-action="delete"] {
-	border-color: rgba(220, 38, 38, .14) !important;
-	background: rgba(220, 38, 38, .07) !important;
-	color: #DC2626 !important;
+.grid-row-open .form-in-grid.st-grid-row-editor .row-actions .grid-delete-row {
+	border-color: rgba(220,38,38,.18) !important;
+	background: rgba(220,38,38,.065) !important;
+	color: #C62828 !important;
 }
 
 /* =========================================================
-   BODY + SECTIONS
-   One calm editor surface; no oversized blue section blocks.
+   BODY — ONE SURFACE, NOT A STACK OF CARDS
    ========================================================= */
 .grid-row-open .form-in-grid.st-grid-row-editor .grid-form-body {
-	max-height: calc(94vh - 60px) !important;
-	padding: 18px !important;
-	background: var(--st-v65-page) !important;
+	max-height: calc(100dvh - 102px) !important;
+	padding: 16px 18px 14px !important;
+	background: var(--st-row-page) !important;
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .form-area {
-	background: transparent !important;
-}
-
-.grid-row-open .form-in-grid.st-grid-row-editor .form-section {
-	margin: 0 0 12px !important;
-	padding: 0 !important;
-	border: 1px solid var(--st-v65-border) !important;
+	padding: 4px 18px 2px !important;
+	border: 1px solid var(--st-row-border) !important;
 	border-radius: 12px !important;
-	background: var(--st-v65-surface) !important;
-	box-shadow: var(--st-v65-shadow) !important;
+	background: var(--st-row-surface) !important;
+	box-shadow: 0 4px 16px rgba(16,24,40,.045) !important;
 	overflow: visible !important;
 }
 
-/* Neutral professional section title — fixes Image / Reference / Quantity etc. */
+.grid-row-open .form-in-grid.st-grid-row-editor .form-section {
+	position: relative !important;
+	margin: 0 !important;
+	padding: 16px 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	overflow: visible !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .form-section + .form-section {
+	border-top: 1px solid var(--st-row-border) !important;
+}
+
+/* Section headings are labels/dividers, not colored cards. */
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head,
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head.collapsible {
 	display: flex !important;
 	align-items: center !important;
-	justify-content: flex-start !important;
+	justify-content: space-between !important;
 	gap: 8px !important;
 	width: 100% !important;
-	min-height: 40px !important;
-	margin: 0 !important;
-	padding: 9px 14px !important;
+	min-height: 30px !important;
+	margin: 0 0 12px !important;
+	padding: 0 2px 9px !important;
 	border: 0 !important;
-	border-bottom: 1px solid var(--st-v65-border) !important;
-	border-radius: 11px 11px 0 0 !important;
-	background: var(--st-v65-soft) !important;
-	color: var(--st-v65-text) !important;
-	font-size: 13px !important;
-	font-weight: 650 !important;
+	border-bottom: 1px solid rgba(201,213,229,.65) !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	color: var(--st-row-text) !important;
+	font-size: 12.5px !important;
+	font-weight: 700 !important;
 	line-height: 1.25 !important;
 	box-shadow: none !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head.collapsible:hover {
-	background: #F3F6FA !important;
-	color: var(--st-v65-text) !important;
+	color: var(--st-row-primary) !important;
+	background: transparent !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head .collapse-indicator {
 	position: static !important;
-	order: 2 !important;
-	margin: 0 !important;
-	color: var(--st-v65-muted) !important;
+	margin: 0 0 0 auto !important;
+	color: var(--st-row-muted) !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head .collapse-indicator svg {
@@ -166,125 +189,233 @@
 	stroke: currentColor !important;
 }
 
-.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-body {
-	padding: 14px 16px 15px !important;
-	background: var(--st-v65-surface) !important;
-	border-radius: 0 0 11px 11px !important;
-}
-
-/* Sections without a visible title should feel like one clean field group. */
 .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head:empty {
 	display: none !important;
 }
 
-.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head:empty + .section-body {
-	border-radius: 11px !important;
+/* =========================================================
+   REAL COMPACT FIELD GRID
+   Flatten Frappe's column wrappers so empty source columns do not create
+   huge blank blocks. Actual controls flow into a clean 2-column grid.
+   ========================================================= */
+.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-body {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: 18px;
+	row-gap: 14px;
+	padding: 0 !important;
+	margin: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
 }
 
-/* =========================================================
-   FIELD RHYTHM
-   ========================================================= */
+.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-body:not([style*="display: none"]):not(.hide) {
+	display: grid;
+}
+
 .grid-row-open .form-in-grid.st-grid-row-editor .form-column {
-	padding-left: 8px !important;
-	padding-right: 8px !important;
+	display: contents !important;
+	float: none !important;
+	width: auto !important;
+	max-width: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control {
-	margin-bottom: 12px !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 
+/* Wide content belongs across the entire sheet. */
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Text"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Small Text"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Long Text"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Text Editor"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Markdown Editor"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="HTML Editor"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Code"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Table"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Table MultiSelect"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Image"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Attach Image"],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Check"] {
+	grid-column: 1 / -1 !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .form-section-description {
+	grid-column: 1 / -1 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	color: var(--st-row-muted) !important;
+	font-size: 12px !important;
+}
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
 .grid-row-open .form-in-grid.st-grid-row-editor .control-label,
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control > .form-group > label {
-	margin-bottom: 6px !important;
-	color: var(--st-v65-text) !important;
+	display: block !important;
+	margin: 0 0 6px !important;
+	padding: 0 !important;
+	color: var(--st-row-text) !important;
 	font-size: 12.5px !important;
-	font-weight: 600 !important;
+	font-weight: 650 !important;
 	line-height: 1.25 !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .control-input,
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .control-input-wrapper {
+	width: 100% !important;
+	min-width: 0 !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .form-control,
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .input-with-feedback,
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .like-disabled-input {
-	min-height: 38px !important;
-	border: 1px solid var(--st-v65-border-strong) !important;
+	width: 100% !important;
+	min-height: 40px !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-row-border-strong) !important;
 	border-radius: 8px !important;
-	background: var(--st-v65-surface) !important;
-	color: var(--st-v65-text) !important;
+	background: var(--st-row-surface) !important;
+	color: var(--st-row-text) !important;
 	font-size: 13px !important;
-	box-shadow: var(--st-v65-control-shadow) !important;
+	line-height: 1.35 !important;
+	box-shadow: var(--st-row-control-shadow) !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control textarea.form-control {
+	min-height: 74px !important;
+	padding-top: 9px !important;
+	padding-bottom: 9px !important;
+	resize: vertical !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .form-control:focus,
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .input-with-feedback:focus {
-	border-color: var(--st-v65-primary) !important;
-	box-shadow: 0 0 0 3px rgba(6, 74, 219, .10), 0 3px 8px rgba(6, 74, 219, .07) !important;
+	border-color: var(--st-row-primary) !important;
+	box-shadow: 0 0 0 3px rgba(6,74,219,.10), 0 2px 8px rgba(6,74,219,.06) !important;
 	outline: none !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control .like-disabled-input,
 .grid-row-open .form-in-grid.st-grid-row-editor .frappe-control input[readonly],
-.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control input:disabled {
-	background: var(--st-v65-soft) !important;
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control input:disabled,
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control textarea[readonly],
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control textarea:disabled {
+	background: var(--st-row-soft) !important;
 	box-shadow: none !important;
 }
 
-/* Keep Link / Autocomplete suggestions comfortably above section cards. */
+/* Compact checks. */
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Check"] .checkbox {
+	margin: 2px 0 0 !important;
+	padding: 0 !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Check"] input[type="checkbox"] {
+	width: 17px !important;
+	height: 17px !important;
+	min-width: 17px !important;
+	min-height: 17px !important;
+	accent-color: var(--st-row-primary) !important;
+}
+
+/* =========================================================
+   AUTOCOMPLETE — KEEP IT ABOVE THE SHEET, BUT COMPACT
+   ========================================================= */
 .grid-row-open .form-in-grid.st-grid-row-editor .awesomplete {
 	position: relative !important;
-	z-index: 7000 !important;
+	z-index: 8000 !important;
 }
 
 .grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul {
-	z-index: 7100 !important;
-	border: 1px solid var(--st-v65-border) !important;
+	z-index: 8100 !important;
+	max-height: 280px !important;
+	margin-top: 6px !important;
+	padding: 6px !important;
+	border: 1px solid var(--st-row-border) !important;
 	border-radius: 10px !important;
-	background: var(--st-v65-surface) !important;
-	box-shadow: 0 18px 38px rgba(15, 23, 42, .16) !important;
+	background: var(--st-row-surface) !important;
+	box-shadow: 0 18px 38px rgba(15,23,42,.16) !important;
+	overflow-y: auto !important;
 }
 
-/* Footer shortcuts should be secondary, not another visual section. */
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul > li {
+	min-height: 38px !important;
+	padding: 7px 10px !important;
+	border-radius: 7px !important;
+	color: var(--st-row-body) !important;
+	font-size: 12.5px !important;
+	line-height: 1.3 !important;
+}
+
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul > li[aria-selected="true"],
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul > li:hover {
+	background: rgba(6,74,219,.075) !important;
+	color: var(--st-row-text) !important;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
 .grid-row-open .form-in-grid.st-grid-row-editor .grid-footer-toolbar {
-	margin-top: 4px !important;
-	padding: 10px 4px 0 !important;
-	border-top: 1px solid var(--st-v65-border) !important;
+	margin: 12px 0 0 !important;
+	padding: 10px 2px 0 !important;
+	border-top: 1px solid var(--st-row-border) !important;
 	background: transparent !important;
-	color: var(--st-v65-muted) !important;
-	font-size: 12px !important;
+	color: var(--st-row-muted) !important;
+	font-size: 11.5px !important;
 }
 
 /* =========================================================
    DARK MODE
    ========================================================= */
+[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .form-area {
+	box-shadow: 0 8px 24px rgba(0,0,0,.20) !important;
+}
+
 [data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head,
 [data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head.collapsible {
-	background: #172033 !important;
-	border-bottom-color: #2B394B !important;
-	color: #F8FAFC !important;
+	border-bottom-color: rgba(58,74,95,.72) !important;
+	background: transparent !important;
+	color: var(--st-row-text) !important;
 }
 
-[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-head.collapsible:hover {
-	background: #1B263A !important;
-}
-
-[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .row-actions .btn,
-[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .row-actions .es-button {
-	border-color: #2B394B !important;
-	background: #172033 !important;
-	color: #D0D8E6 !important;
+[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul > li[aria-selected="true"],
+[data-theme="dark"] .grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul > li:hover {
+	background: rgba(107,145,255,.14) !important;
 }
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
-@media (max-width: 767px) {
+@media (max-width: 900px) {
 	.grid-row-open .form-in-grid.st-grid-row-editor {
-		top: 8px !important;
-		left: 8px !important;
-		width: calc(100vw - 16px) !important;
-		max-width: calc(100vw - 16px) !important;
-		max-height: calc(100dvh - 16px) !important;
+		top: 12px !important;
+		left: 12px !important;
+		width: calc(100vw - 24px) !important;
+		max-width: calc(100vw - 24px) !important;
+		max-height: calc(100dvh - 24px) !important;
+		transform: none !important;
 	}
 
+	.grid-row-open .form-in-grid.st-grid-row-editor .grid-form-body {
+		max-height: calc(100dvh - 82px) !important;
+		padding: 12px !important;
+	}
+
+	.grid-row-open .form-in-grid.st-grid-row-editor .form-area {
+		padding-left: 14px !important;
+		padding-right: 14px !important;
+	}
+}
+
+@media (max-width: 640px) {
 	.grid-row-open .form-in-grid.st-grid-row-editor .grid-form-heading {
 		padding: 10px 12px !important;
 	}
@@ -300,17 +431,22 @@
 		flex-wrap: wrap !important;
 	}
 
-	.grid-row-open .form-in-grid.st-grid-row-editor .grid-form-body {
-		max-height: calc(100dvh - 78px) !important;
-		padding: 10px !important;
+	.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-body:not([style*="display: none"]):not(.hide) {
+		grid-template-columns: minmax(0, 1fr);
 	}
 
-	.grid-row-open .form-in-grid.st-grid-row-editor .form-section > .section-body {
-		padding: 11px 10px 12px !important;
-	}
-
-	.grid-row-open .form-in-grid.st-grid-row-editor .form-column {
-		padding-left: 4px !important;
-		padding-right: 4px !important;
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Text"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Small Text"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Long Text"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Text Editor"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Markdown Editor"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="HTML Editor"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Code"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Table"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Table MultiSelect"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Image"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Attach Image"],
+	.grid-row-open .form-in-grid.st-grid-row-editor .frappe-control[data-fieldtype="Check"] {
+		grid-column: auto !important;
 	}
 }
