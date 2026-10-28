@@ -68,14 +68,14 @@
 			const link = document.createElement("link");
 			link.id = "st-ui-precision-v6-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/ui_precision_v6.css?v=1";
+			link.href = "/assets/saas_theme/css/ui_precision_v6.css?v=2";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-ui-precision-v6-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v6-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v6.js?v=1";
+			script.src = "/assets/saas_theme/js/ui_precision_v6.js?v=2";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
