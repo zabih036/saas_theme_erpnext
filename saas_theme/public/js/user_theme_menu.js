@@ -21,8 +21,8 @@
 		}
 	})();
 
-	/* Precision v4 is deliberately last: it corrects only the current UI regressions
-	   without changing the broader theme layers that already look good. */
+	/* Precision v4 corrects header/report/typography regressions without touching
+	   the broader theme layers that already look good. */
 	(function load_precision_v4_assets() {
 		if (!document.getElementById("st-ui-precision-v4-css")) {
 			const link = document.createElement("link");
@@ -36,6 +36,26 @@
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v4-js";
 			script.src = "/assets/saas_theme/js/ui_precision_v4.js?v=1";
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+	})();
+
+	/* Precision v5 is deliberately loaded after v4 and is scoped only to form
+	   controls + child tables, Configure Columns and the fixed row editor. */
+	(function load_child_table_precision_v5_assets() {
+		if (!document.getElementById("st-child-table-precision-v5-css")) {
+			const link = document.createElement("link");
+			link.id = "st-child-table-precision-v5-css";
+			link.rel = "stylesheet";
+			link.href = "/assets/saas_theme/css/child_table_precision_v5.css?v=1";
+			document.head.appendChild(link);
+		}
+
+		if (!document.getElementById("st-child-table-precision-v5-js")) {
+			const script = document.createElement("script");
+			script.id = "st-child-table-precision-v5-js";
+			script.src = "/assets/saas_theme/js/child_table_precision_v5.js?v=1";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
