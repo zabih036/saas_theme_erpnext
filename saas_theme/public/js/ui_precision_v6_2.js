@@ -298,9 +298,7 @@
 	}
 
 	function setup_all_search_inputs() {
-		document
-			.querySelectorAll(".page-head:visible .st-header-search-input, .page-head .st-header-search-input")
-			.forEach(setup_search_input);
+		document.querySelectorAll(".page-head .st-header-search-input").forEach(setup_search_input);
 	}
 
 	function repair_report_filter_row() {
