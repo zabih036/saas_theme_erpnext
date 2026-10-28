@@ -54,6 +54,7 @@ app_include_css = [
 	"/assets/saas_theme/css/professional_form_card_fix.css?v=1",
 	"/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
 	"/assets/saas_theme/css/report_and_form_shell.css?v=1",
+	"/assets/saas_theme/css/overlay_stacking_fix.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -137,16 +138,16 @@ web_include_js = [
 # Uninstallation
 # ------------
 
-# before_uninstall = "saas_theme.uninstall.before_uninstall"
-# after_uninstall = "saas_theme.uninstall.after_uninstall"
+# before_uninstall = "saas_theme.uninstall.before_install"
+# after_uninstall = "saas_theme.uninstall.after_install"
 
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
 # Name of app being installed is passed as an argument
 
-# before_app_install = "saas_theme.utils.before_app_install"
-# after_app_install = "saas_theme.utils.after_app_install"
+# before_app_install = "saas_theme.install.before_app_install"
+# after_app_install = "saas_theme.install.after_app_install"
 
 # Integration Cleanup
 # -------------------
@@ -167,11 +168,11 @@ web_include_js = [
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+# 	"Event": "saas_theme.desk.doctype.event.event.get_permission_query_conditions",
 # }
 #
 # has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
+# 	"Event": "saas_theme.desk.doctype.event.event.has_permission",
 # }
 
 # Document Events
