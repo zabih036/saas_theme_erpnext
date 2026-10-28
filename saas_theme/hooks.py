@@ -12,7 +12,7 @@ categories = ["Customization", "UI/UX"]
 
 # required_apps = []
 
-# Each item in the list will be shown as an app in the apps page
+# Each item in the list will be shown in the apps page
 # add_to_apps_screen = [
 # 	{
 # 		"name": "saas_theme",
@@ -138,16 +138,16 @@ web_include_js = [
 # Uninstallation
 # ------------
 
-# before_uninstall = "saas_theme.uninstall.before_install"
-# after_uninstall = "saas_theme.uninstall.after_install"
+# before_uninstall = "saas_theme.uninstall.before_uninstall"
+# after_uninstall = "saas_theme.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
 # Name of app being installed is passed as an argument
 
-# before_app_install = "saas_theme.install.before_app_install"
-# after_app_install = "saas_theme.install.after_app_install"
+# before_app_install = "saas_theme.utils.before_app_install"
+# after_app_install = "saas_theme.utils.after_app_install"
 
 # Integration Cleanup
 # -------------------
@@ -168,11 +168,11 @@ web_include_js = [
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-# 	"Event": "saas_theme.desk.doctype.event.event.get_permission_query_conditions",
+# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }
 #
 # has_permission = {
-# 	"Event": "saas_theme.desk.doctype.event.event.has_permission",
+# 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
 # Document Events
