@@ -61,6 +61,26 @@
 		}
 	})();
 
+	/* Precision v6 runs last and fixes only the latest checkbox/search/report
+	   issues without changing the established child-table/form work. */
+	(function load_ui_precision_v6_assets() {
+		if (!document.getElementById("st-ui-precision-v6-css")) {
+			const link = document.createElement("link");
+			link.id = "st-ui-precision-v6-css";
+			link.rel = "stylesheet";
+			link.href = "/assets/saas_theme/css/ui_precision_v6.css?v=1";
+			document.head.appendChild(link);
+		}
+
+		if (!document.getElementById("st-ui-precision-v6-js")) {
+			const script = document.createElement("script");
+			script.id = "st-ui-precision-v6-js";
+			script.src = "/assets/saas_theme/js/ui_precision_v6.js?v=1";
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+	})();
+
 	if (typeof frappe === "undefined") return;
 	if (window.__saas_theme_user_theme_menu__) return;
 	window.__saas_theme_user_theme_menu__ = true;
