@@ -12,7 +12,7 @@ categories = ["Customization", "UI/UX"]
 
 # required_apps = []
 
-# Each item in the list will be shown in the apps page
+# Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
 # 		"name": "saas_theme",
