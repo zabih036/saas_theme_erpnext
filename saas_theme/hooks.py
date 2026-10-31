@@ -7,15 +7,21 @@ app_license = "MIT"
 frappe_version = ">=16.0.0 <17.0.0"
 categories = ["Customization", "UI/UX"]
 
-# Keep the upstream base assets separate from this project's permanent
-# customization layer. Future Desk UI changes belong in custom.css/custom.js.
+# Stable theme asset structure.
+# Future Desk UI changes belong in custom.css/custom.js.
 app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css",
+	"/assets/saas_theme/css/workspace.css",
+	"/assets/saas_theme/css/dashboard.css",
+	"/assets/saas_theme/css/analytics.css",
 	"/assets/saas_theme/css/custom.css",
 ]
 
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js",
+	"/assets/saas_theme/js/workspace.js",
+	"/assets/saas_theme/js/dashboard.js",
+	"/assets/saas_theme/js/analytics.js",
 	"/assets/saas_theme/js/custom.js",
 ]
 
