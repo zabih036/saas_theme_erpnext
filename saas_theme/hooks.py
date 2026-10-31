@@ -54,7 +54,9 @@ app_include_css = [
 	"/assets/saas_theme/css/professional_form_card_fix.css?v=1",
 	"/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
 	"/assets/saas_theme/css/report_and_form_shell.css?v=1",
+	"/assets/saas_theme/css/child_row_editor_finish.css?v=1",
 	"/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
+	"/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -70,6 +72,7 @@ app_include_js = [
 	"/assets/saas_theme/js/user_theme_menu.js?v=1",
 	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
 	"/assets/saas_theme/js/quick_access_preferences.js?v=1",
+	"/assets/saas_theme/js/child_row_editor_finish.js?v=1",
 ]
 
 # include js, css files in header of web template
