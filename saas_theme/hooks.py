@@ -12,7 +12,7 @@ categories = ["Customization", "UI/UX"]
 
 # required_apps = []
 
-# Each item in the list will be shown in the apps page
+# Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
 # 		"name": "saas_theme",
@@ -177,7 +177,7 @@ web_include_js = [
 # }
 #
 # has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission"
+# 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
 # Document Events
@@ -266,7 +266,7 @@ web_include_js = [
 # 	{
 # 		"doctype": "{doctype_1}",
 # 		"filter_by": "{filter_by}",
-# 		"redact_fields": ["{field_1}"],
+# 		"redact_fields": ["{field_1}", "{field_2}"],
 # 		"partial": 1,
 # 	},
 # 	{
