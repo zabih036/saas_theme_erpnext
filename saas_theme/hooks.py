@@ -59,6 +59,7 @@ app_include_css = [
 	"/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
 	"/assets/saas_theme/css/interaction_finish_v2.css?v=2",
 	"/assets/saas_theme/css/global_popup_polish_v3.css?v=3",
+	"/assets/saas_theme/css/compact_autocomplete_and_form_gap_v4.css?v=4",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
