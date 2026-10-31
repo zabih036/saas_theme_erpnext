@@ -3002,14 +3002,14 @@
 			const link = document.createElement("link");
 			link.id = "st-stability-refinement-v3-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=2";
+			link.href = "data:text/css,";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-stability-refinement-v3-js")) {
 			const script = document.createElement("script");
 			script.id = "st-stability-refinement-v3-js";
-			script.src = "/assets/saas_theme/js/stability_refinement_v3.js?v=2";
+			script.src = "data:text/javascript,";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -3022,14 +3022,14 @@
 			const link = document.createElement("link");
 			link.id = "st-ui-precision-v4-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/ui_precision_v4.css?v=1";
+			link.href = "data:text/css,";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-ui-precision-v4-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v4-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v4.js?v=1";
+			script.src = "data:text/javascript,";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -3042,14 +3042,14 @@
 			const link = document.createElement("link");
 			link.id = "st-child-table-precision-v5-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/child_table_precision_v5.css?v=1";
+			link.href = "data:text/css,";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-child-table-precision-v5-js")) {
 			const script = document.createElement("script");
 			script.id = "st-child-table-precision-v5-js";
-			script.src = "/assets/saas_theme/js/child_table_precision_v5.js?v=1";
+			script.src = "data:text/javascript,";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -3062,14 +3062,14 @@
 			const link = document.createElement("link");
 			link.id = "st-ui-precision-v6-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/ui_precision_v6.css?v=2";
+			link.href = "data:text/css,";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-ui-precision-v6-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v6-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v6.js?v=2";
+			script.src = "data:text/javascript,";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -3081,7 +3081,7 @@
 		if (!document.getElementById("st-ui-precision-v6-2-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v6-2-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v6_2.js?v=1";
+			script.src = "data:text/javascript,";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
@@ -3095,7 +3095,7 @@
 			const link = document.createElement("link");
 			link.id = "st-child-row-editor-v65-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/child_row_editor_refinement_v65.css?v=1";
+			link.href = "data:text/css,";
 			document.head.appendChild(link);
 		}
 	})();
@@ -3437,7 +3437,7 @@
 		const link = document.createElement("link");
 		link.id = cssId;
 		link.rel = "stylesheet";
-		link.href = "/assets/saas_theme/css/inline_grid_link_popup_anchor_v5.css?v=5";
+		link.href = "data:text/css,";
 		document.head.appendChild(link);
 	}
 
@@ -3445,7 +3445,7 @@
 	if (!document.getElementById(scriptId)) {
 		const script = document.createElement("script");
 		script.id = scriptId;
-		script.src = "/assets/saas_theme/js/inline_grid_link_popup_anchor_v5.js?v=5";
+		script.src = "data:text/javascript,";
 		script.async = false;
 		document.head.appendChild(script);
 	}
@@ -5195,7 +5195,7 @@
 	window.__saas_theme_ui_consolidation_v7__ = true;
 
 	const STYLE_ID = "st-ui-consolidation-v7-css";
-	const STYLE_HREF = "/assets/saas_theme/css/ui_consolidation_v7.css?v=7";
+	const STYLE_HREF = "data:text/css,";
 	const GRID_EDITOR_CLASS = "st-v7-grid-editor";
 	const GRID_OWNER_CLASS = "st-v7-grid-owner";
 	const GRID_POPUP_CLASS = "st-v7-inline-grid-popup";
