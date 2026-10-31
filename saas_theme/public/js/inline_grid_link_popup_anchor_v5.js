@@ -214,14 +214,13 @@
 					schedule_scan();
 					break;
 				}
-			}
 		});
 
 		observer.observe(document.body, {
 			childList: true,
 			subtree: true,
 			attributes: true,
-			attributeFilter: ["hidden", "class", "style"],
+			attributeFilter: ["hidden"],
 		});
 	}
 
