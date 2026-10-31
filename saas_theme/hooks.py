@@ -58,6 +58,7 @@ app_include_css = [
 	"/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
 	"/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
 	"/assets/saas_theme/css/interaction_finish_v2.css?v=2",
+	"/assets/saas_theme/css/global_popup_polish_v3.css?v=3",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -86,10 +87,6 @@ web_include_js = [
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "saas_theme/public/scss/website"
-
-# include js, css files in header of web form
-# webform_include_js = {"doctype": "public/js/doctype.js"}
-# webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
