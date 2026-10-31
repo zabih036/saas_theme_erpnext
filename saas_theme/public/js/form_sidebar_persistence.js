@@ -222,3 +222,28 @@
 	window.setTimeout(setup_router_listener, 350);
 	window.setTimeout(() => schedule_apply(0), 450);
 })();
+
+/* Load the final inline-grid popup anchor after the base theme assets. */
+(() => {
+	"use strict";
+	if (window.__saas_theme_inline_grid_popup_loader_v5__) return;
+	window.__saas_theme_inline_grid_popup_loader_v5__ = true;
+
+	const cssId = "saas-theme-inline-grid-popup-v5-css";
+	if (!document.getElementById(cssId)) {
+		const link = document.createElement("link");
+		link.id = cssId;
+		link.rel = "stylesheet";
+		link.href = "/assets/saas_theme/css/inline_grid_link_popup_anchor_v5.css?v=5";
+		document.head.appendChild(link);
+	}
+
+	const scriptId = "saas-theme-inline-grid-popup-v5-js";
+	if (!document.getElementById(scriptId)) {
+		const script = document.createElement("script");
+		script.id = scriptId;
+		script.src = "/assets/saas_theme/js/inline_grid_link_popup_anchor_v5.js?v=5";
+		script.async = false;
+		document.head.appendChild(script);
+	}
+})();
