@@ -1,0 +1,547 @@
+/*
+ * SaaS Theme — Interaction Finish v2
+ * Loaded last. This layer styles the body-portaled child-row editor created by
+ * interaction_finish_v2.js and adds the requested spacing to the list View menu.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-v2-row-page: #F6F8FC;
+	--st-v2-row-surface: #FFFFFF;
+	--st-v2-row-soft: #F8FAFC;
+	--st-v2-row-soft-2: #F3F6FB;
+	--st-v2-row-text: #17233C;
+	--st-v2-row-body: #344054;
+	--st-v2-row-muted: #667085;
+	--st-v2-row-border: #DCE4EE;
+	--st-v2-row-border-strong: #C8D4E3;
+	--st-v2-row-primary: #0B5CE1;
+	--st-v2-row-primary-soft: #EEF5FF;
+	--st-v2-row-control-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 3px 10px rgba(16, 24, 40, .035);
+	--st-v2-row-card-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 12px 34px rgba(16, 24, 40, .065);
+	--st-v2-row-sheet-shadow: 0 32px 85px rgba(15, 23, 42, .26);
+}
+
+[data-theme="dark"] {
+	--st-v2-row-page: #0C1320;
+	--st-v2-row-surface: #111827;
+	--st-v2-row-soft: #172033;
+	--st-v2-row-soft-2: #141E2E;
+	--st-v2-row-text: #F8FAFC;
+	--st-v2-row-body: #D5DDE8;
+	--st-v2-row-muted: #94A3B8;
+	--st-v2-row-border: #29384B;
+	--st-v2-row-border-strong: #3A4A5F;
+	--st-v2-row-primary: #76A0FF;
+	--st-v2-row-primary-soft: rgba(118, 160, 255, .14);
+	--st-v2-row-control-shadow: 0 2px 8px rgba(0, 0, 0, .20);
+	--st-v2-row-card-shadow: 0 10px 28px rgba(0, 0, 0, .22);
+	--st-v2-row-sheet-shadow: 0 34px 90px rgba(0, 0, 0, .48);
+}
+
+/* =========================================================
+   1. DEFINITIVE CHILD-ROW STACK
+   The editor is a direct child of body while open, so it can finally sit
+   above #freeze.grid-form without depending on any form/grid ancestor.
+   ========================================================= */
+#freeze.grid-form,
+#freeze.grid-form.st-grid-freeze-active {
+	z-index: 12000 !important;
+}
+
+body > .form-in-grid.st-grid-row-portal {
+	display: block !important;
+	position: fixed !important;
+	top: 16px !important;
+	left: 50% !important;
+	z-index: 13000 !important;
+	width: min(1220px, calc(100vw - 34px)) !important;
+	max-width: min(1220px, calc(100vw - 34px)) !important;
+	height: auto !important;
+	max-height: calc(100dvh - 32px) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	transform: translateX(-50%) !important;
+	opacity: 1 !important;
+	visibility: visible !important;
+	pointer-events: auto !important;
+	isolation: isolate !important;
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 18px !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: var(--st-v2-row-sheet-shadow) !important;
+	overflow: hidden !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .grid-form-heading,
+body > .form-in-grid.st-grid-row-portal .grid-form-body,
+body > .form-in-grid.st-grid-row-portal .form-area,
+body > .form-in-grid.st-grid-row-portal .frappe-control,
+body > .form-in-grid.st-grid-row-portal .awesomplete,
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul {
+	pointer-events: auto !important;
+}
+
+/* =========================================================
+   2. EDITOR HEADER
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .grid-form-heading {
+	position: sticky !important;
+	top: 0 !important;
+	z-index: 90 !important;
+	min-height: 62px !important;
+	margin: 0 !important;
+	padding: 12px 16px !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--st-v2-row-border) !important;
+	background: color-mix(in srgb, var(--st-v2-row-surface) 96%, var(--st-v2-row-soft)) !important;
+	box-shadow: 0 1px 0 rgba(15, 23, 42, .025) !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .grid-header-toolbar {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 14px !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .panel-title {
+	margin: 0 !important;
+	color: var(--st-v2-row-text) !important;
+	font-size: 18px !important;
+	font-weight: 720 !important;
+	line-height: 1.2 !important;
+	letter-spacing: -.015em !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .row-actions {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex-wrap: nowrap !important;
+	gap: 7px !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .row-actions .btn,
+body > .form-in-grid.st-grid-row-portal .row-actions .es-button {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	height: 36px !important;
+	min-height: 36px !important;
+	margin: 0 !important;
+	padding: 0 12px !important;
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-v2-row-soft) !important;
+	color: var(--st-v2-row-body) !important;
+	font-size: 12.5px !important;
+	font-weight: 620 !important;
+	box-shadow: 0 1px 2px rgba(16, 24, 40, .03) !important;
+	transition: border-color .14s ease, background-color .14s ease, box-shadow .14s ease !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .row-actions .btn:hover,
+body > .form-in-grid.st-grid-row-portal .row-actions .es-button:hover {
+	border-color: var(--st-v2-row-border-strong) !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: 0 3px 10px rgba(16, 24, 40, .055) !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .row-actions .btn-danger,
+body > .form-in-grid.st-grid-row-portal .row-actions .grid-delete-row {
+	border-color: rgba(220, 38, 38, .20) !important;
+	background: rgba(220, 38, 38, .055) !important;
+	color: #C62828 !important;
+}
+
+/* =========================================================
+   3. BODY + MODERN INNER CARD
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .grid-form-body {
+	max-height: calc(100dvh - 94px) !important;
+	margin: 0 !important;
+	padding: 18px 20px 16px !important;
+	background: var(--st-v2-row-page) !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	scrollbar-gutter: stable !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-area {
+	width: min(100%, 1160px) !important;
+	margin: 0 auto !important;
+	padding: 16px 18px 18px !important;
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: var(--st-v2-row-card-shadow) !important;
+	overflow: visible !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-section {
+	position: relative !important;
+	margin: 0 !important;
+	padding: 15px 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	overflow: visible !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-section + .form-section:not(:has(> .section-head.collapsible)) {
+	border-top: 1px solid var(--st-v2-row-border) !important;
+}
+
+/* =========================================================
+   4. CLEAN TWO-COLUMN FIELD LAYOUT
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .form-section > .section-body:not(.hide) {
+	display: grid !important;
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	column-gap: 20px !important;
+	row-gap: 15px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-section > .section-body.hide {
+	display: none !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-column {
+	display: contents !important;
+	float: none !important;
+	width: auto !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .frappe-control {
+	position: relative !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	z-index: auto !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Text"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Small Text"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Long Text"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Text Editor"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Markdown Editor"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="HTML Editor"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Code"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Table"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Table MultiSelect"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Image"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Attach Image"],
+body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Check"] {
+	grid-column: 1 / -1 !important;
+}
+
+/* =========================================================
+   5. CONTROLS + WORKING AUTOCOMPLETE
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .control-label,
+body > .form-in-grid.st-grid-row-portal .frappe-control > .form-group > label {
+	display: block !important;
+	margin: 0 0 6px !important;
+	padding: 0 !important;
+	color: var(--st-v2-row-text) !important;
+	font-size: 12.5px !important;
+	font-weight: 650 !important;
+	line-height: 1.25 !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .frappe-control .form-control,
+body > .form-in-grid.st-grid-row-portal .frappe-control .input-with-feedback,
+body > .form-in-grid.st-grid-row-portal .frappe-control .like-disabled-input {
+	width: 100% !important;
+	min-height: 40px !important;
+	border: 1px solid var(--st-v2-row-border-strong) !important;
+	border-radius: 9px !important;
+	background: var(--st-v2-row-surface) !important;
+	color: var(--st-v2-row-text) !important;
+	font-size: 13px !important;
+	box-shadow: var(--st-v2-row-control-shadow) !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .frappe-control .form-control:focus,
+body > .form-in-grid.st-grid-row-portal .frappe-control .input-with-feedback:focus {
+	border-color: var(--st-v2-row-primary) !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--st-v2-row-primary) 12%, transparent), 0 2px 8px rgba(16, 24, 40, .045) !important;
+	outline: none !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .frappe-control:focus-within,
+body > .form-in-grid.st-grid-row-portal .frappe-control:has(.awesomplete > ul:not([hidden])) {
+	z-index: 70 !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul,
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul[role="listbox"] {
+	z-index: 80 !important;
+	max-height: 300px !important;
+	margin-top: 6px !important;
+	padding: 6px !important;
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 11px !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: 0 18px 42px rgba(15, 23, 42, .18) !important;
+	overflow-y: auto !important;
+	pointer-events: auto !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul > li {
+	min-height: 38px !important;
+	padding: 8px 10px !important;
+	border-radius: 7px !important;
+	color: var(--st-v2-row-body) !important;
+	font-size: 12.5px !important;
+	line-height: 1.3 !important;
+	cursor: pointer !important;
+	pointer-events: auto !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul > li:hover,
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul > li[aria-selected="true"] {
+	background: var(--st-v2-row-primary-soft) !important;
+	color: var(--st-v2-row-text) !important;
+}
+
+/* =========================================================
+   6. COLLAPSIBLE SECTIONS — CLEAR MODERN ACCORDION
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .form-section:has(> .section-head.collapsible) {
+	margin: 10px 0 !important;
+	padding: 0 !important;
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: 0 1px 2px rgba(16, 24, 40, .025), 0 5px 16px rgba(16, 24, 40, .025) !important;
+	overflow: visible !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .section-head.collapsible {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 12px !important;
+	width: 100% !important;
+	min-height: 48px !important;
+	margin: 0 !important;
+	padding: 0 11px 0 14px !important;
+	border: 0 !important;
+	border-radius: 11px !important;
+	background: linear-gradient(180deg, var(--st-v2-row-soft) 0%, var(--st-v2-row-surface) 100%) !important;
+	color: var(--st-v2-row-text) !important;
+	font-size: 13px !important;
+	font-weight: 690 !important;
+	line-height: 1.25 !important;
+	cursor: pointer !important;
+	user-select: none !important;
+	transition: background .14s ease, color .14s ease, box-shadow .14s ease !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .section-head.collapsible:hover,
+body > .form-in-grid.st-grid-row-portal .section-head.collapsible:focus-visible {
+	background: var(--st-v2-row-primary-soft) !important;
+	color: var(--st-v2-row-primary) !important;
+	outline: none !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .section-head.collapsible .collapse-indicator {
+	position: static !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 30px !important;
+	height: 30px !important;
+	min-width: 30px !important;
+	margin-left: auto !important;
+	border: 1px solid color-mix(in srgb, var(--st-v2-row-primary) 18%, transparent) !important;
+	border-radius: 8px !important;
+	background: var(--st-v2-row-primary-soft) !important;
+	color: var(--st-v2-row-primary) !important;
+	box-shadow: 0 1px 2px rgba(16, 24, 40, .03) !important;
+	pointer-events: none !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .section-head.collapsible .collapse-indicator svg {
+	width: 15px !important;
+	height: 15px !important;
+	margin: 0 !important;
+	stroke: currentColor !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .form-section:has(> .section-head.collapsible) > .section-body:not(.hide) {
+	padding: 15px !important;
+	border-top: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 0 0 11px 11px !important;
+	background: var(--st-v2-row-surface) !important;
+}
+
+/* Non-collapsible section labels get hierarchy without pretending they click. */
+body > .form-in-grid.st-grid-row-portal .section-head:not(.collapsible) {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 34px !important;
+	margin: 0 0 12px !important;
+	padding: 0 2px 9px !important;
+	border-bottom: 1px solid var(--st-v2-row-border) !important;
+	color: var(--st-v2-row-text) !important;
+	font-size: 12.75px !important;
+	font-weight: 680 !important;
+}
+
+/* =========================================================
+   7. CHILD-ROW LINK SELECTOR / DIALOGS
+   ========================================================= */
+body .modal.st-grid-link-selector-v2.show,
+body .modal.st-grid-link-selector.show {
+	z-index: 22000 !important;
+	pointer-events: auto !important;
+}
+
+body > .modal-backdrop.st-grid-link-selector-backdrop-v2,
+body > .modal-backdrop.st-grid-link-selector-backdrop {
+	z-index: 21990 !important;
+}
+
+body:has(.modal.st-grid-link-selector-v2.show) #freeze.grid-form,
+body:has(.modal.st-grid-link-selector.show) #freeze.grid-form {
+	pointer-events: none !important;
+}
+
+.modal.st-grid-link-selector-v2 .modal-dialog,
+.modal.st-grid-link-selector .modal-dialog {
+	max-width: 780px !important;
+	margin: 6vh auto !important;
+}
+
+.modal.st-grid-link-selector-v2 .modal-content,
+.modal.st-grid-link-selector .modal-content {
+	border: 1px solid var(--st-v2-row-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-v2-row-surface) !important;
+	box-shadow: 0 30px 80px rgba(15, 23, 42, .30) !important;
+	overflow: hidden !important;
+}
+
+/* =========================================================
+   8. VIEW SWITCHER — REQUESTED GAP ABOVE FIRST OPTION
+   Root panel only; submenus keep Frappe's normal geometry.
+   ========================================================= */
+body > .es-menu.st-view-switcher-menu-v2 {
+	z-index: 16000 !important;
+	border: 1px solid rgba(15, 23, 42, .07) !important;
+	border-radius: 12px !important;
+	background: var(--surface-elevation-2, var(--st-v2-row-surface)) !important;
+	box-shadow: 0 14px 34px rgba(15, 23, 42, .14), 0 3px 10px rgba(15, 23, 42, .06) !important;
+}
+
+body > .es-menu.st-view-switcher-menu-v2 > .es-menu__group:first-child {
+	padding-top: 9px !important;
+}
+
+body > .es-menu.st-view-switcher-menu-v2 > .es-menu__group:last-child {
+	padding-bottom: 9px !important;
+}
+
+body > .es-menu.st-view-switcher-menu-v2 .es-menu__item {
+	border-radius: 8px !important;
+}
+
+/* =========================================================
+   9. FOOTER + SCROLLBAR
+   ========================================================= */
+body > .form-in-grid.st-grid-row-portal .grid-footer-toolbar {
+	margin: 14px 0 0 !important;
+	padding: 11px 2px 0 !important;
+	border-top: 1px solid var(--st-v2-row-border) !important;
+	background: transparent !important;
+	color: var(--st-v2-row-muted) !important;
+	font-size: 11.5px !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .grid-form-body::-webkit-scrollbar,
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul::-webkit-scrollbar {
+	width: 9px !important;
+}
+
+body > .form-in-grid.st-grid-row-portal .grid-form-body::-webkit-scrollbar-thumb,
+body > .form-in-grid.st-grid-row-portal .awesomplete > ul::-webkit-scrollbar-thumb {
+	border: 2px solid transparent !important;
+	border-radius: 999px !important;
+	background: #C2CDDA !important;
+	background-clip: padding-box !important;
+}
+
+[data-theme="dark"] body > .form-in-grid.st-grid-row-portal .grid-form-body::-webkit-scrollbar-thumb,
+[data-theme="dark"] body > .form-in-grid.st-grid-row-portal .awesomplete > ul::-webkit-scrollbar-thumb {
+	background: #425168 !important;
+	background-clip: padding-box !important;
+}
+
+/* =========================================================
+   10. RESPONSIVE
+   ========================================================= */
+@media (max-width: 900px) {
+	body > .form-in-grid.st-grid-row-portal {
+		top: 10px !important;
+		width: calc(100vw - 20px) !important;
+		max-width: calc(100vw - 20px) !important;
+		max-height: calc(100dvh - 20px) !important;
+	}
+
+	body > .form-in-grid.st-grid-row-portal .grid-form-body {
+		max-height: calc(100dvh - 82px) !important;
+		padding: 12px !important;
+	}
+
+	body > .form-in-grid.st-grid-row-portal .form-area {
+		padding: 14px !important;
+	}
+}
+
+@media (max-width: 640px) {
+	body > .form-in-grid.st-grid-row-portal .grid-header-toolbar {
+		align-items: flex-start !important;
+		flex-direction: column !important;
+	}
+
+	body > .form-in-grid.st-grid-row-portal .row-actions {
+		width: 100% !important;
+		justify-content: flex-start !important;
+		flex-wrap: wrap !important;
+	}
+
+	body > .form-in-grid.st-grid-row-portal .form-section > .section-body:not(.hide) {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Text"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Small Text"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Long Text"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Text Editor"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Markdown Editor"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="HTML Editor"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Code"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Table"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Table MultiSelect"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Image"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Attach Image"],
+	body > .form-in-grid.st-grid-row-portal .frappe-control[data-fieldtype="Check"] {
+		grid-column: auto !important;
+	}
+}
