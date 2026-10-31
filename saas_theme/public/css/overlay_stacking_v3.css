@@ -1,0 +1,68 @@
+/*
+ * SaaS Theme — Overlay / Stacking Context Fix v3
+ *
+ * Loaded after overlay_stacking_fix.css. This final layer handles dialogs that
+ * are launched while a child-row editor is already open.
+ */
+
+:root {
+	--st-layer-grid-dialog-backdrop: 21990;
+	--st-layer-grid-dialog: 22000;
+	--st-layer-grid-link-backdrop: 41990;
+	--st-layer-grid-link-dialog: 42000;
+}
+
+/* Frappe dialogs are not required to be direct children of body. Do not rely
+   on `body > .modal.show` when deciding whether a dialog beats #freeze. */
+body .modal.show {
+	z-index: var(--st-layer-modal, 20000) !important;
+	pointer-events: auto !important;
+}
+
+/* Any normal dialog opened from the child-row sheet must be above both the
+   grid freeze backdrop and the fixed form-in-grid editor. */
+body:has(#freeze.grid-form) .modal.show:not(:has(.navbar-modal-wrapper)) {
+	z-index: var(--st-layer-grid-dialog) !important;
+}
+
+body:has(#freeze.grid-form) > .modal-backdrop.show {
+	z-index: var(--st-layer-grid-dialog-backdrop) !important;
+}
+
+/* The Link Selector is the most important child-row dialog: Item, Warehouse,
+   Account, UOM and other Link fields can all open it. Its own tagged backdrop
+   and modal get a dedicated top band so the grid freeze can never intercept
+   clicks or visually cover the selector. */
+body .modal.st-grid-link-selector.show {
+	z-index: var(--st-layer-grid-link-dialog) !important;
+	pointer-events: auto !important;
+}
+
+body:has(.modal.st-grid-link-selector.show) > .modal-backdrop.show,
+body > .modal-backdrop.st-grid-link-selector-backdrop {
+	z-index: var(--st-layer-grid-link-backdrop) !important;
+}
+
+/* While the selector is open its Bootstrap backdrop owns outside clicks. The
+   old grid freeze remains visible underneath, but must not capture input. */
+body:has(.modal.st-grid-link-selector.show) #freeze.grid-form {
+	pointer-events: none !important;
+}
+
+body:has(.modal.st-grid-link-selector.show) .grid-row-open .form-in-grid {
+	pointer-events: none !important;
+}
+
+body:has(.modal.st-grid-link-selector.show) .modal.st-grid-link-selector,
+body:has(.modal.st-grid-link-selector.show) .modal.st-grid-link-selector * {
+	pointer-events: auto;
+}
+
+/* Awesome Bar still wins over every other theme surface. */
+body .modal.show:has(.navbar-modal-wrapper) {
+	z-index: var(--st-layer-awesomebar, 30000) !important;
+}
+
+body:has(.modal.show .navbar-modal-wrapper) > .modal-backdrop.show {
+	z-index: var(--st-layer-awesomebar-backdrop, 29990) !important;
+}
