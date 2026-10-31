@@ -57,6 +57,7 @@ app_include_css = [
 	"/assets/saas_theme/css/child_row_editor_finish.css?v=1",
 	"/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
 	"/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
+	"/assets/saas_theme/css/interaction_finish_v2.css?v=2",
 ]
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
@@ -73,6 +74,7 @@ app_include_js = [
 	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
 	"/assets/saas_theme/js/quick_access_preferences.js?v=1",
 	"/assets/saas_theme/js/child_row_editor_finish.js?v=1",
+	"/assets/saas_theme/js/interaction_finish_v2.js?v=2",
 ]
 
 # include js, css files in header of web template
