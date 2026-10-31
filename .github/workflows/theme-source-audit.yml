@@ -1,0 +1,27 @@
+name: Theme Source Audit
+
+on:
+  push:
+    branches:
+      - fix/theme-cleanup
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Audit historical JS asset references
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=041900291b68052807bb1b6c98d116b58a9f50e0
+          rm -rf /tmp/theme-source
+          mkdir -p /tmp/theme-source
+          git archive "$SOURCE" saas_theme/public/js | tar -x -C /tmp/theme-source
+          echo '=== asset references in historical JS ==='
+          grep -RInE '/assets/saas_theme/(css|js)/|createElement\(["'"'](script|link)["'"']\)|\.src[[:space:]]*=|\.href[[:space:]]*=' /tmp/theme-source/saas_theme/public/js || true
