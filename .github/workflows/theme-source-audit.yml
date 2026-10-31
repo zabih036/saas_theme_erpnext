@@ -17,6 +17,8 @@ jobs:
           fetch-depth: 0
       - name: Consolidate complete historical theme
         run: python3 .github/scripts/consolidate_theme.py
+      - name: Neutralize obsolete runtime asset loaders
+        run: python3 .github/scripts/neutralize_theme_loaders.py
       - name: Commit consolidated theme
         run: |
           git config user.name 'Zabihullah'
@@ -26,5 +28,5 @@ jobs:
             echo 'No consolidation changes to commit.'
             exit 0
           fi
-          git commit -m 'fix: restore all theme work in permanent files'
+          git commit -m 'fix: finalize complete self-contained theme bundles'
           git push origin HEAD:fix/theme-cleanup
