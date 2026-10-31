@@ -109,3 +109,24 @@ body > .st-inline-grid-link-popup-v5::-webkit-scrollbar-thumb {
 	background: #46556B !important;
 	background-clip: padding-box !important;
 }
+
+/* =========================================================
+   FORM TAB STICKY OFFSET CORRECTION
+
+   Frappe listens for scroll events on `.main-section`, but its tab-state
+   handler reads `document.documentElement.scrollTop`. In Desk layouts where
+   `.main-section` is the real scroll container, returning to the top can leave
+   `.form-tabs-sticky-down.show-navbar` attached to the tab bar.
+
+   Core Frappe then calculates:
+     navbar height + page-head height
+   which creates the large blank band shown after scrolling back to the top.
+
+   In this theme the page head already occupies the complete top application
+   header. Sticky tabs therefore belong directly below that page head, exactly
+   where they appear on the initial form render.
+   ========================================================= */
+.page-container .form-layout > .form-page > .form-tabs-list.form-tabs-sticky-down.show-navbar,
+.page-container .std-form-layout > .form-layout > .form-page > .form-tabs-list.form-tabs-sticky-down.show-navbar {
+	top: var(--page-head-height, 60px) !important;
+}
