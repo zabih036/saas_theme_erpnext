@@ -11,8 +11,8 @@ categories = ["Customization", "UI/UX"]
 # Desk assets
 # -----------------------------------------------------------------------------
 # IMPORTANT: This order is intentional and is part of the current working UI.
-# Do not reorder, merge, rename, or remove assets during ordinary feature work.
-# See THEME_MAINTENANCE.md for canonical ownership and change-routing rules.
+# Do not reorder, merge, rename, or remove live assets during ordinary feature work.
+# See THEME_MAINTENANCE.md for canonical ownership and staged cleanup rules.
 
 app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css?v=64",
@@ -63,7 +63,6 @@ app_include_js = [
 	"/assets/saas_theme/js/user_theme_menu.js?v=1",
 	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
 	"/assets/saas_theme/js/quick_access_preferences.js?v=1",
-	"/assets/saas_theme/js/child_row_editor_finish.js?v=1",
 	"/assets/saas_theme/js/interaction_finish_v2.js?v=2",
 ]
 
