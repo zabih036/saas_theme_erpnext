@@ -1,0 +1,1473 @@
+/*
+ * SaaS Theme — precision fixes for checkboxes, grid column dialog,
+ * link actions, tree filters and ListView header hover artifacts.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-precision-text: #14213D;
+	--st-precision-blue: #064ADB;
+	--st-precision-blue-soft: #EEF4FF;
+	--st-precision-border: #D7DEE8;
+	--st-precision-border-soft: #E5E7EB;
+	--st-precision-surface: #FFFFFF;
+	--st-precision-muted: #667085;
+	--st-precision-shadow: 0 1px 2px rgba(20, 33, 61, .05), 0 4px 10px rgba(20, 33, 61, .045);
+}
+
+[data-theme="dark"] {
+	--st-precision-text: #E8EEF8;
+	--st-precision-blue: #5E8CFF;
+	--st-precision-blue-soft: rgba(94, 140, 255, .14);
+	--st-precision-border: #3A4658;
+	--st-precision-border-soft: #2A3442;
+	--st-precision-surface: #151B24;
+	--st-precision-muted: #9AA8BB;
+	--st-precision-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   CHECKBOXES — CONSISTENT, COMPACT, UNAMBIGUOUS
+   ========================================================= */
+.grid-row-check,
+.sticky-column,
+.treeview input[type="checkbox"],
+.list-view input[type="checkbox"],
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+.checkbox input[type="checkbox"],
+input.form-check-input[type="checkbox"] {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	box-sizing: border-box !important;
+	display: inline-grid !important;
+	place-content: center !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	max-width: 16px !important;
+	max-height: 16px !important;
+	flex: 0 0 16px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1.5px solid #AEB8C8 !important;
+	border-radius: 4px !important;
+	background: #FFFFFF !important;
+	background-image: none !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .06) !important;
+	vertical-align: middle !important;
+	cursor: pointer !important;
+	opacity: 1 !important;
+	transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease !important;
+}
+
+[data-theme="dark"] .grid-row-check,
+[data-theme="dark"] .sticky-column,
+[data-theme="dark"] .treeview input[type="checkbox"],
+[data-theme="dark"] .list-view input[type="checkbox"],
+[data-theme="dark"] .frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+[data-theme="dark"] .checkbox input[type="checkbox"],
+[data-theme="dark"] input.form-check-input[type="checkbox"] {
+	background: #111827 !important;
+	border-color: #607086 !important;
+}
+
+.grid-row-check:checked,
+.sticky-column:checked,
+.treeview input[type="checkbox"]:checked,
+.list-view input[type="checkbox"]:checked,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:checked,
+.checkbox input[type="checkbox"]:checked,
+input.form-check-input[type="checkbox"]:checked {
+	border-color: var(--st-precision-blue) !important;
+	background-color: var(--st-precision-blue) !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.2 6.1 4.7 8.45 9.8 3.35' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 11px 11px !important;
+	box-shadow: 0 1px 3px rgba(6, 74, 219, .22) !important;
+}
+
+.grid-row-check:indeterminate,
+.sticky-column:indeterminate,
+.treeview input[type="checkbox"]:indeterminate,
+.list-view input[type="checkbox"]:indeterminate,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:indeterminate,
+.checkbox input[type="checkbox"]:indeterminate,
+input.form-check-input[type="checkbox"]:indeterminate {
+	border-color: var(--st-precision-blue) !important;
+	background-color: var(--st-precision-blue) !important;
+	background-image: linear-gradient(#fff, #fff) !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 8px 2px !important;
+}
+
+.grid-row-check:focus-visible,
+.sticky-column:focus-visible,
+.treeview input[type="checkbox"]:focus-visible,
+.list-view input[type="checkbox"]:focus-visible,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:focus-visible,
+.checkbox input[type="checkbox"]:focus-visible,
+input.form-check-input[type="checkbox"]:focus-visible {
+	outline: none !important;
+	box-shadow: 0 0 0 3px rgba(6, 74, 219, .14) !important;
+}
+
+.grid-row-check:disabled,
+.sticky-column:disabled,
+.treeview input[type="checkbox"]:disabled,
+.list-view input[type="checkbox"]:disabled,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:disabled,
+.checkbox input[type="checkbox"]:disabled,
+input.form-check-input[type="checkbox"]:disabled {
+	cursor: default !important;
+	opacity: .55 !important;
+}
+
+/* Prevent generic .form-control rules from stretching checkbox controls. */
+input.form-control[type="checkbox"],
+.sticky-column.form-control {
+	padding: 0 !important;
+	line-height: 1 !important;
+}
+
+/* Child-table row selection stays centered in header and data rows. */
+.grid-row .row-check,
+.grid-row .row-check.col,
+.grid-heading-row .row-check {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-width: 36px !important;
+	padding-inline: 8px !important;
+}
+
+/* =========================================================
+   CONFIGURE COLUMNS DIALOG — EXACT COLUMN ALIGNMENT
+   ========================================================= */
+.modal .form-group:has(.selected-fields) > .row:first-child,
+.modal .selected-fields .fields_order {
+	display: grid !important;
+	grid-template-columns: 28px minmax(0, 1fr) 112px 72px 34px !important;
+	align-items: center !important;
+	column-gap: 8px !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child {
+	margin: 0 0 8px !important;
+	padding: 0 10px !important;
+	min-height: 32px !important;
+	color: var(--st-precision-muted) !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child > [class*="col-"],
+.modal .selected-fields .fields_order > [class*="col-"] {
+	width: auto !important;
+	max-width: none !important;
+	flex: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	min-width: 0 !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child > [class*="col-"] {
+	font-size: 12px !important;
+	font-weight: 650 !important;
+}
+
+.modal .selected-fields .fields_order {
+	height: 44px !important;
+	min-height: 44px !important;
+	margin: 0 0 7px !important;
+	padding: 0 10px !important;
+	border: 1px solid var(--st-precision-border-soft) !important;
+	border-radius: 9px !important;
+	background: var(--st-precision-surface) !important;
+	box-shadow: var(--st-precision-shadow) !important;
+	cursor: grab !important;
+}
+
+.modal .selected-fields .fields_order:active {
+	cursor: grabbing !important;
+}
+
+.modal .selected-fields .fields_order > [class*="col-"] {
+	display: flex !important;
+	align-items: center !important;
+}
+
+.modal .selected-fields .fields_order > .col-5 {
+	font-size: 14px !important;
+	font-weight: 520 !important;
+	color: var(--st-precision-text) !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
+.modal .selected-fields .column-width {
+	width: 96px !important;
+	max-width: 96px !important;
+	height: 34px !important;
+	min-height: 34px !important;
+	margin: 0 !important;
+	padding: 0 10px !important;
+	border: 1px solid var(--st-precision-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-precision-surface) !important;
+	color: var(--st-precision-text) !important;
+	font-size: 13px !important;
+	font-weight: 520 !important;
+	text-align: center !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .04) !important;
+}
+
+.modal .selected-fields .sticky-col-container {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.modal .selected-fields .sticky-column {
+	margin: 0 auto !important;
+}
+
+.modal .selected-fields .remove-field {
+	width: 28px !important;
+	height: 28px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 6px !important;
+	color: var(--st-precision-muted) !important;
+	transition: color .12s ease, background .12s ease !important;
+}
+
+.modal .selected-fields .remove-field:hover {
+	background: rgba(239, 68, 68, .08) !important;
+	color: #DC2626 !important;
+	text-decoration: none !important;
+}
+
+.modal .selected-fields .remove-field svg {
+	width: 14px !important;
+	height: 14px !important;
+}
+
+@media (max-width: 720px) {
+	.modal .form-group:has(.selected-fields) > .row:first-child,
+	.modal .selected-fields .fields_order {
+		grid-template-columns: 24px minmax(120px, 1fr) 88px 54px 30px !important;
+		column-gap: 5px !important;
+	}
+
+	.modal .selected-fields .column-width {
+		width: 78px !important;
+		max-width: 78px !important;
+	}
+}
+
+/* =========================================================
+   LINK FIELDS — QUIET, CLEAR OPEN-RECORD ACTION
+   ========================================================= */
+.frappe-control[data-fieldtype="Link"] .control-input,
+.frappe-control[data-fieldtype="Dynamic Link"] .control-input {
+	position: relative !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn {
+	width: 32px !important;
+	height: 30px !important;
+	min-width: 32px !important;
+	min-height: 30px !important;
+	right: 3px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid rgba(6, 74, 219, .16) !important;
+	border-radius: 7px !important;
+	background: var(--st-precision-blue-soft) !important;
+	box-shadow: none !important;
+	color: var(--st-precision-blue) !important;
+	overflow: hidden !important;
+	transition: background .12s ease, border-color .12s ease !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn:hover,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn:hover {
+	background: rgba(6, 74, 219, .13) !important;
+	border-color: rgba(6, 74, 219, .28) !important;
+	transform: translateY(-50%) !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open {
+	width: 100% !important;
+	height: 100% !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	background: transparent !important;
+	color: var(--st-precision-blue) !important;
+	text-decoration: none !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open svg,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open svg {
+	display: none !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open::before,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open::before {
+	content: "";
+	width: 15px;
+	height: 15px;
+	display: block;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.frappe-control[data-fieldtype="Link"] input.form-control,
+.frappe-control[data-fieldtype="Dynamic Link"] input.form-control {
+	padding-right: 42px !important;
+}
+
+/* =========================================================
+   TREE VIEW CHECKBOX — ALIGN WITH FILTER CONTROLS
+   ========================================================= */
+.treeview .page-form .frappe-control[data-fieldtype="Check"] {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 36px !important;
+	margin: 0 !important;
+}
+
+.treeview .page-form .frappe-control[data-fieldtype="Check"] .checkbox,
+.treeview .page-form .frappe-control[data-fieldtype="Check"] label {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	min-height: 36px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.treeview .page-form .frappe-control[data-fieldtype="Check"] input[type="checkbox"] {
+	margin: 0 !important;
+}
+
+/* =========================================================
+   LISTVIEW HEADER — REMOVE HOVER UNDERLINE / EXTRA RULE
+   ========================================================= */
+.list-view .list-row-head,
+.list-view .list-row-head:hover,
+.list-view .list-row-head:focus,
+.list-view .list-row-head:focus-within {
+	text-decoration: none !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40) !important;
+}
+
+.list-view .list-row-head::before,
+.list-view .list-row-head::after,
+.list-view .list-row-head .list-row-col::before,
+.list-view .list-row-head .list-row-col::after,
+.list-view .list-row-head .list-subject::before,
+.list-view .list-row-head .list-subject::after,
+.list-view .list-row-head [data-sort-by]::before,
+.list-view .list-row-head [data-sort-by]::after {
+	content: none !important;
+	display: none !important;
+	border: 0 !important;
+}
+
+.list-view .list-row-head a,
+.list-view .list-row-head a:hover,
+.list-view .list-row-head [data-sort-by],
+.list-view .list-row-head [data-sort-by]:hover {
+	text-decoration: none !important;
+	border-bottom: 0 !important;
+	box-shadow: none !important;
+}
+
+.list-view .list-row-head + .list-row-container,
+.list-view .list-row-head:hover + .list-row-container {
+	border-top-color: var(--st-list-border) !important;
+}
+/*
+ * SaaS Theme — exact UI follow-up
+ * Loaded last to resolve the remaining Link action, ListView header,
+ * persistent form-sidebar and native workspace widget presentation issues.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-follow-text: #111827;
+	--st-follow-heading: #0F172A;
+	--st-follow-navy: #14213D;
+	--st-follow-blue: #064ADB;
+	--st-follow-blue-hover: #043CB5;
+	--st-follow-blue-soft: #EEF4FF;
+	--st-follow-muted: #64748B;
+	--st-follow-border: #E2E8F0;
+	--st-follow-border-soft: #EDF1F5;
+	--st-follow-surface: #FFFFFF;
+	--st-follow-soft: #F8FAFC;
+	--st-follow-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px rgba(15, 23, 42, .055);
+	--st-follow-shadow-hover: 0 3px 8px rgba(15, 23, 42, .06), 0 14px 30px rgba(15, 23, 42, .075);
+}
+
+[data-theme="dark"] {
+	--st-follow-text: #E5E7EB;
+	--st-follow-heading: #F8FAFC;
+	--st-follow-navy: #E8EEF8;
+	--st-follow-blue: #5E8CFF;
+	--st-follow-blue-hover: #79A2FF;
+	--st-follow-blue-soft: rgba(94, 140, 255, .13);
+	--st-follow-muted: #94A3B8;
+	--st-follow-border: #334155;
+	--st-follow-border-soft: #263244;
+	--st-follow-surface: #151B24;
+	--st-follow-soft: #111827;
+	--st-follow-shadow: 0 2px 10px rgba(0, 0, 0, .18), 0 12px 28px rgba(0, 0, 0, .14);
+	--st-follow-shadow-hover: 0 6px 18px rgba(0, 0, 0, .24), 0 16px 34px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   LINK FIELDS — OVERRIDE THE EARLIER HIGH-SPECIFICITY RULE
+   ========================================================= */
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-field > .link-btn,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > .link-btn,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-field > .link-btn,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > .link-btn {
+	width: auto !important;
+	height: 32px !important;
+	min-width: 30px !important;
+	min-height: 32px !important;
+	max-height: 32px !important;
+	right: 4px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	margin: 0 !important;
+	padding: 1px !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: var(--st-follow-blue) !important;
+	overflow: visible !important;
+	white-space: nowrap !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-field > .link-btn:hover,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > .link-btn:hover,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-field > .link-btn:hover,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > .link-btn:hover {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	transform: translateY(-50%) !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 30px !important;
+	height: 30px !important;
+	min-width: 30px !important;
+	min-height: 30px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid rgba(6, 74, 219, .18) !important;
+	border-radius: 7px !important;
+	background: var(--st-follow-blue-soft) !important;
+	color: var(--st-follow-blue) !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+	transition: background-color .14s ease, border-color .14s ease, transform .14s ease, box-shadow .14s ease !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open:hover,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open:hover,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open:hover,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open:hover {
+	background: rgba(6, 74, 219, .12) !important;
+	border-color: rgba(6, 74, 219, .34) !important;
+	box-shadow: 0 3px 8px rgba(6, 74, 219, .12) !important;
+	transform: translateY(-1px) !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open svg,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open svg,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open svg,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open svg {
+	display: none !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open::before,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open::before,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-open::before,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open::before {
+	content: "" !important;
+	display: block !important;
+	width: 15px !important;
+	height: 15px !important;
+	background-color: currentColor !important;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 14 21 3' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 14 21 3' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-clear,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-clear,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-clear,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-clear {
+	width: 28px !important;
+	height: 30px !important;
+	align-items: center !important;
+	justify-content: center !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 7px !important;
+	background: transparent !important;
+	color: var(--st-follow-muted) !important;
+	box-shadow: none !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-clear:hover,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-clear:hover,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-btn .btn-clear:hover,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-clear:hover {
+	background: rgba(100, 116, 139, .09) !important;
+	color: var(--st-follow-heading) !important;
+}
+
+.form-page .form-layout .frappe-control[data-fieldtype="Link"] .link-field > input.form-control,
+.form-page .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > input.form-control,
+.std-form-layout .frappe-control[data-fieldtype="Link"] .link-field > input.form-control,
+.std-form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-field > input.form-control {
+	padding-right: 72px !important;
+}
+
+/* =========================================================
+   LIST HEADER — REMOVE THE SECOND HOVER LINE EXACTLY
+   Frappe highlights the sticky first .list-row-container; because the
+   themed header has bottom margin, that highlight was visible as a line.
+   ========================================================= */
+.list-view .frappe-list .result > .list-row-container:first-child,
+.list-view .frappe-list .result > .list-row-container:first-child:hover,
+.list-view .frappe-list .result > .list-row-container:first-child:focus,
+.list-view .frappe-list .result > .list-row-container:first-child:focus-within {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+.list-view .frappe-list .result > .list-row-container:first-child::before,
+.list-view .frappe-list .result > .list-row-container:first-child::after {
+	content: none !important;
+	display: none !important;
+}
+
+.list-view .frappe-list .result > .list-row-container:first-child:hover > .list-row-head,
+.list-view .frappe-list .result > .list-row-container:first-child:focus-within > .list-row-head {
+	background: var(--st-list-header) !important;
+	border-color: var(--st-list-border-strong) !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45) !important;
+}
+
+.list-view .frappe-list .list-row-head,
+.list-view .frappe-list .list-row-head:hover {
+	text-decoration: none !important;
+}
+
+.list-view .frappe-list .list-row-head [data-sort-by]:hover,
+.list-view .frappe-list .list-row-head a:hover {
+	text-decoration: none !important;
+	border-bottom: 0 !important;
+	box-shadow: none !important;
+}
+
+/* =========================================================
+   PERSISTENT FORM SIDEBAR COLLAPSE
+   ========================================================= */
+body.st-form-sidebar-collapsed[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-side-section {
+	display: none !important;
+	width: 0 !important;
+	min-width: 0 !important;
+	max-width: 0 !important;
+	flex: 0 0 0 !important;
+	border-left: 0 !important;
+}
+
+body.st-form-sidebar-collapsed[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-main-section-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex: 1 1 100% !important;
+}
+
+.st-form-sidebar-toggle {
+	width: 34px !important;
+	height: 34px !important;
+	min-width: 34px !important;
+	min-height: 34px !important;
+	padding: 0 !important;
+	margin-left: 8px !important;
+	border: 1px solid var(--st-follow-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-follow-surface) !important;
+	color: var(--st-follow-muted) !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, .04) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	transition: color .14s ease, border-color .14s ease, background .14s ease, box-shadow .14s ease !important;
+}
+
+.st-form-sidebar-toggle:hover {
+	color: var(--st-follow-blue) !important;
+	border-color: rgba(6, 74, 219, .28) !important;
+	background: var(--st-follow-blue-soft) !important;
+	box-shadow: 0 3px 9px rgba(15, 23, 42, .07) !important;
+}
+
+.st-form-sidebar-toggle svg {
+	width: 17px !important;
+	height: 17px !important;
+	stroke: currentColor !important;
+}
+
+.st-form-sidebar-toggle[data-collapsed="true"] {
+	color: var(--st-follow-blue) !important;
+	background: var(--st-follow-blue-soft) !important;
+	border-color: rgba(6, 74, 219, .24) !important;
+}
+
+@media (max-width: 991.98px) {
+	.st-form-sidebar-toggle {
+		display: none !important;
+	}
+}
+
+/* =========================================================
+   NATIVE WORKSPACE NUMBER CARDS — CLEAN, MODERN, QUIET
+   ========================================================= */
+.widget.number-widget-box {
+	position: relative !important;
+	min-height: 126px !important;
+	padding: 14px 16px 16px !important;
+	border: 1px solid var(--st-follow-border) !important;
+	border-radius: 13px !important;
+	background: var(--st-follow-surface) !important;
+	box-shadow: var(--st-follow-shadow) !important;
+	overflow: hidden !important;
+	transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease !important;
+}
+
+.widget.number-widget-box::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 14px;
+	bottom: 14px;
+	width: 3px;
+	border-radius: 0 3px 3px 0;
+	background: var(--st-follow-blue);
+	opacity: .88;
+}
+
+.widget.number-widget-box:hover {
+	transform: translateY(-1px) !important;
+	border-color: rgba(6, 74, 219, .22) !important;
+	box-shadow: var(--st-follow-shadow-hover) !important;
+}
+
+.widget.number-widget-box .widget-head {
+	min-height: 32px !important;
+	padding: 0 0 10px !important;
+	margin: 0 !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--st-follow-border-soft) !important;
+	background: transparent !important;
+}
+
+.widget.number-widget-box .widget-title,
+.widget.number-widget-box .widget-label,
+.widget.number-widget-box .widget-label .widget-title {
+	color: var(--st-follow-heading) !important;
+	font-size: 13px !important;
+	font-weight: 650 !important;
+	line-height: 1.35 !important;
+}
+
+.widget.number-widget-box .widget-body {
+	padding: 12px 0 0 !important;
+	margin: 0 !important;
+}
+
+.widget.number-widget-box .widget-content {
+	min-height: 42px !important;
+	display: flex !important;
+	align-items: center !important;
+}
+
+.widget.number-widget-box .number {
+	color: var(--st-follow-navy) !important;
+	font-size: clamp(25px, 2vw, 31px) !important;
+	font-weight: 720 !important;
+	line-height: 1.08 !important;
+	letter-spacing: -.02em !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+.widget.number-widget-box .card-stats,
+.widget.number-widget-box .number-card-loading {
+	color: var(--st-follow-muted) !important;
+	font-size: 11.5px !important;
+}
+
+/* =========================================================
+   NATIVE WORKSPACE CHART / DASHBOARD CARDS
+   ========================================================= */
+.widget.dashboard-widget-box {
+	padding: 0 !important;
+	border: 1px solid var(--st-follow-border) !important;
+	border-radius: 14px !important;
+	background: var(--st-follow-surface) !important;
+	box-shadow: var(--st-follow-shadow) !important;
+	overflow: hidden !important;
+}
+
+.widget.dashboard-widget-box .widget-head {
+	min-height: 58px !important;
+	padding: 13px 16px !important;
+	margin: 0 !important;
+	border-bottom: 1px solid var(--st-follow-border-soft) !important;
+	background: var(--st-follow-surface) !important;
+}
+
+.widget.dashboard-widget-box .widget-title,
+.widget.dashboard-widget-box .widget-label .widget-title {
+	color: var(--st-follow-heading) !important;
+	font-size: 13.5px !important;
+	font-weight: 680 !important;
+	letter-spacing: -.005em !important;
+}
+
+.widget.dashboard-widget-box .widget-subtitle {
+	margin-top: 4px !important;
+	color: var(--st-follow-muted) !important;
+	font-size: 11.5px !important;
+}
+
+.widget.dashboard-widget-box .widget-control .btn,
+.widget.dashboard-widget-box .widget-control .es-button,
+.widget.dashboard-widget-box .filter-chart {
+	border: 1px solid var(--st-follow-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-follow-soft) !important;
+	color: var(--st-follow-muted) !important;
+	box-shadow: none !important;
+}
+
+.widget.dashboard-widget-box .widget-control .btn:hover,
+.widget.dashboard-widget-box .widget-control .es-button:hover,
+.widget.dashboard-widget-box .filter-chart:hover {
+	border-color: rgba(6, 74, 219, .22) !important;
+	background: var(--st-follow-blue-soft) !important;
+	color: var(--st-follow-blue) !important;
+}
+
+.widget.dashboard-widget-box .widget-body {
+	padding: 14px 16px 18px !important;
+	background: var(--st-follow-surface) !important;
+}
+
+.widget.dashboard-widget-box .report-summary {
+	margin: 0 0 16px !important;
+	padding: 16px 18px !important;
+	gap: 12px 20px !important;
+	border: 1px solid var(--st-follow-border-soft) !important;
+	border-radius: 11px !important;
+	background: var(--st-follow-soft) !important;
+	box-shadow: none !important;
+}
+
+.widget.dashboard-widget-box .report-summary .summary-item {
+	min-height: 62px !important;
+	margin: 0 12px !important;
+}
+
+.widget.dashboard-widget-box .report-summary .summary-label {
+	color: #475569 !important;
+	font-size: 13px !important;
+	font-weight: 560 !important;
+}
+
+.widget.dashboard-widget-box .report-summary .summary-value,
+.widget.dashboard-widget-box .report-summary .summary-value div {
+	color: var(--st-follow-navy) !important;
+	font-size: 23px !important;
+	font-weight: 690 !important;
+	line-height: 1.15 !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+.widget.dashboard-widget-box .report-summary .summary-value.green,
+.widget.dashboard-widget-box .report-summary .summary-value.green div {
+	color: #159B62 !important;
+}
+
+.widget.dashboard-widget-box .report-summary .summary-value.red,
+.widget.dashboard-widget-box .report-summary .summary-value.red div {
+	color: #D64545 !important;
+}
+
+.widget.dashboard-widget-box .chart-container,
+.widget.dashboard-widget-box .frappe-chart {
+	background: transparent !important;
+}
+
+.widget.dashboard-widget-box .chart-label,
+.widget.dashboard-widget-box .tick,
+.widget.dashboard-widget-box .chart-legend,
+.widget.dashboard-widget-box .legend-dataset-text {
+	color: var(--st-follow-muted) !important;
+	fill: var(--st-follow-muted) !important;
+}
+
+[data-theme="dark"] .widget.dashboard-widget-box .report-summary .summary-label {
+	color: #B7C2D0 !important;
+}
+
+@media (max-width: 767.98px) {
+	.widget.number-widget-box {
+		min-height: 112px !important;
+		padding: 12px 14px 14px !important;
+	}
+
+	.widget.number-widget-box .number {
+		font-size: 24px !important;
+	}
+
+	.widget.dashboard-widget-box .widget-head {
+		padding: 12px 13px !important;
+	}
+
+	.widget.dashboard-widget-box .widget-body {
+		padding: 12px 13px 15px !important;
+	}
+
+	.widget.dashboard-widget-box .report-summary {
+		padding: 13px !important;
+	}
+}
+/*
+ * SaaS Theme — final precision pass
+ * Responsive shell consistency, currency spacing, pre-paint sidebar state,
+ * darker dashboard typography and Quick Access customization UI.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-v2-black: #000000;
+	--st-v2-text: #111827;
+	--st-v2-navy: #14213D;
+	--st-v2-blue: #064ADB;
+	--st-v2-blue-soft: #EEF4FF;
+	--st-v2-muted: #667085;
+	--st-v2-border: #E5E7EB;
+	--st-v2-border-strong: #D0D5DD;
+	--st-v2-surface: #FFFFFF;
+	--st-v2-soft: #F8FAFC;
+	--st-v2-shadow: 0 1px 2px rgba(20, 33, 61, .04), 0 8px 24px rgba(20, 33, 61, .045);
+	--st-v2-shadow-hover: 0 4px 12px rgba(20, 33, 61, .07), 0 14px 30px rgba(20, 33, 61, .06);
+}
+
+[data-theme="dark"] {
+	--st-v2-black: #F8FAFC;
+	--st-v2-text: #E5E7EB;
+	--st-v2-navy: #E8EEF8;
+	--st-v2-blue: #5E8CFF;
+	--st-v2-blue-soft: rgba(94, 140, 255, .13);
+	--st-v2-muted: #94A3B8;
+	--st-v2-border: #334155;
+	--st-v2-border-strong: #475569;
+	--st-v2-surface: #151B24;
+	--st-v2-soft: #111827;
+	--st-v2-shadow: 0 2px 10px rgba(0, 0, 0, .18), 0 12px 28px rgba(0, 0, 0, .14);
+	--st-v2-shadow-hover: 0 6px 18px rgba(0, 0, 0, .24), 0 16px 34px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   MOBILE DRAWER — NEVER LEAVE THE SCRIM BEHIND
+   Frappe can keep `expanded` on a wrapper that is also `sidebar-hidden`.
+   Upstream mobile CSS displays the scrim for `.expanded`; explicitly cancel it
+   while the drawer is hidden so the page is never half-dark/half-light.
+   ========================================================= */
+@media (max-width: 767.98px) {
+	.body-sidebar-container.sidebar-hidden .overlay,
+	.body-sidebar-container.expanded.sidebar-hidden .overlay {
+		display: none !important;
+		visibility: hidden !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		background: transparent !important;
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
+	}
+
+	.body-sidebar-container.sidebar-hidden,
+	.body-sidebar-container.expanded.sidebar-hidden {
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+
+	/* Do not allow a stale overlay/filter to tint routed content. */
+	.main-section,
+	.page-container,
+	.page-body,
+	.layout-main,
+	.layout-main-section-wrapper,
+	.layout-main-section,
+	.form-page,
+	.list-view-container {
+		opacity: 1 !important;
+		filter: none !important;
+	}
+
+	[data-theme="light"] .main-section,
+	[data-theme="light"] .page-container,
+	[data-theme="light"] .page-body,
+	[data-theme="light"] .layout-main,
+	[data-theme="light"] .layout-main-section-wrapper,
+	[data-theme="light"] .layout-main-section {
+		background-color: #FFFFFF !important;
+	}
+
+	[data-theme="dark"] .main-section,
+	[data-theme="dark"] .page-container,
+	[data-theme="dark"] .page-body,
+	[data-theme="dark"] .layout-main,
+	[data-theme="dark"] .layout-main-section-wrapper,
+	[data-theme="dark"] .layout-main-section {
+		background-color: var(--bg-color, #111827) !important;
+	}
+}
+
+/* =========================================================
+   FORM DETAILS SIDEBAR — PRE-PAINT PERSISTENCE
+   The root preference class is applied as soon as the JS asset evaluates.
+   Keep these selectors route-scoped so other pages are unaffected.
+   ========================================================= */
+html.st-form-sidebar-pref-collapsed body[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-side-section,
+body.st-form-sidebar-collapsed[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-side-section {
+	display: none !important;
+	width: 0 !important;
+	min-width: 0 !important;
+	max-width: 0 !important;
+	flex: 0 0 0 !important;
+	border-left: 0 !important;
+}
+
+html.st-form-sidebar-pref-collapsed body[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-main-section-wrapper,
+body.st-form-sidebar-collapsed[data-route^="Form"]
+	.layout-main:not(:has(.layout-side-section .attachment-preview:not(.hidden)))
+	.layout-main-section-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex: 1 1 100% !important;
+}
+
+/* Avoid a width animation/flash while restoring the saved preference. */
+html.st-form-sidebar-pref-collapsed body[data-route^="Form"] .layout-side-section,
+html.st-form-sidebar-pref-collapsed body[data-route^="Form"] .layout-main-section-wrapper {
+	transition: none !important;
+}
+
+/* =========================================================
+   GRID CURRENCY — RESERVE REAL SPACE FOR SYMBOLS
+   ========================================================= */
+.form-grid .grid-row .grid-currency-input {
+	position: relative !important;
+	display: flex !important;
+	align-items: center !important;
+	width: 100% !important;
+	min-width: 0 !important;
+}
+
+.form-grid .grid-row .grid-currency-prefix,
+.form-grid .grid-row .grid-currency-suffix {
+	position: absolute !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	z-index: 3 !important;
+	display: none !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-width: max-content !important;
+	color: var(--st-v2-muted) !important;
+	font-size: .92em !important;
+	font-weight: 600 !important;
+	line-height: 1 !important;
+	white-space: nowrap !important;
+	pointer-events: none !important;
+}
+
+.form-grid .grid-row .grid-currency-prefix {
+	left: 12px !important;
+}
+
+.form-grid .grid-row .grid-currency-suffix {
+	right: 12px !important;
+}
+
+.form-grid .grid-row .grid-currency-input.grid-currency-has-value .grid-currency-prefix,
+.form-grid .grid-row .grid-currency-input.grid-currency-has-value .grid-currency-suffix {
+	display: inline-flex !important;
+}
+
+.form-grid .grid-row .grid-currency-input.grid-currency-has-value:not(.grid-currency-symbol-right) .form-control {
+	padding-left: calc(22px + var(--grid-currency-symbol-width, 1em)) !important;
+	padding-right: 10px !important;
+	text-align: left !important;
+}
+
+.form-grid .grid-row .grid-currency-input.grid-currency-has-value.grid-currency-symbol-right .form-control {
+	padding-right: calc(22px + var(--grid-currency-symbol-width, 1em)) !important;
+	padding-left: 10px !important;
+	text-align: right !important;
+}
+
+.form-grid .grid-row input[data-fieldtype="Currency"],
+.form-grid .grid-row .grid-currency-input .form-control {
+	font-variant-numeric: tabular-nums !important;
+	font-feature-settings: "tnum" 1 !important;
+}
+
+/* =========================================================
+   HOME DASHBOARD — STRONGER MODERN LIGHT-MODE TYPOGRAPHY
+   ========================================================= */
+[data-theme="light"] .st-home-dashboard,
+[data-theme="light"] .st-home-dashboard a,
+[data-theme="light"] .st-home-dashboard button {
+	color: var(--st-v2-text) !important;
+}
+
+[data-theme="light"] .st-hub-welcome h1,
+[data-theme="light"] .st-hub-metric-copy strong,
+[data-theme="light"] .st-hub-clock-time,
+[data-theme="light"] .st-hub-side-head span,
+[data-theme="light"] .st-hub-section-head h2,
+[data-theme="light"] .st-hub-quick-copy strong,
+[data-theme="light"] .st-hub-recent-copy strong,
+[data-theme="light"] .st-analytics-kpi strong,
+[data-theme="light"] .st-analytics-card-head strong,
+[data-theme="light"] .st-hub-workspace-card strong {
+	color: #000000 !important;
+}
+
+[data-theme="light"] .st-hub-welcome h1 {
+	font-weight: 760 !important;
+	letter-spacing: -.035em !important;
+}
+
+[data-theme="light"] .st-hub-section-head h2,
+[data-theme="light"] .st-hub-side-head span,
+[data-theme="light"] .st-hub-quick-copy strong,
+[data-theme="light"] .st-hub-recent-copy strong {
+	font-weight: 650 !important;
+}
+
+[data-theme="light"] .st-hub-welcome p,
+[data-theme="light"] .st-hub-section-head p,
+[data-theme="light"] .st-hub-quick-copy small,
+[data-theme="light"] .st-hub-recent-copy small,
+[data-theme="light"] .st-hub-side-head small,
+[data-theme="light"] .st-hub-metric-copy small,
+[data-theme="light"] .st-hub-metric-copy span,
+[data-theme="light"] .st-analytics-kpi small,
+[data-theme="light"] .st-analytics-kpi em {
+	color: #667085 !important;
+}
+
+/* =========================================================
+   QUICK ACCESS — EDIT CONTROL
+   ========================================================= */
+.st-hub-quick-section .st-hub-section-head {
+	gap: 16px !important;
+}
+
+.st-quick-access-edit {
+	margin-left: auto !important;
+	flex: 0 0 auto !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 7px !important;
+	height: 34px !important;
+	padding: 0 12px !important;
+	border: 1px solid var(--st-v2-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-v2-surface) !important;
+	color: var(--st-v2-navy) !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .035) !important;
+	font-size: 12px !important;
+	font-weight: 620 !important;
+	line-height: 1 !important;
+	cursor: pointer !important;
+	transition: border-color .14s ease, background-color .14s ease, color .14s ease, box-shadow .14s ease, transform .14s ease !important;
+}
+
+.st-quick-access-edit:hover,
+.st-quick-access-edit:focus-visible {
+	border-color: rgba(6, 74, 219, .28) !important;
+	background: var(--st-v2-blue-soft) !important;
+	color: var(--st-v2-blue) !important;
+	box-shadow: 0 4px 12px rgba(20, 33, 61, .07) !important;
+	outline: none !important;
+	transform: translateY(-1px) !important;
+}
+
+.st-quick-access-edit > span,
+.st-quick-access-edit svg {
+	width: 15px !important;
+	height: 15px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	stroke: currentColor !important;
+}
+
+[data-theme="dark"] .st-quick-access-edit {
+	background: #151B24 !important;
+	border-color: #334155 !important;
+	color: #E5E7EB !important;
+}
+
+[data-theme="dark"] .st-quick-access-edit:hover,
+[data-theme="dark"] .st-quick-access-edit:focus-visible {
+	background: rgba(94, 140, 255, .13) !important;
+	border-color: rgba(94, 140, 255, .32) !important;
+	color: #79A2FF !important;
+}
+
+/* =========================================================
+   QUICK ACCESS PICKER DIALOG
+   ========================================================= */
+.st-quick-access-dialog .modal-dialog {
+	max-width: 720px !important;
+}
+
+.st-quick-access-dialog .modal-content {
+	border: 1px solid var(--st-v2-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-v2-surface) !important;
+	box-shadow: 0 24px 64px rgba(20, 33, 61, .18) !important;
+	overflow: hidden !important;
+}
+
+.st-quick-access-dialog .modal-header {
+	min-height: 58px !important;
+	padding: 14px 18px !important;
+	border-bottom: 1px solid var(--st-v2-border) !important;
+	background: var(--st-v2-surface) !important;
+}
+
+.st-quick-access-dialog .modal-title {
+	color: var(--st-v2-black) !important;
+	font-size: 16px !important;
+	font-weight: 680 !important;
+	letter-spacing: -.01em !important;
+}
+
+.st-quick-access-dialog .modal-body {
+	padding: 18px !important;
+	background: var(--st-v2-surface) !important;
+}
+
+.st-quick-access-dialog .modal-footer {
+	padding: 12px 18px !important;
+	border-top: 1px solid var(--st-v2-border) !important;
+	background: var(--st-v2-soft) !important;
+}
+
+.st-quick-picker {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 12px !important;
+}
+
+.st-quick-picker-toolbar {
+	display: flex !important;
+	align-items: center !important;
+	gap: 10px !important;
+}
+
+.st-quick-picker-search {
+	position: relative !important;
+	flex: 1 1 auto !important;
+	margin: 0 !important;
+}
+
+.st-quick-picker-search > span {
+	position: absolute !important;
+	left: 12px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	width: 16px !important;
+	height: 16px !important;
+	z-index: 2 !important;
+	color: var(--st-v2-muted) !important;
+	pointer-events: none !important;
+}
+
+.st-quick-picker-search svg {
+	width: 16px !important;
+	height: 16px !important;
+	stroke: currentColor !important;
+}
+
+.st-quick-picker-search .form-control {
+	height: 38px !important;
+	padding: 0 12px 0 38px !important;
+	border: 1px solid var(--st-v2-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-v2-surface) !important;
+	color: var(--st-v2-text) !important;
+	box-shadow: none !important;
+}
+
+.st-quick-picker-search .form-control:focus {
+	border-color: rgba(6, 74, 219, .55) !important;
+	box-shadow: 0 0 0 3px rgba(6, 74, 219, .10) !important;
+}
+
+.st-quick-picker-reset {
+	height: 38px !important;
+	padding: 0 12px !important;
+	border: 1px solid var(--st-v2-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-v2-soft) !important;
+	color: var(--st-v2-navy) !important;
+	box-shadow: none !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+}
+
+.st-quick-picker-reset:hover {
+	background: var(--st-v2-blue-soft) !important;
+	border-color: rgba(6, 74, 219, .24) !important;
+	color: var(--st-v2-blue) !important;
+}
+
+.st-quick-picker-meta {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 12px !important;
+	color: var(--st-v2-muted) !important;
+	font-size: 12px !important;
+}
+
+.st-quick-picker-meta strong {
+	color: var(--st-v2-navy) !important;
+	font-weight: 650 !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+.st-quick-picker-options {
+	display: grid !important;
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	gap: 8px !important;
+	max-height: min(430px, 58vh) !important;
+	overflow-y: auto !important;
+	overscroll-behavior: contain !important;
+	padding: 2px !important;
+}
+
+.st-quick-picker-option {
+	position: relative !important;
+	min-width: 0 !important;
+	min-height: 58px !important;
+	margin: 0 !important;
+	padding: 9px 10px !important;
+	display: grid !important;
+	grid-template-columns: 18px 34px minmax(0, 1fr) !important;
+	align-items: center !important;
+	gap: 9px !important;
+	border: 1px solid var(--st-v2-border) !important;
+	border-radius: 11px !important;
+	background: var(--st-v2-surface) !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .025) !important;
+	cursor: pointer !important;
+	transition: border-color .14s ease, background .14s ease, box-shadow .14s ease !important;
+}
+
+.st-quick-picker-option:hover {
+	border-color: var(--st-v2-border-strong) !important;
+	background: var(--st-v2-soft) !important;
+	box-shadow: 0 4px 12px rgba(20, 33, 61, .05) !important;
+}
+
+.st-quick-picker-option:has(.st-quick-picker-check:checked) {
+	border-color: rgba(6, 74, 219, .32) !important;
+	background: var(--st-v2-blue-soft) !important;
+}
+
+.st-quick-picker-check {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	margin: 0 !important;
+	border: 1.5px solid #AEB8C8 !important;
+	border-radius: 4px !important;
+	background: #FFFFFF !important;
+	box-shadow: none !important;
+	cursor: pointer !important;
+}
+
+.st-quick-picker-check:checked {
+	border-color: var(--st-v2-blue) !important;
+	background-color: var(--st-v2-blue) !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.2 6.1 4.7 8.45 9.8 3.35' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 11px 11px !important;
+}
+
+.st-quick-picker-check:disabled {
+	opacity: .45 !important;
+	cursor: not-allowed !important;
+}
+
+.st-quick-picker-icon {
+	width: 34px !important;
+	height: 34px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border: 1px solid rgba(6, 74, 219, .10) !important;
+	border-radius: 9px !important;
+	background: var(--st-v2-blue-soft) !important;
+	color: var(--st-v2-blue) !important;
+}
+
+.st-quick-picker-icon svg {
+	width: 17px !important;
+	height: 17px !important;
+	stroke: currentColor !important;
+}
+
+.st-quick-picker-copy {
+	min-width: 0 !important;
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 2px !important;
+}
+
+.st-quick-picker-copy strong,
+.st-quick-picker-copy small {
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
+.st-quick-picker-copy strong {
+	color: var(--st-v2-black) !important;
+	font-size: 13px !important;
+	font-weight: 630 !important;
+	line-height: 1.2 !important;
+}
+
+.st-quick-picker-copy small {
+	color: var(--st-v2-muted) !important;
+	font-size: 11px !important;
+	line-height: 1.2 !important;
+}
+
+[data-theme="dark"] .st-quick-access-dialog .modal-content,
+[data-theme="dark"] .st-quick-access-dialog .modal-header,
+[data-theme="dark"] .st-quick-access-dialog .modal-body,
+[data-theme="dark"] .st-quick-picker-option,
+[data-theme="dark"] .st-quick-picker-search .form-control {
+	background: #151B24 !important;
+	border-color: #334155 !important;
+}
+
+[data-theme="dark"] .st-quick-access-dialog .modal-footer,
+[data-theme="dark"] .st-quick-picker-reset {
+	background: #111827 !important;
+	border-color: #334155 !important;
+}
+
+[data-theme="dark"] .st-quick-picker-option:hover {
+	background: #1B2430 !important;
+	border-color: #475569 !important;
+}
+
+[data-theme="dark"] .st-quick-picker-option:has(.st-quick-picker-check:checked) {
+	background: rgba(94, 140, 255, .12) !important;
+	border-color: rgba(94, 140, 255, .34) !important;
+}
+
+[data-theme="dark"] .st-quick-picker-check {
+	background: #111827 !important;
+	border-color: #64748B !important;
+}
+
+[data-theme="dark"] .st-quick-picker-check:checked {
+	background-color: #5E8CFF !important;
+	border-color: #5E8CFF !important;
+}
+
+@media (max-width: 767.98px) {
+	.st-hub-quick-section .st-hub-section-head {
+		align-items: flex-start !important;
+	}
+
+	.st-quick-access-edit {
+		height: 32px !important;
+		padding: 0 10px !important;
+	}
+
+	.st-quick-access-dialog .modal-dialog {
+		max-width: none !important;
+		margin: 10px !important;
+	}
+
+	.st-quick-access-dialog .modal-body {
+		padding: 14px !important;
+	}
+
+	.st-quick-picker-toolbar {
+		align-items: stretch !important;
+		flex-direction: column !important;
+	}
+
+	.st-quick-picker-options {
+		grid-template-columns: minmax(0, 1fr) !important;
+		max-height: min(460px, 62vh) !important;
+	}
+}
