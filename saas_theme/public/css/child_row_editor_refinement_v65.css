@@ -1,0 +1,9 @@
+/*
+ * SaaS Theme — legacy child-row refinement retired in v7.
+ *
+ * This file is still dynamically requested by older theme bootstrap code, so
+ * it remains present to avoid a missing asset. All child-row editor layout,
+ * accordion styling, popup geometry and stacking are now owned by
+ * ui_consolidation_v7.css, which is kept last in the document by the v7
+ * interaction controller.
+ */

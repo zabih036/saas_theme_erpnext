@@ -1,0 +1,401 @@
+/*
+ * SaaS Theme — precision fixes for checkboxes, grid column dialog,
+ * link actions, tree filters and ListView header hover artifacts.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-precision-text: #14213D;
+	--st-precision-blue: #064ADB;
+	--st-precision-blue-soft: #EEF4FF;
+	--st-precision-border: #D7DEE8;
+	--st-precision-border-soft: #E5E7EB;
+	--st-precision-surface: #FFFFFF;
+	--st-precision-muted: #667085;
+	--st-precision-shadow: 0 1px 2px rgba(20, 33, 61, .05), 0 4px 10px rgba(20, 33, 61, .045);
+}
+
+[data-theme="dark"] {
+	--st-precision-text: #E8EEF8;
+	--st-precision-blue: #5E8CFF;
+	--st-precision-blue-soft: rgba(94, 140, 255, .14);
+	--st-precision-border: #3A4658;
+	--st-precision-border-soft: #2A3442;
+	--st-precision-surface: #151B24;
+	--st-precision-muted: #9AA8BB;
+	--st-precision-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+
+/* =========================================================
+   CHECKBOXES — CONSISTENT, COMPACT, UNAMBIGUOUS
+   ========================================================= */
+.grid-row-check,
+.sticky-column,
+.treeview input[type="checkbox"],
+.list-view input[type="checkbox"],
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+.checkbox input[type="checkbox"],
+input.form-check-input[type="checkbox"] {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	box-sizing: border-box !important;
+	display: inline-grid !important;
+	place-content: center !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	max-width: 16px !important;
+	max-height: 16px !important;
+	flex: 0 0 16px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1.5px solid #AEB8C8 !important;
+	border-radius: 4px !important;
+	background: #FFFFFF !important;
+	background-image: none !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .06) !important;
+	vertical-align: middle !important;
+	cursor: pointer !important;
+	opacity: 1 !important;
+	transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease !important;
+}
+
+[data-theme="dark"] .grid-row-check,
+[data-theme="dark"] .sticky-column,
+[data-theme="dark"] .treeview input[type="checkbox"],
+[data-theme="dark"] .list-view input[type="checkbox"],
+[data-theme="dark"] .frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+[data-theme="dark"] .checkbox input[type="checkbox"],
+[data-theme="dark"] input.form-check-input[type="checkbox"] {
+	background: #111827 !important;
+	border-color: #607086 !important;
+}
+
+.grid-row-check:checked,
+.sticky-column:checked,
+.treeview input[type="checkbox"]:checked,
+.list-view input[type="checkbox"]:checked,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:checked,
+.checkbox input[type="checkbox"]:checked,
+input.form-check-input[type="checkbox"]:checked {
+	border-color: var(--st-precision-blue) !important;
+	background-color: var(--st-precision-blue) !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.2 6.1 4.7 8.45 9.8 3.35' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 11px 11px !important;
+	box-shadow: 0 1px 3px rgba(6, 74, 219, .22) !important;
+}
+
+.grid-row-check:indeterminate,
+.sticky-column:indeterminate,
+.treeview input[type="checkbox"]:indeterminate,
+.list-view input[type="checkbox"]:indeterminate,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:indeterminate,
+.checkbox input[type="checkbox"]:indeterminate,
+input.form-check-input[type="checkbox"]:indeterminate {
+	border-color: var(--st-precision-blue) !important;
+	background-color: var(--st-precision-blue) !important;
+	background-image: linear-gradient(#fff, #fff) !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 8px 2px !important;
+}
+
+.grid-row-check:focus-visible,
+.sticky-column:focus-visible,
+.treeview input[type="checkbox"]:focus-visible,
+.list-view input[type="checkbox"]:focus-visible,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:focus-visible,
+.checkbox input[type="checkbox"]:focus-visible,
+input.form-check-input[type="checkbox"]:focus-visible {
+	outline: none !important;
+	box-shadow: 0 0 0 3px rgba(6, 74, 219, .14) !important;
+}
+
+.grid-row-check:disabled,
+.sticky-column:disabled,
+.treeview input[type="checkbox"]:disabled,
+.list-view input[type="checkbox"]:disabled,
+.frappe-control[data-fieldtype="Check"] input[type="checkbox"]:disabled,
+.checkbox input[type="checkbox"]:disabled,
+input.form-check-input[type="checkbox"]:disabled {
+	cursor: default !important;
+	opacity: .55 !important;
+}
+
+/* Prevent generic .form-control rules from stretching checkbox controls. */
+input.form-control[type="checkbox"],
+.sticky-column.form-control {
+	padding: 0 !important;
+	line-height: 1 !important;
+}
+
+/* Child-table row selection stays centered in header and data rows. */
+.grid-row .row-check,
+.grid-row .row-check.col,
+.grid-heading-row .row-check {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-width: 36px !important;
+	padding-inline: 8px !important;
+}
+
+/* =========================================================
+   CONFIGURE COLUMNS DIALOG — EXACT COLUMN ALIGNMENT
+   ========================================================= */
+.modal .form-group:has(.selected-fields) > .row:first-child,
+.modal .selected-fields .fields_order {
+	display: grid !important;
+	grid-template-columns: 28px minmax(0, 1fr) 112px 72px 34px !important;
+	align-items: center !important;
+	column-gap: 8px !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child {
+	margin: 0 0 8px !important;
+	padding: 0 10px !important;
+	min-height: 32px !important;
+	color: var(--st-precision-muted) !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child > [class*="col-"],
+.modal .selected-fields .fields_order > [class*="col-"] {
+	width: auto !important;
+	max-width: none !important;
+	flex: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	min-width: 0 !important;
+}
+
+.modal .form-group:has(.selected-fields) > .row:first-child > [class*="col-"] {
+	font-size: 12px !important;
+	font-weight: 650 !important;
+}
+
+.modal .selected-fields .fields_order {
+	height: 44px !important;
+	min-height: 44px !important;
+	margin: 0 0 7px !important;
+	padding: 0 10px !important;
+	border: 1px solid var(--st-precision-border-soft) !important;
+	border-radius: 9px !important;
+	background: var(--st-precision-surface) !important;
+	box-shadow: var(--st-precision-shadow) !important;
+	cursor: grab !important;
+}
+
+.modal .selected-fields .fields_order:active {
+	cursor: grabbing !important;
+}
+
+.modal .selected-fields .fields_order > [class*="col-"] {
+	display: flex !important;
+	align-items: center !important;
+}
+
+.modal .selected-fields .fields_order > .col-5 {
+	font-size: 14px !important;
+	font-weight: 520 !important;
+	color: var(--st-precision-text) !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
+.modal .selected-fields .column-width {
+	width: 96px !important;
+	max-width: 96px !important;
+	height: 34px !important;
+	min-height: 34px !important;
+	margin: 0 !important;
+	padding: 0 10px !important;
+	border: 1px solid var(--st-precision-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-precision-surface) !important;
+	color: var(--st-precision-text) !important;
+	font-size: 13px !important;
+	font-weight: 520 !important;
+	text-align: center !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .04) !important;
+}
+
+.modal .selected-fields .sticky-col-container {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.modal .selected-fields .sticky-column {
+	margin: 0 auto !important;
+}
+
+.modal .selected-fields .remove-field {
+	width: 28px !important;
+	height: 28px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 6px !important;
+	color: var(--st-precision-muted) !important;
+	transition: color .12s ease, background .12s ease !important;
+}
+
+.modal .selected-fields .remove-field:hover {
+	background: rgba(239, 68, 68, .08) !important;
+	color: #DC2626 !important;
+	text-decoration: none !important;
+}
+
+.modal .selected-fields .remove-field svg {
+	width: 14px !important;
+	height: 14px !important;
+}
+
+@media (max-width: 720px) {
+	.modal .form-group:has(.selected-fields) > .row:first-child,
+	.modal .selected-fields .fields_order {
+		grid-template-columns: 24px minmax(120px, 1fr) 88px 54px 30px !important;
+		column-gap: 5px !important;
+	}
+
+	.modal .selected-fields .column-width {
+		width: 78px !important;
+		max-width: 78px !important;
+	}
+}
+
+/* =========================================================
+   LINK FIELDS — QUIET, CLEAR OPEN-RECORD ACTION
+   ========================================================= */
+.frappe-control[data-fieldtype="Link"] .control-input,
+.frappe-control[data-fieldtype="Dynamic Link"] .control-input {
+	position: relative !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn {
+	width: 32px !important;
+	height: 30px !important;
+	min-width: 32px !important;
+	min-height: 30px !important;
+	right: 3px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid rgba(6, 74, 219, .16) !important;
+	border-radius: 7px !important;
+	background: var(--st-precision-blue-soft) !important;
+	box-shadow: none !important;
+	color: var(--st-precision-blue) !important;
+	overflow: hidden !important;
+	transition: background .12s ease, border-color .12s ease !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn:hover,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn:hover {
+	background: rgba(6, 74, 219, .13) !important;
+	border-color: rgba(6, 74, 219, .28) !important;
+	transform: translateY(-50%) !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open {
+	width: 100% !important;
+	height: 100% !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	background: transparent !important;
+	color: var(--st-precision-blue) !important;
+	text-decoration: none !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open svg,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open svg {
+	display: none !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn .btn-open::before,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn .btn-open::before {
+	content: "";
+	width: 15px;
+	height: 15px;
+	display: block;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.frappe-control[data-fieldtype="Link"] input.form-control,
+.frappe-control[data-fieldtype="Dynamic Link"] input.form-control {
+	padding-right: 42px !important;
+}
+
+/* =========================================================
+   TREE VIEW CHECKBOX — ALIGN WITH FILTER CONTROLS
+   ========================================================= */
+.treeview .page-form .frappe-control[data-fieldtype="Check"] {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 36px !important;
+	margin: 0 !important;
+}
+
+.treeview .page-form .frappe-control[data-fieldtype="Check"] .checkbox,
+.treeview .page-form .frappe-control[data-fieldtype="Check"] label {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	min-height: 36px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.treeview .page-form .frappe-control[data-fieldtype="Check"] input[type="checkbox"] {
+	margin: 0 !important;
+}
+
+/* =========================================================
+   LISTVIEW HEADER — REMOVE HOVER UNDERLINE / EXTRA RULE
+   ========================================================= */
+.list-view .list-row-head,
+.list-view .list-row-head:hover,
+.list-view .list-row-head:focus,
+.list-view .list-row-head:focus-within {
+	text-decoration: none !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40) !important;
+}
+
+.list-view .list-row-head::before,
+.list-view .list-row-head::after,
+.list-view .list-row-head .list-row-col::before,
+.list-view .list-row-head .list-row-col::after,
+.list-view .list-row-head .list-subject::before,
+.list-view .list-row-head .list-subject::after,
+.list-view .list-row-head [data-sort-by]::before,
+.list-view .list-row-head [data-sort-by]::after {
+	content: none !important;
+	display: none !important;
+	border: 0 !important;
+}
+
+.list-view .list-row-head a,
+.list-view .list-row-head a:hover,
+.list-view .list-row-head [data-sort-by],
+.list-view .list-row-head [data-sort-by]:hover {
+	text-decoration: none !important;
+	border-bottom: 0 !important;
+	box-shadow: none !important;
+}
+
+.list-view .list-row-head + .list-row-container,
+.list-view .list-row-head:hover + .list-row-container {
+	border-top-color: var(--st-list-border) !important;
+}
