@@ -36,8 +36,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/control_precision_fix.css?v=1",
     "/assets/saas_theme/css/exact_ui_followup.css?v=1",
     "/assets/saas_theme/css/final_precision_v2.css?v=1",
-    "/assets/saas_theme/css/form_experience_refinement.css?v=1",
-    "/assets/saas_theme/css/professional_form_card_fix.css?v=1",
+    "/assets/saas_theme/css/form_surface.css?v=1",
     "/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
     "/assets/saas_theme/css/report_and_form_shell.css?v=1",
     "/assets/saas_theme/css/child_row_editor_finish.css?v=1",
@@ -82,7 +81,7 @@ KNOWN_CSS_FILES = {
     "exact_ui_followup.css",
     "final_precision_v2.css",
     "form_controls.css",
-    "form_experience_refinement.css",
+    "form_surface.css",
     "form_navigation.css",
     "palette.css",
     "global_popup_polish_v3.css",
@@ -98,7 +97,6 @@ KNOWN_CSS_FILES = {
     "mobile_shell.css",
     "overlay_stacking_fix.css",
     "overlay_stacking_v3.css",
-    "professional_form_card_fix.css",
     "professional_ui.css",
     "report_and_form_shell.css",
     "saas_theme.css",
@@ -139,6 +137,8 @@ KNOWN_JS_FILES = {
 # Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
 # return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "form_experience_refinement.css",
+    "professional_form_card_fix.css",
     "form_palette.css",
     "palette_refinement.css",
     "child_row_editor_refinement_v65.css",
