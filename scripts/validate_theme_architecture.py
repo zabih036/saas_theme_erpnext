@@ -33,9 +33,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/desktop_navbar_refinement.css?v=1",
     "/assets/saas_theme/css/tree_view_refinement.css?v=1",
     "/assets/saas_theme/css/home_clarity_refinement.css?v=1",
-    "/assets/saas_theme/css/control_precision_fix.css?v=1",
-    "/assets/saas_theme/css/exact_ui_followup.css?v=1",
-    "/assets/saas_theme/css/final_precision_v2.css?v=1",
+    "/assets/saas_theme/css/precision.css?v=1",
     "/assets/saas_theme/css/form_surface.css?v=1",
     "/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
     "/assets/saas_theme/css/report_and_form_shell.css?v=1",
@@ -75,11 +73,9 @@ KNOWN_CSS_FILES = {
     "child_row_editor_finish.css",
     "child_table_precision_v5.css",
     "compact_autocomplete_and_form_gap_v4.css",
-    "control_precision_fix.css",
+    "precision.css",
     "dark.css",
     "desktop_navbar_refinement.css",
-    "exact_ui_followup.css",
-    "final_precision_v2.css",
     "form_controls.css",
     "form_surface.css",
     "form_navigation.css",
@@ -137,6 +133,9 @@ KNOWN_JS_FILES = {
 # Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
 # return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "control_precision_fix.css",
+    "exact_ui_followup.css",
+    "final_precision_v2.css",
     "form_experience_refinement.css",
     "professional_form_card_fix.css",
     "form_palette.css",
