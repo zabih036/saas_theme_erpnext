@@ -98,11 +98,24 @@
 		list.style.setProperty("margin", "0", "important");
 	}
 
+	function runAfterCurrentEvent() {
+		// v7 also listens to scroll/resize and may recalculate the popup from the
+		// raw input width. Correct once now, then once again in the microtask queue
+		// so our final geometry wins before the browser paints the next frame.
+		correctGeometry();
+		if (typeof window.queueMicrotask === "function") {
+			window.queueMicrotask(correctGeometry);
+		} else {
+			Promise.resolve().then(correctGeometry);
+		}
+	}
+
 	function scheduleCorrection() {
 		if (frame) cancelAnimationFrame(frame);
 
-		// v7 also positions the popup in requestAnimationFrame. Run one frame
-		// later so this narrow-width correction is the final geometry pass.
+		// Opening/focusing can involve several Frappe DOM passes. Keep one final
+		// animation-frame correction for that lifecycle, while scroll uses the
+		// synchronous/microtask path below so width never visibly collapses.
 		frame = requestAnimationFrame(() => {
 			frame = requestAnimationFrame(correctGeometry);
 		});
@@ -112,6 +125,7 @@
 		"focusin",
 		(event) => {
 			if (!isActiveInlineLink(event.target)) return;
+			runAfterCurrentEvent();
 			scheduleCorrection();
 			setTimeout(scheduleCorrection, 40);
 			setTimeout(scheduleCorrection, 100);
@@ -123,6 +137,7 @@
 		"input",
 		(event) => {
 			if (!isActiveInlineLink(event.target)) return;
+			runAfterCurrentEvent();
 			scheduleCorrection();
 			setTimeout(scheduleCorrection, 40);
 		},
@@ -132,14 +147,15 @@
 	document.addEventListener(
 		"awesomplete-open",
 		() => {
+			runAfterCurrentEvent();
 			scheduleCorrection();
 			setTimeout(scheduleCorrection, 50);
 		},
 		true
 	);
 
-	window.addEventListener("resize", scheduleCorrection, { passive: true });
-	window.addEventListener("scroll", scheduleCorrection, { passive: true, capture: true });
+	window.addEventListener("resize", runAfterCurrentEvent, { passive: true });
+	window.addEventListener("scroll", runAfterCurrentEvent, { passive: true, capture: true });
 
 	if (window.MutationObserver && document.body) {
 		const observer = new MutationObserver((mutations) => {
@@ -151,7 +167,10 @@
 							node.querySelector?.(".st-v7-inline-grid-popup"))
 				)
 			);
-			if (popupChanged) scheduleCorrection();
+			if (popupChanged) {
+				runAfterCurrentEvent();
+				scheduleCorrection();
+			}
 		});
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
