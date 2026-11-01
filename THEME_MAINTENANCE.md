@@ -110,24 +110,20 @@ PR #54 established:
 
 No runtime CSS/JS behavior changed.
 
-### Phase 1 — Remove proven no-op compatibility assets — current
+### Phase 1 — Remove proven no-op compatibility assets — completed
 
-Only assets that contain **no live CSS rules or interaction behavior** may be removed.
-
-Retired in this phase:
+Retired:
 
 - `saas_theme/public/js/child_row_editor_finish.js`
-  - already an explicit v7 no-op shim;
-  - removed from `app_include_js`;
 - `saas_theme/public/css/child_row_editor_refinement_v65.css`
-  - contained comments only;
-  - its runtime loader was removed from `user_theme_menu.js`.
 
-The validator now fails if either retired filename returns in hooks, files, or runtime JS references.
+Both were proven no-op compatibility assets before removal. The validator prevents either filename from returning.
 
 ### Phase 2 — Mechanical bundling of contiguous, independent assets — current
 
-First migration: `home_dashboard.css` + `home_analytics.css` → `home.css`. JavaScript remains separate to avoid changing execution timing.
+First migration: `home_dashboard.css` + `home_analytics.css` → `home.css`.
+
+The bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains in `home_dashboard.js` and `home_analytics.js` to avoid changing execution timing.
 
 Rules for a bundle migration:
 
@@ -177,7 +173,9 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
-- “Change dashboard cards” → `home_dashboard.css` / `.js`
+- “Change dashboard/analytics styling” → `home.css`
+- “Change dashboard behavior” → `home_dashboard.js`
+- “Change analytics behavior/data” → `home_analytics.js`
 - “Change login” → `login_refinement.css` / `login_fix.js`
 
 ---
