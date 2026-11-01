@@ -48,8 +48,9 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Professional form card/surface | `saas_theme/public/css/professional_form_card_fix.css` | Form card shell, spacing and surface treatment. |
 | Form layout/experience refinements | `saas_theme/public/css/form_experience_refinement.css` | Established form-layout refinements not owned by controls/tabs. |
 | List View | `saas_theme/public/css/list_view.css` | List rows, cards, list filters and list-only hover/spacing. |
-| Home dashboard | `saas_theme/public/css/home_dashboard.css` / `saas_theme/public/js/home_dashboard.js` | Dashboard cards and dashboard behavior. |
-| ERP analytics | `saas_theme/public/css/home_analytics.css` / `saas_theme/public/js/home_analytics.js` | Analytics widgets and interactions. |
+| Home dashboard + ERP analytics styling | `saas_theme/public/css/home.css` | Exact CSS bundle of the former dashboard + analytics styles, preserving historical order. |
+| Home dashboard behavior | `saas_theme/public/js/home_dashboard.js` | Dashboard behavior. |
+| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` | Analytics interactions and data loading. |
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Reports / DataTable appearance | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces and report tables. |
 | Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Existing final report filter-cell/search behavior. Do not duplicate elsewhere. |
@@ -124,9 +125,9 @@ Retired in this phase:
 
 The validator now fails if either retired filename returns in hooks, files, or runtime JS references.
 
-### Phase 2 — Mechanical bundling of contiguous, independent assets
+### Phase 2 — Mechanical bundling of contiguous, independent assets — current
 
-Only after Phase 1 is verified on the server.
+First migration: `home_dashboard.css` + `home_analytics.css` → `home.css`. JavaScript remains separate to avoid changing execution timing.
 
 Rules for a bundle migration:
 
