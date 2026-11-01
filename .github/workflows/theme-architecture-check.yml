@@ -1,0 +1,22 @@
+name: Theme Architecture Check
+
+on:
+  push:
+    branches:
+      - refactor/theme-maintenance-architecture
+  pull_request:
+    paths:
+      - 'saas_theme/hooks.py'
+      - 'saas_theme/public/css/**'
+      - 'saas_theme/public/js/**'
+      - 'THEME_MAINTENANCE.md'
+      - 'scripts/validate_theme_architecture.py'
+      - '.github/workflows/theme-architecture-check.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
