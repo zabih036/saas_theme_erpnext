@@ -30,8 +30,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/interface_refinement.css?v=1",
     "/assets/saas_theme/css/mobile_shell.css?v=1",
     "/assets/saas_theme/css/workspace_shell_polish.css?v=1",
-    "/assets/saas_theme/css/dark_mode_refinement.css?v=1",
-    "/assets/saas_theme/css/dark_surface_fix.css?v=2",
+    "/assets/saas_theme/css/dark.css?v=1",
     "/assets/saas_theme/css/desktop_navbar_refinement.css?v=1",
     "/assets/saas_theme/css/tree_view_refinement.css?v=1",
     "/assets/saas_theme/css/home_clarity_refinement.css?v=1",
@@ -79,8 +78,7 @@ KNOWN_CSS_FILES = {
     "child_table_precision_v5.css",
     "compact_autocomplete_and_form_gap_v4.css",
     "control_precision_fix.css",
-    "dark_mode_refinement.css",
-    "dark_surface_fix.css",
+    "dark.css",
     "desktop_navbar_refinement.css",
     "exact_ui_followup.css",
     "final_precision_v2.css",
@@ -147,6 +145,8 @@ RETIRED_ASSETS = {
     "child_row_editor_finish.js",
     "home_dashboard.css",
     "home_analytics.css",
+    "dark_mode_refinement.css",
+    "dark_surface_fix.css",
 }
 
 EXPECTED_LATE_ASSET_TOKENS = {
