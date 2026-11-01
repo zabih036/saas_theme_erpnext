@@ -25,8 +25,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/home.css?v=1",
     "/assets/saas_theme/css/brand_shell.css?v=1",
     "/assets/saas_theme/css/palette.css?v=1",
-    "/assets/saas_theme/css/ui_finish.css?v=1",
-    "/assets/saas_theme/css/interface_refinement.css?v=1",
+    "/assets/saas_theme/css/interface.css?v=1",
     "/assets/saas_theme/css/mobile_shell.css?v=1",
     "/assets/saas_theme/css/workspace_shell_polish.css?v=1",
     "/assets/saas_theme/css/dark.css?v=1",
@@ -86,7 +85,7 @@ KNOWN_CSS_FILES = {
     "home_clarity_refinement.css",
     "inline_grid_link_popup_anchor_v5.css",
     "interaction_finish_v2.css",
-    "interface_refinement.css",
+    "interface.css",
     "list_view.css",
     "login.css",
     "login_refinement.css",
@@ -99,7 +98,6 @@ KNOWN_CSS_FILES = {
     "stability_refinement_v3.css",
     "tree_view_refinement.css",
     "ui_consolidation_v7.css",
-    "ui_finish.css",
     "ui_precision_v4.css",
     "ui_precision_v6.css",
     "ui_precision_v6_2.css",
@@ -133,6 +131,8 @@ KNOWN_JS_FILES = {
 # Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
 # return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "ui_finish.css",
+    "interface_refinement.css",
     "control_precision_fix.css",
     "exact_ui_followup.css",
     "final_precision_v2.css",

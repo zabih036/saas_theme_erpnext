@@ -52,6 +52,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | ERP analytics behavior | `saas_theme/public/js/home_analytics.js` | Analytics interactions and data loading. |
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
+| General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
 | Reports / DataTable appearance | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces and report tables. |
 | Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Existing final report filter-cell/search behavior. Do not duplicate elsewhere. |
 | Tree / Chart of Accounts | `saas_theme/public/css/tree_view_refinement.css` | Tree-specific rows, controls and checkboxes. |
@@ -74,8 +75,6 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 
 These files remain because they still contribute rules or behavior to the current working theme. They are not places to add unrelated features:
 
-- `ui_finish.css`
-- `interface_refinement.css`
 - `grid_and_action_alignment.css`
 - `child_row_editor_finish.css`
 - `overlay_stacking_fix.css`
@@ -123,6 +122,7 @@ Completed migrations:
 - `form_palette.css` + `palette_refinement.css` → `palette.css`
 - `form_experience_refinement.css` + `professional_form_card_fix.css` → `form_surface.css`
 - `control_precision_fix.css` + `exact_ui_followup.css` + `final_precision_v2.css` → `precision.css`
+- `ui_finish.css` + `interface_refinement.css` → `interface.css`
 
 Each bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
 
@@ -166,6 +166,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Make form inputs more modern” → `form_controls.css`
 - “Change form card spacing/surface/layout” → `form_surface.css`
 - “Change established cross-surface precision styling” → `precision.css`
+- “Change command-palette/native workspace/general interface refinement styling” → `interface.css`
 - “Change normal form tab spacing” → `form_navigation.css`
 - “Change form palette/colors” → `palette.css`
 - “Fix tabs becoming detached after scrolling” → `interaction_finish_v2.js` / `ui_consolidation_v7.css`
