@@ -7,26 +7,18 @@ app_license = "MIT"
 frappe_version = ">=16.0.0 <17.0.0"
 categories = ["Customization", "UI/UX"]
 
-# Stable theme asset structure.
-# Future Desk UI changes belong in custom.css/custom.js.
+# Permanent Desk structure. Future Desk theme work edits these exact files.
 app_include_css = [
-	"/assets/saas_theme/css/saas_theme.css",
-	"/assets/saas_theme/css/workspace.css",
-	"/assets/saas_theme/css/dashboard.css",
-	"/assets/saas_theme/css/analytics.css",
-	"/assets/saas_theme/css/custom.css",
+    "/assets/saas_theme/css/saas_theme.css",
+    "/assets/saas_theme/css/custom.css",
 ]
 
 app_include_js = [
-	"/assets/saas_theme/js/saas_theme.js",
-	"/assets/saas_theme/js/workspace.js",
-	"/assets/saas_theme/js/dashboard.js",
-	"/assets/saas_theme/js/analytics.js",
-	"/assets/saas_theme/js/custom.js",
+    "/assets/saas_theme/js/saas_theme.js",
+    "/assets/saas_theme/js/custom.js",
 ]
 
-# Login stays independent from Desk assets.
-web_include_css = "/assets/saas_theme/css/login.css"
+# login.css is linked directly by the custom login template.
 web_include_js = [
-	"/assets/saas_theme/js/login.js",
+    "/assets/saas_theme/js/login.js",
 ]
