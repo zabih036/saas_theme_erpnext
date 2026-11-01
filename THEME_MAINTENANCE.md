@@ -44,7 +44,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Mobile shell | `saas_theme/public/css/mobile_shell.css` / `saas_theme/public/js/mobile_shell.js` | Mobile-only shell/navigation behavior. |
 | Form controls | `saas_theme/public/css/form_controls.css` | Data, Link, Select, Date, read-only/submitted controls. |
 | Form tabs/navigation | `saas_theme/public/css/form_navigation.css` | Normal form tab presentation. Cross-layer sticky-state bugs belong to the final stability layer. |
-| Form palette | `saas_theme/public/css/form_palette.css` | Form-specific color tokens/palette. |
+| Form palette | `saas_theme/public/css/palette.css` | Exact bundle of the former form palette + palette refinement layers, preserving historical order. |
 | Professional form card/surface | `saas_theme/public/css/professional_form_card_fix.css` | Form card shell, spacing and surface treatment. |
 | Form layout/experience refinements | `saas_theme/public/css/form_experience_refinement.css` | Established form-layout refinements not owned by controls/tabs. |
 | List View | `saas_theme/public/css/list_view.css` | List rows, cards, list filters and list-only hover/spacing. |
@@ -74,7 +74,6 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 
 These files remain because they still contribute rules or behavior to the current working theme. They are not places to add unrelated features:
 
-- `palette_refinement.css`
 - `ui_finish.css`
 - `interface_refinement.css`
 - `control_precision_fix.css`
@@ -124,6 +123,7 @@ Completed migrations:
 
 - `home_dashboard.css` + `home_analytics.css` → `home.css`
 - `dark_mode_refinement.css` + `dark_surface_fix.css` → `dark.css`
+- `form_palette.css` + `palette_refinement.css` → `palette.css`
 
 Each bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
 
@@ -166,6 +166,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 - “Make form inputs more modern” → `form_controls.css`
 - “Change normal form tab spacing” → `form_navigation.css`
+- “Change form palette/colors” → `palette.css`
 - “Fix tabs becoming detached after scrolling” → `interaction_finish_v2.js` / `ui_consolidation_v7.css`
 - “Change List View row hover” → `list_view.css`
 - “Change report table/filter appearance” → `report_and_form_shell.css`

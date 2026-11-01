@@ -24,8 +24,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/list_view.css?v=1",
     "/assets/saas_theme/css/home.css?v=1",
     "/assets/saas_theme/css/brand_shell.css?v=1",
-    "/assets/saas_theme/css/form_palette.css?v=1",
-    "/assets/saas_theme/css/palette_refinement.css?v=1",
+    "/assets/saas_theme/css/palette.css?v=1",
     "/assets/saas_theme/css/ui_finish.css?v=1",
     "/assets/saas_theme/css/interface_refinement.css?v=1",
     "/assets/saas_theme/css/mobile_shell.css?v=1",
@@ -85,7 +84,7 @@ KNOWN_CSS_FILES = {
     "form_controls.css",
     "form_experience_refinement.css",
     "form_navigation.css",
-    "form_palette.css",
+    "palette.css",
     "global_popup_polish_v3.css",
     "grid_and_action_alignment.css",
     "home.css",
@@ -99,7 +98,6 @@ KNOWN_CSS_FILES = {
     "mobile_shell.css",
     "overlay_stacking_fix.css",
     "overlay_stacking_v3.css",
-    "palette_refinement.css",
     "professional_form_card_fix.css",
     "professional_ui.css",
     "report_and_form_shell.css",
@@ -141,6 +139,8 @@ KNOWN_JS_FILES = {
 # Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
 # return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "form_palette.css",
+    "palette_refinement.css",
     "child_row_editor_refinement_v65.css",
     "child_row_editor_finish.js",
     "home_dashboard.css",
