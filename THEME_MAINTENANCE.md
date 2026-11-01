@@ -66,8 +66,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Route/loading experience | `saas_theme/public/js/route_loader.js` | Route transition/loading behavior. |
 | Login styling | `saas_theme/public/css/login_refinement.css` | Login-only styling. |
 | Login behavior / company branding | `saas_theme/public/js/login_fix.js` | Login-only interaction and branding. |
-| Dark theme base refinements | `saas_theme/public/css/dark_mode_refinement.css` | General dark-mode adjustments. |
-| Dark control/surface corrections | `saas_theme/public/css/dark_surface_fix.css` | Dark-mode surface/control corrections. |
+| Dark theme styling | `saas_theme/public/css/dark.css` | Exact bundle of the former dark base + dark surface correction layers, preserving historical order. |
 
 ---
 
@@ -121,9 +120,12 @@ Both were proven no-op compatibility assets before removal. The validator preven
 
 ### Phase 2 — Mechanical bundling of contiguous, independent assets — current
 
-First migration: `home_dashboard.css` + `home_analytics.css` → `home.css`.
+Completed migrations:
 
-The bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains in `home_dashboard.js` and `home_analytics.js` to avoid changing execution timing.
+- `home_dashboard.css` + `home_analytics.css` → `home.css`
+- `dark_mode_refinement.css` + `dark_surface_fix.css` → `dark.css`
+
+Each bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
 
 Rules for a bundle migration:
 
