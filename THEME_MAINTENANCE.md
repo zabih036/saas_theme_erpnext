@@ -1,12 +1,12 @@
 # SaaS Theme Maintenance Guide
 
-This document is the source of truth for future theme changes.
+This document is the source of truth for future theme changes and cleanup work.
 
 ## Non-negotiable rules
 
 1. Do **not** add a new `v2`, `v3`, `final`, `followup`, `fix`, `precision`, or temporary patch file for ordinary feature work.
-2. Do **not** reorder `app_include_css` or `app_include_js` casually. The current order is part of the working UI behavior.
-3. Do **not** merge or delete historical runtime assets only to make the repository look cleaner. Several layers still participate in the effective cascade.
+2. Do **not** reorder live `app_include_css` or `app_include_js` assets casually. Their order is part of the working UI behavior.
+3. Do **not** bulk-merge or bulk-delete historical runtime assets just to reduce file count.
 4. Change the owner file for the feature being modified. Do not fix the same problem in a second unrelated file.
 5. Cross-layer stability belongs only to the final stability owners listed below.
 6. Before opening a PR, run:
@@ -15,7 +15,20 @@ This document is the source of truth for future theme changes.
    python3 scripts/validate_theme_architecture.py
    ```
 
-7. For runtime changes, test the affected surface in light and dark mode where applicable, after scrolling, and after a hard refresh.
+7. For runtime changes, test the affected surface in light and dark mode where applicable, after scrolling, after reopening the route, and after a hard refresh.
+8. Cleanup is performed as a **migration**, not as a rewrite. Each phase must be independently mergeable and reversible.
+
+---
+
+## Golden baseline
+
+The working theme after PR #53 is the visual and interaction baseline. PR #54 added architecture documentation and validation without changing the runtime theme.
+
+During cleanup, the rule is simple:
+
+> If a cleanup step changes the UI or interaction behavior, the cleanup step is wrong unless that visual/behavioral change was explicitly requested.
+
+Never use file-count reduction as proof that a refactor is better. Runtime parity comes first.
 
 ---
 
@@ -46,7 +59,7 @@ This document is the source of truth for future theme changes.
 | Final child-row/popup/menu/tab CSS and stacking contract | `saas_theme/public/css/ui_consolidation_v7.css` | **Authoritative final CSS stability layer.** Only cross-layer conflicts belong here. |
 | Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_stacking_v3.css` | Owns the current PR #53 visibility compatibility fix. |
 | Inline editable-grid Item/Warehouse popup geometry | `saas_theme/public/js/inline_grid_link_popup_anchor_v5.js` | Owns the PR #52/#53 width/scroll correction. Do not create another popup-position controller. |
-| User menu / Theme Switcher | `saas_theme/public/js/user_theme_menu.js` | User-menu behavior. Also bootstraps historical late precision assets; preserve loader order. |
+| User menu / Theme Switcher | `saas_theme/public/js/user_theme_menu.js` | User-menu behavior. Also bootstraps required late precision assets; preserve loader order. |
 | Form sidebar persistence | `saas_theme/public/js/form_sidebar_persistence.js` | Sidebar preference/toggle. Its current inline-grid compatibility loader order is intentional. |
 | Quick Access / favorites | `saas_theme/public/js/quick_access_preferences.js` | Quick Access and preference behavior. |
 | Route/loading experience | `saas_theme/public/js/route_loader.js` | Route transition/loading behavior. |
@@ -57,9 +70,9 @@ This document is the source of truth for future theme changes.
 
 ---
 
-## Historical compatibility layers
+## Historical compatibility layers still active
 
-These files remain loaded because they are part of the current working cascade. They are not places to add unrelated features:
+These files remain because they still contribute rules or behavior to the current working theme. They are not places to add unrelated features:
 
 - `palette_refinement.css`
 - `ui_finish.css`
@@ -76,9 +89,77 @@ These files remain loaded because they are part of the current working cascade. 
 - `stability_refinement_v3.css` / `.js`
 - `ui_precision_v4.css` / `.js`
 - `ui_precision_v6.css` / `.js`
-- `child_row_editor_refinement_v65.css`
 
-Do not remove these during ordinary feature work. Removal belongs in a dedicated migration with before/after screenshots and interaction regression tests.
+Do not remove an active compatibility layer merely because a newer file exists. First prove that every selector, runtime guard, and event behavior it owns has been migrated.
+
+---
+
+## Cleanup migration program
+
+The old stack will be cleaned in controlled phases.
+
+### Phase 0 — Baseline and guardrails — completed
+
+PR #54 established:
+
+- the canonical ownership map;
+- exact asset-order validation;
+- runtime guard validation;
+- CI architecture checks.
+
+No runtime CSS/JS behavior changed.
+
+### Phase 1 — Remove proven no-op compatibility assets — current
+
+Only assets that contain **no live CSS rules or interaction behavior** may be removed.
+
+Retired in this phase:
+
+- `saas_theme/public/js/child_row_editor_finish.js`
+  - already an explicit v7 no-op shim;
+  - removed from `app_include_js`;
+- `saas_theme/public/css/child_row_editor_refinement_v65.css`
+  - contained comments only;
+  - its runtime loader was removed from `user_theme_menu.js`.
+
+The validator now fails if either retired filename returns in hooks, files, or runtime JS references.
+
+### Phase 2 — Mechanical bundling of contiguous, independent assets
+
+Only after Phase 1 is verified on the server.
+
+Rules for a bundle migration:
+
+1. source files must be contiguous in the existing load order;
+2. concatenate their contents **without editing selectors or code**;
+3. preserve source order byte-for-byte inside the bundle;
+4. replace only those exact hook entries with the new bundle at the same position;
+5. search the repository for direct URL references before deleting source files;
+6. keep dynamic/late-loaded assets separate until their loader behavior is migrated deliberately;
+7. compare the bundle against its source files with a deterministic build/check script;
+8. test the affected surfaces before proceeding to another bundle.
+
+No two cleanup domains should be migrated in the same PR unless both are trivial and independently validated.
+
+### Phase 3 — Move late-loaded precision layers into explicit owners
+
+This is higher risk and happens only after Phase 2 is stable.
+
+For each late layer:
+
+- identify every selector/function it still uniquely owns;
+- migrate that code into its canonical owner;
+- preserve effective cascade/event order;
+- remove its dynamic loader only after the migrated owner is verified;
+- then delete the old file.
+
+`ui_consolidation_v7.css`, `interaction_finish_v2.js`, and the current inline-grid popup compatibility fix are treated as protected stability owners until the end of this phase.
+
+### Phase 4 — Normalize names only after code ownership is clean
+
+Renaming is the last step, not the first.
+
+Only when each concern has one real owner should filenames be simplified. This avoids the previous failure mode where files looked clean while runtime behavior changed.
 
 ---
 
@@ -106,10 +187,13 @@ A refactor is acceptable only when current runtime behavior is preserved.
 
 Preferred order:
 
-1. rename local variables/functions inside the same owner file;
-2. extract helpers inside the same owner file;
-3. remove dead comments/duplicated internal code only after confirming no selector/event dependency;
-4. preserve DOM event timing, asset load order and CSS cascade order;
-5. do not combine several loaded CSS/JS files merely to reduce file count without dedicated regression testing.
+1. remove assets proven to be no-ops;
+2. rename local variables/functions inside the same owner file;
+3. extract helpers inside the same owner file;
+4. remove dead comments/duplicated internal code only after confirming no selector/event dependency;
+5. mechanically bundle contiguous assets without changing their contents;
+6. migrate late compatibility layers one at a time;
+7. preserve DOM event timing, asset load order and CSS cascade order throughout;
+8. rename/simplify filenames only after ownership has been proven.
 
-The current `version-16` behavior after PR #53 is the regression baseline.
+The current working `version-16` remains the regression baseline throughout the migration.
