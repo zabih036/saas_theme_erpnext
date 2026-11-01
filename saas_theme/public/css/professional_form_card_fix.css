@@ -1,0 +1,453 @@
+/*
+ * SaaS Theme — Professional Form Card Fix
+ *
+ * Corrective layer after form_experience_refinement.css.
+ * Goal: make Frappe/ERPNext forms look like a clean professional application:
+ * white card surfaces, compact controls, subtle shadows, dark readable text,
+ * restrained blue accents, and consistent dark-mode equivalents.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-pf-page: #F7F9FC;
+	--st-pf-card: #FFFFFF;
+	--st-pf-card-soft: #F8FAFC;
+	--st-pf-card-blue: #F2F6FF;
+	--st-pf-text: #111827;
+	--st-pf-title: #14213D;
+	--st-pf-muted: #667085;
+	--st-pf-border: #DDE3EC;
+	--st-pf-border-strong: #C9D3E0;
+	--st-pf-primary: #064ADB;
+	--st-pf-primary-hover: #043DB7;
+	--st-pf-shadow: 0 1px 2px rgba(20, 33, 61, .035), 0 8px 22px rgba(20, 33, 61, .055);
+	--st-pf-shadow-sm: 0 1px 2px rgba(20, 33, 61, .045), 0 3px 10px rgba(20, 33, 61, .04);
+	--st-pf-focus: 0 0 0 3px rgba(6, 74, 219, .10), 0 2px 7px rgba(20, 33, 61, .05);
+}
+
+[data-theme="dark"] {
+	--st-pf-page: #0F141C;
+	--st-pf-card: #151B24;
+	--st-pf-card-soft: #111821;
+	--st-pf-card-blue: rgba(94, 140, 255, .10);
+	--st-pf-text: #E8EEF7;
+	--st-pf-title: #F8FAFC;
+	--st-pf-muted: #94A3B8;
+	--st-pf-border: #2E3B4D;
+	--st-pf-border-strong: #3A4A5F;
+	--st-pf-primary: #5E8CFF;
+	--st-pf-primary-hover: #79A2FF;
+	--st-pf-shadow: 0 2px 8px rgba(0, 0, 0, .18), 0 14px 34px rgba(0, 0, 0, .16);
+	--st-pf-shadow-sm: 0 2px 8px rgba(0, 0, 0, .16);
+	--st-pf-focus: 0 0 0 3px rgba(94, 140, 255, .16), 0 2px 8px rgba(0, 0, 0, .16);
+}
+
+/* =========================================================
+   FORM CANVAS
+   Keep the page quiet and let actual content live on cards.
+   ========================================================= */
+.form-page {
+	background: var(--st-pf-page) !important;
+	color: var(--st-pf-text) !important;
+}
+
+.form-page .form-layout,
+.form-page .std-form-layout {
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+/* The tab rail is one small surface; the active tab remains the only strong blue. */
+.form-page .form-tabs-list,
+.std-form-layout .form-tabs-list,
+.form-tabs-list {
+	margin: 8px 12px 10px !important;
+	padding: 5px !important;
+	border: 1px solid var(--st-pf-border) !important;
+	border-radius: 11px !important;
+	background: var(--st-pf-card-blue) !important;
+	box-shadow: var(--st-pf-shadow-sm) !important;
+}
+
+.form-page .form-tabs-list .nav-link,
+.std-form-layout .form-tabs-list .nav-link,
+.form-tabs-list .nav-link {
+	min-height: 34px !important;
+	padding: 7px 12px !important;
+	border: 0 !important;
+	border-radius: 7px !important;
+	background: transparent !important;
+	color: var(--st-pf-title) !important;
+	font-size: 12.5px !important;
+	font-weight: 600 !important;
+	box-shadow: none !important;
+}
+
+.form-page .form-tabs-list .nav-link:hover:not(.active),
+.std-form-layout .form-tabs-list .nav-link:hover:not(.active),
+.form-tabs-list .nav-link:hover:not(.active) {
+	background: rgba(255, 255, 255, .72) !important;
+	color: #000000 !important;
+}
+
+[data-theme="dark"] .form-page .form-tabs-list .nav-link:hover:not(.active),
+[data-theme="dark"] .std-form-layout .form-tabs-list .nav-link:hover:not(.active),
+[data-theme="dark"] .form-tabs-list .nav-link:hover:not(.active) {
+	background: rgba(255, 255, 255, .05) !important;
+	color: #FFFFFF !important;
+}
+
+.form-page .form-tabs-list .nav-link.active,
+.std-form-layout .form-tabs-list .nav-link.active,
+.form-tabs-list .nav-link.active {
+	background: var(--st-pf-primary) !important;
+	color: #FFFFFF !important;
+	font-weight: 650 !important;
+	box-shadow: 0 2px 7px rgba(6, 74, 219, .20) !important;
+}
+
+/* Main tab content becomes the professional white card the form was missing. */
+.form-page .form-tab-content,
+.std-form-layout .form-tab-content {
+	margin: 0 12px 14px !important;
+	padding: 10px 14px 12px !important;
+	border: 1px solid var(--st-pf-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-pf-card) !important;
+	box-shadow: var(--st-pf-shadow) !important;
+}
+
+/* Remove the long grey bands/dividers introduced by the previous pass. */
+.form-page .form-section,
+.std-form-layout .form-section,
+.form-layout .form-section {
+	border-bottom: 0 !important;
+	background: transparent !important;
+}
+
+.form-page .form-section > .section-body,
+.std-form-layout .form-section > .section-body,
+.form-layout .form-section > .section-body {
+	padding-top: 8px !important;
+	padding-bottom: 12px !important;
+}
+
+.form-page .form-column,
+.std-form-layout .form-column {
+	padding-left: 8px !important;
+	padding-right: 8px !important;
+}
+
+/* =========================================================
+   LABELS + CONTROLS
+   Match the clean reference: dark text, compact inputs, soft shadow.
+   ========================================================= */
+.form-page .frappe-control,
+.form-layout .frappe-control,
+.std-form-layout .frappe-control {
+	margin-bottom: 9px !important;
+}
+
+.form-page .frappe-control .control-label,
+.form-layout .frappe-control .control-label,
+.std-form-layout .frappe-control .control-label {
+	margin-bottom: 5px !important;
+	color: var(--st-pf-title) !important;
+	font-size: 12.5px !important;
+	font-weight: 610 !important;
+	line-height: 1.35 !important;
+}
+
+.form-page .frappe-control .form-control,
+.form-layout .frappe-control .form-control,
+.std-form-layout .frappe-control .form-control,
+.form-page .frappe-control .input-with-feedback,
+.form-layout .frappe-control .input-with-feedback,
+.std-form-layout .frappe-control .input-with-feedback,
+.form-page .frappe-control .like-disabled-input,
+.form-layout .frappe-control .like-disabled-input {
+	height: 36px !important;
+	min-height: 36px !important;
+	padding: 7px 10px !important;
+	border: 1px solid var(--st-pf-border-strong) !important;
+	border-radius: 7px !important;
+	background: var(--st-pf-card) !important;
+	color: var(--st-pf-text) !important;
+	font-size: 13px !important;
+	font-weight: 470 !important;
+	box-shadow: var(--st-pf-shadow-sm) !important;
+	transition: border-color .14s ease, box-shadow .14s ease, background-color .14s ease !important;
+}
+
+.form-page .frappe-control .form-control:hover:not(:disabled):not([readonly]),
+.form-layout .frappe-control .form-control:hover:not(:disabled):not([readonly]),
+.form-page .frappe-control .input-with-feedback:hover:not(:disabled):not([readonly]),
+.form-layout .frappe-control .input-with-feedback:hover:not(:disabled):not([readonly]) {
+	border-color: #AEBAC9 !important;
+}
+
+[data-theme="dark"] .form-page .frappe-control .form-control:hover:not(:disabled):not([readonly]),
+[data-theme="dark"] .form-layout .frappe-control .form-control:hover:not(:disabled):not([readonly]),
+[data-theme="dark"] .form-page .frappe-control .input-with-feedback:hover:not(:disabled):not([readonly]),
+[data-theme="dark"] .form-layout .frappe-control .input-with-feedback:hover:not(:disabled):not([readonly]) {
+	border-color: var(--st-pf-border-strong) !important;
+}
+
+.form-page .frappe-control .form-control:focus,
+.form-layout .frappe-control .form-control:focus,
+.form-page .frappe-control .input-with-feedback:focus,
+.form-layout .frappe-control .input-with-feedback:focus {
+	border-color: var(--st-pf-primary) !important;
+	box-shadow: var(--st-pf-focus) !important;
+	outline: 0 !important;
+}
+
+.form-page .frappe-control .form-control:disabled,
+.form-layout .frappe-control .form-control:disabled,
+.form-page .frappe-control .form-control[readonly],
+.form-layout .frappe-control .form-control[readonly],
+.form-page .frappe-control .like-disabled-input,
+.form-layout .frappe-control .like-disabled-input {
+	background: var(--st-pf-card-soft) !important;
+	border-color: var(--st-pf-border) !important;
+	color: var(--st-pf-muted) !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .025) !important;
+}
+
+.form-page .frappe-control textarea.form-control,
+.form-layout .frappe-control textarea.form-control,
+.form-page .frappe-control [contenteditable="true"],
+.form-layout .frappe-control [contenteditable="true"] {
+	height: auto !important;
+	min-height: 76px !important;
+}
+
+/* Preserve the previous Table MultiSelect fix while matching the smaller control size. */
+.form-page .frappe-control[data-fieldtype="Table MultiSelect"] .form-control.table-multiselect,
+.form-layout .frappe-control[data-fieldtype="Table MultiSelect"] .form-control.table-multiselect,
+.form-page .frappe-control[data-fieldtype="MultiSelectPills"] .form-control.table-multiselect,
+.form-layout .frappe-control[data-fieldtype="MultiSelectPills"] .form-control.table-multiselect {
+	min-height: 36px !important;
+	padding: 3px 7px !important;
+	border-radius: 7px !important;
+	background: var(--st-pf-card) !important;
+	border-color: var(--st-pf-border-strong) !important;
+	box-shadow: var(--st-pf-shadow-sm) !important;
+}
+
+.form-page .frappe-control[data-fieldtype="Table MultiSelect"] .table-multiselect input.input-with-feedback,
+.form-layout .frappe-control[data-fieldtype="Table MultiSelect"] .table-multiselect input.input-with-feedback,
+.form-page .frappe-control[data-fieldtype="MultiSelectPills"] .table-multiselect input.input-with-feedback,
+.form-layout .frappe-control[data-fieldtype="MultiSelectPills"] .table-multiselect input.input-with-feedback,
+.form-page .frappe-control[data-fieldtype="Table MultiSelect"] .table-multiselect .awesomplete > input,
+.form-layout .frappe-control[data-fieldtype="Table MultiSelect"] .table-multiselect .awesomplete > input {
+	height: 28px !important;
+	min-height: 28px !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+/* =========================================================
+   SECTION HEADERS
+   White shadow cards instead of long grey strips with a blue rail.
+   ========================================================= */
+.form-page .form-section > .section-head.collapsible,
+.std-form-layout .form-section > .section-head.collapsible,
+.form-layout .form-section > .section-head.collapsible {
+	min-height: 42px !important;
+	margin: 9px 0 7px !important;
+	padding: 0 13px !important;
+	gap: 8px !important;
+	border: 1px solid var(--st-pf-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-pf-card) !important;
+	color: var(--st-pf-title) !important;
+	font-size: 13px !important;
+	font-weight: 650 !important;
+	box-shadow: var(--st-pf-shadow-sm) !important;
+	transition: border-color .14s ease, box-shadow .14s ease, transform .14s ease !important;
+}
+
+.form-page .form-section > .section-head.collapsible:hover,
+.std-form-layout .form-section > .section-head.collapsible:hover,
+.form-layout .form-section > .section-head.collapsible:hover {
+	border-color: rgba(6, 74, 219, .28) !important;
+	box-shadow: 0 4px 12px rgba(20, 33, 61, .07) !important;
+	transform: translateY(-1px) !important;
+}
+
+.form-page .form-section > .section-head.collapsible .collapse-indicator,
+.std-form-layout .form-section > .section-head.collapsible .collapse-indicator,
+.form-layout .form-section > .section-head.collapsible .collapse-indicator,
+.form-page .form-section > .section-head.collapsible .collapse-indicator svg,
+.std-form-layout .form-section > .section-head.collapsible .collapse-indicator svg,
+.form-layout .form-section > .section-head.collapsible .collapse-indicator svg {
+	color: var(--st-pf-muted) !important;
+	stroke: var(--st-pf-muted) !important;
+}
+
+.form-page .form-section > .section-head:not(.collapsible),
+.std-form-layout .form-section > .section-head:not(.collapsible),
+.form-layout .form-section > .section-head:not(.collapsible) {
+	padding: 10px 1px 6px !important;
+	color: var(--st-pf-title) !important;
+	font-size: 13.5px !important;
+	font-weight: 680 !important;
+}
+
+/* =========================================================
+   CHILD TABLES
+   Give tables the same modern card language as the rest of the form.
+   ========================================================= */
+.form-page .form-grid,
+.form-layout .form-grid,
+.std-form-layout .form-grid {
+	border: 1px solid var(--st-pf-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-pf-card) !important;
+	box-shadow: var(--st-pf-shadow-sm) !important;
+}
+
+.form-grid .grid-heading-row,
+.form-grid .grid-heading-row .grid-row,
+.form-grid .grid-heading-row .grid-static-col,
+.form-grid .grid-heading-row .row-check,
+.form-grid .grid-heading-row .row-index {
+	background: var(--st-pf-card-soft) !important;
+	color: var(--st-pf-title) !important;
+}
+
+.form-grid .grid-heading-row {
+	height: 38px !important;
+	min-height: 38px !important;
+	border-bottom: 1px solid var(--st-pf-border) !important;
+}
+
+.form-grid .grid-heading-row .grid-static-col,
+.form-grid .grid-heading-row .row-check,
+.form-grid .grid-heading-row .row-index {
+	height: 38px !important;
+	padding-top: 9px !important;
+	padding-bottom: 8px !important;
+	font-size: 12px !important;
+	font-weight: 650 !important;
+}
+
+.form-grid .grid-body,
+.form-grid .grid-row,
+.form-grid .grid-body .grid-static-col,
+.form-grid .grid-body .row-check,
+.form-grid .grid-body .row-index,
+.form-grid .grid-body .col:last-child {
+	background: var(--st-pf-card) !important;
+}
+
+.form-grid .grid-body .grid-row {
+	border-bottom: 1px solid var(--st-pf-border) !important;
+	color: var(--st-pf-text) !important;
+}
+
+.form-grid .grid-footer {
+	padding: 8px 9px !important;
+	border-top: 1px solid var(--st-pf-border) !important;
+	background: var(--st-pf-card-soft) !important;
+}
+
+.form-grid .grid-footer .btn,
+.form-grid .grid-add-row,
+.form-grid .grid-add-multiple-rows {
+	min-height: 31px !important;
+	border: 1px solid var(--st-pf-border) !important;
+	border-radius: 7px !important;
+	background: var(--st-pf-card) !important;
+	color: var(--st-pf-title) !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, .03) !important;
+}
+
+/* =========================================================
+   DARK MODE
+   Never fall back to white card/input surfaces.
+   ========================================================= */
+[data-theme="dark"] .form-page .form-tab-content,
+[data-theme="dark"] .std-form-layout .form-tab-content,
+[data-theme="dark"] .form-page .form-section > .section-head.collapsible,
+[data-theme="dark"] .std-form-layout .form-section > .section-head.collapsible,
+[data-theme="dark"] .form-layout .form-section > .section-head.collapsible,
+[data-theme="dark"] .form-page .form-grid,
+[data-theme="dark"] .form-layout .form-grid {
+	background: var(--st-pf-card) !important;
+	border-color: var(--st-pf-border) !important;
+}
+
+[data-theme="dark"] .form-page .frappe-control .form-control,
+[data-theme="dark"] .form-layout .frappe-control .form-control,
+[data-theme="dark"] .form-page .frappe-control .input-with-feedback,
+[data-theme="dark"] .form-layout .frappe-control .input-with-feedback,
+[data-theme="dark"] .form-page .frappe-control .like-disabled-input,
+[data-theme="dark"] .form-layout .frappe-control .like-disabled-input {
+	background: var(--st-pf-card) !important;
+	border-color: var(--st-pf-border-strong) !important;
+	color: var(--st-pf-text) !important;
+}
+
+[data-theme="dark"] .form-page .frappe-control .form-control:disabled,
+[data-theme="dark"] .form-layout .frappe-control .form-control:disabled,
+[data-theme="dark"] .form-page .frappe-control .form-control[readonly],
+[data-theme="dark"] .form-layout .frappe-control .form-control[readonly],
+[data-theme="dark"] .form-page .frappe-control .like-disabled-input,
+[data-theme="dark"] .form-layout .frappe-control .like-disabled-input {
+	background: var(--st-pf-card-soft) !important;
+	border-color: var(--st-pf-border) !important;
+	color: var(--st-pf-muted) !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   Keep the card treatment on small screens without wasting width.
+   ========================================================= */
+@media (max-width: 767.98px) {
+	.form-page .form-tabs-list,
+	.std-form-layout .form-tabs-list,
+	.form-tabs-list {
+		margin: 5px 6px 7px !important;
+		padding: 4px !important;
+		border-radius: 9px !important;
+	}
+
+	.form-page .form-tab-content,
+	.std-form-layout .form-tab-content {
+		margin: 0 6px 10px !important;
+		padding: 8px 8px 10px !important;
+		border-radius: 10px !important;
+	}
+
+	.form-page .form-column,
+	.std-form-layout .form-column {
+		padding-left: 6px !important;
+		padding-right: 6px !important;
+	}
+
+	.form-page .frappe-control .form-control,
+	.form-layout .frappe-control .form-control,
+	.form-page .frappe-control .input-with-feedback,
+	.form-layout .frappe-control .input-with-feedback,
+	.form-page .frappe-control .like-disabled-input,
+	.form-layout .frappe-control .like-disabled-input {
+		height: 38px !important;
+		min-height: 38px !important;
+	}
+
+	.form-page .form-section > .section-head.collapsible,
+	.std-form-layout .form-section > .section-head.collapsible,
+	.form-layout .form-section > .section-head.collapsible {
+		min-height: 40px !important;
+		margin-top: 7px !important;
+		padding-left: 11px !important;
+		padding-right: 11px !important;
+	}
+}

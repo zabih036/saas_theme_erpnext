@@ -1,0 +1,261 @@
+/*
+ * SaaS Theme — Overlay / Stacking Context Fix v2
+ *
+ * This file is intentionally loaded LAST.
+ *
+ * Frappe has several independent UI layers:
+ *   - normal form controls / child tables
+ *   - field autocomplete menus
+ *   - the fixed child-row editor + #freeze.grid-form backdrop
+ *   - normal Bootstrap/Frappe dialogs
+ *   - the global Awesome Bar / command search
+ *
+ * Theme rules must never let an ordinary input, child table, sticky grid cell,
+ * or navbar sit above a page-level overlay.  At the same time, the currently
+ * open Link autocomplete must sit above the fields that follow it in the form.
+ */
+
+:root {
+	/* Local component layers. */
+	--st-layer-field-active: 220;
+	--st-layer-field-popup: 240;
+
+	/* Page-level overlays. */
+	--st-layer-grid-backdrop: 12000;
+	--st-layer-grid-editor: 12010;
+	--st-layer-body-popup: 15000;
+	--st-layer-modal-backdrop: 19990;
+	--st-layer-modal: 20000;
+	--st-layer-awesomebar-backdrop: 29990;
+	--st-layer-awesomebar: 30000;
+}
+
+/* =========================================================
+   1. NORMAL FORM / GRID CONTENT
+   Ordinary controls must not manufacture page-level layers.
+   ========================================================= */
+.form-page .frappe-control,
+.form-layout .frappe-control,
+.std-form-layout .frappe-control,
+.form-grid .frappe-control,
+.form-grid .grid-row,
+.form-grid .data-row {
+	z-index: auto !important;
+}
+
+.form-page .frappe-control .awesomplete,
+.form-layout .frappe-control .awesomplete,
+.std-form-layout .frappe-control .awesomplete,
+.form-grid .frappe-control .awesomplete,
+.grid-row-open .form-in-grid .frappe-control .awesomplete,
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete {
+	position: relative !important;
+	z-index: auto !important;
+}
+
+/* Native sticky cells only need to beat cells inside their own table. */
+.form-grid .grid-heading-row .row-check,
+.form-grid .grid-heading-row .row-index,
+.form-grid .grid-body .row-check,
+.form-grid .grid-body .row-index,
+.form-grid .sticky-grid-col,
+.form-grid .grid-static-col.sticky-grid-col {
+	z-index: 1 !important;
+}
+
+/* =========================================================
+   2. FIELD AUTOCOMPLETE / LINK SUGGESTIONS
+
+   The previous pass set every Awesomplete wrapper to z-index:auto.  That kept
+   it below dialogs, but it also meant a later sibling input could paint over
+   the suggestion list.  Promote ONLY the field whose popup is open/focused.
+   ========================================================= */
+.form-page .frappe-control:focus-within,
+.form-layout .frappe-control:focus-within,
+.std-form-layout .frappe-control:focus-within,
+.form-grid .frappe-control:focus-within,
+.grid-row-open .form-in-grid .frappe-control:focus-within {
+	position: relative !important;
+	z-index: var(--st-layer-field-active) !important;
+}
+
+.form-page .frappe-control:has(.awesomplete > ul:not([hidden])),
+.form-layout .frappe-control:has(.awesomplete > ul:not([hidden])),
+.std-form-layout .frappe-control:has(.awesomplete > ul:not([hidden])),
+.form-grid .frappe-control:has(.awesomplete > ul:not([hidden])),
+.grid-row-open .form-in-grid .frappe-control:has(.awesomplete > ul:not([hidden])) {
+	position: relative !important;
+	z-index: var(--st-layer-field-popup) !important;
+}
+
+.form-page .frappe-control:focus-within .awesomplete,
+.form-layout .frappe-control:focus-within .awesomplete,
+.std-form-layout .frappe-control:focus-within .awesomplete,
+.form-grid .frappe-control:focus-within .awesomplete,
+.grid-row-open .form-in-grid .frappe-control:focus-within .awesomplete,
+.form-page .frappe-control:has(.awesomplete > ul:not([hidden])) .awesomplete,
+.form-layout .frappe-control:has(.awesomplete > ul:not([hidden])) .awesomplete,
+.std-form-layout .frappe-control:has(.awesomplete > ul:not([hidden])) .awesomplete,
+.form-grid .frappe-control:has(.awesomplete > ul:not([hidden])) .awesomplete,
+.grid-row-open .form-in-grid .frappe-control:has(.awesomplete > ul:not([hidden])) .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+.form-page .frappe-control .awesomplete > ul,
+.form-layout .frappe-control .awesomplete > ul,
+.std-form-layout .frappe-control .awesomplete > ul,
+.form-grid .frappe-control .awesomplete > ul,
+.grid-row-open .form-in-grid .frappe-control .awesomplete > ul,
+.grid-row-open .form-in-grid.st-grid-row-editor .awesomplete > ul {
+	z-index: 2 !important;
+}
+
+/* Keep field popup surfaces opaque so controls below never show through. */
+.awesomplete > ul,
+.awesomplete > ul[role="listbox"] {
+	background: var(--fg-color, #FFFFFF) !important;
+	isolation: isolate !important;
+}
+
+/* Select2 / Bootstrap dropdowns that belong to normal fields. */
+.frappe-control:has(.select2-container--open),
+.frappe-control:has(.dropdown-menu.show) {
+	position: relative !important;
+	z-index: var(--st-layer-field-popup) !important;
+}
+
+/* Body-attached pickers need to clear the child-row editor, but remain below
+   real dialogs. */
+body > .datepicker,
+body > .daterangepicker,
+body > .select2-container--open,
+body > .select2-container--open .select2-dropdown,
+body > .dropdown-menu.show:not(.navbar .dropdown-menu) {
+	z-index: var(--st-layer-body-popup) !important;
+}
+
+/* =========================================================
+   3. CHILD-TABLE ROW EDITOR
+
+   Frappe v16 uses #freeze.grid-form as the dimming backdrop and .form-in-grid
+   as the fixed editor.  The theme previously allowed navbar/grid surfaces to
+   outrank the native 1038/1039 pair.  Give this feature its own explicit band.
+   ========================================================= */
+#freeze.grid-form {
+	z-index: var(--st-layer-grid-backdrop) !important;
+}
+
+.grid-row-open .form-in-grid,
+.grid-row-open .form-in-grid.st-grid-row-editor {
+	z-index: var(--st-layer-grid-editor) !important;
+	isolation: isolate !important;
+}
+
+/* The editor header only needs to stay over its own scrolling body. */
+.grid-row-open .form-in-grid .grid-form-heading,
+.grid-row-open .form-in-grid.st-grid-row-editor .grid-form-heading {
+	z-index: 40 !important;
+}
+
+/* While the grid editor is open, nothing in the underlying table is allowed
+   to punch through the freeze backdrop. */
+body:has(#freeze.grid-form) .form-grid,
+body:has(#freeze.grid-form) .form-grid .grid-heading-row,
+body:has(#freeze.grid-form) .form-grid .grid-body,
+body:has(#freeze.grid-form) .form-grid .grid-row,
+body:has(#freeze.grid-form) .form-grid .data-row,
+body:has(#freeze.grid-form) .form-grid .grid-static-col,
+body:has(#freeze.grid-form) .form-grid .row-check,
+body:has(#freeze.grid-form) .form-grid .row-index {
+	z-index: auto !important;
+}
+
+/* =========================================================
+   4. NAVBAR / INLINE SEARCH
+
+   Do NOT permanently raise the whole navbar.  That was the reason navbar
+   controls could appear above the child-row backdrop.  Only raise it while an
+   actual inline search result list is open.  The v16 Awesome Bar uses a modal
+   and is handled separately below.
+   ========================================================= */
+.navbar {
+	z-index: 1000 !important;
+}
+
+.navbar-search-bar,
+.search-bar {
+	position: relative;
+	z-index: auto !important;
+}
+
+.navbar:has(.search-bar .awesomplete > ul:not([hidden])),
+.navbar:has(.navbar-search-bar .awesomplete > ul:not([hidden])) {
+	z-index: var(--st-layer-body-popup) !important;
+}
+
+.search-bar .awesomplete,
+.navbar-search-bar .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+.search-bar .awesomplete > ul,
+.navbar-search-bar .awesomplete > ul {
+	z-index: 2 !important;
+}
+
+/* =========================================================
+   5. NORMAL FRAPPE / BOOTSTRAP DIALOGS
+
+   Dialogs opened from the child-row editor must still cover the editor and its
+   freeze layer.  Keep the generic modal band below the Awesome Bar band.
+   ========================================================= */
+body > .modal-backdrop.show {
+	z-index: var(--st-layer-modal-backdrop) !important;
+}
+
+body > .modal.show {
+	z-index: var(--st-layer-modal) !important;
+}
+
+/* =========================================================
+   6. AWESOME BAR / COMMAND SEARCH
+
+   Frappe v16 renders global search as a modal containing
+   .navbar-modal-wrapper.  It is the highest interactive surface in this file.
+   ========================================================= */
+body:has(.modal.show .navbar-modal-wrapper) > .modal-backdrop.show {
+	z-index: var(--st-layer-awesomebar-backdrop) !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) {
+	z-index: var(--st-layer-awesomebar) !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) .modal-dialog,
+body > .modal.show:has(.navbar-modal-wrapper) .modal-content,
+body > .modal.show:has(.navbar-modal-wrapper) .modal-body,
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper {
+	isolation: auto !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete > ul {
+	position: relative !important;
+	z-index: 2 !important;
+	background: var(--modal-bg, var(--fg-color, #FFFFFF)) !important;
+}
+
+/* =========================================================
+   7. DARK MODE POPUP SURFACES
+   ========================================================= */
+[data-theme="dark"] .awesomplete > ul,
+[data-theme="dark"] .awesomplete > ul[role="listbox"],
+[data-theme="dark"] body > .modal.show:has(.navbar-modal-wrapper) .navbar-modal-wrapper .awesomplete > ul {
+	background: var(--fg-color, #161B22) !important;
+}

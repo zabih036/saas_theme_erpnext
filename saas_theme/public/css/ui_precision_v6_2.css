@@ -1,0 +1,327 @@
+/*
+ * SaaS Theme — UI Precision v6.2
+ * Inline search dropdown + exact Query Report filter geometry.
+ */
+
+.page-head,
+.page-head .page-head-content,
+.page-head .st-header-search-slot,
+.page-head .st-header-search-shell {
+	overflow: visible !important;
+}
+
+/* Keep the Desk header and its inline search above form tabs/content. */
+.page-head {
+	position: relative !important;
+	z-index: 1200 !important;
+}
+
+.page-head .page-head-content {
+	position: relative !important;
+	z-index: 1201 !important;
+}
+
+.page-head .st-header-search-slot {
+	position: relative !important;
+	z-index: 1210 !important;
+}
+
+.page-head .st-header-search-shell {
+	position: relative !important;
+	z-index: 1211 !important;
+}
+
+.page-head .st-v62-search-results {
+	position: absolute !important;
+	top: calc(100% + 7px) !important;
+	left: 0 !important;
+	right: 0 !important;
+	z-index: 9999 !important;
+	display: none !important;
+	max-height: 380px !important;
+	padding: 6px !important;
+	border: 1px solid #dce4ee !important;
+	border-radius: 12px !important;
+	background: #ffffff !important;
+	box-shadow: 0 18px 42px rgba(15, 23, 42, .14), 0 4px 12px rgba(15, 23, 42, .06) !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+}
+
+.page-head .st-v62-search-results.is-open {
+	display: block !important;
+}
+
+.page-head .st-v62-search-result {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	width: 100% !important;
+	min-height: 42px !important;
+	margin: 0 !important;
+	padding: 8px 10px !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	background: transparent !important;
+	color: #14213d !important;
+	text-align: left !important;
+	box-shadow: none !important;
+	cursor: pointer !important;
+}
+
+.page-head .st-v62-search-result:hover,
+.page-head .st-v62-search-result.is-active {
+	background: rgba(6, 74, 219, .08) !important;
+	color: #064adb !important;
+}
+
+.page-head .st-v62-search-result-title {
+	display: block !important;
+	width: 100% !important;
+	color: inherit !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
+	line-height: 1.35 !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.page-head .st-v62-search-result-meta {
+	display: block !important;
+	width: 100% !important;
+	margin-top: 2px !important;
+	color: #667085 !important;
+	font-size: 11.5px !important;
+	font-weight: 450 !important;
+	line-height: 1.3 !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.page-head .st-v62-search-empty {
+	padding: 12px !important;
+	color: #667085 !important;
+	font-size: 12.5px !important;
+	font-weight: 500 !important;
+	text-align: center !important;
+}
+
+/* =========================================================
+   DROPDOWN LAYERING
+   Frappe's Link / Autocomplete fields use Awesomplete. Several polished
+   theme cards intentionally clip their contents for rounded corners, which
+   can hide the suggestion menu behind the next section or a child table.
+
+   Only lift/unwrap the relevant ancestors while an Awesomplete menu is open.
+   This preserves the normal card clipping when no dropdown is active.
+   ========================================================= */
+.form-page .form-tabs-list,
+.std-form-layout .form-tabs-list,
+.form-tabs-list {
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+.form-page .awesomplete {
+	position: relative !important;
+	z-index: 5100 !important;
+}
+
+.form-page .awesomplete > ul {
+	z-index: 5200 !important;
+	box-shadow: 0 16px 34px rgba(15, 23, 42, .14), 0 4px 12px rgba(15, 23, 42, .07) !important;
+}
+
+/* Modern browsers used by Frappe support :has(); scope overflow changes only
+   to the branch that currently contains an open suggestion list. */
+.form-page .form-layout:has(.awesomplete > ul:not([hidden])),
+.form-page .form-section:has(.awesomplete > ul:not([hidden])),
+.form-page .section-body:has(.awesomplete > ul:not([hidden])),
+.form-page .form-column:has(.awesomplete > ul:not([hidden])),
+.form-page .frappe-control:has(.awesomplete > ul:not([hidden])),
+.form-page .control-input-wrapper:has(.awesomplete > ul:not([hidden])),
+.form-page .form-grid:has(.awesomplete > ul:not([hidden])),
+.form-page .grid-body:has(.awesomplete > ul:not([hidden])),
+.form-page .grid-row:has(.awesomplete > ul:not([hidden])),
+.form-page .data-row:has(.awesomplete > ul:not([hidden])) {
+	overflow: visible !important;
+}
+
+.form-page .form-section:has(.awesomplete > ul:not([hidden])),
+.form-page .form-column:has(.awesomplete > ul:not([hidden])),
+.form-page .frappe-control:has(.awesomplete > ul:not([hidden])),
+.form-page .form-grid:has(.awesomplete > ul:not([hidden])),
+.form-page .grid-row:has(.awesomplete > ul:not([hidden])) {
+	position: relative !important;
+	z-index: 5000 !important;
+}
+
+/* A child-table card normally uses overflow:hidden for its rounded outline.
+   While suggestions are open, let that menu escape the card instead of being
+   cut off; the normal overflow rule resumes immediately when the menu closes. */
+.form-layout .frappe-control[data-fieldtype="Table"] .form-grid:has(.awesomplete > ul:not([hidden])),
+.form-layout .frappe-control[data-fieldtype="Table MultiSelect"] .form-grid:has(.awesomplete > ul:not([hidden])) {
+	overflow: visible !important;
+	z-index: 5000 !important;
+}
+
+[data-theme="dark"] .form-page .awesomplete > ul {
+	border-color: #334155 !important;
+	background: #111827 !important;
+	box-shadow: 0 18px 40px rgba(0, 0, 0, .34) !important;
+}
+
+/* Query/Script Report table */
+#page-query-report .report-wrapper .datatable {
+	border: 1px solid #dbe3ed !important;
+	border-radius: 12px !important;
+	background: #ffffff !important;
+	box-shadow: 0 4px 14px rgba(15, 23, 42, .05) !important;
+	overflow: hidden !important;
+}
+
+#page-query-report .report-wrapper .dt-row-header,
+#page-query-report .report-wrapper .dt-row-header .dt-cell,
+#page-query-report .report-wrapper .dt-cell--header {
+	height: 44px !important;
+	min-height: 44px !important;
+	background: #eef3f8 !important;
+	border-color: #dbe3ed !important;
+}
+
+#page-query-report .report-wrapper .dt-row-header .dt-cell__content,
+#page-query-report .report-wrapper .dt-cell--header .dt-cell__content {
+	display: flex !important;
+	align-items: center !important;
+	height: 44px !important;
+	min-height: 44px !important;
+	padding: 0 12px !important;
+	color: #14213d !important;
+	font-size: 13.5px !important;
+	font-weight: 650 !important;
+	line-height: 1.2 !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter,
+#page-query-report .report-wrapper .dt-row-filter > .dt-cell {
+	height: 44px !important;
+	min-height: 44px !important;
+	background: #ffffff !important;
+	border-color: #dbe3ed !important;
+	box-sizing: border-box !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter .dt-cell__content {
+	display: flex !important;
+	align-items: center !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	height: 44px !important;
+	min-height: 44px !important;
+	margin: 0 !important;
+	padding: 5px 7px !important;
+	box-sizing: border-box !important;
+	overflow: hidden !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter input.dt-filter,
+#page-query-report .report-wrapper .dt-row-filter input.dt-input,
+#page-query-report .report-wrapper .dt-row-filter input {
+	display: block !important;
+	flex: 1 1 0 !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	height: 32px !important;
+	min-height: 32px !important;
+	margin: 0 !important;
+	padding: 5px 9px !important;
+	border: 1px solid #d7e0eb !important;
+	border-radius: 6px !important;
+	background: #f8fafc !important;
+	color: #14213d !important;
+	box-shadow: none !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	line-height: 1.2 !important;
+	box-sizing: border-box !important;
+	outline: none !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter input::placeholder {
+	color: #98a2b3 !important;
+	opacity: 1 !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter input:focus {
+	border-color: #064adb !important;
+	background: #ffffff !important;
+	box-shadow: 0 0 0 2px rgba(6, 74, 219, .10) !important;
+}
+
+#page-query-report .report-wrapper .dt-row-filter .st-v62-filter-utility input {
+	display: none !important;
+}
+
+#page-query-report .report-wrapper .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content {
+	font-size: 13.5px !important;
+	line-height: 1.35 !important;
+}
+
+[data-theme="dark"] .page-head .st-v62-search-results {
+	border-color: #2b394b !important;
+	background: #111827 !important;
+	box-shadow: 0 18px 42px rgba(0, 0, 0, .34) !important;
+}
+
+[data-theme="dark"] .page-head .st-v62-search-result {
+	color: #f8fafc !important;
+}
+
+[data-theme="dark"] .page-head .st-v62-search-result:hover,
+[data-theme="dark"] .page-head .st-v62-search-result.is-active {
+	background: rgba(107, 145, 255, .14) !important;
+	color: #8fb0ff !important;
+}
+
+[data-theme="dark"] #page-query-report .report-wrapper .datatable,
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-filter,
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-filter > .dt-cell {
+	background: #111827 !important;
+	border-color: #2b394b !important;
+}
+
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-header,
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-header .dt-cell,
+[data-theme="dark"] #page-query-report .report-wrapper .dt-cell--header {
+	background: #172033 !important;
+	border-color: #2b394b !important;
+}
+
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-header .dt-cell__content,
+[data-theme="dark"] #page-query-report .report-wrapper .dt-cell--header .dt-cell__content {
+	color: #f8fafc !important;
+}
+
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-filter input {
+	border-color: #334155 !important;
+	background: #172033 !important;
+	color: #f8fafc !important;
+}
+
+[data-theme="dark"] #page-query-report .report-wrapper .dt-row-filter input:focus {
+	border-color: #6b91ff !important;
+	background: #111827 !important;
+	box-shadow: 0 0 0 2px rgba(107, 145, 255, .14) !important;
+}
+
+@media (max-width: 980px) {
+	.page-head .st-v62-search-results {
+		display: none !important;
+	}
+}

@@ -1,0 +1,330 @@
+/*
+ * SaaS Theme — Final UI polish
+ * Fixes checkbox state clarity and strengthens the home dashboard presentation.
+ */
+
+:root,
+[data-theme="light"] {
+	--st-finish-black: #000000;
+	--st-finish-navy: #14213D;
+	--st-finish-blue: #064ADB;
+	--st-finish-blue-hover: #043CB5;
+	--st-finish-border: #E5E5E5;
+	--st-finish-border-strong: #D5DCE8;
+	--st-finish-white: #FFFFFF;
+	--st-finish-surface: #F7F9FC;
+	--st-finish-muted: #667085;
+	--st-finish-shadow: 0 2px 8px rgba(20, 33, 61, 0.05), 0 12px 28px rgba(20, 33, 61, 0.055);
+	--st-finish-shadow-sm: 0 1px 2px rgba(20, 33, 61, 0.04), 0 5px 14px rgba(20, 33, 61, 0.045);
+}
+
+/* =========================================================
+   CHECKBOXES — EXPLICIT 16PX CHECKED / UNCHECKED STATES
+   ========================================================= */
+.form-page .checkbox input[type="checkbox"],
+.form-layout .checkbox input[type="checkbox"],
+.form-page .frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+.form-layout .frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+.form-page input.form-check-input[type="checkbox"],
+.form-layout input.form-check-input[type="checkbox"] {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	box-sizing: border-box !important;
+	display: inline-block !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	max-width: 16px !important;
+	max-height: 16px !important;
+	flex: 0 0 16px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1.5px solid #AEB8C8 !important;
+	border-radius: 4px !important;
+	background-color: #FFFFFF !important;
+	background-image: none !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-size: 11px 11px !important;
+	box-shadow: 0 1px 2px rgba(20, 33, 61, 0.06) !important;
+	vertical-align: middle !important;
+	cursor: pointer !important;
+	opacity: 1 !important;
+	transition: background-color .14s ease, border-color .14s ease, box-shadow .14s ease !important;
+}
+
+.form-page .checkbox input[type="checkbox"]:checked,
+.form-layout .checkbox input[type="checkbox"]:checked,
+.form-page .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:checked,
+.form-layout .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:checked,
+.form-page input.form-check-input[type="checkbox"]:checked,
+.form-layout input.form-check-input[type="checkbox"]:checked {
+	background-color: #064ADB !important;
+	border-color: #064ADB !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.3 6.2 4.8 8.5 9.8 3.5' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+	box-shadow: 0 1px 3px rgba(6, 74, 219, 0.24) !important;
+}
+
+.form-page .checkbox input[type="checkbox"]:hover,
+.form-layout .checkbox input[type="checkbox"]:hover,
+.form-page .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:hover,
+.form-layout .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:hover {
+	border-color: #064ADB !important;
+}
+
+.form-page .checkbox input[type="checkbox"]:focus-visible,
+.form-layout .checkbox input[type="checkbox"]:focus-visible,
+.form-page .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:focus-visible,
+.form-layout .frappe-control[data-fieldtype="Check"] input[type="checkbox"]:focus-visible {
+	outline: none !important;
+	box-shadow: 0 0 0 3px rgba(6, 74, 219, 0.13) !important;
+}
+
+.form-page .checkbox input[type="checkbox"]:disabled,
+.form-layout .checkbox input[type="checkbox"]:disabled {
+	cursor: default !important;
+	opacity: .55 !important;
+}
+
+.form-page .frappe-control[data-fieldtype="Check"] .checkbox,
+.form-layout .frappe-control[data-fieldtype="Check"] .checkbox,
+.form-page .checkbox,
+.form-layout .checkbox {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 30px !important;
+	gap: 9px !important;
+}
+
+.form-page .frappe-control[data-fieldtype="Check"] .checkbox label,
+.form-layout .frappe-control[data-fieldtype="Check"] .checkbox label,
+.form-page .checkbox label,
+.form-layout .checkbox label {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 9px !important;
+	margin: 0 !important;
+	color: #14213D !important;
+	line-height: 1.35 !important;
+}
+
+/* =========================================================
+   HOME DASHBOARD — STRONGER, CLEANER ENTERPRISE CONTRAST
+   ========================================================= */
+.desktop-wrapper .desktop-container.st-home-dashboard-active {
+	background: #F7F9FC !important;
+}
+
+.st-home-dashboard {
+	color: #14213D !important;
+}
+
+.st-hub-welcome h1,
+.st-hub-clock-time,
+.st-hub-metric-copy strong,
+.st-analytics-kpi strong {
+	color: #000000 !important;
+}
+
+.st-hub-metric,
+.st-hub-clock-card,
+.st-hub-side-card,
+.st-hub-section,
+.st-hub-quick-card,
+.st-analytics-kpi,
+.st-analytics-card {
+	background: #FFFFFF !important;
+	border: 1px solid var(--st-finish-border-strong) !important;
+	box-shadow: var(--st-finish-shadow-sm) !important;
+}
+
+.st-hub-section,
+.st-hub-side-card,
+.st-hub-clock-card {
+	box-shadow: var(--st-finish-shadow) !important;
+}
+
+.st-hub-metric::after {
+	height: 3px !important;
+	background: #064ADB !important;
+	opacity: 1 !important;
+}
+
+.st-hub-metric-icon,
+.st-hub-quick-icon,
+.st-hub-recent-icon,
+.st-analytics-kpi-icon {
+	background: rgba(6, 74, 219, 0.09) !important;
+	color: #064ADB !important;
+	border: 1px solid rgba(6, 74, 219, 0.07) !important;
+}
+
+.st-hub-metric-icon:empty,
+.st-hub-quick-icon:empty,
+.st-hub-recent-icon:empty,
+.st-analytics-kpi-icon:empty {
+	background: rgba(6, 74, 219, 0.09) !important;
+}
+
+.st-hub-metric-icon svg,
+.st-hub-quick-icon svg,
+.st-hub-recent-icon svg,
+.st-analytics-kpi-icon svg {
+	stroke: currentColor !important;
+	color: currentColor !important;
+}
+
+.st-hub-quick-card:hover,
+.st-hub-metric:hover,
+.st-analytics-kpi:hover,
+.st-hub-recent-item:hover {
+	border-color: rgba(6, 74, 219, 0.30) !important;
+	box-shadow: 0 7px 20px rgba(20, 33, 61, 0.085) !important;
+}
+
+.st-hub-section-head h2,
+.st-hub-side-head span,
+.st-hub-quick-copy strong,
+.st-hub-recent-copy strong,
+.st-analytics-card-head strong {
+	color: #14213D !important;
+	font-weight: 700 !important;
+}
+
+.st-hub-section-head p,
+.st-hub-side-head small,
+.st-hub-quick-copy small,
+.st-hub-recent-copy small,
+.st-analytics-card-head small,
+.st-analytics-kpi small,
+.st-analytics-kpi em {
+	color: #667085 !important;
+}
+
+.st-analytics-kpi {
+	min-height: 72px !important;
+}
+
+.st-analytics-card {
+	padding: 14px 14px 10px !important;
+	border-radius: 12px !important;
+}
+
+.st-analytics-card-head {
+	padding-bottom: 8px;
+	border-bottom: 1px solid #EEF1F5;
+}
+
+/* =========================================================
+   CHARTS — NO FILLED TRIANGLES, STRONGER LINES AND BARS
+   ========================================================= */
+.st-chart-wrap {
+	padding-top: 4px;
+}
+
+.st-chart-svg {
+	overflow: visible !important;
+}
+
+.st-chart-grid {
+	stroke: rgba(20, 33, 61, 0.12) !important;
+	stroke-dasharray: 3 4;
+}
+
+.st-chart-label {
+	fill: #667085 !important;
+	color: #667085 !important;
+	font-size: 8.5px !important;
+}
+
+.st-chart-legend {
+	color: #667085 !important;
+	font-weight: 600 !important;
+}
+
+.st-chart-line,
+.st-chart-line.st-chart-series-0,
+.st-chart-line.st-chart-series-1,
+.st-chart-line.st-chart-series-2 {
+	fill: none !important;
+	stroke-width: 3 !important;
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+}
+
+.st-chart-line.st-chart-series-0 {
+	stroke: #064ADB !important;
+}
+
+.st-chart-line.st-chart-series-1 {
+	stroke: #14213D !important;
+}
+
+.st-chart-line.st-chart-series-2 {
+	stroke: #667085 !important;
+}
+
+.st-chart-dot.st-chart-series-0 {
+	fill: #064ADB !important;
+	stroke: #FFFFFF !important;
+	stroke-width: 2.5 !important;
+}
+
+.st-chart-dot.st-chart-series-1 {
+	fill: #14213D !important;
+	stroke: #FFFFFF !important;
+	stroke-width: 2.5 !important;
+}
+
+.st-chart-bar {
+	opacity: .96 !important;
+	filter: drop-shadow(0 2px 3px rgba(20, 33, 61, 0.08));
+}
+
+.st-chart-bar.st-chart-series-0 {
+	fill: #064ADB !important;
+	stroke: #064ADB !important;
+}
+
+.st-chart-bar.st-chart-series-1,
+.st-chart-bar.st-chart-series-2 {
+	fill: #14213D !important;
+	stroke: #14213D !important;
+}
+
+.st-chart-legend .st-chart-series-0 {
+	background: #064ADB !important;
+	color: #064ADB !important;
+}
+
+.st-chart-legend .st-chart-series-1 {
+	background: #14213D !important;
+	color: #14213D !important;
+}
+
+.st-chart-legend .st-chart-series-2 {
+	background: #667085 !important;
+	color: #667085 !important;
+}
+
+[data-theme="dark"] .st-chart-dot.st-chart-series-0,
+[data-theme="dark"] .st-chart-dot.st-chart-series-1 {
+	stroke: #161C24 !important;
+}
+
+@media (max-width: 767px) {
+	.st-hub-metric,
+	.st-hub-quick-card,
+	.st-analytics-kpi {
+		box-shadow: 0 1px 3px rgba(20, 33, 61, 0.06) !important;
+	}
+
+	.form-page .checkbox input[type="checkbox"],
+	.form-layout .checkbox input[type="checkbox"],
+	.form-page .frappe-control[data-fieldtype="Check"] input[type="checkbox"],
+	.form-layout .frappe-control[data-fieldtype="Check"] input[type="checkbox"] {
+		width: 16px !important;
+		height: 16px !important;
+	}
+}
