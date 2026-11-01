@@ -48,8 +48,9 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Professional form card/surface | `saas_theme/public/css/professional_form_card_fix.css` | Form card shell, spacing and surface treatment. |
 | Form layout/experience refinements | `saas_theme/public/css/form_experience_refinement.css` | Established form-layout refinements not owned by controls/tabs. |
 | List View | `saas_theme/public/css/list_view.css` | List rows, cards, list filters and list-only hover/spacing. |
-| Home dashboard | `saas_theme/public/css/home_dashboard.css` / `saas_theme/public/js/home_dashboard.js` | Dashboard cards and dashboard behavior. |
-| ERP analytics | `saas_theme/public/css/home_analytics.css` / `saas_theme/public/js/home_analytics.js` | Analytics widgets and interactions. |
+| Home dashboard + ERP analytics styling | `saas_theme/public/css/home.css` | Exact CSS bundle of the former dashboard + analytics styles, preserving historical order. |
+| Home dashboard behavior | `saas_theme/public/js/home_dashboard.js` | Dashboard behavior. |
+| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` | Analytics interactions and data loading. |
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Reports / DataTable appearance | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces and report tables. |
 | Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Existing final report filter-cell/search behavior. Do not duplicate elsewhere. |
@@ -109,24 +110,20 @@ PR #54 established:
 
 No runtime CSS/JS behavior changed.
 
-### Phase 1 — Remove proven no-op compatibility assets — current
+### Phase 1 — Remove proven no-op compatibility assets — completed
 
-Only assets that contain **no live CSS rules or interaction behavior** may be removed.
-
-Retired in this phase:
+Retired:
 
 - `saas_theme/public/js/child_row_editor_finish.js`
-  - already an explicit v7 no-op shim;
-  - removed from `app_include_js`;
 - `saas_theme/public/css/child_row_editor_refinement_v65.css`
-  - contained comments only;
-  - its runtime loader was removed from `user_theme_menu.js`.
 
-The validator now fails if either retired filename returns in hooks, files, or runtime JS references.
+Both were proven no-op compatibility assets before removal. The validator prevents either filename from returning.
 
-### Phase 2 — Mechanical bundling of contiguous, independent assets
+### Phase 2 — Mechanical bundling of contiguous, independent assets — current
 
-Only after Phase 1 is verified on the server.
+First migration: `home_dashboard.css` + `home_analytics.css` → `home.css`.
+
+The bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains in `home_dashboard.js` and `home_analytics.js` to avoid changing execution timing.
 
 Rules for a bundle migration:
 
@@ -176,7 +173,9 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
-- “Change dashboard cards” → `home_dashboard.css` / `.js`
+- “Change dashboard/analytics styling” → `home.css`
+- “Change dashboard behavior” → `home_dashboard.js`
+- “Change analytics behavior/data” → `home_analytics.js`
 - “Change login” → `login_refinement.css` / `login_fix.js`
 
 ---

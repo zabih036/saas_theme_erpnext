@@ -22,8 +22,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/form_controls.css?v=1",
     "/assets/saas_theme/css/form_navigation.css?v=1",
     "/assets/saas_theme/css/list_view.css?v=1",
-    "/assets/saas_theme/css/home_dashboard.css?v=1",
-    "/assets/saas_theme/css/home_analytics.css?v=1",
+    "/assets/saas_theme/css/home.css?v=1",
     "/assets/saas_theme/css/brand_shell.css?v=1",
     "/assets/saas_theme/css/form_palette.css?v=1",
     "/assets/saas_theme/css/palette_refinement.css?v=1",
@@ -91,9 +90,8 @@ KNOWN_CSS_FILES = {
     "form_palette.css",
     "global_popup_polish_v3.css",
     "grid_and_action_alignment.css",
-    "home_analytics.css",
+    "home.css",
     "home_clarity_refinement.css",
-    "home_dashboard.css",
     "inline_grid_link_popup_anchor_v5.css",
     "interaction_finish_v2.css",
     "interface_refinement.css",
@@ -147,6 +145,8 @@ KNOWN_JS_FILES = {
 RETIRED_ASSETS = {
     "child_row_editor_refinement_v65.css",
     "child_row_editor_finish.js",
+    "home_dashboard.css",
+    "home_analytics.css",
 }
 
 EXPECTED_LATE_ASSET_TOKENS = {
