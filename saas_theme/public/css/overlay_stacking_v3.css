@@ -58,6 +58,19 @@ body:has(.modal.st-grid-link-selector.show) .modal.st-grid-link-selector * {
 	pointer-events: auto;
 }
 
+/*
+ * v7 portals the expanded Frappe child-row editor from `.grid-row-open` to
+ * `<body>` so it can sit above #freeze. Frappe's native visibility rule is
+ * ancestor-based, so once portaled the same node can fall back to the hidden
+ * `.form-in-grid` state. Keep the real portaled editor explicitly visible.
+ */
+body > .form-in-grid.st-v7-grid-editor {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	pointer-events: auto !important;
+}
+
 /* Awesome Bar still wins over every other theme surface. */
 body .modal.show:has(.navbar-modal-wrapper) {
 	z-index: var(--st-layer-awesomebar, 30000) !important;
