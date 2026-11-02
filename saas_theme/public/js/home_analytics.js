@@ -1,6 +1,6 @@
 /*
  * SaaS Theme — ERP Home Dashboard Analytics
- * Reference-style finance, sales and manufacturing overview.
+ * Finance/customer overview with preserved Quick Access, Recent and Workspaces.
  */
 (function () {
 	"use strict";
@@ -38,7 +38,8 @@
 	}
 
 	function user_name() {
-		try { return frappe.user?.full_name?.() || frappe.boot?.user?.full_name || frappe.session?.user || __("User"); } catch (e) { return frappe.session?.user || __("User"); }
+		try { return frappe.user?.full_name?.() || frappe.boot?.user?.full_name || frappe.session?.user || __("User"); }
+		catch (e) { return frappe.session?.user || __("User"); }
 	}
 
 	function greeting() {
@@ -54,8 +55,7 @@
 
 	function money(value) {
 		if (value == null || Number.isNaN(Number(value))) return "—";
-		const number = Number(value);
-		const code = currency();
+		const number = Number(value), code = currency();
 		try {
 			return new Intl.NumberFormat(document.documentElement.lang || navigator.language || "en", {
 				style: code ? "currency" : "decimal",
@@ -68,7 +68,7 @@
 
 	function number(value) {
 		if (value == null || Number.isNaN(Number(value))) return "—";
-		return new Intl.NumberFormat(document.documentElement.lang || navigator.language || "en", { notation: Math.abs(Number(value)) >= 100000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(Number(value));
+		return new Intl.NumberFormat(document.documentElement.lang || navigator.language || "en", { maximumFractionDigits: 0 }).format(Number(value));
 	}
 
 	function relative_time(value) {
@@ -93,63 +93,52 @@
 
 	function delta_html(value, inverse = false) {
 		if (value == null || Number.isNaN(Number(value))) return `<span class="st-dash-delta neutral">${__("Current month")}</span>`;
-		const numeric = Number(value);
-		const positive = inverse ? numeric <= 0 : numeric >= 0;
+		const numeric = Number(value), positive = inverse ? numeric <= 0 : numeric >= 0;
 		return `<span class="st-dash-delta ${positive ? "positive" : "negative"}">${numeric >= 0 ? "↗" : "↘"} ${Math.abs(numeric).toFixed(1)}% <em>${__("vs last month")}</em></span>`;
 	}
 
 	function dashboard_html() {
-		return `<section class="st-dashboard-v4">
+		return `<section class="st-dashboard-v5">
 			<div class="st-dash-kpis">
 				<a class="st-dash-kpi st-dash-kpi-primary" href="${esc(list_route("Sales Invoice"))}"><div class="st-dash-kpi-top"><span>${__("Revenue")}</span><i>${icon("selling")}</i></div><strong data-kpi-value="revenue">—</strong><div data-kpi-delta="revenue">${delta_html(null)}</div><small data-kpi-note="revenue">${__("Loading sales…")}</small></a>
 				<a class="st-dash-kpi" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Expenses")}</span><i>${icon("accounting")}</i></div><strong data-kpi-value="expenses">—</strong><div data-kpi-delta="expenses">${delta_html(null)}</div><small data-kpi-note="expenses">${__("Loading expense ledger…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Work Order"))}"><div class="st-dash-kpi-top"><span>${__("Active Work Orders")}</span><i>${icon("setting")}</i></div><strong data-kpi-value="work_orders">—</strong><div data-kpi-delta="work_orders"><span class="st-dash-delta neutral">${__("Manufacturing")}</span></div><small data-kpi-note="work_orders">${__("Loading production queue…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Stock Entry"))}"><div class="st-dash-kpi-top"><span>${__("Production Completed")}</span><i>${icon("stock")}</i></div><strong data-kpi-value="production">—</strong><div data-kpi-delta="production">${delta_html(null)}</div><small data-kpi-note="production">${__("Loading manufacture entries…")}</small></a>
+				<a class="st-dash-kpi" href="${esc(list_route("Customer"))}"><div class="st-dash-kpi-top"><span>${__("Active Customers")}</span><i>${icon("users")}</i></div><strong data-kpi-value="customers">—</strong><div data-kpi-delta="customers"><span class="st-dash-delta neutral">${__("Customer master")}</span></div><small data-kpi-note="customers">${__("Loading customers…")}</small></a>
+				<a class="st-dash-kpi" href="${esc(list_route("Supplier"))}"><div class="st-dash-kpi-top"><span>${__("Suppliers")}</span><i>${icon("organization")}</i></div><strong data-kpi-value="suppliers">—</strong><div data-kpi-delta="suppliers"><span class="st-dash-delta neutral">${__("Supplier master")}</span></div><small data-kpi-note="suppliers">${__("Loading suppliers…")}</small></a>
 			</div>
 			<div class="st-dash-insights">
 				<article class="st-dash-card st-dash-revenue-card"><div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend"><span><i class="revenue"></i>${__("Revenue")}</span><span><i class="expenses"></i>${__("Expenses")}</span></div></div><div class="st-dash-chart" data-dashboard-chart="trend"><div class="st-dash-loading">${__("Loading chart…")}</div></div></article>
 				<article class="st-dash-card st-dash-heatmap-card"><div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Invoice activity by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div><div class="st-sales-heatmap" data-sales-heatmap><div class="st-dash-loading">${__("Loading heatmap…")}</div></div></article>
+			</div>
+			<div class="st-dash-lower-grid">
 				<article class="st-dash-card st-dash-invoice-card"><div class="st-dash-card-head"><div><strong>${__("Invoices")}</strong><small>${__("Paid vs unpaid · last six months")}</small></div></div><div class="st-invoice-status" data-invoice-status><div class="st-dash-loading">${__("Loading invoice status…")}</div></div></article>
-				<article class="st-dash-card st-dash-transactions-card"><div class="st-dash-card-head"><div><strong>${__("Recent Transactions")}</strong><small>${__("Sales, purchases, payments and manufacturing")}</small></div><span class="st-dash-card-pill">${__("Live")}</span></div><div class="st-transaction-table" data-recent-transactions><div class="st-dash-loading">${__("Loading recent transactions…")}</div></div></article>
+				<article class="st-dash-card st-dash-activity-card"><div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Recent document actions visible to your account")}</small></div><span class="st-dash-card-pill">${__("Live")}</span></div><div class="st-activity-summary"><div class="st-activity-summary-loading">${__("Loading activity…")}</div></div><div class="st-activity-list"><div class="st-dash-loading">${__("Loading recent activity…")}</div></div></article>
 			</div>
 		</section>`;
 	}
 
 	function trend_chart(data) {
-		const labels = data?.labels || [];
-		const revenue = data?.revenue || [];
-		const expenses = data?.expenses || [];
+		const labels = data?.labels || [], revenue = data?.revenue || [], expenses = data?.expenses || [];
 		const values = [...revenue, ...expenses].map(Number).filter((value) => Number.isFinite(value));
 		if (!labels.length || !values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No financial activity is available for this period.")}</div>`;
 		const width = 760, height = 280, left = 52, right = 18, top = 16, bottom = 38;
-		const plotW = width - left - right, plotH = height - top - bottom;
-		const max = Math.max(1, ...values);
-		const slot = plotW / labels.length;
-		const bar = Math.min(28, slot * .24);
+		const plotW = width - left - right, plotH = height - top - bottom, max = Math.max(1, ...values), slot = plotW / labels.length, bar = Math.min(28, slot * .24);
 		const grid = [0, .25, .5, .75, 1].map((ratio) => {
 			const y = top + plotH - ratio * plotH;
 			return `<line x1="${left}" x2="${width-right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left-8}" y="${y+3}" text-anchor="end" class="st-dash-axis">${esc(money(max*ratio))}</text>`;
 		}).join("");
 		const bars = labels.map((label, index) => {
-			const cx = left + slot * index + slot / 2;
-			const rv = Number(revenue[index] || 0), ev = Number(expenses[index] || 0);
-			const rh = rv / max * plotH, eh = ev / max * plotH;
+			const cx = left + slot * index + slot / 2, rv = Number(revenue[index] || 0), ev = Number(expenses[index] || 0), rh = rv / max * plotH, eh = ev / max * plotH;
 			return `<rect x="${cx-bar-3}" y="${top+plotH-rh}" width="${bar}" height="${Math.max(2,rh)}" rx="6" class="st-dash-bar revenue"><title>${esc(`${label} ${__("Revenue")}: ${money(rv)}`)}</title></rect><rect x="${cx+3}" y="${top+plotH-eh}" width="${bar}" height="${Math.max(2,eh)}" rx="6" class="st-dash-bar expenses"><title>${esc(`${label} ${__("Expenses")}: ${money(ev)}`)}</title></rect><text x="${cx}" y="${height-12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
 		}).join("");
 		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}">${grid}${bars}</svg>`;
 	}
 
 	function heatmap_html(data) {
-		const days = data?.days || [];
-		const times = data?.times || [];
-		const values = data?.values || [];
-		const flat = values.flat().map(Number);
-		const max = Math.max(1, ...flat, 1);
+		const days = data?.days || [], times = data?.times || [], values = data?.values || [], flat = values.flat().map(Number), max = Math.max(1, ...flat, 1);
 		if (!days.length || !times.length) return `<div class="st-dash-empty">${__("No sales heatmap data is available.")}</div>`;
 		const heads = days.map((day) => `<span class="st-heatmap-day">${esc(day)}</span>`).join("");
 		const rows = times.map((time, rowIndex) => `<div class="st-heatmap-time">${esc(time)}</div>${days.map((_day, colIndex) => {
-			const value = Number(values?.[rowIndex]?.[colIndex] || 0);
-			const strength = value ? Math.max(.12, value / max) : .035;
+			const value = Number(values?.[rowIndex]?.[colIndex] || 0), strength = value ? Math.max(.12, value / max) : .035;
 			return `<div class="st-heatmap-cell" style="--heat:${strength.toFixed(3)}" title="${esc(`${time} · ${days[colIndex]}: ${value}`)}"><span>${value || ""}</span></div>`;
 		}).join("")}`).join("");
 		return `<div class="st-heatmap-grid"><div></div>${heads}${rows}</div>`;
@@ -157,27 +146,8 @@
 
 	function invoice_html(data) {
 		if (!data || data.paid_count == null) return `<div class="st-dash-empty">${__("Invoice information is unavailable.")}</div>`;
-		const paid = Number(data.paid_count || 0), unpaid = Number(data.unpaid_count || 0), total = paid + unpaid;
-		const percentage = total ? Math.round(paid / total * 100) : 0;
+		const paid = Number(data.paid_count || 0), unpaid = Number(data.unpaid_count || 0), total = paid + unpaid, percentage = total ? Math.round(paid / total * 100) : 0;
 		return `<div class="st-invoice-ring-wrap"><div class="st-invoice-ring" style="--paid:${percentage * 3.6}deg"><div><small>${__("Total")}</small><strong>${number(total)}</strong></div></div></div><div class="st-invoice-legend"><div><span><i class="paid"></i>${__("Paid")}</span><strong>${number(paid)}</strong><small>${money(data.paid_amount)}</small></div><div><span><i class="unpaid"></i>${__("Unpaid")}</span><strong>${number(unpaid)}</strong><small>${money(data.unpaid_amount)}</small></div></div>`;
-	}
-
-	function status_class(value) {
-		const text = String(value || "").toLowerCase();
-		if (text.includes("complete") || text.includes("paid") || text.includes("submit") || text.includes("manufacture")) return "success";
-		if (text.includes("process") || text.includes("part") || text.includes("receive")) return "info";
-		if (text.includes("overdue") || text.includes("cancel") || text.includes("stop")) return "danger";
-		return "neutral";
-	}
-
-	function transactions_html(items) {
-		if (!Array.isArray(items) || !items.length) return `<div class="st-dash-empty">${__("No recent transactions are available.")}</div>`;
-		const head = `<div class="st-transaction-row st-transaction-head"><span>${__("Document")}</span><span>${__("Type")}</span><span>${__("Status")}</span><span>${__("Value / Qty")}</span><span>${__("Date")}</span></div>`;
-		const rows = items.map((item) => {
-			const value = item.value_type === "qty" ? number(item.value) : money(item.value);
-			return `<a class="st-transaction-row" href="${esc(form_route(item.doctype, item.name))}"><span class="st-transaction-doc"><strong>${esc(item.title || item.name)}</strong><small>${esc(item.name || "")}</small></span><span>${esc(item.subtitle || item.doctype || "")}</span><span><b class="st-transaction-status ${status_class(item.status)}">${esc(item.status || __("Submitted"))}</b></span><span class="st-transaction-value">${esc(value)}</span><span>${esc(item.date || "")}</span></a>`;
-		}).join("");
-		return head + rows;
 	}
 
 	function activity_meta(type) {
@@ -193,32 +163,25 @@
 	}
 
 	function activity_summary_html(summary) {
-		return [
-			["created", __("Created"), "created"], ["updated", __("Updated"), "updated"], ["submitted", __("Submitted"), "submitted"], ["other", __("Other"), "other"],
-		].map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary?.[key] || 0)}</strong><small>${esc(label)}</small></div></div>`).join("");
-	}
-
-	function activity_section_html() {
-		return `<section class="st-hub-section st-dashboard-activity-section"><div class="st-hub-section-head"><div><h2>${__("Recent User Activity")}</h2><p>${__("Recent document actions visible to your account")}</p></div><span class="st-dash-card-pill">${__("Live")}</span></div><div class="st-activity-summary"><div class="st-activity-summary-loading">${__("Loading activity…")}</div></div><div class="st-activity-list"><div class="st-dash-loading">${__("Loading recent activity…")}</div></div></section>`;
+		return [["created", __("Created"), "created"], ["updated", __("Updated"), "updated"], ["submitted", __("Submitted"), "submitted"], ["other", __("Other"), "other"]]
+			.map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary?.[key] || 0)}</strong><small>${esc(label)}</small></div></div>`).join("");
 	}
 
 	async function load_dashboard($home, token) {
 		try {
 			const response = await frappe.call({ method: "saas_theme.home.get_dashboard_overview" });
 			if (token !== enhance_token || !$home.closest("body").length) return;
-			const data = response?.message || {};
-			const kpis = data.kpis || {};
-			[["revenue", false, money], ["expenses", true, money], ["work_orders", false, number], ["production", false, number]].forEach(([key, inverse, formatter]) => {
+			const data = response?.message || {}, kpis = data.kpis || {};
+			[["revenue", false, money], ["expenses", true, money], ["customers", false, number], ["suppliers", false, number]].forEach(([key, inverse, formatter]) => {
 				const item = kpis[key] || {};
 				$home.find(`[data-kpi-value="${key}"]`).text(formatter(item.value));
-				if (key !== "work_orders") $home.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, inverse));
+				if (key === "revenue" || key === "expenses") $home.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, inverse));
 				$home.find(`[data-kpi-note="${key}"]`).text(item.note || __("No data available"));
 			});
 			$home.find('[data-dashboard-chart="trend"]').html(trend_chart(data.trend));
 			$home.find('[data-sales-heatmap]').html(heatmap_html(data.heatmap));
-			$home.find('[data-heatmap-total]').text(data.heatmap?.total == null ? "—" : `${number(data.heatmap.total)}+`);
+			$home.find('[data-heatmap-total]').text(data.heatmap?.total == null ? "—" : number(data.heatmap.total));
 			$home.find('[data-invoice-status]').html(invoice_html(data.invoices));
-			$home.find('[data-recent-transactions]').html(transactions_html(data.recent_transactions));
 		} catch (e) {
 			if (token !== enhance_token || !$home.closest("body").length) return;
 			$home.find('.st-dash-loading').text(__("Dashboard data could not be loaded."));
@@ -227,29 +190,41 @@
 
 	async function load_recent_activity($home, token) {
 		try {
-			const response = await frappe.call({ method: "saas_theme.home.get_recent_activity", args: { limit: 8 } });
+			const response = await frappe.call({ method: "saas_theme.home.get_recent_activity", args: { limit: 9 } });
 			if (token !== enhance_token || !$home.closest("body").length) return;
 			const payload = response?.message || {}, items = Array.isArray(payload.items) ? payload.items : [];
-			$home.find('.st-dashboard-activity-section .st-activity-summary').html(activity_summary_html(payload.summary || {}));
-			$home.find('.st-dashboard-activity-section .st-activity-list').html(items.length ? items.map(activity_item_html).join("") : `<div class="st-dash-empty">${__("No recent user activity is available.")}</div>`);
+			$home.find('.st-dash-activity-card .st-activity-summary').html(activity_summary_html(payload.summary || {}));
+			$home.find('.st-dash-activity-card .st-activity-list').html(items.length ? items.map(activity_item_html).join("") : `<div class="st-dash-empty">${__("No recent user activity is available.")}</div>`);
 		} catch (e) {
 			if (token !== enhance_token || !$home.closest("body").length) return;
-			$home.find('.st-dashboard-activity-section .st-activity-list').html(`<div class="st-dash-empty">${__("Recent activity could not be loaded.")}</div>`);
+			$home.find('.st-dash-activity-card .st-activity-list').html(`<div class="st-dash-empty">${__("Recent activity could not be loaded.")}</div>`);
+		}
+	}
+
+	function organize_existing_sections($home) {
+		const $clock = $home.find('.st-hub-clock-card').first();
+		if ($clock.length) {
+			$clock.detach().addClass('st-hub-clock-strip').prependTo($home);
+		}
+
+		const $sidebar = $home.find('.st-hub-sidebar').first();
+		const $workspaces = $home.find('.st-hub-workspaces-section').first();
+		if ($sidebar.length && $workspaces.length) {
+			$workspaces.detach().addClass('st-hub-workspaces-sidebar').appendTo($sidebar);
 		}
 	}
 
 	function enhance() {
 		const $home = $(".st-home-dashboard").last();
-		if (!$home.length || $home.hasClass("st-dashboard-redesign-v4")) return;
-		$home.addClass("st-dashboard-redesign-v4");
+		if (!$home.length || $home.hasClass("st-dashboard-redesign-v5")) return;
+		$home.addClass("st-dashboard-redesign-v5");
 		const token = ++enhance_token;
 
+		organize_existing_sections($home);
 		const name = String(user_name()).split(/\s+/).filter(Boolean)[0] || __("User");
-		$home.find(".st-hub-welcome").html(`<div class="st-dash-title"><h1>${__("Dashboard Overview")}<span>👋</span></h1><p>${esc(greeting())}, ${esc(name)} · ${__("Finance, sales and manufacturing at a glance.")}</p></div><span class="st-dash-period">${__("Current month")}</span>`);
-
+		$home.find(".st-hub-welcome").html(`<div class="st-dash-title"><h1>${__("Dashboard Overview")}<span>👋</span></h1><p>${esc(greeting())}, ${esc(name)} · ${__("Finance, customers and operations at a glance.")}</p></div><span class="st-dash-period">${__("Current month")}</span>`);
 		$home.find(".st-hub-metrics").replaceWith(dashboard_html());
 		$home.find(".st-dashboard-activity-section").remove();
-		$home.find(".st-hub-quick-section").after(activity_section_html());
 
 		load_dashboard($home, token);
 		load_recent_activity($home, token);
