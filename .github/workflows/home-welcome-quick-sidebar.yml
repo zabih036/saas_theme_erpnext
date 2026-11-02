@@ -1,0 +1,42 @@
+name: Home Welcome Quick Sidebar Validation
+on:
+  push:
+    branches:
+      - feature/home-welcome-quick-sidebar
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply Home revision
+        run: python3 .github/scripts/revise_home_quick_sidebar.py
+      - name: Validate JavaScript
+        run: node --check saas_theme/public/js/home_analytics.js
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert Home-only runtime scope
+        run: |
+          git diff --name-only HEAD -- saas_theme/public | tee /tmp/runtime-files
+          test "$(cat /tmp/runtime-files)" = $'saas_theme/public/css/home.css\nsaas_theme/public/js/home_analytics.js'
+      - name: Assert requested layout behavior
+        run: |
+          grep -F 'saas_theme_home_quick_sidebar_hidden_v1' saas_theme/public/js/home_analytics.js
+          grep -F '.navbar-brand .app-logo' saas_theme/public/js/home_analytics.js
+          grep -F '$workspaces.remove();' saas_theme/public/js/home_analytics.js
+          grep -F 'insertAfter($welcome)' saas_theme/public/js/home_analytics.js
+          ! grep -F 'Dashboard Overview' saas_theme/public/js/home_analytics.js
+      - name: Commit Home revision
+        run: |
+          if git diff --quiet -- saas_theme/public/css/home.css saas_theme/public/js/home_analytics.js; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/public/css/home.css saas_theme/public/js/home_analytics.js
+          git commit -m 'feat: make Quick Access a persistent Home sidebar'
+          git push origin HEAD:feature/home-welcome-quick-sidebar
