@@ -7,7 +7,7 @@
 
 	if (typeof frappe === "undefined") return;
 	let enhance_token = 0;
-	const QUICK_SIDEBAR_KEY = "saas_theme_home_quick_sidebar_hidden_v1";
+	const QUICK_SIDEBAR_KEY = "saas_theme_home_quick_sidebar_hidden_v2";
 
 	function esc(value) {
 		const text = value == null ? "" : String(value);
@@ -101,10 +101,10 @@
 	function dashboard_html() {
 		return `<section class="st-dashboard-v5">
 			<div class="st-dash-kpis">
-				<a class="st-dash-kpi st-dash-kpi-primary" href="${esc(list_route("Sales Invoice"))}"><div class="st-dash-kpi-top"><span>${__("Revenue")}</span><i>${icon("selling")}</i></div><strong data-kpi-value="revenue">—</strong><div data-kpi-delta="revenue">${delta_html(null)}</div><small data-kpi-note="revenue">${__("Loading sales…")}</small></a>
+				<a class="st-dash-kpi st-dash-kpi-primary" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Revenue")}</span><i>${icon("selling")}</i></div><strong data-kpi-value="revenue">—</strong><div data-kpi-delta="revenue">${delta_html(null)}</div><small data-kpi-note="revenue">${__("Loading sales…")}</small></a>
 				<a class="st-dash-kpi" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Expenses")}</span><i>${icon("accounting")}</i></div><strong data-kpi-value="expenses">—</strong><div data-kpi-delta="expenses">${delta_html(null)}</div><small data-kpi-note="expenses">${__("Loading expense ledger…")}</small></a>
 				<a class="st-dash-kpi" href="${esc(list_route("Customer"))}"><div class="st-dash-kpi-top"><span>${__("Active Customers")}</span><i>${icon("users")}</i></div><strong data-kpi-value="customers">—</strong><div data-kpi-delta="customers"><span class="st-dash-delta neutral">${__("Customer master")}</span></div><small data-kpi-note="customers">${__("Loading customers…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Supplier"))}"><div class="st-dash-kpi-top"><span>${__("Suppliers")}</span><i>${icon("organization")}</i></div><strong data-kpi-value="suppliers">—</strong><div data-kpi-delta="suppliers"><span class="st-dash-delta neutral">${__("Supplier master")}</span></div><small data-kpi-note="suppliers">${__("Loading suppliers…")}</small></a>
+				<a class="st-dash-kpi" href="${esc(list_route("Supplier"))}"><div class="st-dash-kpi-top"><span>${__("Active Suppliers")}</span><i>${icon("organization")}</i></div><strong data-kpi-value="suppliers">—</strong><div data-kpi-delta="suppliers"><span class="st-dash-delta neutral">${__("Supplier master")}</span></div><small data-kpi-note="suppliers">${__("Loading suppliers…")}</small></a>
 			</div>
 			<div class="st-dash-insights">
 				<article class="st-dash-card st-dash-revenue-card"><div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend"><span><i class="revenue"></i>${__("Revenue")}</span><span><i class="expenses"></i>${__("Expenses")}</span></div></div><div class="st-dash-chart" data-dashboard-chart="trend"><div class="st-dash-loading">${__("Loading chart…")}</div></div></article>
@@ -233,45 +233,47 @@
 	function apply_quick_sidebar_state($home) {
 		const hidden = quick_sidebar_hidden();
 		$home.toggleClass('st-home-quick-sidebar-hidden', hidden);
-		$('.navbar-brand .app-logo').attr({
+		$home.find('.st-home-sidebar-toggle').attr({
 			'aria-expanded': hidden ? 'false' : 'true',
+			'aria-label': hidden ? __('Show Quick Access') : __('Hide Quick Access'),
 			'title': hidden ? __('Show Quick Access') : __('Hide Quick Access'),
-		});
+		}).toggleClass('is-collapsed', hidden);
 	}
 
 	function bind_quick_sidebar_toggle() {
-		if (window.__saas_theme_home_quick_sidebar_toggle_v1__) return;
-		window.__saas_theme_home_quick_sidebar_toggle_v1__ = true;
+		$(document)
+			.off('click.saas_home_sidebar_toggle', '.st-home-sidebar-toggle')
+			.on('click.saas_home_sidebar_toggle', '.st-home-sidebar-toggle', function (event) {
+				event.preventDefault();
+				event.stopPropagation();
 
-		document.addEventListener('click', (event) => {
-			const logo = event.target?.closest?.('.navbar-brand .app-logo');
-			if (!logo) return;
+				const $home = $(this).closest('.st-home-dashboard.st-dashboard-redesign-v7');
+				if (!$home.length) return;
 
-			const home = document.querySelector('.st-home-dashboard.st-dashboard-redesign-v6');
-			if (!home) return;
-
-			event.preventDefault();
-			event.stopPropagation();
-			event.stopImmediatePropagation?.();
-
-			const $home = $(home);
-			set_quick_sidebar_hidden(!quick_sidebar_hidden());
-			apply_quick_sidebar_state($home);
-		}, true);
+				set_quick_sidebar_hidden(!quick_sidebar_hidden());
+				apply_quick_sidebar_state($home);
+			});
 	}
 
 	function enhance() {
 		const $home = $(".st-home-dashboard").last();
-		if (!$home.length || $home.hasClass("st-dashboard-redesign-v6")) return;
-		$home.addClass("st-dashboard-redesign-v5 st-dashboard-redesign-v6");
+		if (!$home.length || $home.hasClass("st-dashboard-redesign-v7")) return;
+		$home.addClass("st-dashboard-redesign-v5 st-dashboard-redesign-v6 st-dashboard-redesign-v7");
+		document.body.classList.add('st-home-sidebar-ui-active');
 		const token = ++enhance_token;
 
 		organize_existing_sections($home);
 		const name = String(user_name()).trim() || __("User");
-		$home.find(".st-hub-welcome").html(`<div class="st-dash-title"><h1>${__("Welcome")}, ${esc(name)}<span>👋</span></h1><p>${esc(greeting())} · ${__("Here is your business overview for today.")}</p></div><span class="st-dash-period">${__("Current month")}</span>`);
+		$home.find(".st-hub-welcome").html(`<div class="st-dash-welcome-group"><button type="button" class="st-home-sidebar-toggle" aria-expanded="true" aria-label="${__("Hide Quick Access")}" title="${__("Hide Quick Access")}"><span class="st-home-sidebar-toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="st-dash-title"><h1>${__("Welcome")}, ${esc(name)}<span>👋</span></h1><p>${esc(greeting())} · ${__("Here is your business overview for today.")}</p></div></div><span class="st-dash-period">${__("Current month")}</span>`);
 		$home.find(".st-hub-metrics").replaceWith(dashboard_html());
-		$home.find(".st-dashboard-activity-section").remove();
 
+		const $main = $home.find('.st-hub-main').first();
+		const $dashboard = $home.find('.st-dashboard-v5').first();
+		if ($main.length && $dashboard.length) {
+			$dashboard.detach().prependTo($main);
+		}
+
+		$home.find(".st-dashboard-activity-section").remove();
 		bind_quick_sidebar_toggle();
 		apply_quick_sidebar_state($home);
 		load_dashboard($home, token);
@@ -280,6 +282,10 @@
 
 	function schedule() { [40, 120, 260].forEach((delay) => setTimeout(enhance, delay)); }
 	$(document).off("desktop_screen.saas_home_analytics").on("desktop_screen.saas_home_analytics", schedule);
-	$(document).off("page-change.saas_home_analytics").on("page-change.saas_home_analytics", function () { const route = frappe.get_route?.() || []; if (route[0] === "desktop" || route.length === 0) schedule(); });
+	$(document).off("page-change.saas_home_analytics").on("page-change.saas_home_analytics", function () {
+		const route = frappe.get_route?.() || [];
+		if (route[0] === "desktop" || route.length === 0) schedule();
+		else document.body.classList.remove('st-home-sidebar-ui-active');
+	});
 	$(schedule);
 })();
