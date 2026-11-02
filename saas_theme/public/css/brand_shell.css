@@ -56,6 +56,55 @@
 }
 
 /* =========================================================
+   DESKTOP SIDEBAR HEADER — ALIGN WITH PAGE HEADER ACTION ROW
+   The base sidebar used 14px top padding plus a 52px header. That placed the
+   workspace logo/title visibly below the page-head Home/action buttons.
+   Keep the same icon scale, but remove the extra top offset and use the same
+   compact 44px row rhythm as the adjacent header controls.
+   ========================================================= */
+@media (min-width: 768px) {
+	.body-sidebar {
+		padding-top: 0 !important;
+	}
+
+	.body-sidebar .sidebar-header {
+		box-sizing: border-box;
+		display: flex !important;
+		align-items: center !important;
+		min-height: 44px !important;
+		height: 44px !important;
+		padding: 0 10px !important;
+		margin-top: 0 !important;
+		margin-bottom: 4px !important;
+	}
+
+	.body-sidebar-container.expanded .body-sidebar .sidebar-header {
+		justify-content: flex-start !important;
+	}
+
+	.body-sidebar .sidebar-header .header-logo-container {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		height: 36px !important;
+		min-height: 36px !important;
+	}
+
+	.body-sidebar .sidebar-header .header-logo {
+		flex: 0 0 36px;
+		align-self: center;
+	}
+
+	.body-sidebar .sidebar-header .title-container {
+		display: flex !important;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 36px;
+		margin-left: 10px;
+	}
+}
+
+/* =========================================================
    WORKSPACE PAGE — USE THE AVAILABLE CANVAS
    Frappe v16 centres Workspaces inside --page-max-width on lg+.
    This is useful for article-like pages, but creates a large empty gutter
