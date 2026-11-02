@@ -21,6 +21,7 @@ jobs:
           path = Path('scripts/validate_theme_architecture.py')
           text = path.read_text()
           text = text.replace('        "border-bottom: 2px solid #064ADB",\n', '        "form-tabs::after",\n')
+          text = text.replace('        "min-height: 46px",\n', '        "min-height: 0 !important",\n')
           text = text.replace('        "padding: 0 10px",\n', '        "padding: 0 !important",\n')
           path.write_text(text)
           PY
@@ -31,6 +32,7 @@ jobs:
       - name: Assert exact rail contract
         run: |
           grep -F 'AUTHORITATIVE FINAL FORM TABS V11' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'min-height: 0 !important' saas_theme/public/css/ui_consolidation_v7.css
           grep -F 'margin: 0 !important' saas_theme/public/css/ui_consolidation_v7.css
           grep -F 'padding: 0 !important' saas_theme/public/css/ui_consolidation_v7.css
           grep -F 'border: 0 !important' saas_theme/public/css/ui_consolidation_v7.css
