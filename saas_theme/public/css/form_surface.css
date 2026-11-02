@@ -1213,8 +1213,8 @@ body .page-head .page-title > .st-page-home-button .icon {
 /* Form-tab appearance moved to the always-last ui_consolidation_v7.css layer. */
 
 
-/* ===== FORM CARD / COMMENTS SPACING V1 ===== */
-/* Keep the form comfortably separated from the details sidebar and avoid an empty vertical band before Comments. */
+/* ===== FORM CARD / COMMENTS SPACING V2 ===== */
+/* Frappe mounts the footer as a sibling wrapper of .layout-main-section, not inside .form-page. */
 .form-page {
 	box-sizing: border-box !important;
 	padding-inline: 10px !important;
@@ -1226,19 +1226,32 @@ body .page-head .page-title > .st-page-home-button .icon {
 	min-height: 0 !important;
 }
 
-.form-page .form-footer,
-.form-layout .form-footer {
-	margin-top: 0 !important;
-	padding-top: 6px !important;
+body[data-route^="Form"] .layout-main-section-wrapper > div:has(> .form-footer) {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	margin: 12px 0 0 !important;
+	padding: 0 10px 12px !important;
 }
 
-.form-footer .after-save {
-	margin-top: 0 !important;
+body[data-route^="Form"] .layout-main-section-wrapper > div:has(> .form-footer) > .form-footer {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+body[data-route^="Form"] .layout-main-section-wrapper > div:has(> .form-footer) .after-save {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	margin: 0 !important;
 }
 
 @media (max-width: 767.98px) {
 	.form-page { padding-inline: 6px !important; }
-	.form-page .form-footer,
-	.form-layout .form-footer { padding-top: 4px !important; }
+	body[data-route^="Form"] .layout-main-section-wrapper > div:has(> .form-footer) {
+		margin-top: 10px !important;
+		padding: 0 6px 10px !important;
+	}
 }
-/* ===== END FORM CARD / COMMENTS SPACING V1 ===== */
+/* ===== END FORM CARD / COMMENTS SPACING V2 ===== */

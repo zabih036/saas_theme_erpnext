@@ -42,7 +42,7 @@ body>.es-menu,body>.es-popover .es-menu,.es-popover .es-menu[role="menu"]{paddin
 
 @media(max-width:900px){body>.form-in-grid.st-v7-grid-editor{top:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important;border-radius:13px!important}body>.form-in-grid.st-v7-grid-editor .grid-header-toolbar{align-items:flex-start!important;flex-direction:column!important}body>.form-in-grid.st-v7-grid-editor .grid-form-body{padding:10px!important}body>.form-in-grid.st-v7-grid-editor .form-area{padding:10px!important}}
 
-/* ===== AUTHORITATIVE FINAL FORM TABS V12 ===== */
+/* ===== AUTHORITATIVE FINAL FORM TABS V13 ===== */
 /* Exact reference tabs: neutral outer rail, baseline behind tabs, active tab open at bottom. */
 body .form-page > .form-tabs-list,
 body .form-layout .form-page > .form-tabs-list,
@@ -181,13 +181,13 @@ body .form-page .form-tab-content,
 body .form-layout .form-tab-content,
 body .std-form-layout .form-tab-content {
 	box-sizing: border-box !important;
-	margin: 0 12px 8px !important;
-	padding: 12px 16px 16px !important;
+	margin: 0 !important;
+	padding: 12px 16px 14px !important;
 	min-height: 0 !important;
 	height: auto !important;
 	border: 1px solid #D9E2EC !important;
 	border-top: 0 !important;
-	border-radius: 0 0 12px 12px !important;
+	border-radius: 0 0 14px 14px !important;
 	background: #FFFFFF !important;
 	box-shadow: 0 8px 22px rgba(15, 23, 42, .04) !important;
 }
@@ -217,5 +217,5 @@ body .std-form-layout .form-tab-content {
 	body .form-tabs-list .nav-link,
 	body .form-tabs-list .nav-item > a { min-height: 38px !important; padding: 7px 11px 8px !important; font-size: 13px !important; border-radius: 11px 11px 0 0 !important; }
 }
-/* ===== END AUTHORITATIVE FINAL FORM TABS V12 ===== */
+/* ===== END AUTHORITATIVE FINAL FORM TABS V13 ===== */
 
