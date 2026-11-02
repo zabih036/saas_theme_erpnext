@@ -1,0 +1,52 @@
+name: Home Dashboard V5 Validation
+
+on:
+  push:
+    branches:
+      - fix/home-dashboard-layout-and-expense-query
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply dashboard revision
+        run: python3 .github/scripts/revise_home_dashboard_v5.py
+      - name: Validate Python
+        run: python3 -m py_compile saas_theme/home.py
+      - name: Validate JavaScript
+        run: node --check saas_theme/public/js/home_analytics.js
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert Frappe-safe expense query
+        run: |
+          ! grep -F 'sum(debit) as debit' saas_theme/home.py
+          ! grep -F 'sum(credit) as credit' saas_theme/home.py
+          ! grep -F 'Recent Transactions' saas_theme/public/js/home_analytics.js
+          ! grep -F 'Active Work Orders' saas_theme/public/js/home_analytics.js
+          ! grep -F 'Production Completed' saas_theme/public/js/home_analytics.js
+      - name: Assert Home-only runtime scope
+        run: |
+          git fetch origin version-16 --depth=100
+          files=$(git diff --name-only origin/version-16 HEAD -- saas_theme)
+          echo "$files"
+          bad=$(printf '%s\n' "$files" | grep -Ev '^(saas_theme/home.py|saas_theme/public/css/home.css|saas_theme/public/js/home_analytics.js)$' || true)
+          if [ -n "$bad" ]; then
+            echo "Unexpected runtime files changed:"
+            echo "$bad"
+            exit 1
+          fi
+      - name: Commit dashboard revision
+        run: |
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/home.py saas_theme/public/css/home.css saas_theme/public/js/home_analytics.js
+          if git diff --cached --quiet; then
+            echo 'No dashboard revision changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: refine Home dashboard layout and expense query'
+          git push origin HEAD:fix/home-dashboard-layout-and-expense-query
