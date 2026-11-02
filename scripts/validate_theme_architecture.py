@@ -47,6 +47,7 @@ EXPECTED_DESK_CSS = [
 EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/saas_theme.js?v=64",
     "/assets/saas_theme/js/professional_ui.js?v=1",
+    "/assets/saas_theme/js/list_view.js?v=1",
     "/assets/saas_theme/js/home_dashboard.js?v=1",
     "/assets/saas_theme/js/home_analytics.js?v=7",
     "/assets/saas_theme/js/brand_shell.js?v=1",
@@ -113,6 +114,7 @@ KNOWN_JS_FILES = {
     "inline_grid_link_popup_anchor_v5.js",
     "interaction_finish_v2.js",
     "login_fix.js",
+    "list_view.js",
     "mobile_shell.js",
     "professional_ui.js",
     "quick_access_preferences.js",
