@@ -24,7 +24,7 @@ jobs:
       - name: Assert Home-only runtime scope
         run: |
           git fetch origin version-16 --depth=1
-          files=$(git diff --name-only origin/version-16...HEAD -- saas_theme/public/css saas_theme/public/js)
+          files=$(git diff --name-only origin/version-16 HEAD -- saas_theme/public/css saas_theme/public/js)
           echo "$files"
           bad=$(printf '%s\n' "$files" | grep -Ev '^(saas_theme/public/css/home.css|saas_theme/public/js/home_analytics.js)$' || true)
           if [ -n "$bad" ]; then
