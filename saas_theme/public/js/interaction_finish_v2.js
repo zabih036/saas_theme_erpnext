@@ -5,7 +5,7 @@
 	window.__saas_theme_ui_consolidation_v7__ = true;
 
 	const STYLE_ID = "st-ui-consolidation-v7-css";
-	const STYLE_HREF = "/assets/saas_theme/css/ui_consolidation_v7.css?v=9";
+	const STYLE_HREF = "/assets/saas_theme/css/ui_consolidation_v7.css?v=10";
 	const GRID_EDITOR_CLASS = "st-v7-grid-editor";
 	const GRID_OWNER_CLASS = "st-v7-grid-owner";
 	const GRID_POPUP_CLASS = "st-v7-inline-grid-popup";
