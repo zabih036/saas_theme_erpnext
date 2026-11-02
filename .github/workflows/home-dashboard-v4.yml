@@ -1,0 +1,44 @@
+name: Home Dashboard V4 Validation
+
+on:
+  push:
+    branches:
+      - feature/home-dashboard-analytics-redesign
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply dashboard revision
+        run: python3 .github/scripts/revise_home_dashboard_v4.py
+      - name: Validate Python
+        run: python3 -m py_compile saas_theme/home.py
+      - name: Validate JavaScript
+        run: node --check saas_theme/public/js/home_analytics.js
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert Home-only runtime scope
+        run: |
+          files=$(git diff --name-only origin/version-16...HEAD -- saas_theme/public/css saas_theme/public/js)
+          echo "$files"
+          bad=$(printf '%s\n' "$files" | grep -Ev '^(saas_theme/public/css/home.css|saas_theme/public/js/home_analytics.js)$' || true)
+          if [ -n "$bad" ]; then
+            echo "Unexpected runtime files changed:"
+            echo "$bad"
+            exit 1
+          fi
+      - name: Commit dashboard revision
+        run: |
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/home.py saas_theme/public/css/home.css saas_theme/public/js/home_analytics.js
+          if git diff --cached --quiet; then
+            echo 'No dashboard revision changes to commit.'
+            exit 0
+          fi
+          git commit -m 'feat: align Home dashboard with finance and manufacturing overview'
+          git push origin HEAD:feature/home-dashboard-analytics-redesign
