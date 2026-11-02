@@ -1,0 +1,41 @@
+name: Form Tabs Raised Outline Validation
+on:
+  push:
+    branches:
+      - feature/form-tabs-raised-outline
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply raised-outline form tabs
+        run: python3 .github/scripts/apply_form_tabs_raised.py
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert requested form-tab design
+        run: |
+          grep -F 'FORM TABS RAISED OUTLINE V2 START' saas_theme/public/css/form.css
+          grep -F 'border-bottom: 2px solid #0759e6' saas_theme/public/css/form.css
+          grep -F 'border-color: #0759e6 #0759e6 #ffffff' saas_theme/public/css/form.css
+          grep -F 'border-radius: 14px 14px 0 0' saas_theme/public/css/form.css
+          grep -F '/assets/saas_theme/css/form.css?v=2' saas_theme/hooks.py
+          ! grep -F '/assets/saas_theme/css/form.css?v=1' saas_theme/hooks.py
+      - name: Assert runtime scope
+        run: |
+          git diff --name-only HEAD -- saas_theme/public saas_theme/hooks.py scripts/validate_theme_architecture.py | tee /tmp/files
+          test "$(cat /tmp/files)" = $'saas_theme/hooks.py\nsaas_theme/public/css/form.css\nscripts/validate_theme_architecture.py'
+      - name: Commit form-tab design
+        run: |
+          if git diff --quiet -- saas_theme/public/css/form.css saas_theme/hooks.py scripts/validate_theme_architecture.py; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/public/css/form.css saas_theme/hooks.py scripts/validate_theme_architecture.py
+          git commit -m 'feat: restyle form tabs as raised outlined navigation'
+          git push origin HEAD:feature/form-tabs-raised-outline
