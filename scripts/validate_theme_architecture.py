@@ -33,7 +33,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/home_clarity_refinement.css?v=1",
     "/assets/saas_theme/css/precision.css?v=1",
     "/assets/saas_theme/css/form_surface.css?v=7",
-    "/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
+    "/assets/saas_theme/css/grid_and_action_alignment.css?v=2",
     "/assets/saas_theme/css/report_and_form_shell.css?v=1",
     "/assets/saas_theme/css/child_row_editor_finish.css?v=1",
     "/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
@@ -199,9 +199,12 @@ REQUIRED_RUNTIME_GUARDS = {
         "padding-top: 6px !important",
         "min-height: 44px !important",
         ".body-sidebar .sidebar-header .title-container",
-        "PAGE HEADER SURFACE",
+    ],
+    "grid_and_action_alignment.css": [
+        "PAGE-HEAD SURFACE + ACTION ALIGNMENT",
         "background: #FFFFFF !important",
         "0 4px 12px rgba(20, 33, 61, .045) !important",
+        "[data-theme=\"dark\"] .page-head",
     ],
     "list_view.js": [
         "__saas_theme_list_filter_visibility_v3__",
