@@ -1,16 +1,17 @@
 /*
  * SaaS Theme — List View behavior
  * Persistent visibility toggle for Frappe's complete List View filter panel.
+ * The toggle lives in the native page icon group beside Reload List.
  */
 (function () {
 	"use strict";
 
-	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v2__) return;
-	window.__saas_theme_list_filter_visibility_v2__ = true;
+	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v3__) return;
+	window.__saas_theme_list_filter_visibility_v3__ = true;
 
 	const STORAGE_PREFIX = "saas_theme_list_filters_collapsed_v1";
 	const BUTTON_CLASS = "st-list-filter-visibility-toggle";
-	const TOOLBAR_CLASS = "st-list-filter-visibility-toolbar";
+	const LEGACY_TOOLBAR_CLASS = "st-list-filter-visibility-toolbar";
 	let scheduled = false;
 
 	function current_doctype() {
@@ -42,7 +43,8 @@
 
 	function filter_icon() {
 		try {
-			return frappe.utils.icon("filter", "xs");
+			// Match frappe.ui.Page.add_action_icon() sizing exactly.
+			return frappe.utils.icon("filter");
 		} catch (e) {
 			return "";
 		}
@@ -50,15 +52,12 @@
 
 	function update_button($button, collapsed) {
 		const label = collapsed ? __("Show Filters") : __("Hide Filters");
-		$button
-			.attr({
-				title: label,
-				"aria-label": label,
-				"aria-expanded": String(!collapsed),
-			})
-			.empty()
-			.append(filter_icon())
-			.append($("<span>").addClass("st-list-filter-toggle-label").text(label));
+		$button.attr({
+			title: label,
+			"aria-label": label,
+			"aria-expanded": String(!collapsed),
+			"data-label": label,
+		});
 	}
 
 	function active_list_form() {
@@ -81,8 +80,19 @@
 		return ($active_forms.length ? $active_forms : $forms).last();
 	}
 
-	function toolbar_for($form) {
-		return $form.prev(`.${TOOLBAR_CLASS}`).first();
+	function icon_group_for($form) {
+		const $page = $form.closest(".page-container");
+		let $group = $page.find(".page-head .page-actions .page-icon-group").first();
+
+		if (!$group.length) {
+			$group = $(".page-head:visible .page-actions .page-icon-group").last();
+		}
+
+		return $group;
+	}
+
+	function button_for($form) {
+		return icon_group_for($form).find(`.${BUTTON_CLASS}`).first();
 	}
 
 	function apply_state($form, doctype, collapsed, persist = false) {
@@ -95,10 +105,35 @@
 			.prop("hidden", collapsed)
 			.attr("aria-hidden", collapsed ? "true" : "false");
 
-		const $button = toolbar_for($form).find(`.${BUTTON_CLASS}`).first();
+		const $button = button_for($form);
 		if ($button.length) update_button($button, collapsed);
 
 		if (persist) write_collapsed(doctype, collapsed);
+	}
+
+	function place_next_to_reload($icon_group, $button) {
+		const reload_label = __("Reload List");
+		const $reload = $icon_group
+			.find(".icon-btn")
+			.filter(function () {
+				if (this === $button.get(0)) return false;
+				const $candidate = $(this);
+				const label =
+					$candidate.attr("title") ||
+					$candidate.attr("data-original-title") ||
+					$candidate.attr("aria-label");
+				const has_refresh_icon = $candidate
+					.find('use[href*="refresh-cw"], use[xlink\\:href*="refresh-cw"]')
+					.length;
+				return label === reload_label || Boolean(has_refresh_icon);
+			})
+			.first();
+
+		if ($reload.length) {
+			$button.insertAfter($reload);
+		} else {
+			$icon_group.append($button);
+		}
 	}
 
 	function ensure_toggle() {
@@ -108,27 +143,25 @@
 		const $form = active_list_form();
 		if (!$form.length) return;
 
-		// Remove the PR #80 placement if an already-rendered route still carries
-		// the old button inside the collapsible filter section.
+		// Remove the older PR #80/PR #81 placements from already-rendered pages.
 		$form.find(`.${BUTTON_CLASS}`).remove();
+		$form.parent().children(`.${LEGACY_TOOLBAR_CLASS}`).remove();
 
-		let $toolbar = toolbar_for($form);
-		if (!$toolbar.length) {
-			$toolbar = $(
-				`<div class="${TOOLBAR_CLASS} level mb-2" role="toolbar"></div>`
-			);
-			$toolbar.append('<div class="level-left"></div>');
-			$toolbar.append('<div class="level-right"></div>');
-			$toolbar.insertBefore($form);
-		}
+		const $icon_group = icon_group_for($form);
+		if (!$icon_group.length) return;
 
-		let $button = $toolbar.find(`.${BUTTON_CLASS}`).first();
+		// A cached/hidden list page may still own an old copy. Keep one button on
+		// the active List page only; route changes recreate it when needed.
+		$(`.${BUTTON_CLASS}`).not($icon_group.find(`.${BUTTON_CLASS}`)).remove();
+
+		let $button = $icon_group.find(`.${BUTTON_CLASS}`).first();
 		if (!$button.length) {
 			$button = $(
-				`<button type="button" class="btn btn-default btn-sm ${BUTTON_CLASS}"></button>`
-			);
-			$toolbar.find(".level-right").first().append($button);
+				`<button type="button" class="text-muted btn btn-default icon-btn ${BUTTON_CLASS}"></button>`
+			).append(filter_icon());
 		}
+
+		place_next_to_reload($icon_group, $button);
 
 		$button
 			.off("click.saasThemeListFilters")
