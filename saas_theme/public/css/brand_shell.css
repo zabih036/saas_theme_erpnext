@@ -57,14 +57,14 @@
 
 /* =========================================================
    DESKTOP SIDEBAR HEADER — ALIGN WITH PAGE HEADER ACTION ROW
-   The base sidebar used 14px top padding plus a 52px header. That placed the
-   workspace logo/title visibly below the page-head Home/action buttons.
-   Keep the same icon scale, but remove the extra top offset and use the same
-   compact 44px row rhythm as the adjacent header controls.
+   The previous correction removed the whole top inset and left the workspace
+   mark/title about 6px above the visual centre of the adjacent Home action.
+   Restore only that measured 6px breathing room while keeping the compact
+   44px row and the existing icon scale.
    ========================================================= */
 @media (min-width: 768px) {
 	.body-sidebar {
-		padding-top: 0 !important;
+		padding-top: 6px !important;
 	}
 
 	.body-sidebar .sidebar-header {

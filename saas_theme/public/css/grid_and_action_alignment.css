@@ -324,9 +324,24 @@
 }
 
 /* =========================================================
-   PAGE-HEAD ACTION ALIGNMENT
-   Every action belongs to one baseline and one control height.
+   PAGE-HEAD SURFACE + ACTION ALIGNMENT
+   Keep the header white with restrained elevation and every action on one
+   baseline/control height. Dark mode retains its native dark shell.
    ========================================================= */
+.page-head {
+	background: #FFFFFF !important;
+	box-shadow:
+		0 1px 2px rgba(20, 33, 61, .025),
+		0 4px 12px rgba(20, 33, 61, .045) !important;
+}
+
+[data-theme="dark"] .page-head {
+	background: #151B24 !important;
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, .16),
+		0 4px 12px rgba(0, 0, 0, .10) !important;
+}
+
 .page-head .page-head-content,
 .page-head .page-head-content > .row,
 .page-head .page-head-content .page-actions,
