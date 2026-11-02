@@ -1,15 +1,16 @@
 /*
  * SaaS Theme — List View behavior
- * Persistent visibility toggle for Frappe's standard/quick filter row.
+ * Persistent visibility toggle for Frappe's complete List View filter panel.
  */
 (function () {
 	"use strict";
 
-	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v1__) return;
-	window.__saas_theme_list_filter_visibility_v1__ = true;
+	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v2__) return;
+	window.__saas_theme_list_filter_visibility_v2__ = true;
 
 	const STORAGE_PREFIX = "saas_theme_list_filters_collapsed_v1";
 	const BUTTON_CLASS = "st-list-filter-visibility-toggle";
+	const TOOLBAR_CLASS = "st-list-filter-visibility-toolbar";
 	let scheduled = false;
 
 	function current_doctype() {
@@ -60,17 +61,41 @@
 			.append($("<span>").addClass("st-list-filter-toggle-label").text(label));
 	}
 
+	function active_list_form() {
+		const $visible_list = $(".list-view:visible").last();
+		if ($visible_list.length) {
+			const $form = $visible_list.find(".page-form.list-page-form").first();
+			if ($form.length) return $form;
+		}
+
+		// The form itself can be hidden by this controller, so never depend on
+		// :visible for the form when restoring its state after route mutations.
+		const $forms = $(".page-form.list-page-form");
+		if (!$forms.length) return $();
+
+		const $active_forms = $forms.filter(function () {
+			const $page = $(this).closest(".page-container, .page-body, .list-view");
+			return !$page.length || $page.is(":visible");
+		});
+
+		return ($active_forms.length ? $active_forms : $forms).last();
+	}
+
+	function toolbar_for($form) {
+		return $form.prev(`.${TOOLBAR_CLASS}`).first();
+	}
+
 	function apply_state($form, doctype, collapsed, persist = false) {
-		const $standard_filters = $form.children(".standard-filter-section").first();
-		if (!$standard_filters.length) return;
+		if (!$form.length) return;
 
-		$form.toggleClass("st-list-filters-collapsed", collapsed);
-		$standard_filters.toggle(!collapsed).attr("aria-hidden", collapsed ? "true" : "false");
+		// Hide the complete List View filter panel. This intentionally includes
+		// standard filters, Filter/Clear actions, sort direction and sort field.
+		$form
+			.toggleClass("st-list-filters-collapsed", collapsed)
+			.prop("hidden", collapsed)
+			.attr("aria-hidden", collapsed ? "true" : "false");
 
-		const $button = $form
-			.children(".filter-section")
-			.find(`.${BUTTON_CLASS}`)
-			.first();
+		const $button = toolbar_for($form).find(`.${BUTTON_CLASS}`).first();
 		if ($button.length) update_button($button, collapsed);
 
 		if (persist) write_collapsed(doctype, collapsed);
@@ -80,33 +105,39 @@
 		const doctype = current_doctype();
 		if (!doctype) return;
 
-		const $form = $(".page-form.list-page-form:visible").last();
+		const $form = active_list_form();
 		if (!$form.length) return;
 
-		const $standard_filters = $form.children(".standard-filter-section").first();
-		const $filter_section = $form.children(".filter-section").first();
-		if (!$standard_filters.length || !$filter_section.length) return;
+		// Remove the PR #80 placement if an already-rendered route still carries
+		// the old button inside the collapsible filter section.
+		$form.find(`.${BUTTON_CLASS}`).remove();
 
-		let $button = $filter_section.find(`.${BUTTON_CLASS}`).first();
+		let $toolbar = toolbar_for($form);
+		if (!$toolbar.length) {
+			$toolbar = $(
+				`<div class="${TOOLBAR_CLASS} level mb-2" role="toolbar"></div>`
+			);
+			$toolbar.append('<div class="level-left"></div>');
+			$toolbar.append('<div class="level-right"></div>');
+			$toolbar.insertBefore($form);
+		}
+
+		let $button = $toolbar.find(`.${BUTTON_CLASS}`).first();
 		if (!$button.length) {
 			$button = $(
 				`<button type="button" class="btn btn-default btn-sm ${BUTTON_CLASS}"></button>`
 			);
+			$toolbar.find(".level-right").first().append($button);
+		}
 
-			const $filter_selector = $filter_section.find(".filter-selector").first();
-			if ($filter_selector.length) {
-				$button.insertBefore($filter_selector);
-			} else {
-				$filter_section.prepend($button);
-			}
-
-			$button.on("click.saasThemeListFilters", (event) => {
+		$button
+			.off("click.saasThemeListFilters")
+			.on("click.saasThemeListFilters", (event) => {
 				event.preventDefault();
 				event.stopPropagation();
 				const collapsed = !$form.hasClass("st-list-filters-collapsed");
 				apply_state($form, doctype, collapsed, true);
 			});
-		}
 
 		apply_state($form, doctype, read_collapsed(doctype), false);
 	}

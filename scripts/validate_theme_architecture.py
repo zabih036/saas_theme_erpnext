@@ -47,7 +47,7 @@ EXPECTED_DESK_CSS = [
 EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/saas_theme.js?v=64",
     "/assets/saas_theme/js/professional_ui.js?v=1",
-    "/assets/saas_theme/js/list_view.js?v=1",
+    "/assets/saas_theme/js/list_view.js?v=2",
     "/assets/saas_theme/js/home_dashboard.js?v=1",
     "/assets/saas_theme/js/home_analytics.js?v=7",
     "/assets/saas_theme/js/brand_shell.js?v=1",
@@ -193,6 +193,12 @@ EXPECTED_LATE_ASSET_TOKENS = {
 }
 
 REQUIRED_RUNTIME_GUARDS = {
+    "list_view.js": [
+        "__saas_theme_list_filter_visibility_v2__",
+        'const TOOLBAR_CLASS = "st-list-filter-visibility-toolbar"',
+        '.prop("hidden", collapsed)',
+        "$toolbar.insertBefore($form)",
+    ],
     "interaction_finish_v2.js": [
         "__saas_theme_ui_consolidation_v7__",
         'const GRID_EDITOR_CLASS = "st-v7-grid-editor"',
