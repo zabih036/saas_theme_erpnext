@@ -19,8 +19,7 @@ PUBLIC = ROOT / "saas_theme" / "public"
 EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/saas_theme.css?v=64",
     "/assets/saas_theme/css/professional_ui.css?v=1",
-    "/assets/saas_theme/css/form_controls.css?v=1",
-    "/assets/saas_theme/css/form_navigation.css?v=1",
+    "/assets/saas_theme/css/form.css?v=1",
     "/assets/saas_theme/css/list_view.css?v=1",
     "/assets/saas_theme/css/home.css?v=1",
     "/assets/saas_theme/css/brand_shell.css?v=1",
@@ -75,9 +74,8 @@ KNOWN_CSS_FILES = {
     "precision.css",
     "dark.css",
     "desktop_navbar_refinement.css",
-    "form_controls.css",
+    "form.css",
     "form_surface.css",
-    "form_navigation.css",
     "palette.css",
     "global_popup_polish_v3.css",
     "grid_and_action_alignment.css",
@@ -131,6 +129,8 @@ KNOWN_JS_FILES = {
 # Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
 # return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "form_controls.css",
+    "form_navigation.css",
     "ui_finish.css",
     "interface_refinement.css",
     "control_precision_fix.css",
