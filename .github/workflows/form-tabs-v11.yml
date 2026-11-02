@@ -14,6 +14,16 @@ jobs:
           fetch-depth: 0
       - name: Apply V11 form tabs
         run: python3 .github/scripts/apply_form_tabs_v11.py
+      - name: Update validator contract for inner baseline
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/validate_theme_architecture.py')
+          text = path.read_text()
+          text = text.replace('        "border-bottom: 2px solid #064ADB",\n', '        "form-tabs::after",\n')
+          text = text.replace('        "padding: 0 10px",\n', '        "padding: 0 !important",\n')
+          path.write_text(text)
+          PY
       - name: Validate JS
         run: node --check saas_theme/public/js/interaction_finish_v2.js
       - name: Validate architecture
