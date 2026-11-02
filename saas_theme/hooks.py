@@ -45,6 +45,7 @@ app_include_css = [
 app_include_js = [
 	"/assets/saas_theme/js/saas_theme.js?v=64",
 	"/assets/saas_theme/js/professional_ui.js?v=1",
+	"/assets/saas_theme/js/list_view.js?v=1",
 	"/assets/saas_theme/js/home_dashboard.js?v=1",
 	"/assets/saas_theme/js/home_analytics.js?v=7",
 	"/assets/saas_theme/js/brand_shell.js?v=1",
