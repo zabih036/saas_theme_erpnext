@@ -42,22 +42,20 @@ body>.es-menu,body>.es-popover .es-menu,.es-popover .es-menu[role="menu"]{paddin
 
 @media(max-width:900px){body>.form-in-grid.st-v7-grid-editor{top:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important;border-radius:13px!important}body>.form-in-grid.st-v7-grid-editor .grid-header-toolbar{align-items:flex-start!important;flex-direction:column!important}body>.form-in-grid.st-v7-grid-editor .grid-form-body{padding:10px!important}body>.form-in-grid.st-v7-grid-editor .form-area{padding:10px!important}}
 
-/* ===== AUTHORITATIVE FINAL FORM TABS V10 ===== */
-/* Exact reference-style tabs: clean white rail, blue baseline, open-bottom active tab. */
+/* ===== AUTHORITATIVE FINAL FORM TABS V11 ===== */
+/* Exact reference tabs: neutral outer rail, baseline behind tabs, active tab open at bottom. */
 body .form-page > .form-tabs-list,
 body .form-layout .form-page > .form-tabs-list,
 body .std-form-layout .form-page > .form-tabs-list,
 body .form-layout .form-tabs-list,
 body .std-form-layout .form-tabs-list {
 	box-sizing: border-box !important;
-	display: flex !important;
-	align-items: flex-end !important;
-	width: auto !important;
-	min-height: 46px !important;
-	margin: 0 8px !important;
-	padding: 0 10px !important;
+	display: block !important;
+	width: 100% !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
 	border: 0 !important;
-	border-bottom: 2px solid #064ADB !important;
 	border-radius: 0 !important;
 	background: #FFFFFF !important;
 	box-shadow: none !important;
@@ -68,12 +66,13 @@ body .std-form-layout .form-tabs-list {
 
 body .form-tabs-list::-webkit-scrollbar { display: none !important; }
 
-/* Explicitly neutralize the old inner-tab card styles from earlier layers. */
 body .form-page .form-tabs-list .form-tabs,
 body .std-form-layout .form-tabs-list .form-tabs,
 body .form-tabs-list .form-tabs,
 body .form-tabs-list .nav,
 body .form-tabs-list .nav-tabs {
+	box-sizing: border-box !important;
+	position: relative !important;
 	display: flex !important;
 	align-items: flex-end !important;
 	flex-wrap: nowrap !important;
@@ -81,7 +80,7 @@ body .form-tabs-list .nav-tabs {
 	width: max-content !important;
 	min-width: 100% !important;
 	margin: 0 !important;
-	padding: 0 !important;
+	padding: 0 14px !important;
 	border: 0 !important;
 	border-radius: 0 !important;
 	background: transparent !important;
@@ -89,7 +88,22 @@ body .form-tabs-list .nav-tabs {
 	overflow: visible !important;
 }
 
+/* The blue baseline belongs to the inner tab row, behind the tab buttons. */
+body .form-tabs-list .form-tabs::after {
+	content: "" !important;
+	position: absolute !important;
+	left: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	height: 2px !important;
+	background: #064ADB !important;
+	z-index: 0 !important;
+	pointer-events: none !important;
+}
+
 body .form-tabs-list .nav-item {
+	position: relative !important;
+	z-index: 1 !important;
 	flex: 0 0 auto !important;
 	margin: 0 !important;
 	padding: 0 !important;
@@ -102,15 +116,14 @@ body .std-form-layout .form-tabs-list .nav-link,
 body .form-tabs-list .nav-item > a {
 	box-sizing: border-box !important;
 	position: relative !important;
-	z-index: 1 !important;
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	min-height: 42px !important;
-	margin: 0 0 -2px !important;
-	padding: 9px 18px 10px !important;
+	min-height: 40px !important;
+	margin: 0 !important;
+	padding: 8px 14px 9px !important;
 	border: 2px solid transparent !important;
-	border-radius: 14px 14px 0 0 !important;
+	border-radius: 13px 13px 0 0 !important;
 	background: transparent !important;
 	color: #8A8A8A !important;
 	font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
@@ -145,11 +158,11 @@ body .form-tabs-list .nav-item > a.active {
 	border-left: 2px solid #064ADB !important;
 	border-right: 2px solid #064ADB !important;
 	border-bottom: 0 !important;
-	border-radius: 14px 14px 0 0 !important;
+	border-radius: 13px 13px 0 0 !important;
 	box-shadow: none !important;
 }
 
-/* Mask the rail baseline under the active tab so the bottom is visually open. */
+/* White mask fully removes the baseline under the active tab. */
 body .form-tabs-list .nav-link.active::after,
 body .form-tabs-list .nav-item.active > a::after,
 body .form-tabs-list .nav-item > a.active::after {
@@ -161,6 +174,7 @@ body .form-tabs-list .nav-item > a.active::after {
 	bottom: -2px !important;
 	height: 3px !important;
 	background: #FFFFFF !important;
+	z-index: 4 !important;
 	pointer-events: none !important;
 }
 
@@ -168,7 +182,7 @@ body .form-page .form-tab-content,
 body .form-layout .form-tab-content,
 body .std-form-layout .form-tab-content {
 	box-sizing: border-box !important;
-	margin: -1px 8px 14px !important;
+	margin: 0 0 14px !important;
 	padding: 12px 16px 16px !important;
 	border: 1px solid #D9E2EC !important;
 	border-top: 0 !important;
@@ -179,12 +193,8 @@ body .std-form-layout .form-tab-content {
 
 [data-theme="dark"] body .form-page > .form-tabs-list,
 [data-theme="dark"] body .form-layout .form-tabs-list,
-[data-theme="dark"] body .std-form-layout .form-tabs-list { background: #111827 !important; border-bottom-color: #6B91FF !important; }
-[data-theme="dark"] body .form-page .form-tabs-list .form-tabs,
-[data-theme="dark"] body .std-form-layout .form-tabs-list .form-tabs,
-[data-theme="dark"] body .form-tabs-list .form-tabs,
-[data-theme="dark"] body .form-tabs-list .nav,
-[data-theme="dark"] body .form-tabs-list .nav-tabs { background: transparent !important; }
+[data-theme="dark"] body .std-form-layout .form-tabs-list { background: #111827 !important; }
+[data-theme="dark"] body .form-tabs-list .form-tabs::after { background: #6B91FF !important; }
 [data-theme="dark"] body .form-tabs-list .nav-link,
 [data-theme="dark"] body .form-tabs-list .nav-item > a { color: #9AA7B8 !important; }
 [data-theme="dark"] body .form-tabs-list .nav-link.active,
@@ -195,14 +205,13 @@ body .std-form-layout .form-tab-content {
 [data-theme="dark"] body .form-tabs-list .nav-item > a.active::after { background: #111827 !important; }
 
 @media (max-width: 767px) {
-	body .form-page > .form-tabs-list,
-	body .form-layout .form-tabs-list,
-	body .std-form-layout .form-tabs-list { min-height: 44px !important; margin: 0 6px !important; padding: 0 6px !important; }
+	body .form-page .form-tabs-list .form-tabs,
+	body .std-form-layout .form-tabs-list .form-tabs,
+	body .form-tabs-list .form-tabs,
+	body .form-tabs-list .nav,
+	body .form-tabs-list .nav-tabs { padding: 0 8px !important; gap: 4px !important; }
 	body .form-tabs-list .nav-link,
-	body .form-tabs-list .nav-item > a { min-height: 40px !important; padding: 8px 14px 9px !important; font-size: 13px !important; border-radius: 12px 12px 0 0 !important; }
-	body .form-page .form-tab-content,
-	body .form-layout .form-tab-content,
-	body .std-form-layout .form-tab-content { margin-left: 6px !important; margin-right: 6px !important; }
+	body .form-tabs-list .nav-item > a { min-height: 38px !important; padding: 7px 11px 8px !important; font-size: 13px !important; border-radius: 11px 11px 0 0 !important; }
 }
-/* ===== END AUTHORITATIVE FINAL FORM TABS V10 ===== */
+/* ===== END AUTHORITATIVE FINAL FORM TABS V11 ===== */
 
