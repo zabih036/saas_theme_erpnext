@@ -93,27 +93,101 @@
 	}
 
 	function analytics_html() {
-		return `<div class="st-hub-section-head st-analytics-head"><div><h2>${__("Business Overview")}</h2><p>${__("Sales, purchases, payments and stock activity for the last 6 months")}</p></div><span class="st-analytics-updated">${__("Loading analytics…")}</span></div>
-		<div class="st-analytics-kpis">
-			${kpi("sales", __("Sales Invoices"), "selling", list_route("Sales Invoice"))}
-			${kpi("purchases", __("Purchase Invoices"), "shopping-cart", list_route("Purchase Invoice"))}
-			${kpi("payments", __("Payment Entries"), "payment", list_route("Payment Entry"))}
-			${kpi("stock", __("Stock Activity"), "stock", list_route("Stock Entry"))}
-		</div>
-		<div class="st-analytics-grid">
-			<article class="st-analytics-card st-analytics-card-wide"><div class="st-analytics-card-head"><strong>${__("Sales vs Purchases")}</strong><small>${__("Submitted invoice value by month")}</small></div><div class="st-analytics-chart st-finance-chart">${empty_chart(__("Loading chart…"))}</div></article>
-			<article class="st-analytics-card"><div class="st-analytics-card-head"><strong>${__("Payment Activity")}</strong><small>${__("Submitted payment value by month")}</small></div><div class="st-analytics-chart st-payments-chart">${empty_chart(__("Loading chart…"))}</div></article>
-			<article class="st-analytics-card"><div class="st-analytics-card-head"><strong>${__("Stock Transactions")}</strong><small>${__("Submitted stock entries by month")}</small></div><div class="st-analytics-chart st-stock-chart">${empty_chart(__("Loading chart…"))}</div></article>
+		return `<div class="st-hub-section-head st-analytics-head"><div><h2>${__("Business Overview")}</h2><p>${__("A focused view of financial movement, operational activity and recent user actions")}</p></div><span class="st-analytics-updated">${__("Loading analytics…")}</span></div>
+		<div class="st-analytics-grid st-analytics-grid-v2">
+			<article class="st-analytics-card st-analytics-finance-card"><div class="st-analytics-card-head"><div><strong>${__("Sales vs Purchases")}</strong><small>${__("Submitted invoice value across the last 6 months")}</small></div><span class="st-analytics-card-tag">${__("6 months")}</span></div><div class="st-analytics-chart st-finance-chart">${empty_chart(__("Loading chart…"))}</div></article>
+			<article class="st-analytics-card st-analytics-activity-card"><div class="st-analytics-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Actions on documents you are allowed to view")}</small></div><span class="st-analytics-live"><i></i>${__("Live")}</span></div><div class="st-activity-summary"><div class="st-activity-summary-loading">${__("Loading activity…")}</div></div><div class="st-activity-list"><div class="st-analytics-empty st-activity-loading">${__("Loading recent activity…")}</div></div></article>
+			<article class="st-analytics-card st-analytics-payments-card"><div class="st-analytics-card-head"><div><strong>${__("Payment Activity")}</strong><small>${__("Submitted payment value by month")}</small></div><span class="st-analytics-card-icon">${icon("payment")}</span></div><div class="st-analytics-chart st-payments-chart">${empty_chart(__("Loading chart…"))}</div></article>
+			<article class="st-analytics-card st-analytics-stock-card"><div class="st-analytics-card-head"><div><strong>${__("Stock Transactions")}</strong><small>${__("Submitted stock entries by month")}</small></div><span class="st-analytics-card-icon">${icon("stock")}</span></div><div class="st-analytics-chart st-stock-chart">${empty_chart(__("Loading chart…"))}</div></article>
 		</div>`;
-	}
-
-	function kpi(key, title, icon_name, route) {
-		return `<a class="st-analytics-kpi" href="${esc(route)}"><span class="st-analytics-kpi-icon">${icon(icon_name)}</span><span><small>${esc(title)}</small><strong data-analytics-value="${key}">—</strong><em data-analytics-note="${key}">${__("Loading…")}</em></span>${arrow()}</a>`;
 	}
 
 	function empty_chart(message) {
 		return `<div class="st-analytics-empty">${esc(message)}</div>`;
 	}
+
+	function form_route(doctype, name) {
+		if (!doctype || !name) return "#";
+		const prefix = window.location.pathname.startsWith("/app") ? "/app" : "/desk";
+		return `${prefix}/${slug(doctype)}/${encodeURIComponent(String(name))}`;
+	}
+
+	function relative_time(value) {
+		if (!value) return "";
+		try {
+			if (typeof frappe.datetime?.prettyDate === "function") return frappe.datetime.prettyDate(value);
+		} catch (e) {
+			// Fall through to the local formatter.
+		}
+		const parsed = new Date(String(value).replace(" ", "T"));
+		if (Number.isNaN(parsed.getTime())) return String(value);
+		const seconds = Math.max(0, Math.floor((Date.now() - parsed.getTime()) / 1000));
+		if (seconds < 60) return __("Just now");
+		if (seconds < 3600) return __("{0}m ago", [Math.floor(seconds / 60)]);
+		if (seconds < 86400) return __("{0}h ago", [Math.floor(seconds / 3600)]);
+		if (seconds < 604800) return __("{0}d ago", [Math.floor(seconds / 86400)]);
+		return new Intl.DateTimeFormat(document.documentElement.lang || navigator.language || "en", { month: "short", day: "numeric" }).format(parsed);
+	}
+
+	function initials(value) {
+		const text = String(value || __("User")).replace(/@.*$/, "").replace(/[._-]+/g, " ").trim();
+		const parts = text.split(/\s+/).filter(Boolean);
+		if (!parts.length) return "U";
+		return `${parts[0][0] || ""}${parts.length > 1 ? parts[parts.length - 1][0] || "" : ""}`.toUpperCase().slice(0, 2);
+	}
+
+	function activity_meta(type) {
+		const map = {
+			Created: { action: __("created"), tone: "created" },
+			Submitted: { action: __("submitted"), tone: "submitted" },
+			Cancelled: { action: __("cancelled"), tone: "cancelled" },
+			Updated: { action: __("updated"), tone: "updated" },
+			Edit: { action: __("edited"), tone: "updated" },
+			Workflow: { action: __("changed workflow for"), tone: "workflow" },
+			Assigned: { action: __("assigned"), tone: "assigned" },
+			"Assignment Completed": { action: __("completed assignment for"), tone: "submitted" },
+			Attachment: { action: __("added an attachment to"), tone: "attachment" },
+			"Attachment Removed": { action: __("removed an attachment from"), tone: "attachment" },
+			Shared: { action: __("shared"), tone: "shared" },
+			Unshared: { action: __("unshared"), tone: "shared" },
+		};
+		return map[type] || { action: __("updated"), tone: "updated" };
+	}
+
+	function activity_item_html(item) {
+		const meta = activity_meta(item.activity_type);
+		const doctype = item.reference_doctype || __("Document");
+		const name = item.reference_name || item.subject || "";
+		const actor = item.actor || __("User");
+		const href = item.reference_doctype && item.reference_name ? form_route(item.reference_doctype, item.reference_name) : "#";
+		return `<a class="st-activity-item" href="${esc(href)}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small></span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
+	}
+
+	function activity_summary_html(summary) {
+		const values = [
+			{ key: "created", label: __("Created"), tone: "created" },
+			{ key: "updated", label: __("Updated"), tone: "updated" },
+			{ key: "submitted", label: __("Submitted"), tone: "submitted" },
+			{ key: "other", label: __("Other"), tone: "other" },
+		];
+		return values.map((item) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${item.tone}"></span><div><strong>${Number(summary?.[item.key] || 0)}</strong><small>${esc(item.label)}</small></div></div>`).join("");
+	}
+
+	async function load_recent_activity($home, token) {
+		try {
+			const response = await frappe.call({ method: "saas_theme.home.get_recent_activity", args: { limit: 9 } });
+			if (token !== enhance_token || !$home.closest("body").length) return;
+			const payload = response?.message || {};
+			const items = Array.isArray(payload.items) ? payload.items : [];
+			$home.find(".st-activity-summary").html(activity_summary_html(payload.summary || {}));
+			$home.find(".st-activity-list").html(items.length ? items.map(activity_item_html).join("") : `<div class="st-activity-empty">${__("No recent document activity is available for your current permissions.")}</div>`);
+		} catch (e) {
+			if (token !== enhance_token || !$home.closest("body").length) return;
+			$home.find(".st-activity-summary").html(activity_summary_html({}));
+			$home.find(".st-activity-list").html(`<div class="st-activity-empty">${__("Recent activity could not be loaded.")}</div>`);
+		}
+	}
+
 
 	function currency() {
 		return frappe.boot?.sysdefaults?.currency || frappe.sys_defaults?.currency || frappe.defaults?.get_default?.("currency") || "";
@@ -262,8 +336,7 @@
 		$metrics.append(metric_html("sales", __("Sales This Month"), "selling", list_route("Sales Invoice")));
 		$metrics.append(metric_html("purchases", __("Purchases This Month"), "shopping-cart", list_route("Purchase Invoice")));
 
-		$home.find(".st-hub-quick-section .st-hub-section-head p").text(__("Buying, sales, assets, payments, accounting and stock"));
-		$home.find(".st-hub-quick-grid").html(quick_items(items).map(quick_html).join(""));
+		$home.find(".st-hub-quick-section .st-hub-section-head p").text(__("Favorites and recently used workspaces"));
 
 		const $sidebar = $home.find(".st-hub-sidebar");
 		$sidebar.find(".st-hub-workspace-nav").remove();
@@ -272,6 +345,7 @@
 		const $workspace_section = $home.find(".st-hub-workspaces-section");
 		$workspace_section.removeClass("st-hub-workspaces-section").addClass("st-hub-analytics-section").html(analytics_html());
 		load_analytics($home, token);
+		load_recent_activity($home, token);
 	}
 
 	function schedule() {
