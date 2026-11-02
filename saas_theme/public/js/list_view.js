@@ -6,8 +6,8 @@
 (function () {
 	"use strict";
 
-	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v3__) return;
-	window.__saas_theme_list_filter_visibility_v3__ = true;
+	if (typeof frappe === "undefined" || window.__saas_theme_list_filter_visibility_v4__) return;
+	window.__saas_theme_list_filter_visibility_v4__ = true;
 
 	const STORAGE_PREFIX = "saas_theme_list_filters_collapsed_v1";
 	const BUTTON_CLASS = "st-list-filter-visibility-toggle";
@@ -136,6 +136,28 @@
 		}
 	}
 
+	function handle_toggle_click(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		// Resolve the live route and filter form at click time. Frappe can rebuild
+		// the List DOM/header independently, so a closure over an older $form can
+		// leave a visible button pointing at a detached panel.
+		const doctype = current_doctype();
+		const $form = active_list_form();
+		if (!doctype || !$form.length) return;
+
+		const collapsed = !$form.hasClass("st-list-filters-collapsed");
+		apply_state($form, doctype, collapsed, true);
+		update_button($(event.currentTarget), collapsed);
+	}
+
+	function bind_delegated_toggle() {
+		$(document)
+			.off("click.saasThemeListFilters", `.${BUTTON_CLASS}`)
+			.on("click.saasThemeListFilters", `.${BUTTON_CLASS}`, handle_toggle_click);
+	}
+
 	function ensure_toggle() {
 		const doctype = current_doctype();
 		if (!doctype) return;
@@ -162,16 +184,6 @@
 		}
 
 		place_next_to_reload($icon_group, $button);
-
-		$button
-			.off("click.saasThemeListFilters")
-			.on("click.saasThemeListFilters", (event) => {
-				event.preventDefault();
-				event.stopPropagation();
-				const collapsed = !$form.hasClass("st-list-filters-collapsed");
-				apply_state($form, doctype, collapsed, true);
-			});
-
 		apply_state($form, doctype, read_collapsed(doctype), false);
 	}
 
@@ -183,6 +195,8 @@
 			ensure_toggle();
 		});
 	}
+
+	bind_delegated_toggle();
 
 	if (frappe.router?.on) {
 		frappe.router.on("change", () => {

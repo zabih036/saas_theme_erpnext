@@ -47,7 +47,7 @@ EXPECTED_DESK_CSS = [
 EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/saas_theme.js?v=64",
     "/assets/saas_theme/js/professional_ui.js?v=1",
-    "/assets/saas_theme/js/list_view.js?v=3",
+    "/assets/saas_theme/js/list_view.js?v=4",
     "/assets/saas_theme/js/home_dashboard.js?v=1",
     "/assets/saas_theme/js/home_analytics.js?v=7",
     "/assets/saas_theme/js/brand_shell.js?v=1",
@@ -207,11 +207,15 @@ REQUIRED_RUNTIME_GUARDS = {
         "[data-theme=\"dark\"] .page-head",
     ],
     "list_view.js": [
-        "__saas_theme_list_filter_visibility_v3__",
+        "__saas_theme_list_filter_visibility_v4__",
         'const LEGACY_TOOLBAR_CLASS = "st-list-filter-visibility-toolbar"',
         '.page-actions .page-icon-group',
         'text-muted btn btn-default icon-btn',
         '$button.insertAfter($reload)',
+        'function handle_toggle_click(event)',
+        '.on("click.saasThemeListFilters", `.${BUTTON_CLASS}`, handle_toggle_click)',
+        'const doctype = current_doctype();',
+        'const $form = active_list_form();',
         '.prop("hidden", collapsed)',
     ],
     "interaction_finish_v2.js": [
