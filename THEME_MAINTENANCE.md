@@ -52,9 +52,10 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
 | General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
-| Reports / DataTable appearance | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces and report tables. |
+| Reports / DataTable + flat-form shell | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces, report tables and the intentionally colocated no-tab/flat-form shell. |
 | Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Existing final report filter-cell/search behavior. Do not duplicate elsewhere. |
 | Tree / Chart of Accounts | `saas_theme/public/css/tree_view_refinement.css` | Tree-specific rows, controls and checkboxes. |
+| Grid + page-action alignment | `saas_theme/public/css/grid_and_action_alignment.css` | Child-grid geometry and page-head action alignment. Keep separate from form surface and reports because it spans both concerns. |
 | Child-table visual baseline | `saas_theme/public/css/child_table_precision_v5.css` / `saas_theme/public/js/child_table_precision_v5.js` | Child-table rows, controls and Configure Columns behavior. |
 | Expanded child-row editor, Link Selector, popup portal lifecycle, form-tab stability | `saas_theme/public/js/interaction_finish_v2.js` | **Authoritative final interaction controller.** Do not introduce another controller for these behaviors. |
 | Final child-row/popup/menu/tab CSS and stacking contract | `saas_theme/public/css/ui_consolidation_v7.css` | **Authoritative final CSS stability layer.** Only cross-layer conflicts belong here. |
@@ -112,7 +113,7 @@ Retired:
 
 Both were proven no-op compatibility assets before removal. The validator prevents either filename from returning.
 
-### Phase 2 — Mechanical bundling of contiguous, independent assets — current
+### Phase 2 — Mechanical bundling of contiguous, independent assets — completed
 
 Completed migrations:
 
@@ -124,7 +125,9 @@ Completed migrations:
 - `ui_finish.css` + `interface_refinement.css` → `interface.css`
 - `form_controls.css` + `form_navigation.css` → `form.css`
 
-Each bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
+Phase 2 ends here. The remaining adjacent CSS files were reviewed and intentionally **not** bundled when their ownership boundaries differ. In particular, `form_surface.css`, `grid_and_action_alignment.css`, and `report_and_form_shell.css` remain separate because they own different runtime surfaces. The protected child-row/popup/overlay stack also remains untouched.
+
+Each completed bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
 
 Rules for a bundle migration:
 
@@ -138,6 +141,14 @@ Rules for a bundle migration:
 8. test the affected surfaces before proceeding to another bundle.
 
 No two cleanup domains should be migrated in the same PR unless both are trivial and independently validated.
+
+## Design-change readiness
+
+Normal design work may resume after Phase 2. Phase 3 is **not** a prerequisite for new design changes. Future UI work should edit the canonical owner file directly and must not create another versioned/final/follow-up patch layer.
+
+Protected compatibility files should be migrated only when the feature they own is being deliberately changed and can be regression-tested in that same PR. This keeps design work moving without risking the stabilized child-row, popup, overlay, tab or report behavior.
+
+---
 
 ### Phase 3 — Move late-loaded precision layers into explicit owners
 
@@ -165,13 +176,14 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 - “Make form inputs more modern” → `form.css` (controls section)
 - “Change form card spacing/surface/layout” → `form_surface.css`
+- “Change child-grid geometry or page-head action alignment” → `grid_and_action_alignment.css`
 - “Change established cross-surface precision styling” → `precision.css`
 - “Change command-palette/native workspace/general interface refinement styling” → `interface.css`
 - “Change normal form tab spacing” → `form.css` (navigation section)
 - “Change form palette/colors” → `palette.css`
 - “Fix tabs becoming detached after scrolling” → `interaction_finish_v2.js` / `ui_consolidation_v7.css`
 - “Change List View row hover” → `list_view.css`
-- “Change report table/filter appearance” → `report_and_form_shell.css`
+- “Change report table/filter appearance or flat/no-tab form shell” → `report_and_form_shell.css`
 - “Fix report filter behavior/alignment logic” → `ui_precision_v6_2.js`
 - “Change child-table row visuals” → `child_table_precision_v5.css`
 - “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_v3.css` only for stacking/visibility compatibility

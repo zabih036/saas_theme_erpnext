@@ -126,8 +126,8 @@ KNOWN_JS_FILES = {
     "workspace_shell_polish.js",
 }
 
-# Phase 1 cleanup: these were explicit no-op compatibility assets. They must not
-# return through a new hook or runtime loader.
+# Retired filenames from proven no-op removals or completed bundle migrations.
+# They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
     "form_controls.css",
     "form_navigation.css",
@@ -146,6 +146,29 @@ RETIRED_ASSETS = {
     "home_analytics.css",
     "dark_mode_refinement.css",
     "dark_surface_fix.css",
+}
+
+PROTECTED_COMPATIBILITY_FILES = {
+    "css/child_row_editor_finish.css",
+    "css/overlay_stacking_fix.css",
+    "css/overlay_stacking_v3.css",
+    "css/interaction_finish_v2.css",
+    "css/global_popup_polish_v3.css",
+    "css/compact_autocomplete_and_form_gap_v4.css",
+    "css/stability_refinement_v3.css",
+    "css/ui_precision_v4.css",
+    "css/child_table_precision_v5.css",
+    "css/ui_precision_v6.css",
+    "css/ui_precision_v6_2.css",
+    "css/ui_consolidation_v7.css",
+    "css/inline_grid_link_popup_anchor_v5.css",
+    "js/stability_refinement_v3.js",
+    "js/ui_precision_v4.js",
+    "js/child_table_precision_v5.js",
+    "js/ui_precision_v6.js",
+    "js/ui_precision_v6_2.js",
+    "js/interaction_finish_v2.js",
+    "js/inline_grid_link_popup_anchor_v5.js",
 }
 
 EXPECTED_LATE_ASSET_TOKENS = {
@@ -297,6 +320,13 @@ def validate_late_loaders() -> None:
             fail(f"{filename} late-loader asset order changed")
 
 
+def validate_protected_compatibility_files() -> None:
+    for relative in sorted(PROTECTED_COMPATIBILITY_FILES):
+        path = PUBLIC / relative
+        if not path.is_file():
+            fail(f"protected compatibility file is missing: {relative}")
+
+
 def validate_runtime_guards() -> None:
     for filename, tokens in REQUIRED_RUNTIME_GUARDS.items():
         folder = "css" if filename.endswith(".css") else "js"
@@ -317,6 +347,7 @@ def main() -> None:
     validate_public_asset_inventory()
     validate_retired_assets()
     validate_late_loaders()
+    validate_protected_compatibility_files()
     validate_runtime_guards()
     validate_maintenance_docs()
     print("Theme architecture validation passed.")
@@ -324,7 +355,9 @@ def main() -> None:
     print(f"  Desk JS assets:  {len(EXPECTED_DESK_JS)}")
     print(f"  Known CSS files:  {len(KNOWN_CSS_FILES)}")
     print(f"  Known JS files:   {len(KNOWN_JS_FILES)}")
-    print(f"  Retired no-op assets removed: {len(RETIRED_ASSETS)}")
+    print(f"  Retired asset filenames blocked: {len(RETIRED_ASSETS)}")
+    print(f"  Protected compatibility files: {len(PROTECTED_COMPATIBILITY_FILES)}")
+    print("  Phase 2 safe mechanical cleanup: complete")
     print("  PR #53 child-row visibility and popup-scroll guards: preserved")
 
 
