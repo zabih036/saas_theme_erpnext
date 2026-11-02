@@ -145,55 +145,7 @@ body .page-head .page-title > .st-page-home-button .icon {
 	line-height: 1.45 !important;
 }
 
-/* =========================================================
-   FORM TABS — QUIETER RAIL, CLEAR ACTIVE STATE
-   ========================================================= */
-.form-page .form-tabs-list,
-.std-form-layout .form-tabs-list,
-.form-tabs-list {
-	margin: 8px 10px 13px !important;
-	padding: 5px !important;
-	border: 1px solid var(--st-fx-border) !important;
-	border-radius: 10px !important;
-	background: var(--st-fx-surface-soft) !important;
-	box-shadow: none !important;
-}
-
-.form-tabs-list .form-tabs,
-.form-tabs-list .nav-tabs {
-	background: transparent !important;
-	border: 0 !important;
-}
-
-.form-page .form-tabs-list .nav-link,
-.std-form-layout .form-tabs-list .nav-link,
-.form-tabs-list .nav-link {
-	min-height: 34px !important;
-	padding: 7px 12px !important;
-	border: 0 !important;
-	border-radius: 8px !important;
-	background: transparent !important;
-	color: var(--st-fx-body) !important;
-	font-size: 12.5px !important;
-	font-weight: 600 !important;
-	box-shadow: none !important;
-}
-
-.form-page .form-tabs-list .nav-link:hover:not(.active),
-.std-form-layout .form-tabs-list .nav-link:hover:not(.active),
-.form-tabs-list .nav-link:hover:not(.active) {
-	background: var(--st-fx-surface) !important;
-	color: var(--st-fx-text) !important;
-}
-
-.form-page .form-tabs-list .nav-link.active,
-.std-form-layout .form-tabs-list .nav-link.active,
-.form-tabs-list .nav-link.active {
-	background: var(--st-fx-primary) !important;
-	color: #FFFFFF !important;
-	font-weight: 650 !important;
-	box-shadow: 0 2px 6px rgba(6, 74, 219, .18) !important;
-}
+/* Form-tab appearance is owned by the final reference block below. */
 
 /* =========================================================
    CONTROLS — MODERN ENTERPRISE DENSITY
@@ -908,64 +860,20 @@ body .page-head .page-title > .st-page-home-button .icon {
 	box-shadow: none !important;
 }
 
-/* The tab rail is one small surface; the active tab remains the only strong blue. */
-.form-page .form-tabs-list,
-.std-form-layout .form-tabs-list,
-.form-tabs-list {
-	margin: 8px 12px 10px !important;
-	padding: 5px !important;
-	border: 1px solid var(--st-pf-border) !important;
-	border-radius: 11px !important;
-	background: var(--st-pf-card-blue) !important;
-	box-shadow: var(--st-pf-shadow-sm) !important;
-}
+/* Legacy filled-blue tab styling removed; final reference block below is authoritative. */
 
-.form-page .form-tabs-list .nav-link,
-.std-form-layout .form-tabs-list .nav-link,
-.form-tabs-list .nav-link {
-	min-height: 34px !important;
-	padding: 7px 12px !important;
-	border: 0 !important;
-	border-radius: 7px !important;
-	background: transparent !important;
-	color: var(--st-pf-title) !important;
-	font-size: 12.5px !important;
-	font-weight: 600 !important;
-	box-shadow: none !important;
-}
-
-.form-page .form-tabs-list .nav-link:hover:not(.active),
-.std-form-layout .form-tabs-list .nav-link:hover:not(.active),
-.form-tabs-list .nav-link:hover:not(.active) {
-	background: rgba(255, 255, 255, .72) !important;
-	color: #000000 !important;
-}
-
-[data-theme="dark"] .form-page .form-tabs-list .nav-link:hover:not(.active),
-[data-theme="dark"] .std-form-layout .form-tabs-list .nav-link:hover:not(.active),
-[data-theme="dark"] .form-tabs-list .nav-link:hover:not(.active) {
-	background: rgba(255, 255, 255, .05) !important;
-	color: #FFFFFF !important;
-}
-
-.form-page .form-tabs-list .nav-link.active,
-.std-form-layout .form-tabs-list .nav-link.active,
-.form-tabs-list .nav-link.active {
-	background: var(--st-pf-primary) !important;
-	color: #FFFFFF !important;
-	font-weight: 650 !important;
-	box-shadow: 0 2px 7px rgba(6, 74, 219, .20) !important;
-}
-
-/* Main tab content becomes the professional white card the form was missing. */
+/* Main tab content joins directly to the reference-style tab rail. */
 .form-page .form-tab-content,
-.std-form-layout .form-tab-content {
-	margin: 0 12px 14px !important;
-	padding: 10px 14px 12px !important;
+.std-form-layout .form-tab-content,
+.form-layout .form-tab-content {
+	box-sizing: border-box !important;
+	margin: -1px 12px 14px !important;
+	padding: 14px 16px 16px !important;
 	border: 1px solid var(--st-pf-border) !important;
-	border-radius: 12px !important;
+	border-top: 0 !important;
+	border-radius: 0 0 14px 14px !important;
 	background: var(--st-pf-card) !important;
-	box-shadow: var(--st-pf-shadow) !important;
+	box-shadow: 0 12px 28px rgba(20, 33, 61, .055) !important;
 }
 
 /* Remove the long grey bands/dividers introduced by the previous pass. */
@@ -1303,46 +1211,35 @@ body .page-head .page-title > .st-page-home-button .icon {
 
 
 /* ===== FINAL FORM TAB REFERENCE CASCADE START ===== */
-/*
- * Integrated form tabs: one continuous card with the form body below.
- * The tab rail owns the top corners; the form body owns the bottom corners.
- * Sticky positioning remains controlled by the existing stability layer.
- */
-.form-page > .form-tabs-list,
-.form-page .std-form-layout > .form-tabs-list,
-.form-page .form-layout > .form-tabs-list {
+/* Authoritative visual owner for Frappe form tabs. */
+.form-page .form-tabs-list,
+.form-layout .form-tabs-list,
+.std-form-layout .form-tabs-list,
+.form-tabs-list {
 	box-sizing: border-box !important;
-	position: relative !important;
-	z-index: 2 !important;
 	display: flex !important;
 	align-items: flex-end !important;
-	width: 100% !important;
-	min-height: 64px !important;
-	margin: 0 !important;
-	padding: 14px 28px 0 !important;
+	width: auto !important;
+	min-height: 62px !important;
+	margin: 0 12px !important;
+	padding: 12px 22px 0 !important;
 	border: 1px solid #D9E2EC !important;
 	border-bottom: 2px solid #064ADB !important;
-	border-radius: 16px 16px 0 0 !important;
+	border-radius: 14px 14px 0 0 !important;
 	background: #FFFFFF !important;
-	box-shadow: 0 -1px 0 rgba(15, 23, 42, .02), 0 8px 20px rgba(15, 23, 42, .035) !important;
+	box-shadow: 0 5px 16px rgba(15, 23, 42, .035) !important;
 	overflow-x: auto !important;
 	overflow-y: hidden !important;
 	scrollbar-width: none !important;
 }
 
-.form-page > .form-tabs-list::-webkit-scrollbar,
-.form-page .std-form-layout > .form-tabs-list::-webkit-scrollbar,
-.form-page .form-layout > .form-tabs-list::-webkit-scrollbar {
+.form-tabs-list::-webkit-scrollbar {
 	display: none !important;
 }
 
-.form-page > .form-tabs-list .form-tabs,
-.form-page > .form-tabs-list .nav,
-.form-page > .form-tabs-list .nav-tabs,
-.form-page .std-form-layout > .form-tabs-list .form-tabs,
-.form-page .std-form-layout > .form-tabs-list .nav-tabs,
-.form-page .form-layout > .form-tabs-list .form-tabs,
-.form-page .form-layout > .form-tabs-list .nav-tabs {
+.form-tabs-list .form-tabs,
+.form-tabs-list .nav,
+.form-tabs-list .nav-tabs {
 	display: flex !important;
 	align-items: flex-end !important;
 	flex-wrap: nowrap !important;
@@ -1357,19 +1254,18 @@ body .page-head .page-title > .st-page-home-button .icon {
 	overflow: visible !important;
 }
 
-.form-page > .form-tabs-list .nav-item,
-.form-page .std-form-layout > .form-tabs-list .nav-item,
-.form-page .form-layout > .form-tabs-list .nav-item {
+.form-tabs-list .nav-item {
 	flex: 0 0 auto !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	background: transparent !important;
 }
 
-.form-page > .form-tabs-list .nav-link,
-.form-page > .form-tabs-list .nav-item > a,
-.form-page .std-form-layout > .form-tabs-list .nav-link,
-.form-page .form-layout > .form-tabs-list .nav-link {
+.form-page .form-tabs-list .nav-link,
+.form-layout .form-tabs-list .nav-link,
+.std-form-layout .form-tabs-list .nav-link,
+.form-tabs-list .nav-link,
+.form-tabs-list .nav-item > a {
 	box-sizing: border-box !important;
 	position: relative !important;
 	z-index: 1 !important;
@@ -1378,11 +1274,11 @@ body .page-head .page-title > .st-page-home-button .icon {
 	justify-content: center !important;
 	min-height: 48px !important;
 	margin: 0 0 -2px !important;
-	padding: 11px 24px 12px !important;
+	padding: 10px 22px 11px !important;
 	border: 2px solid transparent !important;
-	border-radius: 16px 16px 0 0 !important;
+	border-radius: 14px 14px 0 0 !important;
 	background: transparent !important;
-	color: #8A8D93 !important;
+	color: #8E9096 !important;
 	font-size: 15px !important;
 	font-weight: 500 !important;
 	line-height: 1.2 !important;
@@ -1390,24 +1286,23 @@ body .page-head .page-title > .st-page-home-button .icon {
 	white-space: nowrap !important;
 	box-shadow: none !important;
 	text-decoration: none !important;
-	transition: color .16s ease, border-color .16s ease, background-color .16s ease !important;
+	transition: color .15s ease !important;
 }
 
-.form-page > .form-tabs-list .nav-link:hover:not(.active),
-.form-page > .form-tabs-list .nav-item > a:hover:not(.active),
-.form-page .std-form-layout > .form-tabs-list .nav-link:hover:not(.active),
-.form-page .form-layout > .form-tabs-list .nav-link:hover:not(.active) {
+.form-tabs-list .nav-link:hover:not(.active),
+.form-tabs-list .nav-item > a:hover:not(.active) {
 	background: transparent !important;
 	border-color: transparent !important;
-	color: #4B5563 !important;
+	color: #5F636B !important;
 	box-shadow: none !important;
 }
 
-.form-page > .form-tabs-list .nav-link.active,
-.form-page > .form-tabs-list .nav-item.active > a,
-.form-page > .form-tabs-list .nav-item > a.active,
-.form-page .std-form-layout > .form-tabs-list .nav-link.active,
-.form-page .form-layout > .form-tabs-list .nav-link.active {
+.form-page .form-tabs-list .nav-link.active,
+.form-layout .form-tabs-list .nav-link.active,
+.std-form-layout .form-tabs-list .nav-link.active,
+.form-tabs-list .nav-link.active,
+.form-tabs-list .nav-item.active > a,
+.form-tabs-list .nav-item > a.active {
 	z-index: 3 !important;
 	background: #FFFFFF !important;
 	color: #064ADB !important;
@@ -1416,114 +1311,94 @@ body .page-head .page-title > .st-page-home-button .icon {
 	box-shadow: none !important;
 }
 
-.form-page > .form-tabs-list .nav-link.active::after,
-.form-page > .form-tabs-list .nav-item.active > a::after,
-.form-page > .form-tabs-list .nav-item > a.active::after {
+.form-tabs-list .nav-link.active::after,
+.form-tabs-list .nav-item.active > a::after,
+.form-tabs-list .nav-item > a.active::after {
 	display: none !important;
 	content: none !important;
 }
 
-/* Join the tab rail and form body into one card. */
-.form-page > .form-tabs-list + .form-layout,
-.form-page > .form-tabs-list + .std-form-layout,
-.form-page > .form-tabs-list ~ .form-layout,
-.form-page > .form-tabs-list ~ .std-form-layout {
-	position: relative !important;
-	z-index: 1 !important;
-	margin-top: -1px !important;
-	border-top: 0 !important;
-	border-radius: 0 0 16px 16px !important;
-	background: #FFFFFF !important;
-	box-shadow: 0 14px 32px rgba(15, 23, 42, .055) !important;
-}
-
-.form-page > .form-tabs-list + .form-layout::before,
-.form-page > .form-tabs-list + .std-form-layout::before,
-.form-page > .form-tabs-list ~ .form-layout::before,
-.form-page > .form-tabs-list ~ .std-form-layout::before {
-	display: none !important;
-	content: none !important;
-}
-
-.form-page > .form-tabs-list .nav-link:focus-visible,
-.form-page > .form-tabs-list .nav-item > a:focus-visible {
+.form-tabs-list .nav-link:focus-visible,
+.form-tabs-list .nav-item > a:focus-visible {
 	outline: 2px solid rgba(6, 74, 219, .22) !important;
 	outline-offset: -4px !important;
 }
 
-/* Sticky state becomes a compact floating rail only while Frappe pins it. */
-.form-page > .form-tabs-list.form-tabs-sticky-down,
-.form-page .std-form-layout > .form-tabs-list.form-tabs-sticky-down,
-.form-page .form-layout > .form-tabs-list.form-tabs-sticky-down {
-	border-radius: 0 0 12px 12px !important;
-	background: #FFFFFF !important;
-	box-shadow: 0 8px 22px rgba(15, 23, 42, .08) !important;
+.form-page .form-tabs-list + .form-tab-content,
+.form-layout .form-tabs-list + .form-tab-content,
+.std-form-layout .form-tabs-list + .form-tab-content,
+.form-tabs-list + .form-tab-content {
+	margin-top: -1px !important;
+	border-top: 0 !important;
+	border-radius: 0 0 14px 14px !important;
 }
 
-[data-theme="dark"] .form-page > .form-tabs-list,
-[data-theme="dark"] .form-page .std-form-layout > .form-tabs-list,
-[data-theme="dark"] .form-page .form-layout > .form-tabs-list {
+.form-tabs-list.form-tabs-sticky-down {
+	background: #FFFFFF !important;
+	box-shadow: 0 8px 22px rgba(15, 23, 42, .07) !important;
+}
+
+[data-theme="dark"] .form-page .form-tabs-list,
+[data-theme="dark"] .form-layout .form-tabs-list,
+[data-theme="dark"] .std-form-layout .form-tabs-list,
+[data-theme="dark"] .form-tabs-list {
 	border-color: #2C394A !important;
 	border-bottom-color: #6B91FF !important;
 	background: #111827 !important;
 }
 
-[data-theme="dark"] .form-page > .form-tabs-list .nav-link,
-[data-theme="dark"] .form-page > .form-tabs-list .nav-item > a {
+[data-theme="dark"] .form-tabs-list .nav-link,
+[data-theme="dark"] .form-tabs-list .nav-item > a {
 	color: #9AA7B8 !important;
 }
 
-[data-theme="dark"] .form-page > .form-tabs-list .nav-link:hover:not(.active),
-[data-theme="dark"] .form-page > .form-tabs-list .nav-item > a:hover:not(.active) {
+[data-theme="dark"] .form-tabs-list .nav-link:hover:not(.active),
+[data-theme="dark"] .form-tabs-list .nav-item > a:hover:not(.active) {
 	color: #D4DCE7 !important;
 }
 
-[data-theme="dark"] .form-page > .form-tabs-list .nav-link.active,
-[data-theme="dark"] .form-page > .form-tabs-list .nav-item.active > a,
-[data-theme="dark"] .form-page > .form-tabs-list .nav-item > a.active {
+[data-theme="dark"] .form-tabs-list .nav-link.active,
+[data-theme="dark"] .form-tabs-list .nav-item.active > a,
+[data-theme="dark"] .form-tabs-list .nav-item > a.active {
 	background: #111827 !important;
 	color: #8FB0FF !important;
 	border-color: #6B91FF #6B91FF #111827 !important;
 }
 
-[data-theme="dark"] .form-page > .form-tabs-list + .form-layout,
-[data-theme="dark"] .form-page > .form-tabs-list + .std-form-layout,
-[data-theme="dark"] .form-page > .form-tabs-list ~ .form-layout,
-[data-theme="dark"] .form-page > .form-tabs-list ~ .std-form-layout {
+[data-theme="dark"] .form-page .form-tab-content,
+[data-theme="dark"] .form-layout .form-tab-content,
+[data-theme="dark"] .std-form-layout .form-tab-content {
 	background: #151B24 !important;
 	border-color: #2C394A !important;
 	border-top: 0 !important;
-	box-shadow: 0 16px 34px rgba(0, 0, 0, .24) !important;
-}
-
-[data-theme="dark"] .form-page > .form-tabs-list.form-tabs-sticky-down {
-	background: #111827 !important;
+	box-shadow: 0 14px 30px rgba(0, 0, 0, .22) !important;
 }
 
 @media (max-width: 767px) {
-	.form-page > .form-tabs-list,
-	.form-page .std-form-layout > .form-tabs-list,
-	.form-page .form-layout > .form-tabs-list {
-		min-height: 56px !important;
-		padding: 10px 14px 0 !important;
-		border-radius: 14px 14px 0 0 !important;
+	.form-page .form-tabs-list,
+	.form-layout .form-tabs-list,
+	.std-form-layout .form-tabs-list,
+	.form-tabs-list {
+		min-height: 54px !important;
+		margin: 0 8px !important;
+		padding: 8px 10px 0 !important;
+		border-radius: 12px 12px 0 0 !important;
 	}
 
-	.form-page > .form-tabs-list .nav-link,
-	.form-page > .form-tabs-list .nav-item > a,
-	.form-page .std-form-layout > .form-tabs-list .nav-link,
-	.form-page .form-layout > .form-tabs-list .nav-link {
-		min-height: 44px !important;
-		padding: 10px 17px 11px !important;
+	.form-tabs-list .nav-link,
+	.form-tabs-list .nav-item > a {
+		min-height: 42px !important;
+		padding: 9px 15px 10px !important;
 		font-size: 14px !important;
-		border-radius: 14px 14px 0 0 !important;
+		border-radius: 12px 12px 0 0 !important;
 	}
 
-	.form-page > .form-tabs-list + .form-layout,
-	.form-page > .form-tabs-list + .std-form-layout,
-	.form-page > .form-tabs-list ~ .form-layout,
-	.form-page > .form-tabs-list ~ .std-form-layout {
-		border-radius: 0 0 14px 14px !important;
+	.form-page .form-tab-content,
+	.form-layout .form-tab-content,
+	.std-form-layout .form-tab-content {
+		margin-left: 8px !important;
+		margin-right: 8px !important;
+		border-radius: 0 0 12px 12px !important;
 	}
 }
 /* ===== FINAL FORM TAB REFERENCE CASCADE END ===== */
