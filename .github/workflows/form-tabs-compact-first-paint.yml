@@ -1,0 +1,43 @@
+name: Form Tabs Compact First Paint
+on:
+  push:
+    branches:
+      - fix/form-tabs-compact-first-paint
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply compact first-paint tabs
+        run: python3 .github/scripts/apply_compact_first_paint_tabs.py
+      - name: Validate interaction controller syntax
+        run: node --check saas_theme/public/js/interaction_finish_v2.js
+      - name: Validate theme architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert compact tab contract
+        run: |
+          grep -F 'AUTHORITATIVE FINAL FORM TABS V9' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'min-height: 46px !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'min-height: 40px !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'padding: 4px 10px 0 !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'padding: 8px 14px 9px !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'font-size: 13px !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F 'background: #FFFFFF !important' saas_theme/public/css/ui_consolidation_v7.css
+          grep -F '/assets/saas_theme/css/ui_consolidation_v7.css?v=9' saas_theme/hooks.py
+          grep -F 'href*="/assets/saas_theme/css/ui_consolidation_v7.css"' saas_theme/public/js/interaction_finish_v2.js
+          grep -F '/assets/saas_theme/js/interaction_finish_v2.js?v=4' saas_theme/hooks.py
+      - name: Assert runtime scope
+        run: |
+          git diff --name-only HEAD -- saas_theme/hooks.py saas_theme/public/css saas_theme/public/js scripts/validate_theme_architecture.py | tee /tmp/files
+          test "$(cat /tmp/files)" = $'saas_theme/hooks.py\nsaas_theme/public/css/ui_consolidation_v7.css\nsaas_theme/public/js/interaction_finish_v2.js\nscripts/validate_theme_architecture.py'
+      - name: Commit production fix
+        run: |
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/hooks.py saas_theme/public/css/ui_consolidation_v7.css saas_theme/public/js/interaction_finish_v2.js scripts/validate_theme_architecture.py
+          git commit -m 'fix: compact form tabs and eliminate post-load size shift'
+          git push origin HEAD:fix/form-tabs-compact-first-paint
