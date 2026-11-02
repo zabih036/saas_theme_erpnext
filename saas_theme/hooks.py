@@ -17,7 +17,7 @@ categories = ["Customization", "UI/UX"]
 app_include_css = [
 	"/assets/saas_theme/css/saas_theme.css?v=64",
 	"/assets/saas_theme/css/professional_ui.css?v=1",
-	"/assets/saas_theme/css/form.css?v=2",
+	"/assets/saas_theme/css/form.css?v=3",
 	"/assets/saas_theme/css/list_view.css?v=1",
 	"/assets/saas_theme/css/home.css?v=7",
 	"/assets/saas_theme/css/brand_shell.css?v=1",
@@ -30,7 +30,7 @@ app_include_css = [
 	"/assets/saas_theme/css/tree_view_refinement.css?v=1",
 	"/assets/saas_theme/css/home_clarity_refinement.css?v=1",
 	"/assets/saas_theme/css/precision.css?v=1",
-	"/assets/saas_theme/css/form_surface.css?v=4",
+	"/assets/saas_theme/css/form_surface.css?v=5",
 	"/assets/saas_theme/css/grid_and_action_alignment.css?v=1",
 	"/assets/saas_theme/css/report_and_form_shell.css?v=1",
 	"/assets/saas_theme/css/child_row_editor_finish.css?v=1",
@@ -55,7 +55,7 @@ app_include_js = [
 	"/assets/saas_theme/js/user_theme_menu.js?v=1",
 	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
 	"/assets/saas_theme/js/quick_access_preferences.js?v=1",
-	"/assets/saas_theme/js/interaction_finish_v2.js?v=2",
+	"/assets/saas_theme/js/interaction_finish_v2.js?v=3",
 ]
 
 # -----------------------------------------------------------------------------
