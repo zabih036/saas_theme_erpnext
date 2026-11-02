@@ -1,0 +1,39 @@
+name: List Filter Visibility
+
+on:
+  push:
+    branches:
+      - feature/list-filter-visibility-toggle
+
+jobs:
+  validate-and-apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply list filter visibility wiring
+        run: python3 .github/scripts/apply_list_filter_visibility.py
+      - name: Validate JavaScript syntax
+        run: node --check saas_theme/public/js/list_view.js
+      - name: Validate architecture
+        run: python3 scripts/validate_theme_architecture.py
+      - name: Assert persistence contract
+        run: |
+          grep -q 'saas_theme_list_filters_collapsed_v1' saas_theme/public/js/list_view.js
+          grep -q 'Show Filters' saas_theme/public/js/list_view.js
+          grep -q 'Hide Filters' saas_theme/public/js/list_view.js
+          grep -q 'standard-filter-section' saas_theme/public/js/list_view.js
+          grep -q '/assets/saas_theme/js/list_view.js?v=1' saas_theme/hooks.py
+      - name: Commit production wiring
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name 'Zabihullah'
+          git config user.email '52412292+zabih036@users.noreply.github.com'
+          git add saas_theme/hooks.py scripts/validate_theme_architecture.py
+          git commit -m 'feat: register persistent list filter toggle'
+          git push
