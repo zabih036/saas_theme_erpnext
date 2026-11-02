@@ -7,6 +7,7 @@
 
 	if (typeof frappe === "undefined") return;
 	let enhance_token = 0;
+	const QUICK_SIDEBAR_KEY = "saas_theme_home_quick_sidebar_hidden_v1";
 
 	function esc(value) {
 		const text = value == null ? "" : String(value);
@@ -202,30 +203,77 @@
 	}
 
 	function organize_existing_sections($home) {
+		const $welcome = $home.find('.st-hub-welcome').first();
 		const $clock = $home.find('.st-hub-clock-card').first();
-		if ($clock.length) {
-			$clock.detach().addClass('st-hub-clock-strip').prependTo($home);
+		if ($clock.length && $welcome.length) {
+			$clock.detach().addClass('st-hub-clock-strip').insertAfter($welcome);
 		}
 
 		const $sidebar = $home.find('.st-hub-sidebar').first();
+		const $quick = $home.find('.st-hub-quick-section').first();
 		const $workspaces = $home.find('.st-hub-workspaces-section').first();
-		if ($sidebar.length && $workspaces.length) {
-			$workspaces.detach().addClass('st-hub-workspaces-sidebar').appendTo($sidebar);
+		$workspaces.remove();
+
+		if ($sidebar.length && $quick.length) {
+			$quick.detach().addClass('st-home-quick-sidebar').prependTo($sidebar);
+			$sidebar.addClass('st-home-navigation-sidebar');
 		}
+	}
+
+	function quick_sidebar_hidden() {
+		try { return localStorage.getItem(QUICK_SIDEBAR_KEY) === '1'; }
+		catch (e) { return false; }
+	}
+
+	function set_quick_sidebar_hidden(hidden) {
+		try { localStorage.setItem(QUICK_SIDEBAR_KEY, hidden ? '1' : '0'); }
+		catch (e) { /* Sidebar persistence is optional if storage is unavailable. */ }
+	}
+
+	function apply_quick_sidebar_state($home) {
+		const hidden = quick_sidebar_hidden();
+		$home.toggleClass('st-home-quick-sidebar-hidden', hidden);
+		$('.navbar-brand .app-logo').attr({
+			'aria-expanded': hidden ? 'false' : 'true',
+			'title': hidden ? __('Show Quick Access') : __('Hide Quick Access'),
+		});
+	}
+
+	function bind_quick_sidebar_toggle() {
+		if (window.__saas_theme_home_quick_sidebar_toggle_v1__) return;
+		window.__saas_theme_home_quick_sidebar_toggle_v1__ = true;
+
+		document.addEventListener('click', (event) => {
+			const logo = event.target?.closest?.('.navbar-brand .app-logo');
+			if (!logo) return;
+
+			const home = document.querySelector('.st-home-dashboard.st-dashboard-redesign-v6');
+			if (!home) return;
+
+			event.preventDefault();
+			event.stopPropagation();
+			event.stopImmediatePropagation?.();
+
+			const $home = $(home);
+			set_quick_sidebar_hidden(!quick_sidebar_hidden());
+			apply_quick_sidebar_state($home);
+		}, true);
 	}
 
 	function enhance() {
 		const $home = $(".st-home-dashboard").last();
-		if (!$home.length || $home.hasClass("st-dashboard-redesign-v5")) return;
-		$home.addClass("st-dashboard-redesign-v5");
+		if (!$home.length || $home.hasClass("st-dashboard-redesign-v6")) return;
+		$home.addClass("st-dashboard-redesign-v5 st-dashboard-redesign-v6");
 		const token = ++enhance_token;
 
 		organize_existing_sections($home);
-		const name = String(user_name()).split(/\s+/).filter(Boolean)[0] || __("User");
-		$home.find(".st-hub-welcome").html(`<div class="st-dash-title"><h1>${__("Dashboard Overview")}<span>👋</span></h1><p>${esc(greeting())}, ${esc(name)} · ${__("Finance, customers and operations at a glance.")}</p></div><span class="st-dash-period">${__("Current month")}</span>`);
+		const name = String(user_name()).trim() || __("User");
+		$home.find(".st-hub-welcome").html(`<div class="st-dash-title"><h1>${__("Welcome")}, ${esc(name)}<span>👋</span></h1><p>${esc(greeting())} · ${__("Here is your business overview for today.")}</p></div><span class="st-dash-period">${__("Current month")}</span>`);
 		$home.find(".st-hub-metrics").replaceWith(dashboard_html());
 		$home.find(".st-dashboard-activity-section").remove();
 
+		bind_quick_sidebar_toggle();
+		apply_quick_sidebar_state($home);
 		load_dashboard($home, token);
 		load_recent_activity($home, token);
 	}
