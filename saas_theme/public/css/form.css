@@ -452,7 +452,6 @@
 	.form-page .form-layout .form-tabs-list {
 		margin-left: 4px !important;
 		margin-right: 4px !important;
-		padding: 5px !important;
 	}
 
 	.form-page .form-layout .form-tabs .nav-link {
@@ -589,7 +588,6 @@
 	.form-tabs-list {
 		margin-left: 5px !important;
 		margin-right: 5px !important;
-		padding: 5px !important;
 	}
 
 	.form-tabs-list .nav-link {
