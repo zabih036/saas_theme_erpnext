@@ -42,22 +42,24 @@ body>.es-menu,body>.es-popover .es-menu,.es-popover .es-menu[role="menu"]{paddin
 
 @media(max-width:900px){body>.form-in-grid.st-v7-grid-editor{top:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important;border-radius:13px!important}body>.form-in-grid.st-v7-grid-editor .grid-header-toolbar{align-items:flex-start!important;flex-direction:column!important}body>.form-in-grid.st-v7-grid-editor .grid-form-body{padding:10px!important}body>.form-in-grid.st-v7-grid-editor .form-area{padding:10px!important}}
 
-/* ===== AUTHORITATIVE FINAL FORM TABS V8 ===== */
+/* ===== AUTHORITATIVE FINAL FORM TABS V9 ===== */
 /*
- * This stylesheet is deliberately kept LAST in <head> by interaction_finish_v2.js.
- * Therefore these rules are the only final visual owner of normal Frappe form tabs.
+ * Compact first-paint form tabs.
+ * This file is loaded statically from hooks.py and interaction_finish_v2.js keeps
+ * the same link last in <head> after later precision styles are injected.
  */
-.form-page .form-tabs-list,
-.form-layout .form-tabs-list,
-.std-form-layout .form-tabs-list,
-.form-tabs-list {
+body .form-page > .form-tabs-list,
+body .form-layout .form-page > .form-tabs-list,
+body .std-form-layout .form-page > .form-tabs-list,
+body .form-layout .form-tabs-list,
+body .std-form-layout .form-tabs-list {
 	box-sizing: border-box !important;
 	display: flex !important;
 	align-items: flex-end !important;
 	width: auto !important;
-	min-height: 60px !important;
-	margin: 0 12px !important;
-	padding: 10px 20px 0 !important;
+	min-height: 46px !important;
+	margin: 0 8px !important;
+	padding: 4px 10px 0 !important;
 	border: 0 !important;
 	border-bottom: 2px solid #064ADB !important;
 	border-radius: 0 !important;
@@ -68,187 +70,199 @@ body>.es-menu,body>.es-popover .es-menu,.es-popover .es-menu[role="menu"]{paddin
 	scrollbar-width: none !important;
 }
 
-.form-tabs-list::-webkit-scrollbar {
+body .form-tabs-list::-webkit-scrollbar {
 	display: none !important;
 }
 
-.form-tabs-list .form-tabs,
-.form-tabs-list .nav,
-.form-tabs-list .nav-tabs {
+body .form-tabs-list .form-tabs,
+body .form-tabs-list .nav,
+body .form-tabs-list .nav-tabs {
 	display: flex !important;
 	align-items: flex-end !important;
 	flex-wrap: nowrap !important;
-	gap: 10px !important;
+	gap: 6px !important;
 	width: max-content !important;
 	min-width: 100% !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	border: 0 !important;
-	background: transparent !important;
+	border-radius: 0 !important;
+	background: #FFFFFF !important;
 	box-shadow: none !important;
 	overflow: visible !important;
 }
 
-.form-tabs-list .nav-item {
+body .form-tabs-list .nav-item {
 	flex: 0 0 auto !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	background: transparent !important;
 }
 
-.form-page .form-tabs-list .nav-link,
-.form-layout .form-tabs-list .nav-link,
-.std-form-layout .form-tabs-list .nav-link,
-.form-tabs-list .nav-link,
-.form-tabs-list .nav-item > a {
+body .form-page .form-tabs-list .nav-link,
+body .form-layout .form-tabs-list .nav-link,
+body .std-form-layout .form-tabs-list .nav-link,
+body .form-tabs-list .nav-item > a {
 	box-sizing: border-box !important;
 	position: relative !important;
 	z-index: 1 !important;
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	min-height: 48px !important;
+	min-height: 40px !important;
 	margin: 0 0 -2px !important;
-	padding: 10px 22px 11px !important;
+	padding: 8px 14px 9px !important;
 	border: 2px solid transparent !important;
-	border-radius: 14px 14px 0 0 !important;
+	border-radius: 11px 11px 0 0 !important;
 	background: transparent !important;
-	color: #92959B !important;
-	font-size: 15px !important;
-	font-weight: 500 !important;
-	line-height: 1.2 !important;
+	color: #7A8392 !important;
+	font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+	font-size: 13px !important;
+	font-weight: 520 !important;
+	line-height: 1.25 !important;
 	letter-spacing: 0 !important;
 	white-space: nowrap !important;
 	box-shadow: none !important;
 	text-decoration: none !important;
-	transition: color .15s ease !important;
+	transition: color .14s ease, border-color .14s ease !important;
 }
 
-.form-tabs-list .nav-link:hover:not(.active),
-.form-tabs-list .nav-item > a:hover:not(.active) {
+body .form-tabs-list .nav-link:hover:not(.active),
+body .form-tabs-list .nav-item > a:hover:not(.active) {
 	background: transparent !important;
 	border-color: transparent !important;
-	color: #5F636B !important;
+	color: #344054 !important;
 	box-shadow: none !important;
 }
 
-.form-page .form-tabs-list .nav-link.active,
-.form-layout .form-tabs-list .nav-link.active,
-.std-form-layout .form-tabs-list .nav-link.active,
-.form-tabs-list .nav-link.active,
-.form-tabs-list .nav-item.active > a,
-.form-tabs-list .nav-item > a.active {
+body .form-page .form-tabs-list .nav-link.active,
+body .form-layout .form-tabs-list .nav-link.active,
+body .std-form-layout .form-tabs-list .nav-link.active,
+body .form-tabs-list .nav-item.active > a,
+body .form-tabs-list .nav-item > a.active {
 	z-index: 3 !important;
 	background: #FFFFFF !important;
 	color: #064ADB !important;
-	font-weight: 700 !important;
+	font-weight: 650 !important;
 	border: 2px solid #064ADB !important;
 	border-bottom-color: #FFFFFF !important;
-	border-radius: 14px 14px 0 0 !important;
+	border-radius: 11px 11px 0 0 !important;
 	box-shadow: none !important;
 }
 
-.form-tabs-list .nav-link.active:hover,
-.form-tabs-list .nav-item.active > a:hover,
-.form-tabs-list .nav-item > a.active:hover {
+body .form-tabs-list .nav-link.active:hover,
+body .form-tabs-list .nav-item.active > a:hover,
+body .form-tabs-list .nav-item > a.active:hover {
 	background: #FFFFFF !important;
 	color: #064ADB !important;
 	border-color: #064ADB #064ADB #FFFFFF !important;
 	box-shadow: none !important;
 }
 
-.form-tabs-list .nav-link.active::after,
-.form-tabs-list .nav-item.active > a::after,
-.form-tabs-list .nav-item > a.active::after {
+body .form-tabs-list .nav-link.active::after,
+body .form-tabs-list .nav-item.active > a::after,
+body .form-tabs-list .nav-item > a.active::after {
 	display: none !important;
 	content: none !important;
 }
 
-.form-tabs-list .nav-link:focus-visible,
-.form-tabs-list .nav-item > a:focus-visible {
-	outline: 2px solid rgba(6, 74, 219, .22) !important;
-	outline-offset: -4px !important;
+body .form-tabs-list .nav-link:focus-visible,
+body .form-tabs-list .nav-item > a:focus-visible {
+	outline: 2px solid rgba(6, 74, 219, .20) !important;
+	outline-offset: -3px !important;
 }
 
-.form-page .form-tab-content,
-.form-layout .form-tab-content,
-.std-form-layout .form-tab-content {
+body .form-page .form-tab-content,
+body .form-layout .form-tab-content,
+body .std-form-layout .form-tab-content {
 	box-sizing: border-box !important;
-	margin: -1px 12px 14px !important;
-	padding: 14px 16px 16px !important;
+	margin: -1px 8px 14px !important;
+	padding: 12px 16px 16px !important;
 	border: 1px solid #D9E2EC !important;
 	border-top: 0 !important;
-	border-radius: 0 0 14px 14px !important;
+	border-radius: 0 0 12px 12px !important;
 	background: #FFFFFF !important;
-	box-shadow: 0 10px 26px rgba(15, 23, 42, .045) !important;
+	box-shadow: 0 8px 22px rgba(15, 23, 42, .04) !important;
 }
 
-.form-tabs-list.form-tabs-sticky-down {
+body .form-tabs-list.form-tabs-sticky-down {
 	background: #FFFFFF !important;
-	box-shadow: 0 8px 22px rgba(15, 23, 42, .07) !important;
+	box-shadow: 0 6px 18px rgba(15, 23, 42, .06) !important;
 }
 
-[data-theme="dark"] .form-page .form-tabs-list,
-[data-theme="dark"] .form-layout .form-tabs-list,
-[data-theme="dark"] .std-form-layout .form-tabs-list,
-[data-theme="dark"] .form-tabs-list {
+[data-theme="dark"] body .form-page > .form-tabs-list,
+[data-theme="dark"] body .form-layout .form-tabs-list,
+[data-theme="dark"] body .std-form-layout .form-tabs-list,
+[data-theme="dark"] body .form-tabs-list .form-tabs,
+[data-theme="dark"] body .form-tabs-list .nav,
+[data-theme="dark"] body .form-tabs-list .nav-tabs {
 	background: #111827 !important;
+}
+
+[data-theme="dark"] body .form-page > .form-tabs-list,
+[data-theme="dark"] body .form-layout .form-tabs-list,
+[data-theme="dark"] body .std-form-layout .form-tabs-list {
 	border-bottom-color: #6B91FF !important;
 }
 
-[data-theme="dark"] .form-tabs-list .nav-link,
-[data-theme="dark"] .form-tabs-list .nav-item > a {
+[data-theme="dark"] body .form-tabs-list .nav-link,
+[data-theme="dark"] body .form-tabs-list .nav-item > a {
 	color: #9AA7B8 !important;
 }
 
-[data-theme="dark"] .form-tabs-list .nav-link:hover:not(.active),
-[data-theme="dark"] .form-tabs-list .nav-item > a:hover:not(.active) {
+[data-theme="dark"] body .form-tabs-list .nav-link:hover:not(.active),
+[data-theme="dark"] body .form-tabs-list .nav-item > a:hover:not(.active) {
 	color: #D4DCE7 !important;
 }
 
-[data-theme="dark"] .form-tabs-list .nav-link.active,
-[data-theme="dark"] .form-tabs-list .nav-item.active > a,
-[data-theme="dark"] .form-tabs-list .nav-item > a.active,
-[data-theme="dark"] .form-tabs-list .nav-link.active:hover {
+[data-theme="dark"] body .form-tabs-list .nav-link.active,
+[data-theme="dark"] body .form-tabs-list .nav-item.active > a,
+[data-theme="dark"] body .form-tabs-list .nav-item > a.active,
+[data-theme="dark"] body .form-tabs-list .nav-link.active:hover {
 	background: #111827 !important;
 	color: #8FB0FF !important;
 	border-color: #6B91FF #6B91FF #111827 !important;
 }
 
-[data-theme="dark"] .form-page .form-tab-content,
-[data-theme="dark"] .form-layout .form-tab-content,
-[data-theme="dark"] .std-form-layout .form-tab-content {
+[data-theme="dark"] body .form-page .form-tab-content,
+[data-theme="dark"] body .form-layout .form-tab-content,
+[data-theme="dark"] body .std-form-layout .form-tab-content {
 	background: #151B24 !important;
 	border-color: #2C394A !important;
 	border-top: 0 !important;
-	box-shadow: 0 14px 30px rgba(0, 0, 0, .22) !important;
+	box-shadow: 0 12px 26px rgba(0, 0, 0, .20) !important;
 }
 
 @media (max-width: 767px) {
-	.form-page .form-tabs-list,
-	.form-layout .form-tabs-list,
-	.std-form-layout .form-tabs-list,
-	.form-tabs-list {
-		min-height: 54px !important;
-		margin: 0 8px !important;
-		padding: 8px 10px 0 !important;
+	body .form-page > .form-tabs-list,
+	body .form-layout .form-tabs-list,
+	body .std-form-layout .form-tabs-list {
+		min-height: 44px !important;
+		margin: 0 6px !important;
+		padding: 4px 6px 0 !important;
 	}
 
-	.form-tabs-list .nav-link,
-	.form-tabs-list .nav-item > a {
-		min-height: 42px !important;
-		padding: 9px 15px 10px !important;
-		font-size: 14px !important;
-		border-radius: 12px 12px 0 0 !important;
+	body .form-tabs-list .form-tabs,
+	body .form-tabs-list .nav,
+	body .form-tabs-list .nav-tabs {
+		gap: 3px !important;
 	}
 
-	.form-page .form-tab-content,
-	.form-layout .form-tab-content,
-	.std-form-layout .form-tab-content {
-		margin-left: 8px !important;
-		margin-right: 8px !important;
-		border-radius: 0 0 12px 12px !important;
+	body .form-tabs-list .nav-link,
+	body .form-tabs-list .nav-item > a {
+		min-height: 38px !important;
+		padding: 7px 12px 8px !important;
+		font-size: 12.75px !important;
+		border-radius: 10px 10px 0 0 !important;
+	}
+
+	body .form-page .form-tab-content,
+	body .form-layout .form-tab-content,
+	body .std-form-layout .form-tab-content {
+		margin-left: 6px !important;
+		margin-right: 6px !important;
+		border-radius: 0 0 10px 10px !important;
 	}
 }
-/* ===== END AUTHORITATIVE FINAL FORM TABS V8 ===== */
+/* ===== END AUTHORITATIVE FINAL FORM TABS V9 ===== */
 
