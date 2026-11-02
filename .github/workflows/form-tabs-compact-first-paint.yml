@@ -12,6 +12,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Repair temporary validator guard quoting
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.github/scripts/apply_compact_first_paint_tabs.py')
+          text = path.read_text()
+          old = "interaction_guard + '        \\'document.querySelector(\\'link[rel=\"stylesheet\"][href*=\"/assets/saas_theme/css/ui_consolidation_v7.css\"]\\')\\',\\n',"
+          new = "interaction_guard + '        \\'href*=\"/assets/saas_theme/css/ui_consolidation_v7.css\"\\',\\n',"
+          if old not in text:
+              raise SystemExit('temporary guard anchor missing')
+          path.write_text(text.replace(old, new, 1))
+          PY
       - name: Apply compact first-paint tabs
         run: python3 .github/scripts/apply_compact_first_paint_tabs.py
       - name: Validate interaction controller syntax
