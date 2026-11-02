@@ -22,7 +22,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/form.css?v=3",
     "/assets/saas_theme/css/list_view.css?v=1",
     "/assets/saas_theme/css/home.css?v=7",
-    "/assets/saas_theme/css/brand_shell.css?v=2",
+    "/assets/saas_theme/css/brand_shell.css?v=3",
     "/assets/saas_theme/css/palette.css?v=1",
     "/assets/saas_theme/css/interface.css?v=1",
     "/assets/saas_theme/css/mobile_shell.css?v=1",
@@ -196,9 +196,12 @@ REQUIRED_RUNTIME_GUARDS = {
     "brand_shell.css": [
         "DESKTOP SIDEBAR HEADER — ALIGN WITH PAGE HEADER ACTION ROW",
         "@media (min-width: 768px)",
-        "padding-top: 0 !important",
+        "padding-top: 6px !important",
         "min-height: 44px !important",
         ".body-sidebar .sidebar-header .title-container",
+        "PAGE HEADER SURFACE",
+        "background: #FFFFFF !important",
+        "0 4px 12px rgba(20, 33, 61, .045) !important",
     ],
     "list_view.js": [
         "__saas_theme_list_filter_visibility_v3__",
