@@ -105,26 +105,6 @@
 }
 
 /* =========================================================
-   PAGE HEADER SURFACE
-   Keep the Desk header crisp white with only a restrained elevation cue.
-   The shadow is intentionally subtle so the header separates from content
-   without reading as a floating card.
-   ========================================================= */
-.page-head {
-	background: #FFFFFF !important;
-	box-shadow:
-		0 1px 2px rgba(20, 33, 61, .025),
-		0 4px 12px rgba(20, 33, 61, .045) !important;
-}
-
-[data-theme="dark"] .page-head {
-	background: #111821 !important;
-	box-shadow:
-		0 1px 2px rgba(0, 0, 0, .16),
-		0 4px 12px rgba(0, 0, 0, .10) !important;
-}
-
-/* =========================================================
    WORKSPACE PAGE — USE THE AVAILABLE CANVAS
    Frappe v16 centres Workspaces inside --page-max-width on lg+.
    This is useful for article-like pages, but creates a large empty gutter
