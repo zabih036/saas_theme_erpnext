@@ -14,6 +14,20 @@ jobs:
           fetch-depth: 0
       - name: Apply exact reference tabs
         run: python3 .github/scripts/apply_exact_reference_tabs_v10.py
+      - name: Update validator contract for open-bottom active tab
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/validate_theme_architecture.py')
+          text = path.read_text()
+          text = text.replace('        "border-bottom-color: #FFFFFF",\n', '')
+          if '        "border-bottom: 0 !important",\n' not in text:
+              anchor = '        "font-size: 14px",\n'
+              if anchor not in text:
+                  raise SystemExit('validator tab guard anchor missing')
+              text = text.replace(anchor, anchor + '        "border-bottom: 0 !important",\n', 1)
+          path.write_text(text)
+          PY
       - name: Validate JS
         run: node --check saas_theme/public/js/interaction_finish_v2.js
       - name: Validate architecture
@@ -27,7 +41,7 @@ jobs:
           grep -F 'border-bottom: 0 !important' saas_theme/public/css/ui_consolidation_v7.css
           grep -F 'border-radius: 14px 14px 0 0 !important' saas_theme/public/css/ui_consolidation_v7.css
           grep -F 'bottom: -2px !important' saas_theme/public/css/ui_consolidation_v7.css
-          ! grep -R -n -E 'background:[[:space:]]*#F4F7FC[[:space:]]*!important|border-radius:[[:space:]]*8px[[:space:]]*!important|padding:[[:space:]]*5px[[:space:]]*!important' saas_theme/public/css | grep 'form-tabs' 
+          ! grep -R -n -E 'background:[[:space:]]*#F4F7FC[[:space:]]*!important|border-radius:[[:space:]]*8px[[:space:]]*!important|padding:[[:space:]]*5px[[:space:]]*!important' saas_theme/public/css | grep 'form-tabs'
       - name: Commit production fix
         run: |
           git config user.name 'Zabihullah'
