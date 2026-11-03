@@ -71,7 +71,14 @@ function makeHarness(isMobile = false) {
             return { each(callback) { callback.call(layout); return this; } };
         }
         if (value === ".main-section") {
-            return { each(callback) { log("scroll_check"); callback.call(main); return this; } };
+            return {
+                each(callback) { log("scroll_check"); callback.call(main); return this; },
+                css(properties) {
+                    if (properties.overflow === "") main.style.overflow = "";
+                    if (properties.overflowY === "") main.style.overflowY = "";
+                    return this;
+                },
+            };
         }
         if (typeof value === "string" && value.startsWith(".page-head")) {
             const isHiddenControl = value.includes("sidebar-toggle-btn") || value.includes("more-button");
