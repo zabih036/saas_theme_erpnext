@@ -112,7 +112,7 @@ function makeHarness(isMobile = false) {
     const frappe = {
         is_mobile() { return isMobile; },
         ui: { Sidebar },
-        app: { sidebar: { sidebar_expanded: false } },
+        app: { sidebar: { sidebar_expanded: isMobile } },
         after_ajax(callback) { afterAjax.push(callback); },
     };
     const context = {
