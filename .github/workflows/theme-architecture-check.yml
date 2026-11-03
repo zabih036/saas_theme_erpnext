@@ -12,6 +12,7 @@ on:
       - 'THEME_MAINTENANCE.md'
       - 'scripts/validate_theme_architecture.py'
       - 'scripts/validate_theme_late_loaders.py'
+      - 'scripts/test_stability_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
 
 jobs:
@@ -23,3 +24,7 @@ jobs:
         run: python3 scripts/validate_theme_architecture.py
       - name: Validate late-loaded asset dependencies
         run: python3 scripts/validate_theme_late_loaders.py
+      - name: Validate stability controller syntax and behavior
+        run: |
+          node --check saas_theme/public/js/stability_refinement_v3.js
+          node scripts/test_stability_runtime.js
