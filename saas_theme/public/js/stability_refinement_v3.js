@@ -11,7 +11,6 @@
 
 	const state = {
 		timer: null,
-		patched_sidebar: false,
 	};
 
 	function blocking_layer_is_open() {
@@ -80,7 +79,6 @@
 		}
 
 		proto.__saas_theme_scroll_stability_v3 = true;
-		state.patched_sidebar = true;
 		return true;
 	}
 
@@ -126,20 +124,20 @@
 		release_stale_scroll_lock();
 	}
 
+	// A subsequent pass only repairs DOM surfaces, without repatching Sidebar.
+	// Retain the original 90ms and 320ms timing after the main refresh.
+	function refresh_delayed_surfaces() {
+		repair_page_header();
+		classify_form_layouts();
+		release_stale_scroll_lock();
+	}
+
 	function schedule(delay = 10) {
 		clearTimeout(state.timer);
 		state.timer = setTimeout(() => {
 			refresh();
-			setTimeout(() => {
-				repair_page_header();
-				classify_form_layouts();
-				release_stale_scroll_lock();
-			}, 90);
-			setTimeout(() => {
-				repair_page_header();
-				classify_form_layouts();
-				release_stale_scroll_lock();
-			}, 320);
+			setTimeout(refresh_delayed_surfaces, 90);
+			setTimeout(refresh_delayed_surfaces, 320);
 		}, delay);
 	}
 

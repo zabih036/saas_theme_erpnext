@@ -181,6 +181,27 @@ reversible pull request. Keep `ui_consolidation_v7.css`,
 `interaction_finish_v2.js`, and inline-grid popup compatibility protected.
 
 
+#### Phase 3B — Stabilize one late controller before migration
+
+The first Phase 3B pass is deliberately limited to
+`stability_refinement_v3.js`, the late-loaded controller for Desk header
+recovery, sidebar scrolling, and no-tab/one-tab form classification.
+
+- The unused internal `state.patched_sidebar` flag is removed; nothing reads it.
+- Two identical delayed DOM-repair sequences now share one private helper.
+  The original main refresh and 90ms/320ms follow-up timings remain intact.
+- `scripts/test_stability_runtime.js` exercises these timers, route-change
+  registration, single-initialization guard, and desktop/mobile sidebar
+  behavior under a dependency-free simulated Frappe Desk environment.
+- CI additionally runs `node --check` on the controller and adds static
+  architecture guards for its active behaviors.
+
+**No behavior has moved to another owner yet**: changing load timing could
+break existing headers and forms. Its late loader, stylesheet, selectors,
+native patches, and registration order remain exactly as before. Only consider
+removing this layer after browser parity tests on live light/dark Desk,
+Form, List, Report, and mobile pages prove the new owner equivalent.
+
 For each late layer:
 
 - identify every selector/function it still uniquely owns;

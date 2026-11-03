@@ -218,6 +218,17 @@ REQUIRED_RUNTIME_GUARDS = {
         'list.page.page_form.hasClass("st-list-filters-collapsed")',
         '$button.insertAfter($reload)',
     ],
+    "stability_refinement_v3.js": [
+        "__saas_theme_stability_v3__",
+        "function patch_sidebar_scroll_helpers()",
+        "function release_stale_scroll_lock()",
+        "function classify_form_layouts()",
+        "function repair_page_header()",
+        "function refresh_delayed_surfaces()",
+        "setTimeout(refresh_delayed_surfaces, 90);",
+        "setTimeout(refresh_delayed_surfaces, 320);",
+        "saas_stability_v3",
+    ],
     "interaction_finish_v2.js": [
         "__saas_theme_ui_consolidation_v7__",
         'const GRID_EDITOR_CLASS = "st-v7-grid-editor"',
