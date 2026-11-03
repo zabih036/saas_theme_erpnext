@@ -154,6 +154,33 @@ Protected compatibility files should be migrated only when the feature they own 
 
 This is higher risk and happens only after Phase 2 is stable.
 
+#### Phase 3A — Inventory and lock down the late-load graph
+
+Before moving live code, run `python3 scripts/validate_theme_late_loaders.py`.
+CI runs it alongside the existing architecture validator. It verifies the exact
+currently effective *reference order*, file existence, duplicate injections,
+hook registrations, and every versioned dynamic theme CSS/JS URL. This audit
+does **not** alter runtime asset order, CSS declarations, or JavaScript handlers.
+
+| Existing loader | Late-loaded children | Migration concern |
+| --- | --- | --- |
+| `user_theme_menu.js` | `stability_refinement_v3` CSS/JS; `ui_precision_v4` CSS/JS; `child_table_precision_v5` CSS/JS; `ui_precision_v6` CSS/JS; `ui_precision_v6_2.js` | Current order is part of the working header, report, checkbox, and child-table behavior |
+| `ui_precision_v6_2.js` | `ui_precision_v6_2.css` | The same CSS URL appears in two intentional branches: update an existing link, or insert a new one |
+| `form_sidebar_persistence.js` | `inline_grid_link_popup_anchor_v5` CSS/JS | Protected inline-grid dropdown positioning/scroll behavior |
+| `interaction_finish_v2.js` | `ui_consolidation_v7.css` | Intentional *second* injection of CSS also included by hooks, preserving final cascade priority |
+
+The audit currently tracks **13 distinct late URLs** and one intentional
+direct/late CSS reinjection. No file should be deleted or moved merely because
+it appears in both the Desk hook list and a dynamic loader.
+
+**Next migration rule:** choose one of the unprotected late layers, document
+each rule/event it owns, compare rendered light/dark views and route-reopen
+behavior, and migrate it into the canonical owner at equivalent load timing.
+Only then update the loader graph and delete its old file in a separate,
+reversible pull request. Keep `ui_consolidation_v7.css`,
+`interaction_finish_v2.js`, and inline-grid popup compatibility protected.
+
+
 For each late layer:
 
 - identify every selector/function it still uniquely owns;
