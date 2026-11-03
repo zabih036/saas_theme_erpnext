@@ -98,7 +98,6 @@ KNOWN_CSS_FILES = {
     "stability_refinement_v3.css",
     "tree_view_refinement.css",
     "ui_consolidation_v7.css",
-    "ui_precision_v4.css",
     "ui_precision_v6.css",
     "ui_precision_v6_2.css",
     "workspace_shell_polish.css",
@@ -133,6 +132,7 @@ KNOWN_JS_FILES = {
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
     "form_controls.css",
+    "ui_precision_v4.css",
     "form_navigation.css",
     "ui_finish.css",
     "interface_refinement.css",
@@ -176,9 +176,8 @@ PROTECTED_COMPATIBILITY_FILES = {
 
 EXPECTED_LATE_ASSET_TOKENS = {
     "user_theme_menu.js": [
-        "/assets/saas_theme/css/stability_refinement_v3.css?v=2",
+        "/assets/saas_theme/css/stability_refinement_v3.css?v=3",
         "/assets/saas_theme/js/stability_refinement_v3.js?v=2",
-        "/assets/saas_theme/css/ui_precision_v4.css?v=1",
         "/assets/saas_theme/js/ui_precision_v4.js?v=1",
         "/assets/saas_theme/css/child_table_precision_v5.css?v=1",
         "/assets/saas_theme/js/child_table_precision_v5.js?v=1",
@@ -193,6 +192,11 @@ EXPECTED_LATE_ASSET_TOKENS = {
 }
 
 REQUIRED_RUNTIME_GUARDS = {
+    "stability_refinement_v3.css": [
+        "SaaS Theme — Stability Refinement v3",
+        "SaaS Theme — UI Precision v4",
+        ".form-layout.st-section-card-form",
+    ],
     "brand_shell.css": [
         "DESKTOP SIDEBAR HEADER — ALIGN WITH PAGE HEADER ACTION ROW",
         "@media (min-width: 768px)",
