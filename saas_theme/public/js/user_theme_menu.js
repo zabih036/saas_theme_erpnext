@@ -8,7 +8,7 @@
 			const link = document.createElement("link");
 			link.id = "st-stability-refinement-v3-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=2";
+			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=3";
 			document.head.appendChild(link);
 		}
 
@@ -21,17 +21,9 @@
 		}
 	})();
 
-	/* Precision v4 corrects header/report/typography regressions without touching
-	   the broader theme layers that already look good. */
+	/* Precision v4 CSS was mechanically appended after stability v3 CSS.
+	   Its header/profile JavaScript still loads at the same late stage. */
 	(function load_precision_v4_assets() {
-		if (!document.getElementById("st-ui-precision-v4-css")) {
-			const link = document.createElement("link");
-			link.id = "st-ui-precision-v4-css";
-			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/ui_precision_v4.css?v=1";
-			document.head.appendChild(link);
-		}
-
 		if (!document.getElementById("st-ui-precision-v4-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v4-js";

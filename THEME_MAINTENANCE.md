@@ -81,8 +81,8 @@ These files remain because they still contribute rules or behavior to the curren
 - `interaction_finish_v2.css`
 - `global_popup_polish_v3.css`
 - `compact_autocomplete_and_form_gap_v4.css`
-- `stability_refinement_v3.css` / `.js`
-- `ui_precision_v4.css` / `.js`
+- `stability_refinement_v3.css` (now contains the original v3 + v4 CSS blocks) / `.js`
+- `ui_precision_v4.js` (still active)
 - `ui_precision_v6.css` / `.js`
 
 Do not remove an active compatibility layer merely because a newer file exists. First prove that every selector, runtime guard, and event behavior it owns has been migrated.
@@ -164,12 +164,12 @@ does **not** alter runtime asset order, CSS declarations, or JavaScript handlers
 
 | Existing loader | Late-loaded children | Migration concern |
 | --- | --- | --- |
-| `user_theme_menu.js` | `stability_refinement_v3` CSS/JS; `ui_precision_v4` CSS/JS; `child_table_precision_v5` CSS/JS; `ui_precision_v6` CSS/JS; `ui_precision_v6_2.js` | Current order is part of the working header, report, checkbox, and child-table behavior |
+| `user_theme_menu.js` | `stability_refinement_v3` bundled CSS + stability JS; `ui_precision_v4.js`; `child_table_precision_v5` CSS/JS; `ui_precision_v6` CSS/JS; `ui_precision_v6_2.js` | Current order is part of the working header, report, checkbox, and child-table behavior |
 | `ui_precision_v6_2.js` | `ui_precision_v6_2.css` | The same CSS URL appears in two intentional branches: update an existing link, or insert a new one |
 | `form_sidebar_persistence.js` | `inline_grid_link_popup_anchor_v5` CSS/JS | Protected inline-grid dropdown positioning/scroll behavior |
 | `interaction_finish_v2.js` | `ui_consolidation_v7.css` | Intentional *second* injection of CSS also included by hooks, preserving final cascade priority |
 
-The audit currently tracks **13 distinct late URLs** and one intentional
+The original Phase 3A audit tracked **13 distinct late URLs**. After Phase 3C it tracks **12** and one intentional
 direct/late CSS reinjection. No file should be deleted or moved merely because
 it appears in both the Desk hook list and a dynamic loader.
 
@@ -201,6 +201,34 @@ break existing headers and forms. Its late loader, stylesheet, selectors,
 native patches, and registration order remain exactly as before. Only consider
 removing this layer after browser parity tests on live light/dark Desk,
 Form, List, Report, and mobile pages prove the new owner equivalent.
+
+#### Phase 3C — Consolidate adjacent late CSS and delete v4.css
+
+The first actual file removal in Phase 3 uses a **mechanical stylesheet
+consolidation**, without changing any CSS rules or JavaScript controllers:
+
+- The original `stability_refinement_v3.css` content is followed by exactly
+  one newline and the complete original `ui_precision_v4.css` content.
+  The two stylesheets had adjacent CSS cascade positions: the only intervening
+  late asset was the stability **JavaScript** controller.
+- The former `ui_precision_v4.css` injection was removed from
+  `user_theme_menu.js`, and the now-unreferenced CSS file was deleted.
+- `ui_precision_v4.js` remains loaded at its old position and retains its
+  existing header/profile behavior.
+- The surviving stability CSS URL is cache-bumped to `?v=3`; the loader
+  `user_theme_menu.js` is cache-bumped to `?v=2`. No other asset URL is
+  changed or reordered.
+- `scripts/validate_phase3c_css_bundle.py` checks both original stylesheet
+  contents against immutable Git blob SHA-1 IDs, their ordering, and deletion
+  of the retired file. It runs in CI alongside the architecture and late
+  dependency checks.
+
+**Limitation:** The final CSS cascade is retained, but in the consolidated
+bundle v4 declarations become available when the v3 stylesheet loads rather
+than when a separate v4 stylesheet finishes loading. Live-browser light/dark,
+route-reopen and responsive checks are still recommended before deploying.
+Do not use this step as permission to remove the currently active v4 JS,
+child-table, search, report, or overlay layers.
 
 For each late layer:
 
