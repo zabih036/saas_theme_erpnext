@@ -159,7 +159,6 @@ PROTECTED_COMPATIBILITY_FILES = {
     "css/global_popup_polish_v3.css",
     "css/compact_autocomplete_and_form_gap_v4.css",
     "css/stability_refinement_v3.css",
-    "css/ui_precision_v4.css",
     "css/child_table_precision_v5.css",
     "css/ui_precision_v6.css",
     "css/ui_precision_v6_2.css",
