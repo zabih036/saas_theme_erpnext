@@ -13,6 +13,7 @@ on:
       - 'scripts/validate_theme_architecture.py'
       - 'scripts/validate_theme_late_loaders.py'
       - 'scripts/test_stability_runtime.js'
+      - 'scripts/test_report_filter_geometry.js'
       - 'scripts/validate_phase3c_css_bundle.py'
       - '.github/workflows/theme-architecture-check.yml'
 
@@ -31,3 +32,7 @@ jobs:
           node scripts/test_stability_runtime.js
       - name: Validate Phase 3C stylesheet byte parity
         run: python3 scripts/validate_phase3c_css_bundle.py
+      - name: Validate report filter geometry and controller syntax
+        run: |
+          node --check saas_theme/public/js/ui_precision_v6_2.js
+          node scripts/test_report_filter_geometry.js
