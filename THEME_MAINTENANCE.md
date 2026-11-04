@@ -53,7 +53,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
 | General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
 | Reports / DataTable + flat-form shell | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces, report tables and the intentionally colocated no-tab/flat-form shell. |
-| Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Existing final report filter-cell/search behavior. Do not duplicate elsewhere. |
+| Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Final report filter labels/utility classification and search behavior. **Frappe DataTable alone owns filter-cell widths** via `.dt-cell__content--col-N`; do not set outer-cell pixel widths. |
 | Tree / Chart of Accounts | `saas_theme/public/css/tree_view_refinement.css` | Tree-specific rows, controls and checkboxes. |
 | Grid + page-action alignment | `saas_theme/public/css/grid_and_action_alignment.css` | Child-grid geometry and page-head action alignment. Keep separate from form surface and reports because it spans both concerns. |
 | Child-table visual baseline | `saas_theme/public/css/child_table_precision_v5.css` / `saas_theme/public/js/child_table_precision_v5.js` | Child-table rows, controls and Configure Columns behavior. |
@@ -261,6 +261,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Change List View row hover” → `list_view.css`
 - “Change report table/filter appearance or flat/no-tab form shell” → `report_and_form_shell.css`
 - “Fix report filter behavior/alignment logic” → `ui_precision_v6_2.js`
+- “Fix Stock Ledger / General Ledger DataTable header/filter alignment” → `ui_precision_v6.css` + `ui_precision_v6_2.css` (input styling only, never force widths on `.dt-cell__content`) and `ui_precision_v6_2.js` (remove legacy inline geometry; preserve DataTable column sizing). `scripts/test_report_filter_geometry.js` guards this.
 - “Change child-table row visuals” → `child_table_precision_v5.css`
 - “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_v3.css` only for stacking/visibility compatibility
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`

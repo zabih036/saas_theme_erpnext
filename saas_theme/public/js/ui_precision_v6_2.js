@@ -18,13 +18,13 @@
 	function load_css() {
 		let link = document.getElementById("st-ui-precision-v6-2-css");
 		if (link) {
-			link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=2";
+			link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=3";
 			return;
 		}
 		link = document.createElement("link");
 		link.id = "st-ui-precision-v6-2-css";
 		link.rel = "stylesheet";
-		link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=2";
+		link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=3";
 		document.head.appendChild(link);
 	}
 
@@ -362,27 +362,33 @@
 		document.querySelectorAll(".page-head .st-header-search-input").forEach(setup_search_input);
 	}
 
-	function sync_filter_cell(header, filter_cell, input) {
-		if (!header || !filter_cell || !input) return;
-		const width = Math.round(header.getBoundingClientRect().width);
-		if (width <= 0) return;
+	// Frappe DataTable owns column widths via its generated
+	// .dt-cell__content--col-N stylesheet. Applying header widths to the
+	// *outer* filter cells breaks alignment when columns are resized or rerendered.
+	// Remove only old theme-authored important inline overrides from cached DOM.
+	function restore_native_filter_geometry(filter_cell, input) {
+		if (!filter_cell || !input) return;
 
 		["width", "min-width", "max-width", "flex-basis"].forEach((property) => {
-			filter_cell.style.setProperty(property, `${width}px`, "important");
+			if (filter_cell.style.getPropertyPriority(property) === "important") {
+				filter_cell.style.removeProperty(property);
+			}
 		});
 
 		const content = filter_cell.querySelector(".dt-cell__content");
 		if (content) {
-			content.style.setProperty("width", "100%", "important");
-			content.style.setProperty("max-width", "100%", "important");
-			content.style.setProperty("box-sizing", "border-box", "important");
+			["width", "max-width", "box-sizing"].forEach((property) => {
+				if (content.style.getPropertyPriority(property) === "important") {
+					content.style.removeProperty(property);
+				}
+			});
 		}
 
-		input.style.setProperty("display", "block", "important");
-		input.style.setProperty("width", "100%", "important");
-		input.style.setProperty("min-width", "0", "important");
-		input.style.setProperty("max-width", "none", "important");
-		input.style.setProperty("box-sizing", "border-box", "important");
+		["display", "width", "min-width", "max-width", "box-sizing"].forEach((property) => {
+			if (input.style.getPropertyPriority(property) === "important") {
+				input.style.removeProperty(property);
+			}
+		});
 	}
 
 	function repair_report_filter_row() {
@@ -398,15 +404,11 @@
 				const filter_cell = input.closest(".dt-cell");
 				if (!header || !filter_cell) return;
 
+				restore_native_filter_geometry(filter_cell, input);
 				const header_text = clean_text(header.textContent || "");
 				const utility = !header_text || /^(no\.?|#|sr\.?|select)$/i.test(header_text);
 				filter_cell.classList.toggle("st-v62-filter-utility", utility);
-				if (utility) {
-					input.style.setProperty("display", "none", "important");
-					return;
-				}
-
-				sync_filter_cell(header, filter_cell, input);
+				if (utility) return;
 				input.setAttribute("placeholder", __("Filter"));
 				input.setAttribute("aria-label", __("Filter {0}", [header_text]));
 			});

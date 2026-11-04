@@ -216,11 +216,16 @@
 	box-sizing: border-box !important;
 }
 
+/* A DataTable .dt-cell is sized by its .dt-cell__content--col-N child.
+   Earlier report-shell CSS added 7px side padding to each *outer* filter cell,
+   causing cumulative drift from the header/data columns. */
+#page-query-report .report-wrapper .dt-row-filter > .dt-cell {
+	padding: 0 !important;
+}
+
 #page-query-report .report-wrapper .dt-row-filter .dt-cell__content {
 	display: flex !important;
 	align-items: center !important;
-	width: 100% !important;
-	max-width: 100% !important;
 	height: 44px !important;
 	min-height: 44px !important;
 	margin: 0 !important;

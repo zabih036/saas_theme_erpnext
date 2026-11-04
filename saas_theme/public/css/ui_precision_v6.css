@@ -593,7 +593,6 @@
 #page-query-report .report-wrapper .dt-row-filter .dt-cell__content {
 	display: flex !important;
 	align-items: center !important;
-	width: 100% !important;
 	height: 42px !important;
 	min-height: 42px !important;
 	padding: 5px 7px !important;
