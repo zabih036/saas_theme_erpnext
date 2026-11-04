@@ -41,7 +41,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/interaction_finish_v2.css?v=2",
     "/assets/saas_theme/css/global_popup_polish_v3.css?v=3",
     "/assets/saas_theme/css/compact_autocomplete_and_form_gap_v4.css?v=4",
-    "/assets/saas_theme/css/ui_consolidation_v7.css?v=13",
+    "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
 ]
 
 EXPECTED_DESK_JS = [
@@ -59,7 +59,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/user_theme_menu.js?v=2",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=1",
-    "/assets/saas_theme/js/interaction_finish_v2.js?v=8",
+    "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -236,7 +236,7 @@ REQUIRED_RUNTIME_GUARDS = {
         "__saas_theme_ui_consolidation_v7__",
         'const GRID_EDITOR_CLASS = "st-v7-grid-editor"',
         'const GRID_POPUP_CLASS = "st-v7-inline-grid-popup"',
-        "/assets/saas_theme/css/ui_consolidation_v7.css?v=13",
+        "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
         'href*="/assets/saas_theme/css/ui_consolidation_v7.css"',
     ],
     "inline_grid_link_popup_anchor_v5.js": [
@@ -255,6 +255,12 @@ REQUIRED_RUNTIME_GUARDS = {
         "body>.form-in-grid.st-v7-grid-editor",
         "body>.st-v7-inline-grid-popup",
         "st-v7-awesomebar-backdrop",
+        "Expanded child-row Link actions: keep Frappe's native show/hide contract",
+        "body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn",
+        ".link-btn:not([style*=\"display\"])",
+        ".link-btn > a[style*=\"display: none\"]",
+        "stroke: currentColor !important",
+
         "AUTHORITATIVE FINAL FORM TABS V13",
         "form-tabs::after",
         "min-height: 0 !important",
