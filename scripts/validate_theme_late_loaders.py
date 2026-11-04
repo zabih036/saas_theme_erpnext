@@ -30,9 +30,9 @@ LATE_LOADERS = {
         ("js/ui_precision_v4.js?v=1", 1),
         ("css/child_table_precision_v5.css?v=1", 1),
         ("js/child_table_precision_v5.js?v=1", 1),
-        ("css/ui_precision_v6.css?v=2", 1),
+        ("css/ui_precision_v6.css?v=3", 1),
         ("js/ui_precision_v6.js?v=2", 1),
-        ("js/ui_precision_v6_2.js?v=1", 1),
+        ("js/ui_precision_v6_2.js?v=2", 1),
     ],
     "form_sidebar_persistence.js": [
         ("css/inline_grid_link_popup_anchor_v5.css?v=5", 1),
@@ -42,7 +42,7 @@ LATE_LOADERS = {
         ("css/ui_consolidation_v7.css?v=14", 1),
     ],
     "ui_precision_v6_2.js": [
-        ("css/ui_precision_v6_2.css?v=2", 2),
+        ("css/ui_precision_v6_2.css?v=3", 2),
     ],
 }
 
