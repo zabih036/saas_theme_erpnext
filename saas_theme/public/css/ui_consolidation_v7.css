@@ -28,6 +28,89 @@ body>.st-v7-inline-grid-popup{box-sizing:border-box!important;list-style:none!im
 /* Compact Link action icon. */
 .link-field{position:relative!important}.link-field .input-with-feedback,.link-field .form-control{padding-right:42px!important}.link-field .link-btn{position:absolute!important;top:50%!important;right:5px!important;transform:translateY(-50%)!important;display:inline-flex!important;align-items:center!important;gap:3px!important;z-index:3!important}.link-field .link-btn>a,.link-field .btn-open,.link-field .btn-clear{box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;margin:0!important;padding:0!important;border:1px solid var(--st-v7-border)!important;border-radius:8px!important;background:var(--st-v7-surface-subtle)!important;color:var(--st-v7-primary)!important;box-shadow:none!important;text-decoration:none!important}.link-field .link-btn>a:hover,.link-field .btn-open:hover,.link-field .btn-clear:hover{border-color:var(--st-v7-border-strong)!important;background:var(--st-v7-primary-soft)!important}.link-field .link-btn svg,.link-field .btn-open svg,.link-field .btn-clear svg{width:14px!important;height:14px!important;stroke-width:1.8!important}
 
+/* Expanded child-row Link actions: keep Frappe's native show/hide contract.
+   Earlier Form CSS paints the WHOLE .link-btn bright blue at input height,
+   and generic v7 display:flex !important bypasses Frappe's .toggle(false).
+   Limit this correction to the body-portaled child-row editor. */
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field {
+	position: relative !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field > .form-control,
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field > .input-with-feedback {
+	padding-inline-end: 72px !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn {
+	box-sizing: border-box !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: auto !important;
+	right: auto !important;
+	inset-inline-end: 6px !important;
+	transform: translateY(-50%) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	gap: 3px !important;
+	width: max-content !important;
+	min-width: 0 !important;
+	height: 28px !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: var(--st-v7-primary) !important;
+	pointer-events: none !important;
+	z-index: 3 !important;
+}
+/* Fresh native Link controls have no display inline-style. Frappe adds one
+   on .show(), and sets display:none on .hide(); don't force them open. */
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn:not([style*="display"]),
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn[style*="display: none"],
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn[style*="display:none"] {
+	display: none !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn > a {
+	box-sizing: border-box !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	flex: 0 0 28px !important;
+	width: 28px !important;
+	min-width: 28px !important;
+	height: 28px !important;
+	min-height: 28px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid var(--st-v7-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-v7-surface-subtle) !important;
+	color: var(--st-v7-primary) !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+	pointer-events: auto !important;
+	cursor: pointer !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn > a:hover {
+	border-color: var(--st-v7-border-strong) !important;
+	background: var(--st-v7-primary-soft) !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn > a[style*="display: none"],
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn > a[style*="display:none"] {
+	display: none !important;
+}
+body > .form-in-grid:is(.st-v7-grid-editor, .st-grid-row-portal) .link-field .link-btn svg {
+	width: 14px !important;
+	height: 14px !important;
+	min-width: 14px !important;
+	min-height: 14px !important;
+	color: currentColor !important;
+	stroke: currentColor !important;
+	stroke-width: 1.8 !important;
+}
+
 /* Expanded child row: modern fixed sheet. */
 body>.form-in-grid.st-v7-grid-editor{box-sizing:border-box!important;position:fixed!important;top:14px!important;left:50%!important;right:auto!important;bottom:14px!important;transform:translateX(-50%)!important;width:min(1240px,calc(100vw - 32px))!important;max-width:calc(100vw - 32px)!important;height:auto!important;max-height:calc(100vh - 28px)!important;margin:0!important;padding:0!important;border:1px solid var(--st-v7-border)!important;border-radius:16px!important;background:var(--st-v7-surface)!important;box-shadow:var(--st-v7-editor-shadow)!important;overflow:hidden!important}body>.form-in-grid.st-v7-grid-editor>.grid-form-heading{position:sticky!important;top:0!important;z-index:4!important;min-height:62px!important;padding:0!important;border:0!important;border-bottom:1px solid var(--st-v7-border)!important;background:var(--st-v7-surface)!important;box-shadow:0 1px 0 rgba(15,23,42,.025)!important}body>.form-in-grid.st-v7-grid-editor .grid-header-toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:62px!important;padding:10px 16px!important;background:transparent!important}body>.form-in-grid.st-v7-grid-editor .panel-title{color:var(--st-v7-text)!important;font-size:17px!important;font-weight:700!important;letter-spacing:-.015em!important}body>.form-in-grid.st-v7-grid-editor .row-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:wrap!important;gap:7px!important}body>.form-in-grid.st-v7-grid-editor .row-actions .btn{min-height:36px!important;margin:0!important;padding:7px 11px!important;border-radius:9px!important;box-shadow:none!important}body>.form-in-grid.st-v7-grid-editor .grid-form-body{height:calc(100% - 62px)!important;max-height:calc(100vh - 90px)!important;padding:16px!important;background:var(--st-v7-surface-soft)!important;overflow-y:auto!important;overflow-x:hidden!important}body>.form-in-grid.st-v7-grid-editor .form-area{box-sizing:border-box!important;width:100%!important;max-width:none!important;margin:0 auto!important;padding:14px 16px 16px!important;border:1px solid var(--st-v7-border)!important;border-radius:14px!important;background:var(--st-v7-surface)!important;box-shadow:0 2px 10px rgba(15,23,42,.035)!important}body>.form-in-grid.st-v7-grid-editor .form-layout,body>.form-in-grid.st-v7-grid-editor .form-page{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;background:transparent!important}body>.form-in-grid.st-v7-grid-editor .form-control,body>.form-in-grid.st-v7-grid-editor .input-with-feedback,body>.form-in-grid.st-v7-grid-editor .like-disabled-input{border-color:var(--st-v7-border-strong)!important;background:var(--st-v7-surface)!important;box-shadow:var(--st-v7-control-shadow)!important}body>.form-in-grid.st-v7-grid-editor .form-control:focus,body>.form-in-grid.st-v7-grid-editor .input-with-feedback:focus{border-color:var(--st-v7-primary)!important;box-shadow:0 0 0 3px rgba(7,89,230,.11),var(--st-v7-control-shadow)!important}
 
