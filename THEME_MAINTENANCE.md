@@ -265,6 +265,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_v3.css` only for stacking/visibility compatibility
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
+- “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
 - “Change dashboard/analytics styling” → `home.css`
 - “Change dashboard behavior” → `home_dashboard.js`

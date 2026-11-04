@@ -39,7 +39,7 @@ LATE_LOADERS = {
         ("js/inline_grid_link_popup_anchor_v5.js?v=5", 1),
     ],
     "interaction_finish_v2.js": [
-        ("css/ui_consolidation_v7.css?v=13", 1),
+        ("css/ui_consolidation_v7.css?v=14", 1),
     ],
     "ui_precision_v6_2.js": [
         ("css/ui_precision_v6_2.css?v=2", 2),
