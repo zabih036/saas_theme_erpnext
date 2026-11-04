@@ -18,13 +18,13 @@
 	function load_css() {
 		let link = document.getElementById("st-ui-precision-v6-2-css");
 		if (link) {
-			link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=2";
+			link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=3";
 			return;
 		}
 		link = document.createElement("link");
 		link.id = "st-ui-precision-v6-2-css";
 		link.rel = "stylesheet";
-		link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=2";
+		link.href = "/assets/saas_theme/css/ui_precision_v6_2.css?v=3";
 		document.head.appendChild(link);
 	}
 
