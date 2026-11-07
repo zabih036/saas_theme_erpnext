@@ -7,13 +7,13 @@ import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BUNDLE = ROOT / "saas_theme/public/css/overlay_stacking_fix.css"
+BUNDLE = ROOT / "saas_theme/public/css/overlay_layers.css"
 OLD = ROOT / "saas_theme/public/css/overlay_stacking_v3.css"
 HOOKS = ROOT / "saas_theme/hooks.py"
 ORIGINAL_V2 = "a62c768b52be9ec260e281070bebedbeee5890b8"
 ORIGINAL_V3 = "473e2ddec0f8697c148d68fd7749b13e2254bde2"
 BOUNDARY = b"\n/*\n * SaaS Theme \xe2\x80\x94 Overlay / Stacking Context Fix v3\n"
-ASSET = "/assets/saas_theme/css/overlay_stacking_fix.css?v=3"
+ASSET = "/assets/saas_theme/css/overlay_layers.css?v=1"
 OBSOLETE = "overlay_stacking_v3.css"
 
 
