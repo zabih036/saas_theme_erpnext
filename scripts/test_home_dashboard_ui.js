@@ -70,7 +70,9 @@ assert.ok(start > 0 && end > start, "Home KPI template not found");
 const template = analytics.slice(start, end);
 const dashboard = vm.runInNewContext(template + "\n dashboard_html();", {
     esc: (s) => String(s),
-    __: (s) => s,
+    __: (s, args) => String(s).replace(/\{(\d+)\}/g, (_, n) => args?.[Number(n)] ?? ""),
+    list_route: (doctype) => "/desk/" + doctype.toLowerCase().replace(/ /g, "-"),
+    report_route: (report) => "/desk/query-report/" + encodeURIComponent(report),
 });
 const keys = ["revenue", "expenses", "customers", "suppliers",
     "stock_value", "cash", "receivables", "payables"];
