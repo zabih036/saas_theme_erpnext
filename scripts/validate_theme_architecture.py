@@ -21,7 +21,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/professional_ui.css?v=1",
     "/assets/saas_theme/css/form.css?v=3",
     "/assets/saas_theme/css/list_view.css?v=1",
-    "/assets/saas_theme/css/home.css?v=9",
+    "/assets/saas_theme/css/home.css?v=10",
     "/assets/saas_theme/css/brand_shell.css?v=3",
     "/assets/saas_theme/css/palette.css?v=1",
     "/assets/saas_theme/css/interface.css?v=1",
@@ -49,7 +49,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/professional_ui.js?v=1",
     "/assets/saas_theme/js/list_view.js?v=5",
     "/assets/saas_theme/js/home_dashboard.js?v=3",
-    "/assets/saas_theme/js/home_analytics.js?v=9",
+    "/assets/saas_theme/js/home_analytics.js?v=10",
     "/assets/saas_theme/js/brand_shell.js?v=1",
     "/assets/saas_theme/js/ui_finish.js?v=1",
     "/assets/saas_theme/js/route_loader.js?v=1",
@@ -58,7 +58,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/final_shell_cleanup.js?v=2",
     "/assets/saas_theme/js/user_theme_menu.js?v=3",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
-    "/assets/saas_theme/js/quick_access_preferences.js?v=2",
+    "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
 ]
 
