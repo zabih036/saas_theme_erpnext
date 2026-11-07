@@ -25,7 +25,7 @@ URL_PATTERN = re.compile(r"/assets/saas_theme/(?:css|js)/[a-zA-Z0-9_.-]+\?v=[0-9
 # in both the existing-link and new-link branches.
 LATE_LOADERS = {
     "user_theme_menu.js": [
-        ("css/stability_refinement_v3.css?v=3", 1),
+        ("css/desk_stability.css?v=1", 1),
         ("js/stability_refinement_v3.js?v=2", 1),
         ("js/ui_precision_v4.js?v=1", 1),
         ("css/child_table_precision_v5.css?v=1", 1),
