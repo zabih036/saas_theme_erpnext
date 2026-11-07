@@ -178,7 +178,7 @@ audit_rows.update({
 activity = home.get_recent_activity(limit=9)
 assert len(activity["items"]) == 2, activity
 assert activity["items"][0]["actor"] == "bob@example.com"
-assert activity["items"][0]["description"] == "1 field changes"
+assert activity["items"][0]["description"] == "1 field changed"
 assert activity["items"][1]["actor"] == "Alice"
 assert "100000" not in str(activity)
 assert "SECRET-1" not in str(activity)
