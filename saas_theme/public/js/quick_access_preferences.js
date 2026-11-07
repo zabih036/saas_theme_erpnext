@@ -1,6 +1,6 @@
 /*
- * SaaS Theme — user configurable Quick Access workspaces.
- * Keeps the default ERP shortcuts until the user explicitly customizes them.
+ * SaaS Theme — user configurable Quick Access module sidebars.
+ * Uses the same permission-checked sidebar source as the Home navigation.
  */
 (function () {
 	"use strict";
@@ -9,7 +9,7 @@
 	if (window.__saas_theme_quick_access_preferences__) return;
 	window.__saas_theme_quick_access_preferences__ = true;
 
-	const STORAGE_PREFIX = "saas_theme.quick_access_workspaces_v2";
+	const STORAGE_PREFIX = "saas_theme.quick_access_sidebars_v1";
 	const MAX_ITEMS = 8;
 	let refresh_timer = null;
 	let observer = null;
@@ -53,33 +53,14 @@
 		}
 	}
 
-	function get_workspaces() {
+	function get_sidebars() {
+		// The same role-filtered owner drives both the sidebar and dialog.
+		if (!saas_theme.home_dashboard?.sidebar_access_ready?.()) return [];
 		try {
-			return saas_theme.professional_ui?.get_workspaces?.() || [];
+			return saas_theme.home_dashboard.get_quick_access() || [];
 		} catch (error) {
 			return [];
 		}
-	}
-
-	function visible_workspaces(items) {
-		const pages = frappe.boot?.workspaces?.pages || [];
-		const hidden = new Set();
-
-		pages.forEach((page) => {
-			if (!page || (page.hidden !== 1 && page.is_hidden !== 1 && page.hide_custom !== 1)) return;
-			[page.name, page.title, page.label]
-				.filter(Boolean)
-				.forEach((value) => hidden.add(String(value)));
-		});
-
-		const seen = new Set();
-		return (items || []).filter((item) => {
-			if (!item?.name || !item?.route) return false;
-			if (hidden.has(String(item.name)) || hidden.has(String(item.title || ""))) return false;
-			if (seen.has(item.name)) return false;
-			seen.add(item.name);
-			return true;
-		});
 	}
 
 	function icon(name, fallback = "layout-grid") {
@@ -154,7 +135,7 @@
 		const $head = $section.find(".st-hub-section-head").first();
 		if (!$head.length) return;
 
-		$head.find("p").first().text(__("Choose the workspaces you use most"));
+		$head.find("p").first().text(__("Choose the sidebar modules you use most"));
 		if ($head.children(".st-quick-access-edit").length) return;
 
 		const $button = $(`<button type="button" class="st-quick-access-edit"><span>${edit_icon()}</span><strong>${__("Customize")}</strong></button>`);
@@ -169,32 +150,15 @@
 	function render_selection($section, items) {
 		const $grid = $section.find(".st-hub-quick-grid").first();
 		if (!$grid.length) return;
-
-		if (!$grid.data("st-default-quick-html")) {
-			$grid.data("st-default-quick-html", $grid.html());
-		}
-
 		const saved = read_selection();
-		if (saved === null) {
-			if ($grid.attr("data-st-quick-mode") === "custom") {
-				$grid.html($grid.data("st-default-quick-html") || "");
-			}
-			$grid.attr("data-st-quick-mode", "default").removeAttr("data-st-quick-signature");
-			return;
-		}
-
-		const chosen = selected_items(items, saved);
-		if (!chosen.length) {
-			clear_selection();
-			$grid.html($grid.data("st-default-quick-html") || "");
-			$grid.attr("data-st-quick-mode", "default").removeAttr("data-st-quick-signature");
-			return;
-		}
-
+		// Never restore a stale Workspace HTML block or role-restricted link.
+		const permitted = selected_items(items, saved === null ? recommended_names(items) : saved);
+		const chosen = permitted.length ? permitted : selected_items(items, recommended_names(items));
 		const signature = chosen.map((item) => item.name).join("|");
-		if ($grid.attr("data-st-quick-signature") === signature) return;
+		if ($grid.attr("data-st-quick-signature") === signature &&
+			$grid.attr("data-st-quick-mode") === "sidebars") return;
 		$grid.html(chosen.map(quick_card).join(""));
-		$grid.attr("data-st-quick-mode", "custom").attr("data-st-quick-signature", signature);
+		$grid.attr("data-st-quick-mode", "sidebars").attr("data-st-quick-signature", signature);
 	}
 
 	function picker_html(items, current_names) {
@@ -209,16 +173,16 @@
 		const rows = options.map((item) => {
 			const checked = current.has(item.name) ? " checked" : "";
 			const search = esc(`${item.title || item.name} ${item.module || ""}`.toLowerCase());
-			return `<label class="st-quick-picker-option" data-search="${search}"><input type="checkbox" class="st-quick-picker-check" value="${esc(item.name)}"${checked}><span class="st-quick-picker-icon">${icon(item.icon)}</span><span class="st-quick-picker-copy"><strong>${esc(__(item.title || item.name))}</strong><small>${esc(__(item.module || __("Workspace")))}</small></span></label>`;
+			return `<label class="st-quick-picker-option" data-search="${search}"><input type="checkbox" class="st-quick-picker-check" value="${esc(item.name)}"${checked}><span class="st-quick-picker-icon">${icon(item.icon)}</span><span class="st-quick-picker-copy"><strong>${esc(__(item.title || item.name))}</strong><small>${esc(__(item.module || __("Sidebar")))}</small></span></label>`;
 		}).join("");
 
-		return `<div class="st-quick-picker"><div class="st-quick-picker-toolbar"><label class="st-quick-picker-search"><span>${search_icon()}</span><input type="search" class="form-control" autocomplete="off" placeholder="${esc(__("Search workspaces"))}"></label><button type="button" class="btn btn-default st-quick-picker-reset">${__("Recommended")}</button></div><div class="st-quick-picker-meta"><span>${__("Select up to {0} workspaces", [MAX_ITEMS])}</span><strong class="st-quick-picker-count"></strong></div><div class="st-quick-picker-options">${rows}</div></div>`;
+		return `<div class="st-quick-picker"><div class="st-quick-picker-toolbar"><label class="st-quick-picker-search"><span>${search_icon()}</span><input type="search" class="form-control" autocomplete="off" placeholder="${esc(__("Search sidebar modules"))}"></label><button type="button" class="btn btn-default st-quick-picker-reset">${__("Recommended")}</button></div><div class="st-quick-picker-meta"><span>${__("Select up to {0} modules", [MAX_ITEMS])}</span><strong class="st-quick-picker-count"></strong></div><div class="st-quick-picker-options">${rows}</div></div>`;
 	}
 
 	function open_picker($home) {
-		const items = visible_workspaces(get_workspaces());
+		const items = get_sidebars();
 		if (!items.length) {
-			frappe.msgprint(__("No visible workspaces are available for Quick Access."));
+			// There are no accessible sidebars to customize.
 			return;
 		}
 
@@ -237,7 +201,7 @@
 					.slice(0, MAX_ITEMS);
 
 				if (!names.length) {
-					frappe.msgprint(__("Select at least one workspace for Quick Access."));
+					frappe.msgprint(__("Select at least one sidebar module for Quick Access."));
 					return;
 				}
 
@@ -285,10 +249,13 @@
 
 		const $section = $home.find(".st-hub-quick-section").first();
 		if (!$section.length) return;
+		if (!saas_theme.home_dashboard?.sidebar_access_ready?.()) return;
 
 		applying = true;
 		try {
-			const items = visible_workspaces(get_workspaces());
+			const items = get_sidebars();
+			if (!items.length) { $section.hide(); return; }
+			$section.show();
 			ensure_edit_button($section);
 			render_selection($section, items);
 		} finally {
@@ -300,6 +267,10 @@
 		clearTimeout(refresh_timer);
 		refresh_timer = setTimeout(enhance_quick_access, delay);
 	}
+
+	$(document)
+		.off("saas_home_sidebars_ready.saas_quick_access_preferences")
+		.on("saas_home_sidebars_ready.saas_quick_access_preferences", enhance_quick_access);
 
 	$(document)
 		.off("desktop_screen.saas_quick_access_preferences")
