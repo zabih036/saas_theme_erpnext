@@ -168,33 +168,77 @@
 		</section>`;
 	}
 
+	function line_points(values, width, height, low, high, left = 0, top = 0) {
+		const range = Math.max(1, high - low);
+		const dx = values.length > 1 ? width / (values.length - 1) : 0;
+		return values.map((raw, index) => ({
+			x: left + index * dx,
+			y: top + (high - Number(raw || 0)) / range * height,
+		}));
+	}
+
+	function smooth_line_path(points) {
+		if (!points.length) return "";
+		return points.slice(1).reduce((d, point, i) => {
+			const last = points[i], mid = (last.x + point.x) / 2;
+			return d + ` C ${mid.toFixed(2)} ${last.y.toFixed(2)}, ${mid.toFixed(2)} ${point.y.toFixed(2)}, ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+		}, `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`);
+	}
+
+	function kpi_sparkline(values) {
+		if (!Array.isArray(values) || values.length < 2) return "";
+		const clean = values.map((raw) => Number(raw || 0));
+		if (!clean.every(Number.isFinite)) return "";
+		const lo = Math.min(...clean), hi = Math.max(...clean);
+		const points = line_points(clean, 90, 30, lo - Math.max(1, (hi - lo) * .18),
+			hi + Math.max(1, (hi - lo) * .18), 2, 2);
+		return `<svg class="st-v9-kpi-spark" viewBox="0 0 94 34" aria-hidden="true" focusable="false"><path d="${smooth_line_path(points)}"/></svg>`;
+	}
+
 	function trend_chart(data) {
-		const labels = data?.labels || [];
+		const labels = Array.isArray(data?.labels) ? data.labels : [];
 		const series = [
 			{ key: "revenue", title: __("Revenue"), values: data?.revenue },
 			{ key: "expenses", title: __("Expenses"), values: data?.expenses },
-		].filter((item) => Array.isArray(item.values));
+		].filter((item) => Array.isArray(item.values) &&
+			item.values.length === labels.length &&
+			item.values.every((value) => Number.isFinite(Number(value))));
 		if (!labels.length || !series.length) return "";
-		const values = series.flatMap((item) => item.values.map(Number).filter(Number.isFinite));
-		if (!values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No posted activity for this period.")}</div>`;
-		const width = 760, height = 280, left = 56, right = 18, top = 16, bottom = 38;
+		const all = series.flatMap((item) => item.values.map(Number));
+		if (!all.length) return "";
+		const width = 800, height = 284, left = 76, right = 22, top = 20, bottom = 42;
 		const plotW = width - left - right, plotH = height - top - bottom;
-		const max = Math.max(1, ...values), slot = plotW / labels.length;
-		const barWidth = Math.min(27, slot * .27);
-		const grid = [0, .25, .5, .75, 1].map((ratio) => {
+		const minValue = Math.min(0, ...all), maxValue = Math.max(0, ...all);
+		const padding = Math.max(1, (maxValue - minValue) * .13);
+		const lo = minValue < 0 ? minValue - padding : 0;
+		const hi = maxValue + padding;
+		const ticks = [0, .25, .5, .75, 1];
+		const grid = ticks.map((ratio) => {
 			const y = top + plotH - ratio * plotH;
-			return `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left - 8}" y="${y + 3}" text-anchor="end" class="st-dash-axis">${esc(money(max * ratio))}</text>`;
+			const value = lo + (hi - lo) * ratio;
+			return `<line x1="${left}" x2="${width - right}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}" class="st-dash-grid-line"/>
+				<text x="${left - 11}" y="${(y + 3).toFixed(2)}" text-anchor="end" class="st-dash-axis">${esc(money(value))}</text>`;
 		}).join("");
-		const bars = labels.map((label, index) => {
-			const center = left + slot * (index + .5);
-			return series.map((item, si) => {
-				const val = Number(item.values[index] || 0);
-				const h = Math.max(0, val / max * plotH);
-				const x = center + (si - (series.length - 1) / 2) * (barWidth + 6) - barWidth / 2;
-				return `<rect x="${x}" y="${top + plotH - h}" width="${barWidth}" height="${h}" rx="5" class="st-dash-bar ${item.key}"><title>${esc(label)} ${esc(item.title)}: ${esc(money(val))}</title></rect>`;
-			}).join("") + `<text x="${center}" y="${height - 12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
+		const months = labels.map((label, i) => {
+			const x = left + (labels.length === 1 ? plotW / 2 : (i * plotW / (labels.length - 1)));
+			return `<text x="${x.toFixed(2)}" y="${height - 13}" text-anchor="middle" class="st-dash-axis st-dash-month">${esc(label)}</text>`;
 		}).join("");
-		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expense totals by month"))}">${grid}${bars}</svg>`;
+		const lines = series.map((item) => {
+			const points = line_points(item.values, plotW, plotH, lo, hi, left, top);
+			const path = smooth_line_path(points);
+			const baseline = top + (hi / (hi - lo)) * plotH;
+			const bottomY = Math.min(top + plotH, Math.max(top, baseline));
+			const areaPath = `${path} L ${points[points.length - 1].x} ${bottomY} L ${points[0].x} ${bottomY} Z`;
+			const circles = points.map((point, index) =>
+				`<circle cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="4" class="st-dash-chart-dot ${item.key}"><title>${esc(labels[index])} · ${esc(item.title)}: ${esc(money(item.values[index]))}</title></circle>`
+			).join("");
+			return `<path class="st-dash-chart-area ${item.key}" d="${areaPath}"/>
+				<path class="st-dash-chart-line ${item.key}" d="${path}"/>${circles}`;
+		}).join("");
+		return `<svg class="st-dash-chart-svg st-v9-trend-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expenses by month"))}">
+			<defs><linearGradient id="st-v9-trend-purple" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity=".24"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity=".015"/></linearGradient>
+			<linearGradient id="st-v9-trend-cyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity=".14"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
+			${grid}${months}${lines}</svg>`;
 	}
 
 	function production_chart(data) {
