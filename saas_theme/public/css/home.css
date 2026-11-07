@@ -2647,3 +2647,127 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-activity-card { height: 374px !important; }
 }
 
+
+
+/* ==============================================================
+   Home KPI hover surfaces — maintained in the canonical Home CSS.
+   Revenue is always brand blue; all other KPI cards are neutral
+   until a smooth circle expands from their top-right corner.
+   Never change Desk, reports, child tables or the analytics cards.
+   ============================================================== */
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi {
+	overflow: hidden;
+	isolation: isolate;
+	transition: transform .20s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]) {
+	--st-v9-bg: #ffffff;
+	--st-v9-border: #e1e7f0;
+	--st-v9-color: #244f68;
+	--st-v9-accent: #1762ca;
+	background: #ffffff !important;
+	border-color: #e1e7f0 !important;
+	box-shadow: 0 3px 14px rgba(20, 50, 84, .045) !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi[data-dashboard-kpi="revenue"] {
+	--st-v9-bg: #1762ca;
+	--st-v9-border: #1762ca;
+	--st-v9-color: #ffffff;
+	--st-v9-accent: #ffffff;
+	background: #1762ca !important;
+	border-color: #1762ca !important;
+	box-shadow: 0 7px 20px rgba(23, 98, 202, .17) !important;
+}
+/* Existing :before is the decorative corner; :after is reserved for
+   the animated fill and cannot intercept clicks on the anchor. */
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"])::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background: #1762ca;
+	clip-path: circle(0% at 100% 0%);
+	transition: clip-path .56s cubic-bezier(.22, 1, .36, 1);
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]):is(:hover, :focus-visible)::after {
+	clip-path: circle(150% at 100% 0%);
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi > :not(.st-home-card-open) {
+	position: relative;
+	z-index: 1;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi .st-home-card-open {
+	z-index: 2;
+}
+/* The Revenue tile stays legible against blue. Other card content changes
+   to white as the hover fill advances, including icons and mini charts. */
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:is(
+	[data-dashboard-kpi="revenue"],
+	:not([data-dashboard-kpi="revenue"]):hover,
+	:not([data-dashboard-kpi="revenue"]):focus-visible
+) :is(.st-dash-kpi-top, .st-dash-kpi-top span, .st-kpi-value-row > strong, small, .st-dash-delta, .st-dash-delta em) {
+	color: #ffffff !important;
+	opacity: 1 !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi :is(
+	.st-dash-kpi-top, .st-dash-kpi-top span, .st-kpi-value-row > strong,
+	small, .st-dash-delta, .st-dash-delta em
+) {
+	transition: color .23s ease;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:is(
+	[data-dashboard-kpi="revenue"],
+	:not([data-dashboard-kpi="revenue"]):hover,
+	:not([data-dashboard-kpi="revenue"]):focus-visible
+) .st-dash-kpi-top i {
+	background: rgba(255, 255, 255, .17) !important;
+	color: #ffffff !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:is(
+	[data-dashboard-kpi="revenue"],
+	:not([data-dashboard-kpi="revenue"]):hover,
+	:not([data-dashboard-kpi="revenue"]):focus-visible
+) :is(.st-dash-kpi-top i svg, .st-v9-kpi-spark path) {
+	color: #ffffff !important;
+	stroke: #ffffff !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:is(
+	[data-dashboard-kpi="revenue"],
+	:not([data-dashboard-kpi="revenue"]):hover,
+	:not([data-dashboard-kpi="revenue"]):focus-visible
+) .st-home-card-open {
+	color: #ffffff !important;
+	background: rgba(255, 255, 255, .17) !important;
+	border-color: rgba(255, 255, 255, .28) !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]):hover {
+	border-color: #1762ca !important;
+	box-shadow: 0 9px 22px rgba(23, 98, 202, .14) !important;
+}
+
+/* In dark mode, keep the neutral cards dark rather than showing a bright
+   white rectangle; the same blue corner reveal and Revenue tile remain. */
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]) {
+	--st-v9-bg: #233247;
+	--st-v9-border: #364a64;
+	--st-v9-color: #e0f2ff;
+	background: #233247 !important;
+	border-color: #364a64 !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]) :is(
+	.st-dash-kpi-top, .st-dash-kpi-top span, .st-kpi-value-row > strong, small
+) {
+	color: #e0f2ff !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:not([data-dashboard-kpi="revenue"]):is(:hover, :focus-visible) :is(
+	.st-dash-kpi-top, .st-dash-kpi-top span, .st-kpi-value-row > strong, small
+) {
+	color: #ffffff !important;
+}
+@media (prefers-reduced-motion: reduce) {
+	.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi,
+	.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi::after {
+		transition: none !important;
+	}
+}
