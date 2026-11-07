@@ -235,8 +235,9 @@
 	}
 
 	function activity_summary_html(summary) {
-		return [["created", __("Created"), "created"], ["updated", __("Updated"), "updated"], ["submitted", __("Submitted"), "submitted"], ["other", __("Other"), "other"]]
-			.map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary?.[key] || 0)}</strong><small>${esc(label)}</small></div></div>`).join("");
+		return [["updated", __("Document updates"), "updated"]]
+			.filter(([key]) => Number(summary?.[key] || 0) > 0)
+			.map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary[key])}</strong><small>${esc(label)}</small></div></div>`).join("");
 	}
 
 	async function load_dashboard($home, token) {
