@@ -41,7 +41,7 @@ frappe.defaults = types.SimpleNamespace(
     get_user_default=lambda key: "Demo Company",
     get_global_default=lambda key: "AFN",
 )
-frappe.logger = lambda name: types.SimpleNamespace(debug=lambda *args: None)
+frappe.logger = lambda name: types.SimpleNamespace(debug=lambda *args: None, warning=lambda *args: None)
 frappe_utils.cint = lambda x: int(x or 0)
 frappe_utils.flt = lambda x: float(x or 0)
 frappe_utils.getdate = lambda x: x if isinstance(x, date) else date.fromisoformat(str(x)[:10])
