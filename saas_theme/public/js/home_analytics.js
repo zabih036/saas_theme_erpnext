@@ -8,6 +8,7 @@
 	if (typeof frappe === "undefined") return;
 	let enhance_token = 0;
 	const QUICK_SIDEBAR_KEY = "saas_theme_home_quick_sidebar_hidden_v2";
+	let home_currency = "";
 
 	function esc(value) {
 		const text = value == null ? "" : String(value);
@@ -51,7 +52,7 @@
 	}
 
 	function currency() {
-		return frappe.boot?.sysdefaults?.currency || frappe.sys_defaults?.currency || frappe.defaults?.get_default?.("currency") || "";
+		return home_currency || frappe.boot?.sysdefaults?.currency || frappe.sys_defaults?.currency || frappe.defaults?.get_default?.("currency") || "";
 	}
 
 	function money(value) {
@@ -98,22 +99,55 @@
 		return `<span class="st-dash-delta ${positive ? "positive" : "negative"}">${numeric >= 0 ? "↗" : "↘"} ${Math.abs(numeric).toFixed(1)}% <em>${__("vs last month")}</em></span>`;
 	}
 
+
+	function kpi_card(key, title, icon_name, primary = false) {
+		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
+			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${icon(icon_name)}</i></div>
+			<strong data-kpi-value="${esc(key)}">—</strong>
+			<div data-kpi-delta="${esc(key)}"></div>
+			<small data-kpi-note="${esc(key)}"></small>
+		</article>`;
+	}
+
 	function dashboard_html() {
-		return `<section class="st-dashboard-v5">
+		return `<section class="st-dashboard-v5 st-dashboard-v8">
 			<div class="st-dash-kpis">
-				<a class="st-dash-kpi st-dash-kpi-primary" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Revenue")}</span><i>${icon("selling")}</i></div><strong data-kpi-value="revenue">—</strong><div data-kpi-delta="revenue">${delta_html(null)}</div><small data-kpi-note="revenue">${__("Loading sales…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Expenses")}</span><i>${icon("accounting")}</i></div><strong data-kpi-value="expenses">—</strong><div data-kpi-delta="expenses">${delta_html(null)}</div><small data-kpi-note="expenses">${__("Loading expense ledger…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Customer"))}"><div class="st-dash-kpi-top"><span>${__("Active Customers")}</span><i>${icon("users")}</i></div><strong data-kpi-value="customers">—</strong><div data-kpi-delta="customers"><span class="st-dash-delta neutral">${__("Customer master")}</span></div><small data-kpi-note="customers">${__("Loading customers…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Supplier"))}"><div class="st-dash-kpi-top"><span>${__("Active Suppliers")}</span><i>${icon("organization")}</i></div><strong data-kpi-value="suppliers">—</strong><div data-kpi-delta="suppliers"><span class="st-dash-delta neutral">${__("Supplier master")}</span></div><small data-kpi-note="suppliers">${__("Loading suppliers…")}</small></a>
+				${kpi_card("revenue", "Revenue", "trending-up", true)}
+				${kpi_card("expenses", "Expenses", "credit-card")}
+				${kpi_card("customers", "Active Customers", "users")}
+				${kpi_card("suppliers", "Active Suppliers", "truck")}
+			</div>
+			<div class="st-dash-financial-kpis">
+				${kpi_card("stock_value", "Stock Value", "package")}
+				${kpi_card("cash", "Bank & Treasury Cash", "landmark")}
+				${kpi_card("receivables", "Receivables", "arrow-down-left")}
+				${kpi_card("payables", "Payables", "arrow-up-right")}
 			</div>
 			<div class="st-dash-insights">
-				<article class="st-dash-card st-dash-revenue-card"><div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend"><span><i class="revenue"></i>${__("Revenue")}</span><span><i class="expenses"></i>${__("Expenses")}</span></div></div><div class="st-dash-chart" data-dashboard-chart="trend"><div class="st-dash-loading">${__("Loading chart…")}</div></div></article>
-				<article class="st-dash-card st-dash-heatmap-card"><div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Invoice activity by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div><div class="st-sales-heatmap" data-sales-heatmap><div class="st-dash-loading">${__("Loading heatmap…")}</div></div></article>
+				<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
+					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend" data-trend-legend></div></div>
+					<div class="st-dash-chart" data-dashboard-chart="trend"></div>
+				</article>
+				<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
+					<div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Submitted invoices by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
+					<div class="st-sales-heatmap" data-sales-heatmap></div>
+				</article>
 			</div>
 			<div class="st-dash-lower-grid">
-				<article class="st-dash-card st-dash-invoice-card"><div class="st-dash-card-head"><div><strong>${__("Invoices")}</strong><small>${__("Paid vs unpaid · last six months")}</small></div></div><div class="st-invoice-status" data-invoice-status><div class="st-dash-loading">${__("Loading invoice status…")}</div></div></article>
-				<article class="st-dash-card st-dash-activity-card"><div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Recent document actions visible to your account")}</small></div><span class="st-dash-card-pill">${__("Live")}</span></div><div class="st-activity-summary"><div class="st-activity-summary-loading">${__("Loading activity…")}</div></div><div class="st-activity-list"><div class="st-dash-loading">${__("Loading recent activity…")}</div></div></article>
+				<article hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices">
+					<div class="st-dash-card-head"><div><strong>${__("Sales Invoices")}</strong><small>${__("Paid vs unpaid · past six months")}</small></div></div>
+					<div class="st-invoice-status" data-invoice-status></div>
+				</article>
+				<article class="st-dash-card st-dash-activity-card">
+					<div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Document audit events you can view")}</small></div></div>
+					<div class="st-activity-summary"></div>
+					<div class="st-activity-list"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
+				</article>
 			</div>
+			<article hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production">
+				<div class="st-dash-card-head"><div><strong>${__("Production Runs")}</strong><small>${__("Submitted Manufacture stock entries · six months")}</small></div><strong data-production-total></strong></div>
+				<div class="st-production-chart" data-production-chart></div>
+			</article>
 		</section>`;
 	}
 
