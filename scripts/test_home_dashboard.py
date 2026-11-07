@@ -157,8 +157,8 @@ assert overview["kpis"]["stock_value"]["value"] == 12500
 assert overview["production"]["total"] == 1
 assert queries and all(q[0] in readable for q in queries)
 
-# Comments and Version changes become real user audit entries. An unauthorized
-# linked document is excluded even though the raw Version table contains it.
+# The feed must load from Version ONLY, never Comment. It includes the
+# permitted document but not sensitive field values or inaccessible records.
 readable.update({("Sales Invoice", "SI-1")})
 audit_rows.update({
     "Comment": [dict(
@@ -176,13 +176,55 @@ audit_rows.update({
     ],
 })
 activity = home.get_recent_activity(limit=9)
-assert len(activity["items"]) == 2, activity
+assert len(activity["items"]) == 1, activity
 assert activity["items"][0]["actor"] == "bob@example.com"
-assert activity["items"][0]["description"] == "1 field changed"
-assert activity["items"][1]["actor"] == "Alice"
+assert activity["items"][0]["description"] == "1 fields changed"
+assert activity["summary"] == {"updated": 1}
+assert "Alice" not in str(activity)
 assert "100000" not in str(activity)
 assert "SECRET-1" not in str(activity)
-assert activity["summary"]["submitted"] == 1
+
+# custom_allowed_roles on Sidebar is a *child table*; only users with an
+# allowed role can see that sidebar in Home Quick Access AND its modal.
+class FakeMeta:
+    def __init__(self, fields):
+        self.fields = fields
+
+    def get_field(self, name):
+        return self.fields.get(name)
+
+
+meta = {
+    "Sidebar": FakeMeta({"custom_allowed_roles": types.SimpleNamespace(
+        fieldtype="Table", options="Sidebar Allowed Role",
+    )}),
+    "Workspace Sidebar": FakeMeta({}),
+    "Sidebar Allowed Role": FakeMeta({}),
+}
+frappe.get_meta = lambda doctype: meta[doctype]
+frappe.db = types.SimpleNamespace(exists=lambda doctype, name: doctype == "DocType")
+frappe.get_roles = lambda user: ["Employee", "Accounts User"]
+frappe.get_all = lambda doctype, fields=None, filters=None, order_by=None, limit_page_length=None: (
+    [Row({"name": "Buying"}), Row({"name": "Accounting"})]
+    if doctype == "Sidebar"
+    else [Row(v) for v in audit_rows.get(doctype, [])]
+)
+docs = {
+    ("Sidebar", "Buying"): Row({"custom_allowed_roles": [Row({"role": "Employee"})]}),
+    ("Sidebar", "Accounting"): Row({"custom_allowed_roles": [Row({"role": "System Manager"})]}),
+}
+frappe.get_doc = lambda doctype, name: docs[(doctype, name)]
+names = ["Buying", "Accounting", "Manufacturing"]
+allowed = home.get_home_sidebar_access(names)
+assert allowed == {"allowed": ["Buying", "Manufacturing"]}, allowed
+assert home.get_home_sidebar_access('["Buying","Accounting"]') == {"allowed": ["Buying"]}
+assert home.get_home_sidebar_access(["Accounting"]) == {"allowed": []}
+docs[("Sidebar", "Buying")] = Row({"custom_allowed_roles": [Row({"unknown": "Employee"})]})
+assert home.get_home_sidebar_access(["Buying"]) == {"allowed": []}  # fail-closed
+docs[("Sidebar", "Buying")] = Row({"custom_allowed_roles": []})
+assert home.get_home_sidebar_access(["Buying"]) == {"allowed": ["Buying"]}
+frappe.get_doc = lambda doctype, name: (_ for _ in ()).throw(ValueError("unreadable roles"))
+assert home.get_home_sidebar_access(["Accounting"]) == {"allowed": []}
 
 frappe.session.user = "Guest"
 assert home.get_dashboard_overview() == {}
