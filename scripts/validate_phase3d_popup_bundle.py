@@ -12,13 +12,13 @@ import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BUNDLE = ROOT / "saas_theme/public/css/global_popup_polish_v3.css"
+BUNDLE = ROOT / "saas_theme/public/css/popup_controls.css"
 OLD = ROOT / "saas_theme/public/css/compact_autocomplete_and_form_gap_v4.css"
 HOOKS = ROOT / "saas_theme/hooks.py"
 ORIGINAL_POPUP = "aee8195b5fe4235215bca72f52af2e71ad52289f"
 ORIGINAL_COMPACT = "ceb450fdc34e12d8e3b5bcd08ea778d989a3b396"
 BOUNDARY = b"\n/*\n * SaaS Theme \xe2\x80\x94 Compact Autocomplete + Form Gap v4\n"
-ASSET = "/assets/saas_theme/css/global_popup_polish_v3.css?v=4"
+ASSET = "/assets/saas_theme/css/popup_controls.css?v=1"
 OBSOLETE = "compact_autocomplete_and_form_gap_v4.css"
 
 
