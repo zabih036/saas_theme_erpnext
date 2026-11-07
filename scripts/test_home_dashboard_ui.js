@@ -14,6 +14,7 @@ new vm.Script(analytics);
 
 const events = () => ({off() { return this; }, on() { return this; }});
 const context = {
+    __: (message) => message,
     window: {location: {pathname: "/desk"}},
     document: {},
     saas_theme: {home_dashboard: {}, professional_ui: {get_workspaces: () => []}},
