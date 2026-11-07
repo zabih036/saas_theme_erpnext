@@ -415,7 +415,8 @@ def get_recent_activity(limit: int = 10) -> dict:
             candidates.append({
                 "creation": row.creation, "actor": row.owner,
                 "activity_type": "Updated",
-                "description": _("{0} field changes").format(count) if count else _("Updated document"),
+                "description": _("{0} field changed").format(count) if count == 1
+                else _("{0} fields changed").format(count) if count else _("Updated document"),
                 "reference_doctype": row.ref_doctype,
                 "reference_name": row.docname,
             })
