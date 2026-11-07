@@ -228,19 +228,45 @@
 			const response = await frappe.call({ method: "saas_theme.home.get_dashboard_overview" });
 			if (token !== enhance_token || !$home.closest("body").length) return;
 			const data = response?.message || {}, kpis = data.kpis || {};
-			[["revenue", false, money], ["expenses", true, money], ["customers", false, number], ["suppliers", false, number]].forEach(([key, inverse, formatter]) => {
-				const item = kpis[key] || {};
-				$home.find(`[data-kpi-value="${key}"]`).text(formatter(item.value));
-				if (key === "revenue" || key === "expenses") $home.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, inverse));
-				$home.find(`[data-kpi-note="${key}"]`).text(item.note || __("No data available"));
+			home_currency = data.currency || "";
+			const money_keys = new Set(["revenue", "expenses", "stock_value", "cash", "receivables", "payables"]);
+			Object.entries(kpis).forEach(([key, item]) => {
+				if (!item || item.value == null) return;
+				const $card = $home.find(`[data-dashboard-kpi="${key}"]`);
+				if (!$card.length) return;
+				$card.removeAttr("hidden");
+				$card.find(`[data-kpi-value="${key}"]`).text(money_keys.has(key) ? money(item.value) : number(item.value));
+				if ((key === "revenue" || key === "expenses") && item.delta != null) {
+					$card.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, key === "expenses"));
+				}
+				$card.find(`[data-kpi-note="${key}"]`).text(item.note || "");
 			});
-			$home.find('[data-dashboard-chart="trend"]').html(trend_chart(data.trend));
-			$home.find('[data-sales-heatmap]').html(heatmap_html(data.heatmap));
-			$home.find('[data-heatmap-total]').text(data.heatmap?.total == null ? "—" : number(data.heatmap.total));
-			$home.find('[data-invoice-status]').html(invoice_html(data.invoices));
-		} catch (e) {
-			if (token !== enhance_token || !$home.closest("body").length) return;
-			$home.find('.st-dash-loading').text(__("Dashboard data could not be loaded."));
+			if (data.trend && (Array.isArray(data.trend.revenue) || Array.isArray(data.trend.expenses))) {
+				$home.find('[data-dashboard-panel="trend"]').removeAttr("hidden");
+				$home.find('[data-dashboard-chart="trend"]').html(trend_chart(data.trend));
+				const legend = [["revenue", __("Revenue")], ["expenses", __("Expenses")]]
+					.filter(([key]) => Array.isArray(data.trend[key]))
+					.map(([key, label]) => `<span><i class="${key}"></i>${esc(label)}</span>`).join("");
+				$home.find("[data-trend-legend]").html(legend);
+			}
+			if (data.heatmap) {
+				$home.find('[data-dashboard-panel="heatmap"]').removeAttr("hidden");
+				$home.find("[data-sales-heatmap]").html(heatmap_html(data.heatmap));
+				$home.find("[data-heatmap-total]").text(number(data.heatmap.total));
+			}
+			if (data.invoices) {
+				$home.find('[data-dashboard-panel="invoices"]').removeAttr("hidden");
+				$home.find("[data-invoice-status]").html(invoice_html(data.invoices));
+			}
+			if (data.production) {
+				$home.find('[data-dashboard-panel="production"]').removeAttr("hidden");
+				$home.find("[data-production-chart]").html(production_chart(data.production));
+				$home.find("[data-production-total]").text(number(data.production.total));
+			}
+		} catch (error) {
+			// Do not render permission-denied or incomplete KPI cards as zeroes.
+			if (token !== enhance_token) return;
+			$home.find(".st-dashboard-v8 [data-dashboard-panel]").attr("hidden", "hidden");
 		}
 	}
 
