@@ -39,6 +39,22 @@
 		}
 	}
 
+	function kpi_icon(name) {
+		// Fixed inline SVG paths avoid empty icon squares when the icon name
+		// is absent from a particular Frappe v16 icon sprite.
+		const shapes = {
+			"trending-up": '<path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+			"credit-card": '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+			"users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+			"truck": '<path d="M1 5h14v12H1zM15 9h4l3 4v4h-7z"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/>',
+			"package": '<path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+			"landmark": '<path d="m3 10 9-7 9 7M4 10h16M5 10v9m5-9v9m5-9v9m4-9v9M3 21h18"/>',
+			"arrow-down-left": '<path d="M17 7 7 17M17 17H7V7"/>',
+			"arrow-up-right": '<path d="M7 17 17 7M7 7h10v10"/>',
+		};
+		return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name] || shapes.package}</svg>`;
+	}
+
 	function user_name() {
 		try { return frappe.user?.full_name?.() || frappe.boot?.user?.full_name || frappe.session?.user || __("User"); }
 		catch (e) { return frappe.session?.user || __("User"); }
@@ -102,7 +118,7 @@
 
 	function kpi_card(key, title, icon_name, primary = false) {
 		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
-			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${icon(icon_name)}</i></div>
+			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${kpi_icon(icon_name)}</i></div>
 			<strong data-kpi-value="${esc(key)}">—</strong>
 			<div data-kpi-delta="${esc(key)}"></div>
 			<small data-kpi-note="${esc(key)}"></small>
@@ -215,7 +231,7 @@
 
 	function activity_item_html(item) {
 		const meta = activity_meta(item.activity_type), doctype = item.reference_doctype || __("Document"), name = item.reference_name || item.subject || "", actor = item.actor || __("User");
-		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small></span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
+		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small>${item.description ? `<small class="st-activity-description">${esc(item.description)}</small>` : ""}</span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
 	}
 
 	function activity_summary_html(summary) {
@@ -279,7 +295,7 @@
 			$home.find('.st-dash-activity-card .st-activity-list').html(items.length ? items.map(activity_item_html).join("") : `<div class="st-dash-empty">${__("No recent user activity is available.")}</div>`);
 		} catch (e) {
 			if (token !== enhance_token || !$home.closest("body").length) return;
-			$home.find('.st-dash-activity-card .st-activity-list').html(`<div class="st-dash-empty">${__("Recent activity could not be loaded.")}</div>`);
+			$home.find('.st-dash-activity-card').remove();
 		}
 	}
 
@@ -298,6 +314,9 @@
 		if ($sidebar.length && $quick.length) {
 			$quick.detach().addClass('st-home-quick-sidebar').prependTo($sidebar);
 			$sidebar.addClass('st-home-navigation-sidebar');
+			$quick.find('.st-hub-section-head h2').text(__('Quick Access'));
+			$quick.find('.st-hub-section-head p').text(__('Available module sidebars'));
+			$quick.find('.st-hub-quick-grid').toggleClass('st-hub-sidebar-links', true);
 		}
 	}
 
