@@ -87,7 +87,7 @@ const hoverBlock = css.slice(css.indexOf("Home KPI hover surfaces"));
 assert.ok(hoverBlock.length > 4000, "Last loaded Home KPI override is missing");
 // Revenue must be the only permanently blue card; other cards remain white.
 assert.match(hoverBlock,
-    /a\.st-dash-kpi\[data-dashboard-kpi="revenue"\]\s*\{[^}]*background:\s*linear-gradient\(130deg, #1762ca 0%, #2476dd 100%\) !important/s);
+    /a\.st-dash-kpi\[data-dashboard-kpi="revenue"\]\s*\{[^}]*background:\s*#1762ca !important/s);
 assert.match(hoverBlock,
     /a\.st-dash-kpi:not\(\[data-dashboard-kpi="revenue"\]\)\s*\{[^}]*background:\s*#ffffff !important/s);
 // Only non-Revenue KPI cards receive the expanding upper-right blue circle.
