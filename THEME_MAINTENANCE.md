@@ -271,7 +271,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Change dashboard/analytics styling” → `home.css`
 - “Fix Home KPI data and invoice counts” → `saas_theme/home.py` with permission checks and base-currency totals; do not default inaccessible metrics to zero.
 - “Change Home Quick Access links” → `home_dashboard.js`: use the current user's module sidebars, not Workspace favorites; never inject unauthorized navigation.
-- “Change Home user activity” → `saas_theme/home.py` Comment/Version audit logs, read-permission checked per document; do not return Version field values.
+- “Change Home user activity” → `saas_theme/home.py` Version-only audit logs, read-permission checked per document; do not return Version field values.
 - “Change Home production chart” → `home_analytics.js` for visualizations and `saas_theme/home.py` for counts of submitted Manufacture Stock Entries (do not add mixed UOM quantities).
 
 - “Change dashboard behavior” → `home_dashboard.js`
@@ -291,6 +291,16 @@ Only when each concern has one real owner should filenames be simplified. This a
 - Regressions: `python3 scripts/test_home_dashboard.py` and `node scripts/test_home_dashboard_ui.js`. In-browser checks still required for light/dark, permission roles, empty states, mobile, and module sidebar navigation.
 
 ---
+
+### Home Quick Access and Version log (role-safe refinement)
+
+- Quick Access sidebar entries and the Customize modal share `home_dashboard.get_quick_access()`. The modal must **never** independently query Workspace pages or reinstate the legacy Workspace selection key.
+- The frontend starts with **no visible sidebar entries** until `saas_theme.home.get_home_sidebar_access` returns approved names.
+- This endpoint reads the `custom_allowed_roles` child table on configured `Sidebar` or legacy `Workspace Sidebar` documents and checks the current user's roles. Empty child table = unrestricted; nonempty without matching role = hidden. Errors fail closed.
+- The user's Frappe boot sidebar visibility is the first gate; the custom-role endpoint is a second restrictive intersection. It does not grant access to ERPNext records.
+- The activity feed is backed by **Version only**. It shows actor, document, time and safe field/row-change counts, with no old/new field values. Per-document read permission applies.
+- All eight KPI cards share one modern blue surface and compact 18–22px amount typography. Keep styling in the existing `home.css` owner.
+- Test users with and without custom sidebar roles: the sidebar and modal must both hide restricted items after refresh and stale preferences.
 
 ## Refactor policy
 
