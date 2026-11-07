@@ -34,14 +34,35 @@ const context = {
     $: (value) => typeof value === "function" ? undefined : events(),
 };
 vm.runInNewContext(hub, context);
+// Before the server has validated custom_allowed_roles, show no sidebar.
 const nav = context.saas_theme.home_dashboard.get_quick_access();
-assert.deepEqual(Array.from(nav, (v) => v.name), ["Buying", "Manufacturing"]);
-assert.equal(nav[0].route, "/desk/buying");
-assert.equal(nav[1].route, "/desk/manufacturing");
-assert.ok(!nav.some((v) => v.name === "Accounting" || v.name === "Empty"));
+assert.deepEqual(Array.from(nav, (v) => v.name), []);
+assert.equal(context.saas_theme.home_dashboard.sidebar_access_ready(), false);
+assert.ok(hub.includes('method: "saas_theme.home.get_home_sidebar_access"'),
+    "Sidebar roles must be checked on the backend");
+assert.ok(hub.includes("allowed_sidebar_names = new Set(names)"),
+    "Use only the server-approved sidebar identities");
+assert.ok(hub.includes('const quick = [];'),
+    "Never briefly display unauthorized sidebar links");
 assert.ok(hub.includes("Your available sidebar modules"));
 assert.ok(!hub.includes("get_quick_access(workspaces)"),
-    "Quick Access must not regress to workspace favorites");
+    "Quick Access must not regress to Workspace favorites");
+
+const picker = fs.readFileSync(
+    path.join(root, "saas_theme/public/js/quick_access_preferences.js"), "utf8");
+new vm.Script(picker);
+assert.ok(picker.includes("saas_theme.home_dashboard.get_quick_access()"),
+    "The customize modal must use the same permitted sidebar collection");
+assert.ok(!picker.includes("get_workspaces()") &&
+    !picker.includes("visible_workspaces"),
+    "The modal must not independently expose Workspace pages");
+assert.ok(picker.includes("saas_home_sidebars_ready"),
+    "Picker refreshes only after the permission response");
+assert.ok(picker.includes("quick_access_sidebars_v1") &&
+    !picker.includes("quick_access_workspaces_v2"),
+    "Old Workspace selections must not restore restricted sidebar links");
+assert.ok(picker.includes("Search sidebar modules"));
+
 
 const start = analytics.indexOf("\tfunction kpi_icon(");
 const end = analytics.indexOf("\n\tfunction trend_chart(", start);
@@ -71,4 +92,7 @@ assert.ok(analytics.includes("if (data.production)"),
           "Production chart must be optional");
 assert.ok(analytics.includes("home_currency = data.currency"),
           "Financial figures must use their reporting company's currency");
+assert.ok(css.includes("background: linear-gradient(115deg, #174783") &&
+    css.includes("font-size: clamp(18px, 1.35vw, 22px)"),
+    "All Home financial cards must use compact typography and a uniform blue surface");
 console.log("Home UI passed: sidebar navigation, permission-hidden cards, audit trail and production chart.");
