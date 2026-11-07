@@ -79,8 +79,7 @@ These files remain because they still contribute rules or behavior to the curren
 - `child_row_editor_finish.css`
 - `overlay_stacking_fix.css`
 - `interaction_finish_v2.css`
-- `global_popup_polish_v3.css`
-- `compact_autocomplete_and_form_gap_v4.css`
+- `global_popup_polish_v3.css` (now includes the original adjacent compact autocomplete/form-gap v4 CSS block)
 - `stability_refinement_v3.css` (now contains the original v3 + v4 CSS blocks) / `.js`
 - `ui_precision_v4.js` (still active)
 - `ui_precision_v6.css` / `.js`
@@ -125,7 +124,7 @@ Completed migrations:
 - `ui_finish.css` + `interface_refinement.css` → `interface.css`
 - `form_controls.css` + `form_navigation.css` → `form.css`
 
-Phase 2 ends here. The remaining adjacent CSS files were reviewed and intentionally **not** bundled when their ownership boundaries differ. In particular, `form_surface.css`, `grid_and_action_alignment.css`, and `report_and_form_shell.css` remain separate because they own different runtime surfaces. The protected child-row/popup/overlay stack also remains untouched.
+Phase 2 ends here. The remaining adjacent CSS files were reviewed and intentionally **not** bundled when their ownership boundaries differ. In particular, `form_surface.css`, `grid_and_action_alignment.css`, and `report_and_form_shell.css` remain separate because they own different runtime surfaces. The protected child-row/popup/overlay stack remained untouched during Phase 2; later independent cleanup phases may migrate exact, adjacent CSS blocks under pinned parity checks.
 
 Each completed bundle is a byte-for-byte concatenation in the original CSS load order. JavaScript remains separate to avoid changing execution timing.
 
@@ -201,6 +200,32 @@ break existing headers and forms. Its late loader, stylesheet, selectors,
 native patches, and registration order remain exactly as before. Only consider
 removing this layer after browser parity tests on live light/dark Desk,
 Form, List, Report, and mobile pages prove the new owner equivalent.
+
+#### Phase 3D — Popup and autocomplete CSS parity bundle
+
+This is a deliberately mechanical consolidation of two **adjacent, hook-loaded**
+styling files with overlapping ownership: `global_popup_polish_v3.css` and
+`compact_autocomplete_and_form_gap_v4.css`.
+
+- Appended the latter stylesheet **unchanged** after exactly one newline in
+  `global_popup_polish_v3.css` to preserve selector order and specificity.
+- Removed the now-redundant v4 CSS hook reference and deleted its file.
+  The surviving popup asset keeps its original place immediately after
+  `interaction_finish_v2.css` and before `ui_consolidation_v7.css`.
+- Bumped only the surviving asset cache version from `v=3` to `v=4`.
+- Retired the old filename in the architecture validator; the popup bundle
+  now checks for both original marker sections.
+- `scripts/validate_phase3d_popup_bundle.py` independently verifies
+  the two immutable original Git-blob SHA IDs, byte-accurate concatenation,
+  hook position and absence of any old dynamically loaded URLs.
+- No JS controller, form state, child-row, popup stacking logic, checkbox,
+  report filter or Desk behavior was rewritten.
+
+**Remaining Phase 3 work:** header/profile and stability JS controllers,
+child-table and report late loaders, popup-portal JS, and the final
+`ui_consolidation_v7.css` styling layer still have live ownership. Their
+migration requires equivalent runtime timing and browser regression
+checks; don't delete these files by version suffix alone.
 
 #### Phase 3C — Consolidate adjacent late CSS and delete v4.css
 
