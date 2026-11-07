@@ -17,13 +17,13 @@ OLD = ROOT / "saas_theme/public/css/compact_autocomplete_and_form_gap_v4.css"
 HOOKS = ROOT / "saas_theme/hooks.py"
 ORIGINAL_POPUP = "aee8195b5fe4235215bca72f52af2e71ad52289f"
 ORIGINAL_COMPACT = "ceb450fdc34e12d8e3b5bcd08ea778d989a3b396"
-BOUNDARY = b"\\n/*\\n * SaaS Theme \\xe2\\x80\\x94 Compact Autocomplete + Form Gap v4\\n"
+BOUNDARY = b"\n/*\n * SaaS Theme \xe2\x80\x94 Compact Autocomplete + Form Gap v4\n"
 ASSET = "/assets/saas_theme/css/global_popup_polish_v3.css?v=4"
 OBSOLETE = "compact_autocomplete_and_form_gap_v4.css"
 
 
 def blob_hash(content: bytes) -> str:
-    prefix = b"blob " + str(len(content)).encode() + b"\\0"
+    prefix = b"blob " + str(len(content)).encode() + b"\0"
     return hashlib.sha1(prefix + content).hexdigest()
 
 
