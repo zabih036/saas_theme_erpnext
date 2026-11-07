@@ -292,6 +292,24 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+### Home KPI cards — primary Revenue and corner-fill hover
+
+- Revenue alone has a permanent, solid **#1762ca** background with white
+  text, icons and real Revenue/Expenses trend sparkline colors.
+- The other seven KPI cards use a simple white surface with a subtle border
+  in light mode and a readable dark-neutral surface in dark mode.
+- Hover or keyboard focus on a non-Revenue card smoothly expands a blue
+  `clip-path: circle(... at 100% 0%)` layer from its **top-right corner**,
+  while copy, icons, sparklines and the action affordance turn white.
+  The layer has `pointer-events:none` and stays behind the full clickable
+  anchor contents; card routes and hidden-permission states are unchanged.
+- The transition honors `prefers-reduced-motion`, and all selectors are
+  limited to `st-home-dashboard .st-dashboard-v10 a.st-dash-kpi`.
+  Never add this hover to chart tiles, Desk, Form, List or Report CSS.
+- The source of truth is `saas_theme/public/css/home.css?v=13` and its
+  exact hook/architecture cache version. Keep the prior Link and
+  authorized-hidden KPI regression assertions working.
+
 ### Home V11 — Blue brand accent and native card navigation
 
 - The horizontal Dashboard / Analytics / Activity tab strip is **deleted**
