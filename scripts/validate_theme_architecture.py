@@ -36,8 +36,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/grid_and_action_alignment.css?v=2",
     "/assets/saas_theme/css/report_and_form_shell.css?v=1",
     "/assets/saas_theme/css/child_row_editor_finish.css?v=1",
-    "/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
-    "/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
+    "/assets/saas_theme/css/overlay_stacking_fix.css?v=3",
     "/assets/saas_theme/css/interaction_finish_v2.css?v=2",
     "/assets/saas_theme/css/global_popup_polish_v3.css?v=4",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
@@ -89,7 +88,6 @@ KNOWN_CSS_FILES = {
     "login_refinement.css",
     "mobile_shell.css",
     "overlay_stacking_fix.css",
-    "overlay_stacking_v3.css",
     "professional_ui.css",
     "report_and_form_shell.css",
     "saas_theme.css",
@@ -129,6 +127,7 @@ KNOWN_JS_FILES = {
 # Retired filenames from proven no-op removals or completed bundle migrations.
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "overlay_stacking_v3.css",
     "compact_autocomplete_and_form_gap_v4.css",
     "form_controls.css",
     "ui_precision_v4.css",
@@ -153,7 +152,6 @@ RETIRED_ASSETS = {
 PROTECTED_COMPATIBILITY_FILES = {
     "css/child_row_editor_finish.css",
     "css/overlay_stacking_fix.css",
-    "css/overlay_stacking_v3.css",
     "css/interaction_finish_v2.css",
     "css/global_popup_polish_v3.css",
     "css/stability_refinement_v3.css",
@@ -247,7 +245,9 @@ REQUIRED_RUNTIME_GUARDS = {
         'window.addEventListener("scroll", runAfterCurrentEvent',
         "Math.max(180, Math.round(rect.width))",
     ],
-    "overlay_stacking_v3.css": [
+    "overlay_stacking_fix.css": [
+        "SaaS Theme — Overlay / Stacking Context Fix v2",
+        "SaaS Theme — Overlay / Stacking Context Fix v3",
         "body > .form-in-grid.st-v7-grid-editor",
         "display: block !important",
         "visibility: visible !important",
