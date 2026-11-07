@@ -58,6 +58,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Grid + page-action alignment | `saas_theme/public/css/grid_and_action_alignment.css` | Child-grid geometry and page-head action alignment. Keep separate from form surface and reports because it spans both concerns. |
 | Child-table visual baseline | `saas_theme/public/css/child_table_precision_v5.css` / `saas_theme/public/js/child_table_precision_v5.js` | Child-table rows, controls and Configure Columns behavior. |
 | Expanded child-row editor, Link Selector, popup portal lifecycle, form-tab stability | `saas_theme/public/js/interaction_finish_v2.js` | **Authoritative final interaction controller.** Do not introduce another controller for these behaviors. |
+| Desk stability CSS (late) | `saas_theme/public/css/desk_stability.css` | Exact former stability v3 + precision v4 CSS; load-time parity is protected by Phase 4B checks. |
 | Final child-row/popup/menu/tab CSS and stacking contract | `saas_theme/public/css/ui_consolidation_v7.css` | **Authoritative final CSS stability layer.** Only cross-layer conflicts belong here. |
 | Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_layers.css` | Owns the original v2 + v3 overlay/visibility compatibility rules, preserving PR #53. |
 | Inline editable-grid Item/Warehouse popup geometry | `saas_theme/public/js/inline_grid_link_popup_anchor_v5.js` | Owns the PR #52/#53 width/scroll correction. Do not create another popup-position controller. |
@@ -80,7 +81,7 @@ These files remain because they still contribute rules or behavior to the curren
 - `overlay_layers.css` (the exact former overlay v2 + v3 blocks)
 - `interaction_finish_v2.css`
 - `popup_controls.css` (the exact former global-popup v3 + compact-autocomplete v4 blocks)
-- `stability_refinement_v3.css` (now contains the original v3 + v4 CSS blocks) / `.js`
+- `desk_stability.css` (exact original v3 + v4 CSS bundle); `stability_refinement_v3.js` remains its original late-loaded controller
 - `ui_precision_v4.js` (still active)
 - `ui_precision_v6.css` / `.js`
 
@@ -304,6 +305,33 @@ For each late layer:
 - then delete the old file.
 
 `ui_consolidation_v7.css`, `interaction_finish_v2.js`, and the current inline-grid popup compatibility fix are treated as protected stability owners until the end of this phase.
+
+### Phase 4B — Give the consolidated stability CSS a stable filename
+
+The previously completed Phase 3C mechanical CSS bundle already had one
+real late-loaded owner for stability v3 and precision v4 styling.
+
+- Rename `stability_refinement_v3.css` to `desk_stability.css` with
+  **exactly the same Git blob bytes**. Do not rewrite declarations.
+- Change **only the CSS URL literal** in `user_theme_menu.js`, preserving
+  its existing DOM injection ID, CSS-then-JS loader sequence, timings,
+  menu events and dependent child-table/report loaders. The loader's
+  hook cache version changes from `v=3` to `v=4`; the new stylesheet
+  starts at `desk_stability.css?v=1`.
+- Phase 3C's immutable original v3+v4 content parity validator now
+  checks the descriptive file path. The Phase 4B regression validator
+  compares the full renamed CSS blob with its original Git hash, and
+  validates that the current entire loader JS becomes byte-identical
+  to its original version after substituting **only** the URL string.
+- The late-loader graph, architecture manifest and reference audit
+  enforce the new path and guard against reintroduction of the retired
+  stylesheet name. No user-facing behavior is intended to change.
+
+**Not removed:** `stability_refinement_v3.js` remains active, along
+with `ui_precision_v4.js`, `ui_precision_v6.js`,
+`ui_precision_v6_2.js`, child-grid, popup and other protected
+controllers. Their remaining migrations require equivalent event
+scheduling/route checks and real-browser testing before retirement.
 
 ### Phase 4A — Normalize the completed CSS bundles
 
