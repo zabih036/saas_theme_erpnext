@@ -47,8 +47,8 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Form surface / layout experience | `saas_theme/public/css/form_surface.css` | Exact bundle of the former form experience + professional form card layers, preserving historical order. |
 | List View | `saas_theme/public/css/list_view.css` | List rows, cards, list filters and list-only hover/spacing. |
 | Home dashboard + ERP analytics styling | `saas_theme/public/css/home.css` | Exact CSS bundle of the former dashboard + analytics styles, preserving historical order. |
-| Home dashboard behavior | `saas_theme/public/js/home_dashboard.js` | Dashboard behavior. |
-| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` | Analytics interactions and data loading. |
+| Home dashboard behavior | `saas_theme/public/js/home_dashboard.js` | Navigation uses user-visible **module sidebars** from Frappe boot, not Workspace cards; respect sidebar permission filtering and native routes. |
+| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` / `saas_theme/home.py` | Render only permission-available data. Finance totals are per-company, permission-enforced aggregates; audit activity comes from Comment and Version records filtered by document read access. |
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
 | General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
@@ -269,9 +269,26 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
 - “Change dashboard/analytics styling” → `home.css`
+- “Fix Home KPI data and invoice counts” → `saas_theme/home.py` with permission checks and base-currency totals; do not default inaccessible metrics to zero.
+- “Change Home Quick Access links” → `home_dashboard.js`: use the current user's module sidebars, not Workspace favorites; never inject unauthorized navigation.
+- “Change Home user activity” → `saas_theme/home.py` Comment/Version audit logs, read-permission checked per document; do not return Version field values.
+- “Change Home production chart” → `home_analytics.js` for visualizations and `saas_theme/home.py` for counts of submitted Manufacture Stock Entries (do not add mixed UOM quantities).
+
 - “Change dashboard behavior” → `home_dashboard.js`
 - “Change analytics behavior/data” → `home_analytics.js`
 - “Change login” → `login_refinement.css` / `login_fix.js`
+
+---
+
+## Home dashboard data contracts (v8)
+
+- Only keys included in `get_dashboard_overview().kpis` may render a KPI. A missing key means unavailable or unauthorized, **not zero**. Never show a permission warning inside the dashboard.
+- All financial KPIs use the selected user/company default and its base currency. No cross-company/currency sums. Stock = current `Bin.stock_value` total for company warehouses. Treasury = debit minus credit from Cash + Bank account types. Receivables = debit minus credit; Payables = credit minus debit.
+- GL and Bin totals use `frappe.qb.get_query(..., ignore_permissions=False)` so row, role and field permissions remain enforced. The query builder default **ignores permissions**; always explicitly pass false.
+- Revenue is net amount of posted Sales Invoices this month. The note uses `_("{0} submitted sales invoices").format(count)` to avoid leaking a literal `{0}`, and no percentage is shown when last month's amount is zero.
+- Invoices/heatmap use a capped, *complete* permitted set; if capped, hide it rather than showing truncated totals. Production chart counts manufacturing runs only.
+- Recent user activity = actual Frappe Comment and Version records, sorted by creation, with per-document `frappe.has_permission(..., doc=name, user=user)`. Do **not** expose sensitive Version old/new values or logs for unreadable documents.
+- Regressions: `python3 scripts/test_home_dashboard.py` and `node scripts/test_home_dashboard_ui.js`. In-browser checks still required for light/dark, permission roles, empty states, mobile, and module sidebar navigation.
 
 ---
 
