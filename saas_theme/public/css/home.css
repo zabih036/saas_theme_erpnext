@@ -2451,6 +2451,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	box-shadow: 0 4px 20px rgba(58,43,119,.055) !important;
 }
 .st-dashboard-v10 .st-dash-insights .st-dash-card { min-height: 286px !important; }
+.st-dashboard-v10 .st-dash-insights .st-dash-production-card { margin-top: 0 !important; }
 .st-dashboard-v10 .st-dash-lower-grid .st-dash-card { min-height: 255px !important; }
 .st-dashboard-v10 .st-dash-card-head { margin-bottom: 17px; }
 .st-dashboard-v10 .st-dash-card-head strong { font-size: 13px !important; color: #292445 !important; }
@@ -2604,6 +2605,8 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 [data-theme="dark"] .st-dashboard-v10 .st-v9-kpi-spark path { stroke: #b8deff !important; }
 
 [data-theme="dark"] .st-dashboard-v10 .st-v10-sales-track { background: #342d4a; }
+[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-day strong { color: #c9bdf0; }
+[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-caption { color: #b2a5ca; }
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry {
 	background: #222035 !important;
 	border-bottom-color: #3a354e !important;
