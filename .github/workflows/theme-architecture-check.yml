@@ -20,6 +20,7 @@ on:
       - 'scripts/test_home_v10_layout.js'
       - 'saas_theme/home.py'
       - 'scripts/validate_phase3c_css_bundle.py'
+      - 'scripts/validate_phase3d_popup_bundle.py'
       - '.github/workflows/theme-architecture-check.yml'
 
 jobs:
@@ -37,6 +38,8 @@ jobs:
           node scripts/test_stability_runtime.js
       - name: Validate Phase 3C stylesheet byte parity
         run: python3 scripts/validate_phase3c_css_bundle.py
+      - name: Validate Phase 3D popup CSS cascade parity
+        run: python3 scripts/validate_phase3d_popup_bundle.py
       - name: Validate report filter geometry and controller syntax
         run: |
           node --check saas_theme/public/js/ui_precision_v6_2.js

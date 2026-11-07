@@ -39,8 +39,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
     "/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
     "/assets/saas_theme/css/interaction_finish_v2.css?v=2",
-    "/assets/saas_theme/css/global_popup_polish_v3.css?v=3",
-    "/assets/saas_theme/css/compact_autocomplete_and_form_gap_v4.css?v=4",
+    "/assets/saas_theme/css/global_popup_polish_v3.css?v=4",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
 ]
 
@@ -72,7 +71,6 @@ KNOWN_CSS_FILES = {
     "brand_shell.css",
     "child_row_editor_finish.css",
     "child_table_precision_v5.css",
-    "compact_autocomplete_and_form_gap_v4.css",
     "precision.css",
     "dark.css",
     "desktop_navbar_refinement.css",
@@ -131,6 +129,7 @@ KNOWN_JS_FILES = {
 # Retired filenames from proven no-op removals or completed bundle migrations.
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "compact_autocomplete_and_form_gap_v4.css",
     "form_controls.css",
     "ui_precision_v4.css",
     "form_navigation.css",
@@ -157,7 +156,6 @@ PROTECTED_COMPATIBILITY_FILES = {
     "css/overlay_stacking_v3.css",
     "css/interaction_finish_v2.css",
     "css/global_popup_polish_v3.css",
-    "css/compact_autocomplete_and_form_gap_v4.css",
     "css/stability_refinement_v3.css",
     "css/child_table_precision_v5.css",
     "css/ui_precision_v6.css",
@@ -202,6 +200,10 @@ REQUIRED_RUNTIME_GUARDS = {
         "padding-top: 6px !important",
         "min-height: 44px !important",
         ".body-sidebar .sidebar-header .title-container",
+    ],
+    "global_popup_polish_v3.css": [
+        "SaaS Theme — Global Popup Polish v3",
+        "SaaS Theme — Compact Autocomplete + Form Gap v4",
     ],
     "grid_and_action_alignment.css": [
         "PAGE-HEAD SURFACE + ACTION ALIGNMENT",
