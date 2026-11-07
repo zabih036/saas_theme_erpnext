@@ -1834,3 +1834,63 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	}
 }
 /* ===== END HOME V8 ===== */
+
+
+/* Home summary tiles: consistent modern surface and compact typography. */
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi,
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi-primary {
+	background: linear-gradient(115deg, #174783 0%, #2065ba 100%) !important;
+	border: 1px solid rgba(21, 66, 131, .48) !important;
+	border-radius: 15px !important;
+	min-height: 135px !important;
+	padding: 14px 16px 13px !important;
+	color: #ffffff !important;
+	box-shadow: 0 2px 9px rgba(16, 67, 131, .11) !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi:hover {
+	border-color: rgba(20, 65, 130, .60) !important;
+	box-shadow: 0 5px 14px rgba(16, 67, 131, .16) !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi > strong {
+	font-size: clamp(18px, 1.35vw, 22px) !important;
+	line-height: 1.22 !important;
+	letter-spacing: -.015em !important;
+	font-weight: 730 !important;
+	margin-top: 7px !important;
+	color: #ffffff !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-kpi-top,
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-kpi-top span {
+	font-size: 11.5px !important;
+	color: rgba(255, 255, 255, .88) !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi small {
+	margin-top: 6px !important;
+	color: rgba(255, 255, 255, .82) !important;
+	font-size: 10.5px !important;
+	line-height: 1.45 !important;
+	opacity: 1 !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-kpi-top i {
+	width: 33px !important;
+	height: 33px !important;
+	border-radius: 10px !important;
+	background: rgba(255, 255, 255, .13) !important;
+	color: #ffffff !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-kpi-top i svg {
+	color: #ffffff !important;
+	stroke: #ffffff !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-delta {
+	color: #d0f7e8 !important;
+	font-size: 10.5px !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi .st-dash-delta em {
+	color: rgba(255, 255, 255, .78) !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi,
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v8 .st-dash-kpi-primary {
+	background: linear-gradient(115deg, #173a72 0%, #1b4b91 100%) !important;
+	border-color: rgba(86, 139, 209, .38) !important;
+}
