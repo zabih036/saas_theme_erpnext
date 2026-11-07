@@ -59,7 +59,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Child-table visual baseline | `saas_theme/public/css/child_table_precision_v5.css` / `saas_theme/public/js/child_table_precision_v5.js` | Child-table rows, controls and Configure Columns behavior. |
 | Expanded child-row editor, Link Selector, popup portal lifecycle, form-tab stability | `saas_theme/public/js/interaction_finish_v2.js` | **Authoritative final interaction controller.** Do not introduce another controller for these behaviors. |
 | Final child-row/popup/menu/tab CSS and stacking contract | `saas_theme/public/css/ui_consolidation_v7.css` | **Authoritative final CSS stability layer.** Only cross-layer conflicts belong here. |
-| Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_stacking_v3.css` | Owns the current PR #53 visibility compatibility fix. |
+| Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_stacking_fix.css` | Owns the original v2 + v3 overlay/visibility compatibility rules, preserving PR #53. |
 | Inline editable-grid Item/Warehouse popup geometry | `saas_theme/public/js/inline_grid_link_popup_anchor_v5.js` | Owns the PR #52/#53 width/scroll correction. Do not create another popup-position controller. |
 | User menu / Theme Switcher | `saas_theme/public/js/user_theme_menu.js` | User-menu behavior. Also bootstraps required late precision assets; preserve loader order. |
 | Form sidebar persistence | `saas_theme/public/js/form_sidebar_persistence.js` | Sidebar preference/toggle. Its current inline-grid compatibility loader order is intentional. |
@@ -77,7 +77,7 @@ These files remain because they still contribute rules or behavior to the curren
 
 - `grid_and_action_alignment.css`
 - `child_row_editor_finish.css`
-- `overlay_stacking_fix.css`
+- `overlay_stacking_fix.css` (now contains the exact adjacent v2 + v3 overlay rules)
 - `interaction_finish_v2.css`
 - `global_popup_polish_v3.css` (now includes the original adjacent compact autocomplete/form-gap v4 CSS block)
 - `stability_refinement_v3.css` (now contains the original v3 + v4 CSS blocks) / `.js`
@@ -201,6 +201,27 @@ native patches, and registration order remain exactly as before. Only consider
 removing this layer after browser parity tests on live light/dark Desk,
 Form, List, Report, and mobile pages prove the new owner equivalent.
 
+#### Phase 3E — Overlay stacking CSS parity bundle
+
+The adjacent hook styles `overlay_stacking_fix.css` and
+`overlay_stacking_v3.css` shared the same child-row and overlay ownership.
+They are mechanically consolidated with **no changes to selectors, values,
+media queries, variables or relative cascade order**:
+
+- Append the complete original v3 stylesheet after a single newline in
+  `overlay_stacking_fix.css`; remove only the redundant v3 hook and file.
+- Keep the surviving stylesheet at the original position between
+  `child_row_editor_finish.css` and `interaction_finish_v2.css`,
+  cache-bumped to `v=3`. Child-row, Link Selector and modal stacking rules
+  preserve their original order.
+- `scripts/validate_phase3e_overlay_bundle.py` checks exact v2/v3 Git blob
+  IDs, CSS boundary/order, hooks and absence of legacy dynamic loaders.
+- Retire the old filename in the architecture validator and preserve runtime
+  guards for child-row portal visibility on the combined file.
+- No JavaScript event logic or `ui_consolidation_v7.css` late reinjection
+  is moved. Live light/dark and modal/child-row browser smoke tests remain
+  required before production.
+
 #### Phase 3D — Popup and autocomplete CSS parity bundle
 
 This is a deliberately mechanical consolidation of two **adjacent, hook-loaded**
@@ -288,7 +309,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix report filter behavior/alignment logic” → `ui_precision_v6_2.js`
 - “Fix Stock Ledger / General Ledger DataTable header/filter alignment” → `ui_precision_v6.css` + `ui_precision_v6_2.css` (input styling only, never force widths on `.dt-cell__content`) and `ui_precision_v6_2.js` (remove legacy inline geometry; preserve DataTable column sizing). `scripts/test_report_filter_geometry.js` guards this.
 - “Change child-table row visuals” → `child_table_precision_v5.css`
-- “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_v3.css` only for stacking/visibility compatibility
+- “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_fix.css` only for stacking/visibility compatibility
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
