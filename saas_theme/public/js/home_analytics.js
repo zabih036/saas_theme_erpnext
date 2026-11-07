@@ -119,14 +119,15 @@
 	function kpi_card(key, title, icon_name, primary = false) {
 		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
 			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${kpi_icon(icon_name)}</i></div>
-			<strong data-kpi-value="${esc(key)}">—</strong>
+			<div class="st-kpi-value-row"><strong data-kpi-value="${esc(key)}">—</strong><span hidden class="st-kpi-sparkline" data-kpi-mini="${esc(key)}"></span></div>
 			<div data-kpi-delta="${esc(key)}"></div>
 			<small data-kpi-note="${esc(key)}"></small>
 		</article>`;
 	}
 
 	function dashboard_html() {
-		return `<section class="st-dashboard-v5 st-dashboard-v8">
+		return `<section class="st-dashboard-v5 st-dashboard-v8 st-dashboard-v9">
+			<div class="st-dashboard-section-title"><div><span class="st-dashboard-eyebrow">${__("BUSINESS OVERVIEW")}</span><h2>${__("Your financial snapshot")}</h2></div><small>${__("Key figures for your selected company")}</small></div>
 			<div class="st-dash-kpis">
 				${kpi_card("revenue", "Revenue", "trending-up", true)}
 				${kpi_card("expenses", "Expenses", "credit-card")}
@@ -139,13 +140,14 @@
 				${kpi_card("receivables", "Receivables", "arrow-down-left")}
 				${kpi_card("payables", "Payables", "arrow-up-right")}
 			</div>
+			<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("ANALYTICS")}</span><h2>${__("Performance & activity")}</h2></div><small>${__("Six-month view where available")}</small></div>
 			<div class="st-dash-insights">
 				<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
-					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend" data-trend-legend></div></div>
+					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
 					<div class="st-dash-chart" data-dashboard-chart="trend"></div>
 				</article>
 				<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
-					<div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Submitted invoices by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
+					<div class="st-dash-card-head"><div><strong>${__("Sales Activity")}</strong><small>${__("Submitted invoices · weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
 					<div class="st-sales-heatmap" data-sales-heatmap></div>
 				</article>
 			</div>
@@ -155,8 +157,7 @@
 					<div class="st-invoice-status" data-invoice-status></div>
 				</article>
 				<article class="st-dash-card st-dash-activity-card">
-					<div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Document audit events you can view")}</small></div></div>
-					<div class="st-activity-summary"></div>
+					<div class="st-dash-card-head"><div><strong>${__("Recent Document Changes")}</strong><small>${__("Latest Version history · documents you can access")}</small></div><div class="st-activity-summary"></div></div>
 					<div class="st-activity-list"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
 				</article>
 			</div>
