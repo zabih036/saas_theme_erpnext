@@ -24,7 +24,7 @@ const chart=vm.runInNewContext(chartSrc+
     esc:escapeHtml,__:translate,money:(v)=>"AFN "+Math.round(v)
 });
 for(const needle of ["st-v9-trend-chart","st-dash-chart-line revenue",
-    "st-dash-chart-line expenses","st-dash-chart-area revenue","st-v9-trend-purple",
+    "st-dash-chart-line expenses","st-dash-chart-area revenue","st-home-trend-primary",
     "May","Oct","AFN 340"]) assert.ok(chart.view.includes(needle),needle);
 assert.doesNotMatch(chart.view,/NaN|undefined|st-dash-bar/);
 assert.match(chart.spark,/st-v9-kpi-spark/);
