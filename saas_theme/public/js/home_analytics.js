@@ -119,14 +119,15 @@
 	function kpi_card(key, title, icon_name, primary = false) {
 		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
 			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${kpi_icon(icon_name)}</i></div>
-			<strong data-kpi-value="${esc(key)}">—</strong>
+			<div class="st-kpi-value-row"><strong data-kpi-value="${esc(key)}">—</strong><span hidden class="st-kpi-sparkline" data-kpi-mini="${esc(key)}"></span></div>
 			<div data-kpi-delta="${esc(key)}"></div>
 			<small data-kpi-note="${esc(key)}"></small>
 		</article>`;
 	}
 
 	function dashboard_html() {
-		return `<section class="st-dashboard-v5 st-dashboard-v8">
+		return `<section class="st-dashboard-v5 st-dashboard-v8 st-dashboard-v9">
+			<div class="st-dashboard-section-title"><div><span class="st-dashboard-eyebrow">${__("BUSINESS OVERVIEW")}</span><h2>${__("Your financial snapshot")}</h2></div><small>${__("Key figures for your selected company")}</small></div>
 			<div class="st-dash-kpis">
 				${kpi_card("revenue", "Revenue", "trending-up", true)}
 				${kpi_card("expenses", "Expenses", "credit-card")}
@@ -139,13 +140,14 @@
 				${kpi_card("receivables", "Receivables", "arrow-down-left")}
 				${kpi_card("payables", "Payables", "arrow-up-right")}
 			</div>
+			<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("ANALYTICS")}</span><h2>${__("Performance & activity")}</h2></div><small>${__("Six-month view where available")}</small></div>
 			<div class="st-dash-insights">
 				<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
-					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend" data-trend-legend></div></div>
+					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
 					<div class="st-dash-chart" data-dashboard-chart="trend"></div>
 				</article>
 				<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
-					<div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Submitted invoices by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
+					<div class="st-dash-card-head"><div><strong>${__("Sales Activity")}</strong><small>${__("Submitted invoices · weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
 					<div class="st-sales-heatmap" data-sales-heatmap></div>
 				</article>
 			</div>
@@ -155,8 +157,7 @@
 					<div class="st-invoice-status" data-invoice-status></div>
 				</article>
 				<article class="st-dash-card st-dash-activity-card">
-					<div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Document audit events you can view")}</small></div></div>
-					<div class="st-activity-summary"></div>
+					<div class="st-dash-card-head"><div><strong>${__("Recent Document Changes")}</strong><small>${__("Latest Version history · documents you can access")}</small></div><div class="st-activity-summary"></div></div>
 					<div class="st-activity-list"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
 				</article>
 			</div>
@@ -167,33 +168,77 @@
 		</section>`;
 	}
 
+	function line_points(values, width, height, low, high, left = 0, top = 0) {
+		const range = Math.max(1, high - low);
+		const dx = values.length > 1 ? width / (values.length - 1) : 0;
+		return values.map((raw, index) => ({
+			x: left + index * dx,
+			y: top + (high - Number(raw || 0)) / range * height,
+		}));
+	}
+
+	function smooth_line_path(points) {
+		if (!points.length) return "";
+		return points.slice(1).reduce((d, point, i) => {
+			const last = points[i], mid = (last.x + point.x) / 2;
+			return d + ` C ${mid.toFixed(2)} ${last.y.toFixed(2)}, ${mid.toFixed(2)} ${point.y.toFixed(2)}, ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+		}, `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`);
+	}
+
+	function kpi_sparkline(values) {
+		if (!Array.isArray(values) || values.length < 2) return "";
+		const clean = values.map((raw) => Number(raw || 0));
+		if (!clean.every(Number.isFinite)) return "";
+		const lo = Math.min(...clean), hi = Math.max(...clean);
+		const points = line_points(clean, 90, 30, lo - Math.max(1, (hi - lo) * .18),
+			hi + Math.max(1, (hi - lo) * .18), 2, 2);
+		return `<svg class="st-v9-kpi-spark" viewBox="0 0 94 34" aria-hidden="true" focusable="false"><path d="${smooth_line_path(points)}"/></svg>`;
+	}
+
 	function trend_chart(data) {
-		const labels = data?.labels || [];
+		const labels = Array.isArray(data?.labels) ? data.labels : [];
 		const series = [
 			{ key: "revenue", title: __("Revenue"), values: data?.revenue },
 			{ key: "expenses", title: __("Expenses"), values: data?.expenses },
-		].filter((item) => Array.isArray(item.values));
+		].filter((item) => Array.isArray(item.values) &&
+			item.values.length === labels.length &&
+			item.values.every((value) => Number.isFinite(Number(value))));
 		if (!labels.length || !series.length) return "";
-		const values = series.flatMap((item) => item.values.map(Number).filter(Number.isFinite));
-		if (!values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No posted activity for this period.")}</div>`;
-		const width = 760, height = 280, left = 56, right = 18, top = 16, bottom = 38;
+		const all = series.flatMap((item) => item.values.map(Number));
+		if (!all.length) return "";
+		const width = 800, height = 284, left = 76, right = 22, top = 20, bottom = 42;
 		const plotW = width - left - right, plotH = height - top - bottom;
-		const max = Math.max(1, ...values), slot = plotW / labels.length;
-		const barWidth = Math.min(27, slot * .27);
-		const grid = [0, .25, .5, .75, 1].map((ratio) => {
+		const minValue = Math.min(0, ...all), maxValue = Math.max(0, ...all);
+		const padding = Math.max(1, (maxValue - minValue) * .13);
+		const lo = minValue < 0 ? minValue - padding : 0;
+		const hi = maxValue + padding;
+		const ticks = [0, .25, .5, .75, 1];
+		const grid = ticks.map((ratio) => {
 			const y = top + plotH - ratio * plotH;
-			return `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left - 8}" y="${y + 3}" text-anchor="end" class="st-dash-axis">${esc(money(max * ratio))}</text>`;
+			const value = lo + (hi - lo) * ratio;
+			return `<line x1="${left}" x2="${width - right}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}" class="st-dash-grid-line"/>
+				<text x="${left - 11}" y="${(y + 3).toFixed(2)}" text-anchor="end" class="st-dash-axis">${esc(money(value))}</text>`;
 		}).join("");
-		const bars = labels.map((label, index) => {
-			const center = left + slot * (index + .5);
-			return series.map((item, si) => {
-				const val = Number(item.values[index] || 0);
-				const h = Math.max(0, val / max * plotH);
-				const x = center + (si - (series.length - 1) / 2) * (barWidth + 6) - barWidth / 2;
-				return `<rect x="${x}" y="${top + plotH - h}" width="${barWidth}" height="${h}" rx="5" class="st-dash-bar ${item.key}"><title>${esc(label)} ${esc(item.title)}: ${esc(money(val))}</title></rect>`;
-			}).join("") + `<text x="${center}" y="${height - 12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
+		const months = labels.map((label, i) => {
+			const x = left + (labels.length === 1 ? plotW / 2 : (i * plotW / (labels.length - 1)));
+			return `<text x="${x.toFixed(2)}" y="${height - 13}" text-anchor="middle" class="st-dash-axis st-dash-month">${esc(label)}</text>`;
 		}).join("");
-		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expense totals by month"))}">${grid}${bars}</svg>`;
+		const lines = series.map((item) => {
+			const points = line_points(item.values, plotW, plotH, lo, hi, left, top);
+			const path = smooth_line_path(points);
+			const baseline = top + (hi / (hi - lo)) * plotH;
+			const bottomY = Math.min(top + plotH, Math.max(top, baseline));
+			const areaPath = `${path} L ${points[points.length - 1].x} ${bottomY} L ${points[0].x} ${bottomY} Z`;
+			const circles = points.map((point, index) =>
+				`<circle cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="4" class="st-dash-chart-dot ${item.key}"><title>${esc(labels[index])} · ${esc(item.title)}: ${esc(money(item.values[index]))}</title></circle>`
+			).join("");
+			return `<path class="st-dash-chart-area ${item.key}" d="${areaPath}"/>
+				<path class="st-dash-chart-line ${item.key}" d="${path}"/>${circles}`;
+		}).join("");
+		return `<svg class="st-dash-chart-svg st-v9-trend-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expenses by month"))}">
+			<defs><linearGradient id="st-v9-trend-purple" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity=".24"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity=".015"/></linearGradient>
+			<linearGradient id="st-v9-trend-cyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity=".14"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
+			${grid}${months}${lines}</svg>`;
 	}
 
 	function production_chart(data) {
@@ -230,14 +275,29 @@
 	}
 
 	function activity_item_html(item) {
-		const meta = activity_meta(item.activity_type), doctype = item.reference_doctype || __("Document"), name = item.reference_name || item.subject || "", actor = item.actor || __("User");
-		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small>${item.description ? `<small class="st-activity-description">${esc(item.description)}</small>` : ""}</span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
+		// Source is Version only. Render who/what/when separately instead of
+		// compressing long document IDs and metadata into a single text line.
+		const doctype = item.reference_doctype || __("Document");
+		const name = item.reference_name || "";
+		const actor = item.actor || __("User");
+		const description = item.description || __("Updated document");
+		const date = item.creation || "";
+		return `<a class="st-activity-item st-v9-activity-entry" href="${esc(form_route(doctype, name))}" title="${esc(doctype + " · " + name)}">
+			<span class="st-activity-avatar" aria-hidden="true">${esc(initials(actor))}</span>
+			<span class="st-activity-copy">
+				<span class="st-v9-activity-top"><strong class="st-v9-activity-actor">${esc(actor)}</strong><time datetime="${esc(date)}">${esc(relative_time(date))}</time></span>
+				<span class="st-v9-activity-document"><b>${esc(doctype)}</b><span>${esc(name)}</span></span>
+				<span class="st-v9-activity-detail">${esc(description)}</span>
+			</span>
+			<span class="st-v9-activity-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+		</a>`;
 	}
 
 	function activity_summary_html(summary) {
-		return [["updated", __("Document updates"), "updated"]]
-			.filter(([key]) => Number(summary?.[key] || 0) > 0)
-			.map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary[key])}</strong><small>${esc(label)}</small></div></div>`).join("");
+		const count = Number(summary?.updated || 0);
+		return count > 0
+			? `<span class="st-v9-activity-counter"><i aria-hidden="true"></i>${number(count)} ${esc(__("updates"))}</span>`
+			: "";
 	}
 
 	async function load_dashboard($home, token) {
@@ -265,6 +325,14 @@
 					.filter(([key]) => Array.isArray(data.trend[key]))
 					.map(([key, label]) => `<span><i class="${key}"></i>${esc(label)}</span>`).join("");
 				$home.find("[data-trend-legend]").html(legend);
+				// Tiny historical charts use exactly the same permitted totals
+				// as the large chart; omit when the source was not authorized.
+				for (const key of ["revenue", "expenses"]) {
+					if (!kpis[key] || !Array.isArray(data.trend[key])) continue;
+					const svg = kpi_sparkline(data.trend[key]);
+					if (svg) $home.find(`[data-kpi-mini="${key}"]`).html(svg).removeAttr("hidden");
+				}
+
 			}
 			if (data.heatmap) {
 				$home.find('[data-dashboard-panel="heatmap"]').removeAttr("hidden");

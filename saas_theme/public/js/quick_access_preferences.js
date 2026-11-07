@@ -10,8 +10,7 @@
 	window.__saas_theme_quick_access_preferences__ = true;
 
 	const STORAGE_PREFIX = "saas_theme.quick_access_sidebars_v1";
-	const MAX_ITEMS = 8;
-	let refresh_timer = null;
+		let refresh_timer = null;
 	let observer = null;
 	let applying = false;
 
@@ -31,7 +30,7 @@
 			const raw = localStorage.getItem(storage_key());
 			if (raw === null) return null;
 			const value = JSON.parse(raw);
-			return Array.isArray(value) ? value.filter(Boolean).slice(0, MAX_ITEMS) : null;
+			return Array.isArray(value) ? [...new Set(value.filter((name) => typeof name === "string" && name))] : null;
 		} catch (error) {
 			return null;
 		}
@@ -39,7 +38,7 @@
 
 	function write_selection(names) {
 		try {
-			localStorage.setItem(storage_key(), JSON.stringify(names.slice(0, MAX_ITEMS)));
+			localStorage.setItem(storage_key(), JSON.stringify([...new Set(names)]));
 		} catch (error) {
 			// Quick Access remains usable with defaults when storage is unavailable.
 		}
@@ -123,12 +122,12 @@
 			used.add(item.name);
 			chosen.push(item.name);
 		}
-		return chosen.slice(0, MAX_ITEMS);
+		return chosen;
 	}
 
 	function selected_items(items, names) {
 		const by_name = new Map(items.map((item) => [item.name, item]));
-		return (names || []).map((name) => by_name.get(name)).filter(Boolean).slice(0, MAX_ITEMS);
+		return (names || []).map((name) => by_name.get(name)).filter(Boolean);
 	}
 
 	function ensure_edit_button($section) {
@@ -153,11 +152,12 @@
 		const saved = read_selection();
 		// Never restore a stale Workspace HTML block or role-restricted link.
 		const permitted = selected_items(items, saved === null ? recommended_names(items) : saved);
-		const chosen = permitted.length ? permitted : selected_items(items, recommended_names(items));
+		const chosen = permitted; // An explicit empty selection is intentional.
 		const signature = chosen.map((item) => item.name).join("|");
 		if ($grid.attr("data-st-quick-signature") === signature &&
 			$grid.attr("data-st-quick-mode") === "sidebars") return;
-		$grid.html(chosen.map(quick_card).join(""));
+		$grid.html(chosen.length ? chosen.map(quick_card).join("")
+			: `<div class="st-quick-empty-selection"><strong>${esc(__("No modules selected"))}</strong><span>${esc(__("Use Customize to choose your sidebar shortcuts."))}</span></div>`);
 		$grid.attr("data-st-quick-mode", "sidebars").attr("data-st-quick-signature", signature);
 	}
 
@@ -176,7 +176,18 @@
 			return `<label class="st-quick-picker-option" data-search="${search}"><input type="checkbox" class="st-quick-picker-check" value="${esc(item.name)}"${checked}><span class="st-quick-picker-icon">${icon(item.icon)}</span><span class="st-quick-picker-copy"><strong>${esc(__(item.title || item.name))}</strong><small>${esc(__(item.module || __("Sidebar")))}</small></span></label>`;
 		}).join("");
 
-		return `<div class="st-quick-picker"><div class="st-quick-picker-toolbar"><label class="st-quick-picker-search"><span>${search_icon()}</span><input type="search" class="form-control" autocomplete="off" placeholder="${esc(__("Search sidebar modules"))}"></label><button type="button" class="btn btn-default st-quick-picker-reset">${__("Recommended")}</button></div><div class="st-quick-picker-meta"><span>${__("Select up to {0} modules", [MAX_ITEMS])}</span><strong class="st-quick-picker-count"></strong></div><div class="st-quick-picker-options">${rows}</div></div>`;
+		return `<div class="st-quick-picker">
+			<div class="st-quick-picker-toolbar">
+				<label class="st-quick-picker-search"><span>${search_icon()}</span><input type="search" class="form-control" autocomplete="off" placeholder="${esc(__("Search sidebar modules"))}"></label>
+				<div class="st-quick-picker-actions" role="group" aria-label="${esc(__("Selection actions"))}">
+					<button type="button" class="btn btn-default st-quick-picker-select-all">${__("Select All")}</button>
+					<button type="button" class="btn btn-default st-quick-picker-unselect-all">${__("Unselect All")}</button>
+					<button type="button" class="btn btn-default st-quick-picker-reset">${__("Recommended")}</button>
+				</div>
+			</div>
+			<div class="st-quick-picker-meta"><span>${__("Choose sidebar modules for Quick Access")}</span><strong class="st-quick-picker-count" aria-live="polite"></strong></div>
+			<div class="st-quick-picker-options">${rows}</div>
+		</div>`;
 	}
 
 	function open_picker($home) {
@@ -197,13 +208,8 @@
 					.find(".st-quick-picker-check:checked")
 					.map(function () { return String(this.value || ""); })
 					.get()
-					.filter(Boolean)
-					.slice(0, MAX_ITEMS);
+					.filter((name) => items.some((item) => item.name === name));
 
-				if (!names.length) {
-					frappe.msgprint(__("Select at least one sidebar module for Quick Access."));
-					return;
-				}
 
 				write_selection(names);
 				dialog.hide();
@@ -219,8 +225,7 @@
 		const $count = $wrapper.find(".st-quick-picker-count");
 		const update_count = () => {
 			const count = $checks.filter(":checked").length;
-			$count.text(`${count} / ${MAX_ITEMS}`);
-			$checks.not(":checked").prop("disabled", count >= MAX_ITEMS);
+			$count.text(__("{0} of {1} selected", [count, items.length]));
 		};
 
 		$wrapper.find(".st-quick-picker-search input").on("input", function () {
@@ -231,6 +236,14 @@
 		});
 
 		$checks.on("change", update_count);
+		$wrapper.find(".st-quick-picker-select-all").on("click", () => {
+			$checks.prop("checked", true);
+			update_count();
+		});
+		$wrapper.find(".st-quick-picker-unselect-all").on("click", () => {
+			$checks.prop("checked", false);
+			update_count();
+		});
 		$wrapper.find(".st-quick-picker-reset").on("click", () => {
 			const recommended = new Set(recommended_names(items));
 			$checks.each(function () { this.checked = recommended.has(String(this.value || "")); });

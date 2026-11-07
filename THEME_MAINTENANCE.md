@@ -292,6 +292,29 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+### Home V9 portfolio-style visuals and sidebar bulk selection
+
+- The reference-inspired Home uses the **real** ERPNext KPIs: eight pastel
+  snapshot cards (revenue, expenses, customers, suppliers, stock, cash,
+  receivables, payables), not invented stock prices or growth figures.
+- The six-month Revenue & Expenses view is a purple/cyan SVG line/area chart.
+  Its axes, points, tooltips and the two tiny KPI sparklines use the
+  permission-available `trend` arrays. If a metric is unavailable, omit it.
+- Production remains an independently sourced manufacturing-run count chart;
+  Sales Activity remains a weekday/time heatmap; paid/unpaid invoice figures
+  retain their factual values. Home colors and layout belong to `home.css`.
+- Version-only recent changes use a responsive two-column card/timeline
+  presentation when space allows, displaying actor, document, time and safe
+  change counts, with no Version values or unauthorized documents.
+- Quick Access Customize uses the same server-approved list as the left
+  sidebar. `Select All` checks every approved module, `Unselect All` checks
+  none, and `Recommended` keeps the existing curated subset. The previous
+  eight-item limit is intentionally removed; Quick Access scrolls vertically.
+  Persisting `[]` keeps it empty and renders a Customize prompt rather than
+  restoring recommendations. The modal never offers disallowed modules.
+- Regression checks: `node scripts/test_home_visuals_and_picker.js` covers
+  chart source values, escaped Version markup, action buttons and persistence.
+  Continue the existing permission/role, architecture and report tests.
 ### Home Quick Access and Version log (role-safe refinement)
 
 - Quick Access sidebar entries and the Customize modal share `home_dashboard.get_quick_access()`. The modal must **never** independently query Workspace pages or reinstate the legacy Workspace selection key.
