@@ -28,7 +28,7 @@ for (const [name, css] of [["v6", css6], ["v6.2", css62]]) {
 // The same selector also appears in a combined dark-mode rule. Assert the
 // explicit padding-reset declaration, not the first/last unrelated block.
 assert.match(css62,
-    /#page-query-report \\.report-wrapper \\.dt-row-filter > \\.dt-cell\\s*\\{\\s*padding\\s*:\\s*0\\s*!important/,
+    /#page-query-report \.report-wrapper \.dt-row-filter > \.dt-cell\s*\{\s*padding\s*:\s*0\s*!important/,
     "Outer filter cell must have zero padding");
 assert.ok(!js.includes("function sync_filter_cell("), "Old width synchronizer must not return");
 
