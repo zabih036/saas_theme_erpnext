@@ -275,14 +275,29 @@
 	}
 
 	function activity_item_html(item) {
-		const meta = activity_meta(item.activity_type), doctype = item.reference_doctype || __("Document"), name = item.reference_name || item.subject || "", actor = item.actor || __("User");
-		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small>${item.description ? `<small class="st-activity-description">${esc(item.description)}</small>` : ""}</span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
+		// Source is Version only. Render who/what/when separately instead of
+		// compressing long document IDs and metadata into a single text line.
+		const doctype = item.reference_doctype || __("Document");
+		const name = item.reference_name || "";
+		const actor = item.actor || __("User");
+		const description = item.description || __("Updated document");
+		const date = item.creation || "";
+		return `<a class="st-activity-item st-v9-activity-entry" href="${esc(form_route(doctype, name))}" title="${esc(doctype + " · " + name)}">
+			<span class="st-activity-avatar" aria-hidden="true">${esc(initials(actor))}</span>
+			<span class="st-activity-copy">
+				<span class="st-v9-activity-top"><strong class="st-v9-activity-actor">${esc(actor)}</strong><time datetime="${esc(date)}">${esc(relative_time(date))}</time></span>
+				<span class="st-v9-activity-document"><b>${esc(doctype)}</b><span>${esc(name)}</span></span>
+				<span class="st-v9-activity-detail">${esc(description)}</span>
+			</span>
+			<span class="st-v9-activity-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+		</a>`;
 	}
 
 	function activity_summary_html(summary) {
-		return [["updated", __("Document updates"), "updated"]]
-			.filter(([key]) => Number(summary?.[key] || 0) > 0)
-			.map(([key, label, tone]) => `<div class="st-activity-stat"><span class="st-activity-stat-dot st-activity-${tone}"></span><div><strong>${Number(summary[key])}</strong><small>${esc(label)}</small></div></div>`).join("");
+		const count = Number(summary?.updated || 0);
+		return count > 0
+			? `<span class="st-v9-activity-counter"><i aria-hidden="true"></i>${number(count)} ${esc(__("updates"))}</span>`
+			: "";
 	}
 
 	async function load_dashboard($home, token) {
@@ -310,6 +325,14 @@
 					.filter(([key]) => Array.isArray(data.trend[key]))
 					.map(([key, label]) => `<span><i class="${key}"></i>${esc(label)}</span>`).join("");
 				$home.find("[data-trend-legend]").html(legend);
+				// Tiny historical charts use exactly the same permitted totals
+				// as the large chart; omit when the source was not authorized.
+				for (const key of ["revenue", "expenses"]) {
+					if (!kpis[key] || !Array.isArray(data.trend[key])) continue;
+					const svg = kpi_sparkline(data.trend[key]);
+					if (svg) $home.find(`[data-kpi-mini="${key}"]`).html(svg).removeAttr("hidden");
+				}
+
 			}
 			if (data.heatmap) {
 				$home.find('[data-dashboard-panel="heatmap"]').removeAttr("hidden");
