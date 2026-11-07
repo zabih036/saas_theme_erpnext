@@ -178,7 +178,7 @@ audit_rows.update({
 activity = home.get_recent_activity(limit=9)
 assert len(activity["items"]) == 1, activity
 assert activity["items"][0]["actor"] == "bob@example.com"
-assert activity["items"][0]["description"] == "1 fields changed"
+assert activity["items"][0]["description"] == "1 field changed"
 assert activity["summary"] == {"updated": 1}
 assert "Alice" not in str(activity)
 assert "100000" not in str(activity)
@@ -188,10 +188,11 @@ assert "SECRET-1" not in str(activity)
 # allowed role can see that sidebar in Home Quick Access AND its modal.
 class FakeMeta:
     def __init__(self, fields):
-        self.fields = fields
+        self._map = fields if isinstance(fields, dict) else {f.fieldname: f for f in fields}
+        self.fields = list(self._map.values())
 
     def get_field(self, name):
-        return self.fields.get(name)
+        return self._map.get(name)
 
 
 meta = {
@@ -199,7 +200,9 @@ meta = {
         fieldtype="Table", options="Sidebar Allowed Role",
     )}),
     "Workspace Sidebar": FakeMeta({}),
-    "Sidebar Allowed Role": FakeMeta({}),
+    "Sidebar Allowed Role": FakeMeta([types.SimpleNamespace(
+        fieldname="role", fieldtype="Link", options="Role",
+    )]),
 }
 frappe.get_meta = lambda doctype: meta[doctype]
 frappe.db = types.SimpleNamespace(exists=lambda doctype, name: doctype == "DocType")
