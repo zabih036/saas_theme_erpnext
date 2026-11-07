@@ -92,7 +92,17 @@ assert.ok(analytics.includes("if (data.production)"),
           "Production chart must be optional");
 assert.ok(analytics.includes("home_currency = data.currency"),
           "Financial figures must use their reporting company's currency");
-assert.ok(css.includes("background: linear-gradient(115deg, #174783") &&
-    css.includes("font-size: clamp(18px, 1.35vw, 22px)"),
-    "All Home financial cards must use compact typography and a uniform blue surface");
+assert.ok(dashboard.includes("st-dashboard-v9") &&
+    dashboard.includes("st-kpi-value-row") &&
+    dashboard.includes("st-dashboard-section-title"),
+    "Modern portfolio layout and KPI mini-trend slots must be present");
+assert.ok(css.includes('[data-dashboard-kpi="revenue"]') &&
+    css.includes('[data-dashboard-kpi="expenses"]') &&
+    css.includes("linear-gradient(115deg, #cbb6ff, #e6dcff)") &&
+    css.includes("font-size: clamp(18px, 1.5vw, 24px)"),
+    "Use differentiated pastel KPI surfaces with compact financial values");
+assert.ok(css.includes(".st-dash-chart-line.revenue") &&
+    css.includes(".st-v9-activity-entry") &&
+    css.includes(".st-quick-picker-select-all"),
+    "Finance charts, Version activity and modal actions must have owned styling");
 console.log("Home UI passed: sidebar navigation, permission-hidden cards, audit trail and production chart.");
