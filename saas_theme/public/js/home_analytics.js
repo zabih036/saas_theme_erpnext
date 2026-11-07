@@ -267,7 +267,7 @@
 				<path class="st-dash-chart-line ${item.key}" d="${path}"/>${circles}`;
 		}).join("");
 		return `<svg class="st-dash-chart-svg st-v9-trend-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expenses by month"))}">
-			<defs><linearGradient id="st-v9-trend-purple" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity=".24"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity=".015"/></linearGradient>
+			<defs><linearGradient id="st-home-trend-primary" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1762ca" stop-opacity=".24"/><stop offset="100%" stop-color="#1762ca" stop-opacity=".015"/></linearGradient>
 			<linearGradient id="st-v9-trend-cyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity=".14"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
 			${grid}${months}${lines}</svg>`;
 	}
