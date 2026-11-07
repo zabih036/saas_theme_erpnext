@@ -201,6 +201,25 @@ native patches, and registration order remain exactly as before. Only consider
 removing this layer after browser parity tests on live light/dark Desk,
 Form, List, Report, and mobile pages prove the new owner equivalent.
 
+#### Phase 3F — Audit and remove only genuinely dead runtime assets
+
+`scripts/audit_runtime_asset_references.py` checks all active Frappe
+`app_include_css`/`app_include_js` and web include references, direct
+`www/login.html` stylesheet imports, dynamic JavaScript asset injections and
+CSS asset URLs. It fails if any CSS/JS file in the public folders has no
+runtime entry point or a runtime reference points to a missing file.
+
+The audit deliberately proves that **versioned active files are not dead**:
+`ui_precision_v4.js` still repairs the header/profile; `login.css` is
+loaded by the custom login page; the final `ui_consolidation_v7.css` is
+intentionally in both hooks and a late repositioning controller. These must
+not be deleted solely because the version in their name looks old.
+
+After Phase 3D and 3E, the two redundant adjacent v4/v3 CSS files are gone.
+**No further deletion is approved without proving that the file's runtime
+behavior has moved and that there are no remaining references.** The audit
+runs in CI so future feature PRs cannot accidentally orphan a live asset.
+
 #### Phase 3E — Overlay stacking CSS parity bundle
 
 The adjacent hook styles `overlay_stacking_fix.css` and
