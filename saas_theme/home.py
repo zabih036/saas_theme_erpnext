@@ -364,94 +364,151 @@ def get_dashboard_overview() -> dict:
     return result
 
 
+
+def _sidebar_role_field_names(table_field):
+    """Find actual Role links in the custom child table without guessing its name."""
+    names = ["role", "allowed_role", "custom_role", "role_name", "custom_allowed_role"]
+    if not table_field or not getattr(table_field, "options", None):
+        return names
+    child = frappe.get_meta(table_field.options)
+    names.extend(
+        field.fieldname for field in child.fields
+        if field.fieldtype == "Link" and field.options == "Role"
+    )
+    return list(dict.fromkeys(names))
+
+
+def _sidebar_allowed_roles(doc, field_names):
+    rows = doc.get("custom_allowed_roles") or []
+    if not rows:
+        return None  # An empty role table is unrestricted.
+    allowed = set()
+    for row in rows:
+        for fieldname in field_names:
+            value = row.get(fieldname) if hasattr(row, "get") else None
+            if value:
+                allowed.add(str(value).strip())
+    # A configured but malformed nonempty role table denies access.
+    return allowed
+
+
+@frappe.whitelist()
+def get_home_sidebar_access(names=None):
+    """Return only requested sidebars permitted by the custom allowed-roles table.
+
+    The boot payload is already Frappe permission-filtered. This second check
+    handles a site's custom_allowed_roles child table, which the boot payload
+    does not carry. The client intersects both sources and never exposes a
+    sidebar before this response arrives.
+    """
+    user = frappe.session.user
+    if not user or user == "Guest":
+        return {"allowed": []}
+    if isinstance(names, str):
+        try:
+            names = json.loads(names)
+        except (TypeError, ValueError):
+            return {"allowed": []}
+    if not isinstance(names, list):
+        return {"allowed": []}
+    names = list(dict.fromkeys(str(name) for name in names if isinstance(name, str) and name.strip()))
+    if not names or len(names) > 100 or any(len(name) > 180 for name in names):
+        return {"allowed": []}
+    if user == "Administrator":
+        return {"allowed": names}
+
+    try:
+        user_roles = set(frappe.get_roles(user))
+        allowed = set(names)
+        for doctype in ("Sidebar", "Workspace Sidebar"):
+            if not frappe.db.exists("DocType", doctype):
+                continue
+            meta = frappe.get_meta(doctype)
+            table_field = meta.get_field("custom_allowed_roles")
+            if not table_field or table_field.fieldtype != "Table":
+                continue
+            fields = _sidebar_role_field_names(table_field)
+            rows = frappe.get_all(
+                doctype, fields=["name"],
+                filters=[["name", "in", names]], limit_page_length=len(names) + 1,
+            )
+            for row in rows:
+                doc = frappe.get_doc(doctype, row.name)
+                configured = _sidebar_allowed_roles(doc, fields)
+                if configured is not None and not (configured & user_roles):
+                    allowed.discard(row.name)
+        return {"allowed": [name for name in names if name in allowed]}
+    except Exception:
+        frappe.logger("saas_theme").warning("Home sidebar role check unavailable")
+        # A failure must not show restricted sidebars.
+        return {"allowed": []}
+
+
 @frappe.whitelist()
 def get_recent_activity(limit: int = 10) -> dict:
-    """Real document audit trail: Comments + Versions, filtered per document.
+    """Read activity from Version only, not Comment or workspace navigation.
 
-    Only safe metadata is surfaced. Version change values and private fields
-    are never included; each referenced document must pass read permission.
+    Do not expose old/new values. Version rows are filtered by the current
+    user's read permission on each referenced document.
     """
     user = frappe.session.user
     if not user or user == "Guest":
         return {"items": [], "summary": {}, "total": 0}
     limit = min(max(cint(limit) or 10, 1), 15)
-    candidates = []
-
-    # Comments record document creation, submission, cancellation, workflow
-    # transitions, attachments and assignments.
-    try:
-        comments = frappe.get_all(
-            "Comment",
-            fields=["creation", "owner", "comment_type", "comment_by",
-                    "reference_doctype", "reference_name"],
-            filters={"comment_type": ["in", list(ACTIVITY_TYPES)]},
-            order_by="creation desc",
-            limit_page_length=180,
-        )
-        for row in comments:
-            candidates.append({
-                "creation": row.creation, "actor": row.comment_by or row.owner,
-                "activity_type": row.comment_type,
-                "reference_doctype": row.reference_doctype,
-                "reference_name": row.reference_name,
-            })
-    except Exception:
-        pass
-
-    # Version is Frappe's actual field-change audit log, not recent navigation.
     try:
         versions = frappe.get_all(
-            "Version", fields=["creation", "owner", "ref_doctype", "docname", "data"],
-            order_by="creation desc", limit_page_length=180,
+            "Version",
+            fields=["creation", "owner", "ref_doctype", "docname", "data"],
+            order_by="creation desc",
+            limit_page_length=max(180, limit * 15),
         )
-        for row in versions:
-            try:
-                changes = json.loads(row.data or "{}")
-            except (ValueError, TypeError):
-                changes = {}
-            count = sum(
-                len(changes.get(key) or []) for key in ("changed", "added", "removed", "row_changed")
-            )
-            candidates.append({
-                "creation": row.creation, "actor": row.owner,
-                "activity_type": "Updated",
-                "description": _("{0} field changed").format(count) if count == 1
-                else _("{0} fields changed").format(count) if count else _("Updated document"),
-                "reference_doctype": row.ref_doctype,
-                "reference_name": row.docname,
-            })
     except Exception:
-        pass
+        return {"items": [], "summary": {}, "total": 0}
 
-    candidates.sort(key=lambda row: str(row["creation"] or ""), reverse=True)
     permission_cache = {}
     items = []
-    grouped = Counter()
-    for row in candidates:
-        doctype, name = row.get("reference_doctype"), row.get("reference_name")
+    for row in versions:
+        doctype, name = row.get("ref_doctype"), row.get("docname")
         if not doctype or not name:
             continue
-        reference = (doctype, name)
-        if reference not in permission_cache:
-            permission_cache[reference] = _can_read_reference(doctype, name, user)
-        if not permission_cache[reference]:
+        ref = (doctype, name)
+        if ref not in permission_cache:
+            permission_cache[ref] = _can_read_reference(doctype, name, user)
+        if not permission_cache[ref]:
             continue
-        kind = row.get("activity_type") or "Updated"
-        grouped[kind] += 1
+
+        try:
+            changes = json.loads(row.get("data") or "{}")
+        except (ValueError, TypeError):
+            changes = {}
+        if not isinstance(changes, dict):
+            changes = {}
+
+        changed = len(changes.get("changed") or [])
+        added = len(changes.get("added") or [])
+        removed = len(changes.get("removed") or [])
+        row_changed = len(changes.get("row_changed") or [])
+        descriptions = []
+        if changed:
+            descriptions.append(_("{0} fields changed").format(changed))
+        if added:
+            descriptions.append(_("{0} rows added").format(added))
+        if removed:
+            descriptions.append(_("{0} rows removed").format(removed))
+        if row_changed:
+            descriptions.append(_("{0} child rows changed").format(row_changed))
         items.append({
             "creation": row.get("creation"),
-            "actor": _clean_text(row.get("actor"), 90) or _("User"),
-            "activity_type": kind,
-            "description": _clean_text(row.get("description"), 90),
+            "actor": _clean_text(row.get("owner"), 90) or _("User"),
+            "activity_type": "Updated",
+            "description": ", ".join(descriptions) or _("Updated document"),
             "reference_doctype": doctype,
             "reference_name": name,
         })
         if len(items) >= limit:
             break
-    summary = {
-        "created": grouped["Created"],
-        "updated": grouped["Updated"] + grouped["Edit"] + grouped["Workflow"],
-        "submitted": grouped["Submitted"],
+    return {
+        "items": items,
+        "summary": {"updated": len(items)},
+        "total": len(items),
     }
-    summary["other"] = len(items) - sum(summary.values())
-    return {"items": items, "summary": summary, "total": len(items)}
