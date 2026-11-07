@@ -490,7 +490,7 @@ def get_recent_activity(limit: int = 10) -> dict:
         row_changed = len(changes.get("row_changed") or [])
         descriptions = []
         if changed:
-            descriptions.append(_("{0} fields changed").format(changed))
+            descriptions.append((_("1 field changed") if changed == 1 else _("{0} fields changed").format(changed)))
         if added:
             descriptions.append(_("{0} rows added").format(added))
         if removed:
