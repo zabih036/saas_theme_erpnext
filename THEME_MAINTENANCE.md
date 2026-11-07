@@ -59,7 +59,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Child-table visual baseline | `saas_theme/public/css/child_table_precision_v5.css` / `saas_theme/public/js/child_table_precision_v5.js` | Child-table rows, controls and Configure Columns behavior. |
 | Expanded child-row editor, Link Selector, popup portal lifecycle, form-tab stability | `saas_theme/public/js/interaction_finish_v2.js` | **Authoritative final interaction controller.** Do not introduce another controller for these behaviors. |
 | Final child-row/popup/menu/tab CSS and stacking contract | `saas_theme/public/css/ui_consolidation_v7.css` | **Authoritative final CSS stability layer.** Only cross-layer conflicts belong here. |
-| Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_stacking_fix.css` | Owns the original v2 + v3 overlay/visibility compatibility rules, preserving PR #53. |
+| Child-row editor visibility / modal stacking compatibility | `saas_theme/public/css/overlay_layers.css` | Owns the original v2 + v3 overlay/visibility compatibility rules, preserving PR #53. |
 | Inline editable-grid Item/Warehouse popup geometry | `saas_theme/public/js/inline_grid_link_popup_anchor_v5.js` | Owns the PR #52/#53 width/scroll correction. Do not create another popup-position controller. |
 | User menu / Theme Switcher | `saas_theme/public/js/user_theme_menu.js` | User-menu behavior. Also bootstraps required late precision assets; preserve loader order. |
 | Form sidebar persistence | `saas_theme/public/js/form_sidebar_persistence.js` | Sidebar preference/toggle. Its current inline-grid compatibility loader order is intentional. |
@@ -77,9 +77,9 @@ These files remain because they still contribute rules or behavior to the curren
 
 - `grid_and_action_alignment.css`
 - `child_row_editor_finish.css`
-- `overlay_stacking_fix.css` (now contains the exact adjacent v2 + v3 overlay rules)
+- `overlay_layers.css` (the exact former overlay v2 + v3 blocks)
 - `interaction_finish_v2.css`
-- `global_popup_polish_v3.css` (now includes the original adjacent compact autocomplete/form-gap v4 CSS block)
+- `popup_controls.css` (the exact former global-popup v3 + compact-autocomplete v4 blocks)
 - `stability_refinement_v3.css` (now contains the original v3 + v4 CSS blocks) / `.js`
 - `ui_precision_v4.js` (still active)
 - `ui_precision_v6.css` / `.js`
@@ -305,6 +305,34 @@ For each late layer:
 
 `ui_consolidation_v7.css`, `interaction_finish_v2.js`, and the current inline-grid popup compatibility fix are treated as protected stability owners until the end of this phase.
 
+### Phase 4A — Normalize the completed CSS bundles
+
+Once Phase 3D and 3E proved the entire current popup and overlay rule sets
+belong to adjacent canonical bundles, these two now-owning stylesheets were
+renamed **without editing any CSS bytes**:
+
+- `global_popup_polish_v3.css` → `popup_controls.css`.
+- `overlay_stacking_fix.css` → `overlay_layers.css`.
+
+Only their hook URLs are substituted at exactly the same positions, with
+fresh `?v=1` filenames. The original CSS rules, specificity, cascade order,
+all late-loaded assets, and the Frappe event handlers remain unchanged.
+Both retired names are blocked by the architecture validator.
+
+`scripts/validate_phase4_canonical_names.py` pins the two original
+Phase 3D/3E **bundle Git blob hashes** and validates exact bytes and load
+position, while the Phase 3D/3E scripts continue checking the historic
+sub-block integrity. The Phase 3F audit ensures all runtime paths resolve.
+
+**Still pending in Phase 4:** The other versioned JS/CSS assets are active
+and not yet migrated to single non-versioned ownership, particularly
+`stability_refinement_v3`, `ui_precision_v4.js`,
+`child_table_precision_v5`, `ui_precision_v6` / `v6_2`,
+`inline_grid_link_popup_anchor_v5`, and
+`interaction_finish_v2` / `ui_consolidation_v7`. They cannot be
+deleted or renamed as an untested batch while they contain live runtime
+guards, special asset injection timing or corrected popup behavior.
+
 ### Phase 4 — Normalize names only after code ownership is clean
 
 Renaming is the last step, not the first.
@@ -328,7 +356,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix report filter behavior/alignment logic” → `ui_precision_v6_2.js`
 - “Fix Stock Ledger / General Ledger DataTable header/filter alignment” → `ui_precision_v6.css` + `ui_precision_v6_2.css` (input styling only, never force widths on `.dt-cell__content`) and `ui_precision_v6_2.js` (remove legacy inline geometry; preserve DataTable column sizing). `scripts/test_report_filter_geometry.js` guards this.
 - “Change child-table row visuals” → `child_table_precision_v5.css`
-- “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_stacking_fix.css` only for stacking/visibility compatibility
+- “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_layers.css` only for stacking/visibility compatibility
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
