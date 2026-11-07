@@ -292,6 +292,29 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+### Home V10 — Reference-layout implementation and uniform financial cards
+
+- The Home **uses** the uploaded purple dashboard layout as an actual
+  composition: lavender page surface, functional in-page Dashboard/Analytics/
+  Activity pill navigation, two compact KPI rows, a large Revenue & Expenses
+  line chart beside Manufacturing Activity, Sales Activity stacked bars beside
+  the paid/unpaid invoice donut, and a full-width Version activity list.
+- The eight KPI cards all use the original **Bank & Treasury** ice-blue
+  gradient (`#caeaff` to `#e9f6ff`), light border, readable dark text and
+  a shared blue icon accent. Do not reintroduce eight saturated pastel colors.
+- The stacked weekday bars are the existing Sales Invoice weekday/time
+  matrix rendered as counts, not fabricated revenue, web traffic or activity.
+  Time buckets determine segment heights and hover labels.
+- Version-only activity remains permission-filtered on the server. The
+  front end displays a **single-column, fixed-height scrolling list** with
+  compact rows and a persistent header; no multi-column activity cards.
+- The page navigation buttons move to real dashboard sections. The Analytics
+  button remains hidden until at least one authorized report panel is loaded.
+- Do not change Frappe/ERPNext Form, List, Reports, Quick Access role gates,
+  Version payload fields or accounting calculations as part of this polish.
+- Tests: `node scripts/test_home_v10_layout.js` for palette, data-grounded
+  stacked bars, actual section links and Version list scroll behavior, plus
+  existing architecture, permissions, dashboard, report and stability tests.
 ### Home V9 portfolio-style visuals and sidebar bulk selection
 
 - The reference-inspired Home uses the **real** ERPNext KPIs: eight pastel

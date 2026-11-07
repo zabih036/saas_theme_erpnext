@@ -126,45 +126,62 @@
 	}
 
 	function dashboard_html() {
-		return `<section class="st-dashboard-v5 st-dashboard-v8 st-dashboard-v9">
-			<div class="st-dashboard-section-title"><div><span class="st-dashboard-eyebrow">${__("BUSINESS OVERVIEW")}</span><h2>${__("Your financial snapshot")}</h2></div><small>${__("Key figures for your selected company")}</small></div>
-			<div class="st-dash-kpis">
-				${kpi_card("revenue", "Revenue", "trending-up", true)}
-				${kpi_card("expenses", "Expenses", "credit-card")}
-				${kpi_card("customers", "Active Customers", "users")}
-				${kpi_card("suppliers", "Active Suppliers", "truck")}
-			</div>
-			<div class="st-dash-financial-kpis">
-				${kpi_card("stock_value", "Stock Value", "package")}
-				${kpi_card("cash", "Bank & Treasury Cash", "landmark")}
-				${kpi_card("receivables", "Receivables", "arrow-down-left")}
-				${kpi_card("payables", "Payables", "arrow-up-right")}
-			</div>
-			<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("ANALYTICS")}</span><h2>${__("Performance & activity")}</h2></div><small>${__("Six-month view where available")}</small></div>
-			<div class="st-dash-insights">
-				<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
-					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
-					<div class="st-dash-chart" data-dashboard-chart="trend"></div>
-				</article>
-				<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
-					<div class="st-dash-card-head"><div><strong>${__("Sales Activity")}</strong><small>${__("Submitted invoices · weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
-					<div class="st-sales-heatmap" data-sales-heatmap></div>
-				</article>
-			</div>
-			<div class="st-dash-lower-grid">
-				<article hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices">
-					<div class="st-dash-card-head"><div><strong>${__("Sales Invoices")}</strong><small>${__("Paid vs unpaid · past six months")}</small></div></div>
-					<div class="st-invoice-status" data-invoice-status></div>
-				</article>
+		// Match the reference dashboard's compact navigation, statistics and
+		// chart grid. All underlying data still comes from permission-checked
+		// ERPNext endpoints; the HTML remains hidden until data is returned.
+		return `<section class="st-dashboard-v5 st-dashboard-v8 st-dashboard-v9 st-dashboard-v10">
+			<nav class="st-v10-page-nav" aria-label="${esc(__("Dashboard sections"))}">
+				<div class="st-v10-nav-tabs" role="group" aria-label="${esc(__("Jump to section"))}">
+					<button type="button" class="st-v10-nav-tab is-active" data-home-target="overview" aria-pressed="true">${__("Dashboard")}</button>
+					<button type="button" hidden class="st-v10-nav-tab" data-home-target="analytics" aria-pressed="false">${__("Analytics")}</button>
+					<button type="button" class="st-v10-nav-tab" data-home-target="activity" aria-pressed="false">${__("Activity")}</button>
+				</div>
+				<span class="st-v10-nav-caption">${__("ERPNext business overview")}</span>
+			</nav>
+			<section class="st-v10-overview-section" data-home-section="overview">
+				<div class="st-dashboard-section-title"><div><span class="st-dashboard-eyebrow">${__("BUSINESS OVERVIEW")}</span><h2>${__("Financial overview")}</h2></div><small>${__("Selected company · current balances")}</small></div>
+				<div class="st-dash-kpis">
+					${kpi_card("revenue", "Revenue", "trending-up", true)}
+					${kpi_card("expenses", "Expenses", "credit-card")}
+					${kpi_card("customers", "Active Customers", "users")}
+					${kpi_card("suppliers", "Active Suppliers", "truck")}
+				</div>
+				<div class="st-dash-financial-kpis">
+					${kpi_card("stock_value", "Stock Value", "package")}
+					${kpi_card("cash", "Bank & Treasury Cash", "landmark")}
+					${kpi_card("receivables", "Receivables", "arrow-down-left")}
+					${kpi_card("payables", "Payables", "arrow-up-right")}
+				</div>
+			</section>
+			<section class="st-v10-analytics-section" data-home-section="analytics">
+				<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("BUSINESS ANALYTICS")}</span><h2>${__("Performance & operations")}</h2></div><small>${__("Based on your accessible ERPNext records")}</small></div>
+				<div class="st-dash-insights">
+					<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
+						<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
+						<div class="st-dash-chart" data-dashboard-chart="trend"></div>
+					</article>
+					<article hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production">
+						<div class="st-dash-card-head"><div><strong>${__("Manufacturing Activity")}</strong><small>${__("Completed production runs · six months")}</small></div><strong class="st-v10-stat-total" data-production-total></strong></div>
+						<div class="st-production-chart" data-production-chart></div>
+					</article>
+				</div>
+				<div class="st-dash-lower-grid">
+					<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
+						<div class="st-dash-card-head"><div><strong>${__("Sales Activity")}</strong><small>${__("Submitted invoices · weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
+						<div class="st-sales-heatmap" data-sales-heatmap></div>
+					</article>
+					<article hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices">
+						<div class="st-dash-card-head"><div><strong>${__("Sales Invoice Status")}</strong><small>${__("Paid vs unpaid · past six months")}</small></div></div>
+						<div class="st-invoice-status" data-invoice-status></div>
+					</article>
+				</div>
+			</section>
+			<section class="st-v10-audit-section" data-home-section="activity">
 				<article class="st-dash-card st-dash-activity-card">
-					<div class="st-dash-card-head"><div><strong>${__("Recent Document Changes")}</strong><small>${__("Latest Version history · documents you can access")}</small></div><div class="st-activity-summary"></div></div>
-					<div class="st-activity-list"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
+					<div class="st-dash-card-head"><div><strong>${__("Recent Document Changes")}</strong><small>${__("Version history · only documents you can access")}</small></div><div class="st-activity-summary"></div></div>
+					<div class="st-activity-list" role="feed" aria-label="${esc(__("Recent Version history"))}"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
 				</article>
-			</div>
-			<article hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production">
-				<div class="st-dash-card-head"><div><strong>${__("Production Runs")}</strong><small>${__("Submitted Manufacture stock entries · six months")}</small></div><strong data-production-total></strong></div>
-				<div class="st-production-chart" data-production-chart></div>
-			</article>
+			</section>
 		</section>`;
 	}
 
@@ -251,14 +268,32 @@
 	}
 
 	function heatmap_html(data) {
-		const days = data?.days || [], times = data?.times || [], values = data?.values || [], flat = values.flat().map(Number), max = Math.max(1, ...flat, 1);
-		if (!days.length || !times.length) return `<div class="st-dash-empty">${__("No sales heatmap data is available.")}</div>`;
-		const heads = days.map((day) => `<span class="st-heatmap-day">${esc(day)}</span>`).join("");
-		const rows = times.map((time, rowIndex) => `<div class="st-heatmap-time">${esc(time)}</div>${days.map((_day, colIndex) => {
-			const value = Number(values?.[rowIndex]?.[colIndex] || 0), strength = value ? Math.max(.12, value / max) : .035;
-			return `<div class="st-heatmap-cell" style="--heat:${strength.toFixed(3)}" title="${esc(`${time} · ${days[colIndex]}: ${value}`)}"><span>${value || ""}</span></div>`;
-		}).join("")}`).join("");
-		return `<div class="st-heatmap-grid"><div></div>${heads}${rows}</div>`;
+		// Frappe supplies a five-time-bucket by seven-weekday count matrix.
+		// This reference-style stacked bar visualization represents exactly
+		// those counts; it does not present invoice counts as money or visits.
+		const days = Array.isArray(data?.days) ? data.days : [];
+		const times = Array.isArray(data?.times) ? data.times : [];
+		const values = Array.isArray(data?.values) ? data.values : [];
+		if (!days.length || !times.length) return `<div class="st-dash-empty">${__("No sales activity is available.")}</div>`;
+		const totals = days.map((_day, index) =>
+			times.reduce((sum, _time, bucket) => sum + Math.max(0, Number(values?.[bucket]?.[index] || 0)), 0));
+		const max = Math.max(1, ...totals);
+		const bars = days.map((day, index) => {
+			const total = totals[index];
+			const height = total ? Math.max(6, total / max * 100) : 0;
+			const segments = times.map((time, bucket) => {
+				const count = Math.max(0, Number(values?.[bucket]?.[index] || 0));
+				const segment = total ? count / total * 100 : 0;
+				return segment > 0
+					? `<span class="st-v10-sales-segment bucket-${bucket % 5}" style="height:${segment.toFixed(2)}%" title="${esc(time)} · ${esc(day)}: ${number(count)}"></span>`
+					: "";
+			}).join("");
+			return `<div class="st-v10-sales-day"><strong>${number(total)}</strong>
+				<div class="st-v10-sales-track"><div class="st-v10-sales-stack" style="height:${height.toFixed(2)}%">${segments}</div></div>
+				<span>${esc(day)}</span></div>`;
+		}).join("");
+		return `<div class="st-v10-sales-chart" role="img" aria-label="${esc(__("Submitted sales invoices by weekday and time of day"))}">${bars}</div>
+			<div class="st-v10-sales-caption">${esc(__("Segment colors represent time-of-day buckets"))}</div>`;
 	}
 
 	function invoice_html(data) {
@@ -348,6 +383,10 @@
 				$home.find("[data-production-chart]").html(production_chart(data.production));
 				$home.find("[data-production-total]").text(number(data.production.total));
 			}
+			// Charts are loaded only for permitted data. Never reveal a tab
+			// leading to an empty, restricted analytics section.
+			const hasAnalytics = $home.find('.st-v10-analytics-section [data-dashboard-panel]:not([hidden])').length > 0;
+			$home.find('.st-v10-nav-tab[data-home-target="analytics"]').prop("hidden", !hasAnalytics);
 		} catch (error) {
 			// Do not render permission-denied or incomplete KPI cards as zeroes.
 			if (token !== enhance_token) return;
@@ -387,6 +426,24 @@
 			$quick.find('.st-hub-section-head p').text(__('Available module sidebars'));
 			$quick.find('.st-hub-quick-grid').toggleClass('st-hub-sidebar-links', true);
 		}
+	}
+
+	function bind_home_section_navigation() {
+		// Functional in-page navigation (no fake pages or route changes).
+		$(document)
+			.off("click.saas_home_sections", ".st-v10-page-nav [data-home-target]")
+			.on("click.saas_home_sections", ".st-v10-page-nav [data-home-target]", function (event) {
+				event.preventDefault();
+				const $button = $(this);
+				const $home = $button.closest(".st-home-dashboard");
+				const key = String($button.attr("data-home-target") || "");
+				if (!["overview", "analytics", "activity"].includes(key)) return;
+				const section = $home.find(`[data-home-section="${key}"]`).get(0);
+				if (!section) return;
+				$home.find(".st-v10-nav-tab").removeClass("is-active").attr("aria-pressed", "false");
+				$button.addClass("is-active").attr("aria-pressed", "true");
+				section.scrollIntoView({ behavior: "smooth", block: "start" });
+			});
 	}
 
 	function quick_sidebar_hidden() {
@@ -444,6 +501,7 @@
 
 		$home.find(".st-dashboard-activity-section").remove();
 		bind_quick_sidebar_toggle();
+		bind_home_section_navigation();
 		apply_quick_sidebar_state($home);
 		load_dashboard($home, token);
 		load_recent_activity($home, token);

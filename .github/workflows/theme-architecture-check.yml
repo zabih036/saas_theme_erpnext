@@ -17,6 +17,7 @@ on:
       - 'scripts/test_home_dashboard.py'
       - 'scripts/test_home_dashboard_ui.js'
       - 'scripts/test_home_visuals_and_picker.js'
+      - 'scripts/test_home_v10_layout.js'
       - 'saas_theme/home.py'
       - 'scripts/validate_phase3c_css_bundle.py'
       - '.github/workflows/theme-architecture-check.yml'
@@ -49,3 +50,4 @@ jobs:
           node scripts/test_home_dashboard_ui.js
           node --check saas_theme/public/js/quick_access_preferences.js
           node scripts/test_home_visuals_and_picker.js
+          node scripts/test_home_v10_layout.js

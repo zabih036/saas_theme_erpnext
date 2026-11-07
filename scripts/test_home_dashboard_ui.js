@@ -96,11 +96,13 @@ assert.ok(dashboard.includes("st-dashboard-v9") &&
     dashboard.includes("st-kpi-value-row") &&
     dashboard.includes("st-dashboard-section-title"),
     "Modern portfolio layout and KPI mini-trend slots must be present");
-assert.ok(css.includes('[data-dashboard-kpi="revenue"]') &&
-    css.includes('[data-dashboard-kpi="expenses"]') &&
-    css.includes("linear-gradient(115deg, #cbb6ff, #e6dcff)") &&
-    css.includes("font-size: clamp(18px, 1.5vw, 24px)"),
-    "Use differentiated pastel KPI surfaces with compact financial values");
+assert.ok(dashboard.includes("st-dashboard-v10") &&
+    dashboard.includes('data-home-section="analytics"') &&
+    dashboard.includes('data-home-section="activity"') &&
+    css.includes("--st-v10-ice: #d5edfb") &&
+    css.includes("--st-v9-bg: linear-gradient(115deg, #caeaff, #e9f6ff)") &&
+    css.includes("font-size: clamp(17px,1.25vw,22px)"),
+    "V10 must use the Bank & Treasury ice-blue KPI palette and reference-style layout");
 assert.ok(css.includes(".st-dash-chart-line.revenue") &&
     css.includes(".st-v9-activity-entry") &&
     css.includes(".st-quick-picker-select-all"),
