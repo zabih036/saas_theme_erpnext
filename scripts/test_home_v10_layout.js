@@ -87,13 +87,13 @@ const hoverBlock = css.slice(css.indexOf("Home KPI hover surfaces"));
 assert.ok(hoverBlock.length > 4000, "Last loaded Home KPI override is missing");
 // Revenue must be the only permanently blue card; other cards remain white.
 assert.match(hoverBlock,
-    /a\\.st-dash-kpi\\[data-dashboard-kpi="revenue"\\]\\s*\\{[^}]*background:\\s*linear-gradient\\(130deg, #1762ca 0%, #2476dd 100%\\) !important/s);
+    /a\.st-dash-kpi\[data-dashboard-kpi="revenue"\]\s*\{[^}]*background:\s*linear-gradient\(130deg, #1762ca 0%, #2476dd 100%\) !important/s);
 assert.match(hoverBlock,
-    /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\)\\s*\\{[^}]*background:\\s*#ffffff !important/s);
+    /a\.st-dash-kpi:not\(\[data-dashboard-kpi="revenue"\]\)\s*\{[^}]*background:\s*#ffffff !important/s);
 // Only non-Revenue KPI cards receive the expanding upper-right blue circle.
-assert.match(hoverBlock, /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\)::after\\s*\\{[^}]*clip-path:\\s*circle\\(0% at 100% 0%\\)/s);
+assert.match(hoverBlock, /a\.st-dash-kpi:not\(\[data-dashboard-kpi="revenue"\]\)::after\s*\{[^}]*clip-path:\s*circle\(0% at 100% 0%\)/s);
 assert.match(hoverBlock,
-    /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\):is\\(:hover, :focus-visible\\)::after\\s*\\{[^}]*clip-path:\\s*circle\\(150% at 100% 0%\\)/s);
+    /a\.st-dash-kpi:not\(\[data-dashboard-kpi="revenue"\]\):is\(:hover, :focus-visible\)::after\s*\{[^}]*clip-path:\s*circle\(150% at 100% 0%\)/s);
 assert.ok(hoverBlock.includes("transition: clip-path .56s cubic-bezier(.22, 1, .36, 1)"),
     "The fill must expand smoothly instead of appearing instantly");
 assert.ok(hoverBlock.includes("pointer-events: none"),
