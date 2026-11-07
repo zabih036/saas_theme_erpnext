@@ -34,9 +34,9 @@ app_include_css = [
 	"/assets/saas_theme/css/grid_and_action_alignment.css?v=2",
 	"/assets/saas_theme/css/report_and_form_shell.css?v=1",
 	"/assets/saas_theme/css/child_row_editor_finish.css?v=1",
-	"/assets/saas_theme/css/overlay_stacking_fix.css?v=3",
+	"/assets/saas_theme/css/overlay_layers.css?v=1",
 	"/assets/saas_theme/css/interaction_finish_v2.css?v=2",
-	"/assets/saas_theme/css/global_popup_polish_v3.css?v=4",
+	"/assets/saas_theme/css/popup_controls.css?v=1",
 	"/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
 ]
 
