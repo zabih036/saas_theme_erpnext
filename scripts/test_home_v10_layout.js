@@ -83,6 +83,31 @@ assert.ok(analytics.includes("if (!item || item.value == null) return;"),
     "Unavailable KPI must never display a permission-warning link");
 
 assert.match(css, /--st-hub-primary:\s*#1762ca/);
+const hoverBlock = css.slice(css.indexOf("Home KPI hover surfaces"));
+assert.ok(hoverBlock.length > 4000, "Last loaded Home KPI override is missing");
+// Revenue must be the only permanently blue card; other cards remain white.
+assert.match(hoverBlock,
+    /a\\.st-dash-kpi\\[data-dashboard-kpi="revenue"\\]\\s*\\{[^}]*background:\\s*linear-gradient\\(130deg, #1762ca 0%, #2476dd 100%\\) !important/s);
+assert.match(hoverBlock,
+    /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\)\\s*\\{[^}]*background:\\s*#ffffff !important/s);
+// Only non-Revenue KPI cards receive the expanding upper-right blue circle.
+assert.match(hoverBlock, /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\)::after\\s*\\{[^}]*clip-path:\\s*circle\\(0% at 100% 0%\\)/s);
+assert.match(hoverBlock,
+    /a\\.st-dash-kpi:not\\(\\[data-dashboard-kpi="revenue"\\]\\):is\\(:hover, :focus-visible\\)::after\\s*\\{[^}]*clip-path:\\s*circle\\(150% at 100% 0%\\)/s);
+assert.ok(hoverBlock.includes("transition: clip-path .56s cubic-bezier(.22, 1, .36, 1)"),
+    "The fill must expand smoothly instead of appearing instantly");
+assert.ok(hoverBlock.includes("pointer-events: none"),
+    "The hover layer must not block full-card click events");
+assert.ok(hoverBlock.includes("prefers-reduced-motion: reduce"),
+    "Reduced-motion users need a nonanimated fallback");
+assert.ok(hoverBlock.includes('[data-theme="dark"]') &&
+          hoverBlock.includes("background: #233247 !important"),
+    "Neutral cards must remain legible in dark mode");
+assert.ok(hoverBlock.includes(".st-v9-kpi-spark path") &&
+          hoverBlock.includes(".st-home-card-open"),
+    "SVG and link icons must remain legible over blue");
+assert.ok(!hoverBlock.includes("a.st-dash-card::after"),
+    "KPI circle must not override analytics card link arrows");
 assert.match(css, /--st-v9-bg:\s*linear-gradient\(115deg, #caeaff, #e9f6ff\)/);
 assert.match(css, /background:\s*#f3f7fc !important/);
 assert.match(css, /outline:\s*3px solid #1762ca !important/);
@@ -95,4 +120,4 @@ assert.ok(at > 0);
 const rule = css.slice(at,css.indexOf("}",at));
 assert.ok(rule.includes("display: block !important") && rule.includes("overflow-y: auto !important"));
 assert.ok(css.includes("height: 419px !important"));
-console.log("Home links, blue accent, removed tab bar, sales chart and Version list passed.");
+console.log("Home links, top-right KPI hover, blue Revenue, neutral cards and Version list passed.");
