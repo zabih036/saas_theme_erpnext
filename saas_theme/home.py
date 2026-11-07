@@ -117,6 +117,29 @@ def _read_rows(doctype, fields, filters=None, *, limit=1000, order_by=None):
         return None
 
 
+
+def _grouped_sum(doctype, filters, fields, *, group_by=None):
+    """Frappe v16 permission-enforced SQL aggregation, not raw unrestricted SQL.
+
+    Ignore permissions MUST remain False (Frappe's QB default is True).
+    Returns None when a field, source or permission is not available.
+    """
+    try:
+        if not frappe.has_permission(doctype, ptype="read"):
+            return None
+        selections = ([group_by] if group_by else []) + [
+            {"SUM": field, "as": f"total_{field}"} for field in fields
+        ]
+        query = frappe.qb.get_query(
+            doctype, fields=selections, filters=filters,
+            group_by=group_by, ignore_permissions=False,
+        )
+        return query.run(as_dict=True)
+    except Exception:
+        frappe.logger("saas_theme").debug("Home aggregate skipped: %s", doctype)
+        return None
+
+
 def _home_company():
     """Never mix balances from different companies or currencies."""
     company = frappe.defaults.get_user_default("Company")
@@ -154,18 +177,18 @@ def _account_balances(company, today):
     balances = {key: 0.0 for key in account_types}
     if not mapping:
         return balances
-    rows = _read_rows(
-        "GL Entry", ["account", "debit", "credit"],
+    rows = _grouped_sum(
+        "GL Entry",
         [["company", "=", company], ["is_cancelled", "=", 0],
          ["posting_date", "<=", today], ["account", "in", list(mapping)]],
-        limit=50000,
+        ["debit", "credit"], group_by="account",
     )
     if rows is None:
         return None
     for row in rows:
         kind = mapping.get(row.account)
         if kind:
-            net = flt(row.debit) - flt(row.credit)
+            net = flt(row.total_debit) - flt(row.total_credit)
             balances[kind] += -net if kind == "Payable" else net
     return balances
 
@@ -182,12 +205,11 @@ def _stock_balance(company):
         return None
     if not warehouses:
         return 0.0
-    bins = _read_rows(
-        "Bin", ["warehouse", "stock_value"],
-        [["warehouse", "in", [row.name for row in warehouses]]],
-        limit=35000,
+    bins = _grouped_sum(
+        "Bin", [["warehouse", "in", [row.name for row in warehouses]]],
+        ["stock_value"],
     )
-    return _sum(bins, "stock_value") if bins is not None else None
+    return flt(bins[0].total_stock_value) if bins else (0.0 if bins == [] else None)
 
 
 @frappe.whitelist()
@@ -286,18 +308,18 @@ def get_dashboard_overview() -> dict:
             if not accounts:
                 expenses = []
             else:
-                expenses = _read_rows(
-                    "GL Entry", ["posting_date", "debit", "credit"],
+                expenses = _grouped_sum(
+                    "GL Entry",
                     company_filter + [["is_cancelled", "=", 0],
                                       ["posting_date", ">=", first],
                                       ["posting_date", "<=", today],
                                       ["account", "in", [row.name for row in accounts]]],
-                    limit=50000,
+                    ["debit", "credit"], group_by="posting_date",
                 )
     expense_monthly = defaultdict(float)
     if expenses is not None:
         for row in expenses:
-            expense_monthly[_month_key(row.posting_date)] += flt(row.debit) - flt(row.credit)
+            expense_monthly[_month_key(row.posting_date)] += flt(row.total_debit) - flt(row.total_credit)
         current, prior = expense_monthly[current_key], expense_monthly[previous_key]
         kpis["expenses"] = {
             "value": current,
