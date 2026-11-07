@@ -2674,7 +2674,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	--st-v9-border: #1762ca;
 	--st-v9-color: #ffffff;
 	--st-v9-accent: #ffffff;
-	background: linear-gradient(130deg, #1762ca 0%, #2476dd 100%) !important;
+	background: #1762ca !important;
 	border-color: #1762ca !important;
 	box-shadow: 0 7px 20px rgba(23, 98, 202, .17) !important;
 }
