@@ -1844,8 +1844,8 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v9 {
 	--st-v9-ink: #1e2542;
 	--st-v9-muted: #748098;
-	--st-v9-purple: #7548e8;
-	--st-v9-purple-pale: #f3efff;
+	--st-v9-purple: #1762ca;
+	--st-v9-purple-pale: #eef4fd;
 }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v9 .st-dashboard-section-title {
 	display: flex;
@@ -1857,7 +1857,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 .st-dashboard-v9 .st-dashboard-section-title--charts { margin: 24px 0 12px !important; }
 .st-dashboard-v9 .st-dashboard-eyebrow {
 	display: block;
-	color: #8257d5;
+	color: #1762ca;
 	font-size: 9px;
 	font-weight: 760;
 	letter-spacing: .13em;
@@ -1883,7 +1883,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	--st-v9-bg: linear-gradient(115deg, #caeaff, #e9f6ff);
 	--st-v9-border: #c1e3f5;
 	--st-v9-color: #244f68;
-	--st-v9-accent: #2875a3;
+	--st-v9-accent: #1762ca;
 }
 
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v9 .st-dash-kpi,
@@ -2011,21 +2011,21 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	height: 26px;
 	padding: 0 11px;
 	border-radius: 8px;
-	background: #f2ebff;
-	color: #6d35c9;
+	background: #eaf2ff;
+	color: #1762ca;
 	font-size: 10px;
 	font-weight: 760;
 	white-space: nowrap;
 }
 .st-dashboard-v9 .st-dash-legend { gap: 12px; font-size: 10px !important; }
-.st-dashboard-v9 .st-dash-legend i.revenue { background: #8455f5 !important; }
+.st-dashboard-v9 .st-dash-legend i.revenue { background: #1762ca !important; }
 .st-dashboard-v9 .st-dash-legend i.expenses { background: #25aeca !important; }
 .st-dashboard-v9 .st-dash-chart { min-height: 245px; }
 .st-dashboard-v9 .st-dash-chart-svg { min-height: 230px; }
 .st-dashboard-v9 .st-dash-grid-line { stroke: rgba(117, 72, 232, .13); stroke-dasharray: 3 4; }
 .st-dashboard-v9 .st-dash-axis { fill: var(--st-hub-muted); font-size: 10px; }
 .st-dashboard-v9 .st-dash-month { font-weight: 650; }
-.st-dashboard-v9 .st-dash-chart-area.revenue { fill: url(#st-v9-trend-purple); }
+.st-dashboard-v9 .st-dash-chart-area.revenue { fill: url(#st-home-trend-primary); }
 .st-dashboard-v9 .st-dash-chart-area.expenses { fill: url(#st-v9-trend-cyan); }
 .st-dashboard-v9 .st-dash-chart-line {
 	fill: none;
@@ -2033,7 +2033,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	stroke-linecap: round;
 	stroke-linejoin: round;
 }
-.st-dashboard-v9 .st-dash-chart-line.revenue { stroke: #8455f5; }
+.st-dashboard-v9 .st-dash-chart-line.revenue { stroke: #1762ca; }
 .st-dashboard-v9 .st-dash-chart-line.expenses { stroke: #25aeca; }
 .st-dashboard-v9 .st-dash-chart-dot {
 	stroke: var(--st-hub-surface);
@@ -2041,18 +2041,18 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	transition: r .13s ease;
 }
 .st-dashboard-v9 .st-dash-chart-dot:hover { r: 6; }
-.st-dashboard-v9 .st-dash-chart-dot.revenue { fill: #8455f5; }
+.st-dashboard-v9 .st-dash-chart-dot.revenue { fill: #1762ca; }
 .st-dashboard-v9 .st-dash-chart-dot.expenses { fill: #25aeca; }
 .st-dashboard-v9 .st-heatmap-cell { background: rgba(126, 75, 229, var(--heat)); }
 .st-dashboard-v9 .st-heatmap-cell:hover { box-shadow: 0 5px 14px rgba(126,75,229,.20); }
-.st-dashboard-v9 .st-dash-mini-value { color: #8455f5; font-size: 19px; }
-.st-dashboard-v9 .st-invoice-ring { background: conic-gradient(#8455f5 0 var(--paid), #f3aa93 var(--paid) 360deg); }
-.st-dashboard-v9 .st-invoice-legend i.paid { background: #8455f5; }
+.st-dashboard-v9 .st-dash-mini-value { color: #1762ca; font-size: 19px; }
+.st-dashboard-v9 .st-invoice-ring { background: conic-gradient(#1762ca 0 var(--paid), #f3aa93 var(--paid) 360deg); }
+.st-dashboard-v9 .st-invoice-legend i.paid { background: #1762ca; }
 .st-dashboard-v9 .st-invoice-legend i.unpaid { background: #f3aa93; }
 .st-dashboard-v9 .st-invoice-legend > div { background: var(--st-hub-soft); }
-.st-dashboard-v9 .st-production-bar-track { background: #f1eafe; }
-.st-dashboard-v9 .st-production-bar-track i { background: linear-gradient(180deg,#a98aff,#7548e8); }
-.st-dashboard-v9 [data-production-total] { color: #7548e8 !important; }
+.st-dashboard-v9 .st-production-bar-track { background: #e7f0fc; }
+.st-dashboard-v9 .st-production-bar-track i { background: linear-gradient(180deg,#64a3ef,#1762ca); }
+.st-dashboard-v9 [data-production-total] { color: #1762ca !important; }
 
 /* Version history is a timeline of compact individual records, not a
    230px-tall nested scrolling table with a giant one-item summary. */
@@ -2075,15 +2075,15 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	gap: 7px;
 	padding: 7px 10px;
 	border-radius: 8px;
-	background: #f1ebff;
-	color: #7548d8;
+	background: #eaf1ff;
+	color: #1762ca;
 	font-size: 10px;
 	line-height: 1.2;
 	font-weight: 740;
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
-.st-dashboard-v9 .st-v9-activity-counter i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #8a5bea; }
+.st-dashboard-v9 .st-v9-activity-counter i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #1762ca; }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v9 .st-dash-activity-card .st-activity-list {
 	display: grid !important;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)) !important;
@@ -2094,7 +2094,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	padding: 2px 4px 3px 1px;
 	overflow-y: auto;
 	scrollbar-width: thin;
-	scrollbar-color: #c6b4e8 transparent;
+	scrollbar-color: #b1c8e9 transparent;
 }
 .st-dashboard-v9 .st-v9-activity-entry {
 	display: grid;
@@ -2112,13 +2112,13 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 }
 .st-dashboard-v9 .st-v9-activity-entry:hover {
 	background: var(--st-hub-soft) !important;
-	border-color: #ccbcef !important;
+	border-color: #b6d0f1 !important;
 }
 .st-dashboard-v9 .st-v9-activity-entry .st-activity-avatar {
 	width: 32px;
 	height: 32px;
-	background: #f1edff;
-	color: #7045d4;
+	background: #eef5ff;
+	color: #1762ca;
 	font-size: 10px;
 	border-radius: 9px;
 }
@@ -2161,7 +2161,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	display: block;
 	margin-top: 5px;
 	font-size: 9.5px;
-	color: #7653b5;
+	color: #2565b2;
 	line-height: 1.4;
 	overflow-wrap: anywhere;
 }
@@ -2171,7 +2171,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	justify-content: center;
 	width: 17px;
 	height: 17px;
-	color: #9a88bc;
+	color: #6e9bd2;
 }
 .st-dashboard-v9 .st-v9-activity-arrow svg { width: 15px; height: 15px; stroke: currentColor; }
 
@@ -2209,31 +2209,31 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 }
 .st-quick-access-dialog .st-quick-picker-actions .st-quick-picker-select-all {
 	color: #fff !important;
-	background: #7548e8 !important;
-	border-color: #7548e8 !important;
+	background: #1762ca !important;
+	border-color: #1762ca !important;
 }
 .st-quick-access-dialog .st-quick-picker-actions .st-quick-picker-select-all:hover {
-	background: #6334ca !important;
-	border-color: #6334ca !important;
+	background: #0e4da8 !important;
+	border-color: #0e4da8 !important;
 }
 .st-quick-access-dialog .st-quick-picker-actions .st-quick-picker-unselect-all {
-	background: #f3effe !important;
-	color: #6840bd !important;
-	border-color: #e6dafd !important;
+	background: #edf4ff !important;
+	color: #1762ca !important;
+	border-color: #dceaff !important;
 }
 .st-quick-access-dialog .st-quick-picker-actions .btn:focus-visible {
 	outline: 3px solid rgba(117,72,232,.25);
 	outline-offset: 2px;
 }
 .st-quick-access-dialog .st-quick-picker-option:has(.st-quick-picker-check:checked) {
-	border-color: #b9a3ef !important;
-	background: #f2edff !important;
+	border-color: #b3cff3 !important;
+	background: #eaf1ff !important;
 }
 .st-quick-access-dialog .st-quick-picker-check:checked {
-	border-color: #7548e8 !important;
-	background-color: #7548e8 !important;
+	border-color: #1762ca !important;
+	background-color: #1762ca !important;
 }
-.st-quick-access-dialog .st-quick-picker-meta strong { color: #7548e8 !important; }
+.st-quick-access-dialog .st-quick-picker-meta strong { color: #1762ca !important; }
 .st-quick-empty-selection {
 	grid-column: 1 / -1;
 	display: grid;
@@ -2254,15 +2254,15 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	--st-v9-bg: linear-gradient(115deg,#282a43,#303152);
 	--st-v9-color: #f6f3ff;
 	--st-v9-border: #484568;
-	--st-v9-accent: #d0bbff;
+	--st-v9-accent: #a6d0ff;
 }
 [data-theme="dark"] .st-dashboard-v9 .st-dash-period-pill,
 [data-theme="dark"] .st-dashboard-v9 .st-v9-activity-counter,
 [data-theme="dark"] .st-dashboard-v9 .st-v9-activity-entry .st-activity-avatar {
 	background: #332b4f !important;
-	color: #cdbafa !important;
+	color: #bddbff !important;
 }
-[data-theme="dark"] .st-dashboard-v9 .st-v9-activity-detail { color: #bb9cf1; }
+[data-theme="dark"] .st-dashboard-v9 .st-v9-activity-detail { color: #87b8f2; }
 [data-theme="dark"] .st-dashboard-v9 .st-v9-activity-entry:hover { border-color: #6d559a !important; }
 [data-theme="dark"] .st-quick-access-dialog .st-quick-picker-option:has(.st-quick-picker-check:checked) {
 	background: rgba(117,72,232,.18) !important;
@@ -2297,13 +2297,16 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
    permission-filtered metrics from the existing ERPNext endpoints.
    ===================================================================== */
 .desktop-wrapper .desktop-container.st-home-dashboard-active {
-	background: #eeebf9 !important;
+	background: #f3f7fc !important;
 }
 .st-home-dashboard.st-dashboard-redesign-v7 {
-	--st-v10-purple: #784bef;
-	--st-v10-purple-ink: #5131a6;
+	--st-hub-primary: #1762ca;
+	--st-hub-primary-soft: #eaf2fc;
+	--st-v10-primary: #1762ca;
+	--st-v10-purple: #1762ca;
+	--st-v10-purple-ink: #1762ca;
 	--st-v10-ice: #d5edfb;
-	--st-v10-divider: #e8e4f2;
+	--st-v10-divider: #dde8f5;
 	max-width: 1750px;
 	padding-top: 20px;
 }
@@ -2316,7 +2319,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-home-navigation-sidebar .st-hub-section,
 .st-home-dashboard.st-dashboard-redesign-v7 .st-home-navigation-sidebar .st-hub-side-card {
-	border-color: #e1ddec;
+	border-color: #dde8f5;
 	box-shadow: 0 3px 18px rgba(70,50,118,.05);
 }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 {
@@ -2326,62 +2329,14 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	color: #1e2542;
 }
 .st-dashboard-v10 [hidden],
-.st-dashboard-v10 .st-v10-nav-tab[hidden] { display: none !important; }
 .st-home-dashboard .st-dashboard-v10 [data-home-section="analytics"]:not(:has([data-dashboard-panel]:not([hidden]))) {
 	display: none !important;
 }
 .st-dashboard-v10 [data-home-section] { scroll-margin-top: 85px; }
-.st-dashboard-v10 .st-v10-page-nav {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 12px;
-	padding: 10px 2px 22px;
-}
-.st-dashboard-v10 .st-v10-nav-tabs {
-	display: flex;
-	align-items: center;
-	gap: 7px;
-	flex-wrap: wrap;
-}
-.st-dashboard-v10 .st-v10-nav-tab {
-	appearance: none;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 36px;
-	padding: 0 18px;
-	border: 1px solid transparent;
-	border-radius: 999px;
-	background: #d9cef6;
-	color: #68549b;
-	font-size: 11px;
-	font-weight: 700;
-	line-height: 1.2;
-	cursor: pointer;
-	transition: background-color .16s ease, box-shadow .16s ease;
-}
-.st-dashboard-v10 .st-v10-nav-tab.is-active,
-.st-dashboard-v10 .st-v10-nav-tab[aria-pressed="true"] {
-	background: #784bef;
-	color: #fff;
-	box-shadow: 0 5px 14px rgba(120,75,239,.16);
-}
-.st-dashboard-v10 .st-v10-nav-tab:hover:not(.is-active) { background: #cfc0f3; }
-.st-dashboard-v10 .st-v10-nav-tab:focus-visible {
-	outline: 3px solid #ac8bfb;
-	outline-offset: 2px;
-}
-.st-dashboard-v10 .st-v10-nav-caption {
-	font-size: 10px;
-	color: #8276a5;
-	font-weight: 650;
-	white-space: nowrap;
-}
-.st-dashboard-v10 .st-dashboard-eyebrow { color: #7b58c5; font-size: 9px; }
+.st-dashboard-v10 .st-dashboard-eyebrow { color: #1762ca; font-size: 9px; }
 .st-dashboard-v10 .st-dashboard-section-title { margin: 1px 0 11px !important; }
 .st-dashboard-v10 .st-dashboard-section-title--charts { margin: 18px 0 11px !important; }
-.st-dashboard-v10 .st-dashboard-section-title h2 { font-size: 16px; color: #2d2852; }
+.st-dashboard-v10 .st-dashboard-section-title h2 { font-size: 16px; color: #233f63; }
 
 /* Compact ice-blue financial snapshot: single source of color tokens. */
 .st-dashboard-v10 .st-dash-kpis,
@@ -2395,7 +2350,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	--st-v9-bg: linear-gradient(115deg, #caeaff, #e9f6ff);
 	--st-v9-border: #c1e3f5;
 	--st-v9-color: #244f68;
-	--st-v9-accent: #2875a3;
+	--st-v9-accent: #1762ca;
 	min-height: 122px !important;
 	padding: 13px 15px !important;
 	border-radius: 14px !important;
@@ -2412,11 +2367,11 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 .st-dashboard-v10 .st-dash-kpi-top { color: #244f68 !important; }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-top i {
 	background: rgba(255,255,255,.46) !important;
-	color: #2875a3 !important;
+	color: #1762ca !important;
 	width: 30px !important;
 	height: 30px !important;
 }
-.st-dashboard-v10 .st-dash-kpi-top i svg { stroke: #2875a3 !important; color: #2875a3 !important; }
+.st-dashboard-v10 .st-dash-kpi-top i svg { stroke: #1762ca !important; color: #1762ca !important; }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-kpi-value-row > strong {
 	color: #244f68 !important;
 	font-size: clamp(17px,1.25vw,22px) !important;
@@ -2426,7 +2381,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	font-size: 10px !important;
 }
 .st-dashboard-v10 .st-dash-financial-kpis { margin-top: 12px; }
-.st-dashboard-v10 .st-v9-kpi-spark path { stroke: #2875a3 !important; }
+.st-dashboard-v10 .st-v9-kpi-spark path { stroke: #1762ca !important; }
 
 /* Analytics grid replicates the reference's tall trend + operations panel
    and the second row of split activity + donut. */
@@ -2444,7 +2399,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 }
 .st-dashboard-v10 .st-dash-lower-grid { margin-top: 14px !important; }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-card {
-	border: 1px solid #e4e0ef !important;
+	border: 1px solid #dbe5f1 !important;
 	border-radius: 16px !important;
 	background: #fff !important;
 	padding: 18px 19px !important;
@@ -2454,15 +2409,15 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 .st-dashboard-v10 .st-dash-insights .st-dash-production-card { margin-top: 0 !important; }
 .st-dashboard-v10 .st-dash-lower-grid .st-dash-card { min-height: 255px !important; }
 .st-dashboard-v10 .st-dash-card-head { margin-bottom: 17px; }
-.st-dashboard-v10 .st-dash-card-head strong { font-size: 13px !important; color: #292445 !important; }
+.st-dashboard-v10 .st-dash-card-head strong { font-size: 13px !important; color: #223653 !important; }
 .st-dashboard-v10 .st-dash-card-head small { font-size: 10px !important; }
 .st-dashboard-v10 .st-dash-chart { min-height: 202px; }
 .st-dashboard-v10 .st-dash-chart-svg { min-height: 198px; }
 .st-dashboard-v10 .st-production-chart { display: block; margin-top: 20px; }
 .st-dashboard-v10 .st-production-bars { min-height: 184px; padding-top: 10px; gap: 9px; }
-.st-dashboard-v10 .st-production-bar-track { height: 117px; width: min(35px, 100%); background: #eee7fe; }
-.st-dashboard-v10 .st-production-bar-track i { background: linear-gradient(180deg,#a187fa,#7548e8); }
-.st-dashboard-v10 .st-v10-stat-total { color: #784bef !important; font-size: 16px !important; }
+.st-dashboard-v10 .st-production-bar-track { height: 117px; width: min(35px, 100%); background: #e7f0fc; }
+.st-dashboard-v10 .st-production-bar-track i { background: linear-gradient(180deg,#64a3ef,#1762ca); }
+.st-dashboard-v10 .st-v10-stat-total { color: #1762ca !important; font-size: 16px !important; }
 .st-dashboard-v10 .st-v10-sales-chart {
 	display: grid;
 	grid-template-columns: repeat(7,minmax(0,1fr));
@@ -2485,7 +2440,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	font-size: 10px;
 	line-height: 1;
 	font-weight: 720;
-	color: #645c89;
+	color: #456785;
 }
 .st-dashboard-v10 .st-v10-sales-track {
 	display: flex;
@@ -2494,7 +2449,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	width: min(38px,100%);
 	height: 126px;
 	border-radius: 10px;
-	background: #f3efff;
+	background: #eef4fd;
 	overflow: hidden;
 }
 .st-dashboard-v10 .st-v10-sales-stack {
@@ -2509,12 +2464,12 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	width: 100%;
 	flex-shrink: 0;
 }
-.st-dashboard-v10 .st-v10-sales-segment.bucket-0 { background: #7548e8; }
-.st-dashboard-v10 .st-v10-sales-segment.bucket-1 { background: #9d80ef; }
-.st-dashboard-v10 .st-v10-sales-segment.bucket-2 { background: #bbabf7; }
+.st-dashboard-v10 .st-v10-sales-segment.bucket-0 { background: #1762ca; }
+.st-dashboard-v10 .st-v10-sales-segment.bucket-1 { background: #4c8ce0; }
+.st-dashboard-v10 .st-v10-sales-segment.bucket-2 { background: #86b8f1; }
 .st-dashboard-v10 .st-v10-sales-segment.bucket-3 { background: #56bbf2; }
 .st-dashboard-v10 .st-v10-sales-segment.bucket-4 { background: #96d9f5; }
-.st-dashboard-v10 .st-v10-sales-caption { text-align: center; margin-top: 14px; font-size: 9px; color: #857c99; }
+.st-dashboard-v10 .st-v10-sales-caption { text-align: center; margin-top: 14px; font-size: 9px; color: #738ba6; }
 .st-dashboard-v10 .st-invoice-status { grid-template-columns: minmax(0, 1fr) minmax(115px, 1fr); align-items: center; }
 .st-dashboard-v10 .st-invoice-ring { width: 130px; height: 130px; }
 .st-dashboard-v10 .st-invoice-ring::after { inset: 17px; }
@@ -2542,7 +2497,7 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	overscroll-behavior: contain;
 	padding: 0 5px 0 0 !important;
 	scrollbar-width: thin;
-	scrollbar-color: #c5b9df transparent;
+	scrollbar-color: #b6cde8 transparent;
 }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry {
 	display: grid !important;
@@ -2552,14 +2507,14 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	padding: 10px 12px !important;
 	margin: 0 !important;
 	border: 0 !important;
-	border-bottom: 1px solid #ebe7f2 !important;
+	border-bottom: 1px solid #e2e9f3 !important;
 	border-radius: 0 !important;
 	box-shadow: none !important;
 	background: #fff !important;
 }
 .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry:hover {
-	background: #f7f4ff !important;
-	border-bottom-color: #ddd2f8 !important;
+	background: #f3f7ff !important;
+	border-bottom-color: #c7dbf8 !important;
 }
 .st-dashboard-v10 .st-v9-activity-entry .st-activity-avatar { width: 30px; height: 30px; }
 .st-dashboard-v10 .st-v9-activity-entry .st-v9-activity-top { align-items: center; }
@@ -2568,11 +2523,9 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 .st-dashboard-v10 .st-v9-activity-entry .st-v9-activity-detail { margin-top: 2px; font-size: 9.5px; }
 
 /* Preserve sidebar, old Page interactions and appearance outside Home. */
-[data-theme="dark"] .desktop-wrapper .desktop-container.st-home-dashboard-active { background: #1d1a29 !important; }
-[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 { color: #eae7f8; }
-[data-theme="dark"] .st-dashboard-v10 .st-dashboard-section-title h2 { color: #e9e3fc; }
-[data-theme="dark"] .st-dashboard-v10 .st-v10-nav-tab { background: #3a3157; color: #cfbeef; }
-[data-theme="dark"] .st-dashboard-v10 .st-v10-nav-tab.is-active { background: #784bef; color: #fff; }
+[data-theme="dark"] .desktop-wrapper .desktop-container.st-home-dashboard-active { background: #151e2b !important; }
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 { color: #e2eeff; }
+[data-theme="dark"] .st-dashboard-v10 .st-dashboard-section-title h2 { color: #e0eeff; }
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi,
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-primary {
 	--st-v9-bg: linear-gradient(115deg,#20384e,#2b4562);
@@ -2605,14 +2558,79 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 [data-theme="dark"] .st-dashboard-v10 .st-v9-kpi-spark path { stroke: #b8deff !important; }
 
 [data-theme="dark"] .st-dashboard-v10 .st-v10-sales-track { background: #342d4a; }
-[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-day strong { color: #c9bdf0; }
-[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-caption { color: #b2a5ca; }
+[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-day strong { color: #b5d3f7; }
+[data-theme="dark"] .st-dashboard-v10 .st-v10-sales-caption { color: #a6bbd4; }
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry {
 	background: #222035 !important;
 	border-bottom-color: #3a354e !important;
 }
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry:hover { background: #2e2945 !important; }
 
+/* Every visible KPI and analytics tile is a semantic link to ERPNext data. */
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi,
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-card {
+	position: relative;
+	text-decoration: none !important;
+	cursor: pointer !important;
+	color: inherit;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi:focus-visible,
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-card:focus-visible {
+	outline: 3px solid #1762ca !important;
+	outline-offset: 3px;
+}
+.st-dashboard-v10 a.st-dash-kpi .st-home-card-open {
+	position: absolute;
+	right: 12px;
+	bottom: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 21px;
+	height: 21px;
+	color: #1762ca;
+	background: rgba(255,255,255,.50);
+	border: 1px solid rgba(23,98,202,.12);
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 720;
+	line-height: 1;
+	transition: background .16s ease, transform .16s ease;
+}
+.st-dashboard-v10 a.st-dash-kpi:hover .st-home-card-open,
+.st-dashboard-v10 a.st-dash-kpi:focus-visible .st-home-card-open {
+	background: rgba(255,255,255,.9);
+	transform: translate(1px,-1px);
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-kpi small {
+	padding-right: 24px !important;
+}
+.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 a.st-dash-card:hover {
+	border-color: #9ec7ee !important;
+	box-shadow: 0 8px 25px rgba(23,98,202,.10) !important;
+}
+.st-dashboard-v10 a.st-dash-card::after {
+	content: "↗";
+	position: absolute;
+	right: 16px;
+	bottom: 12px;
+	display: grid;
+	place-items: center;
+	height: 22px;
+	width: 22px;
+	color: #1762ca;
+	background: #eaf2fc;
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 730;
+	opacity: .76;
+	pointer-events: none;
+}
+[data-theme="dark"] .st-dashboard-v10 a.st-dash-kpi .st-home-card-open,
+[data-theme="dark"] .st-dashboard-v10 a.st-dash-card::after {
+	background: rgba(24,74,130,.55);
+	color: #c7e2ff;
+}
 @media (max-width: 1280px) {
 	.st-dashboard-v10 .st-dash-kpis,
 	.st-dashboard-v10 .st-dash-financial-kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -2621,9 +2639,6 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	.st-dashboard-v10 .st-invoice-status { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 680px) {
-	.st-dashboard-v10 .st-v10-page-nav { flex-wrap: wrap; padding-bottom: 16px; }
-	.st-dashboard-v10 .st-v10-nav-caption { display: none; }
-	.st-dashboard-v10 .st-v10-nav-tab { min-height: 33px; padding: 0 12px; }
 	.st-dashboard-v10 .st-dash-kpis,
 	.st-dashboard-v10 .st-dash-financial-kpis { grid-template-columns: 1fr !important; }
 	.st-dashboard-v10 .st-v10-sales-chart { gap: 4px; }
@@ -2631,6 +2646,4 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	.st-dashboard-v10 .st-invoice-status { grid-template-columns: 1fr; }
 	.st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-activity-card { height: 374px !important; }
 }
-@media (prefers-reduced-motion: reduce) {
-	.st-dashboard-v10 .st-v10-nav-tab { transition: none; }
-}
+

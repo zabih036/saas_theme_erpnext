@@ -292,11 +292,38 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+### Home V11 — Blue brand accent and native card navigation
+
+- The horizontal Dashboard / Analytics / Activity tab strip is **deleted**
+  (HTML, event handler and scoped styles). The Home content remains in its
+  existing overview, operations and activity layout without redundant tabs.
+- Use `#1762ca` for the Home primary accent, chart lines/fills, status and
+  hover/focus treatments. Retain the eight shared Bank & Treasury ice-blue
+  card surfaces and a subtle neutral-blue page background. Do not restyle
+  the Desk, Form, List, Report or global sidebar themes.
+- All **visible** KPI cards are native `<a>` links, preserving full-card
+  click, keyboard focus, open-in-new-tab and browser Back behavior. Destination
+  mappings: Revenue → Sales Invoice; Expenses → Profit and Loss Statement;
+  Customers → Customer; Suppliers → Supplier; Stock Value → Stock Balance;
+  Bank & Treasury → General Ledger; Receivables → Accounts Receivable;
+  Payables → Accounts Payable.
+- The four analytics cards also link to their relevant ERPNext source/report:
+  monthly Revenue & Expenses → Profit and Loss Statement; Manufacture Runs →
+  Stock Entry; Sales Activity and invoice status → Sales Invoice.
+- The KPI and analytics cards remain hidden until their authorized source
+  data arrives. Frappe continues to enforce permission checks for destination
+  lists/reports; the Home theme does not bypass roles or publish restricted data.
+- Version history continues to link **individual documents**, never the
+  entire audit card. Quick Access continues its separate role-validated
+  sidebar permissions and selection workflow.
+- Tests: `scripts/test_home_v10_layout.js` now guards exact KPI/report link
+  destinations, missing navigation, blue palette, authorized-hidden content,
+  chart data and the scrollable Version list.
+
 ### Home V10 — Reference-layout implementation and uniform financial cards
 
-- The Home **uses** the uploaded purple dashboard layout as an actual
-  composition: lavender page surface, functional in-page Dashboard/Analytics/
-  Activity pill navigation, two compact KPI rows, a large Revenue & Expenses
+- The Home **uses** the uploaded dashboard reference as an actual
+  composition: subtle neutral-blue page surface, two compact KPI rows, a large Revenue & Expenses
   line chart beside Manufacturing Activity, Sales Activity stacked bars beside
   the paid/unpaid invoice donut, and a full-width Version activity list.
 - The eight KPI cards all use the original **Bank & Treasury** ice-blue
@@ -308,12 +335,12 @@ Only when each concern has one real owner should filenames be simplified. This a
 - Version-only activity remains permission-filtered on the server. The
   front end displays a **single-column, fixed-height scrolling list** with
   compact rows and a persistent header; no multi-column activity cards.
-- The page navigation buttons move to real dashboard sections. The Analytics
-  button remains hidden until at least one authorized report panel is loaded.
+- The former in-page Dashboard/Analytics/Activity tab navigation was
+  retired in Home V11. Use the normal Desk and sidebar navigation.
 - Do not change Frappe/ERPNext Form, List, Reports, Quick Access role gates,
   Version payload fields or accounting calculations as part of this polish.
 - Tests: `node scripts/test_home_v10_layout.js` for palette, data-grounded
-  stacked bars, actual section links and Version list scroll behavior, plus
+  stacked bars, actual KPI/report links and Version list scroll behavior, plus
   existing architecture, permissions, dashboard, report and stability tests.
 ### Home V9 portfolio-style visuals and sidebar bulk selection
 

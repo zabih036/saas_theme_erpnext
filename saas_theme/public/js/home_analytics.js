@@ -116,13 +116,35 @@
 	}
 
 
+	// Use Frappe's ordinary, permission-enforced DocType and report routes.
+	// An unavailable KPI stays hidden and cannot be clicked.
+	function kpi_destination(key) {
+		const reports = {
+			expenses: "Profit and Loss Statement",
+			stock_value: "Stock Balance",
+			cash: "General Ledger",
+			receivables: "Accounts Receivable",
+			payables: "Accounts Payable",
+		};
+		if (Object.prototype.hasOwnProperty.call(reports, key)) {
+			return report_route(reports[key]);
+		}
+		const lists = {
+			revenue: "Sales Invoice",
+			customers: "Customer",
+			suppliers: "Supplier",
+		};
+		return lists[key] ? list_route(lists[key]) : "#";
+	}
+
 	function kpi_card(key, title, icon_name, primary = false) {
-		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
+		return `<a hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}" href="${esc(kpi_destination(key))}" aria-label="${esc(__("View {0} details", [__(title)]))}">
 			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${kpi_icon(icon_name)}</i></div>
 			<div class="st-kpi-value-row"><strong data-kpi-value="${esc(key)}">—</strong><span hidden class="st-kpi-sparkline" data-kpi-mini="${esc(key)}"></span></div>
 			<div data-kpi-delta="${esc(key)}"></div>
 			<small data-kpi-note="${esc(key)}"></small>
-		</article>`;
+			<span class="st-home-card-open" aria-hidden="true">↗</span>
+		</a>`;
 	}
 
 	function dashboard_html() {
@@ -130,14 +152,6 @@
 		// chart grid. All underlying data still comes from permission-checked
 		// ERPNext endpoints; the HTML remains hidden until data is returned.
 		return `<section class="st-dashboard-v5 st-dashboard-v8 st-dashboard-v9 st-dashboard-v10">
-			<nav class="st-v10-page-nav" aria-label="${esc(__("Dashboard sections"))}">
-				<div class="st-v10-nav-tabs" role="group" aria-label="${esc(__("Jump to section"))}">
-					<button type="button" class="st-v10-nav-tab is-active" data-home-target="overview" aria-pressed="true">${__("Dashboard")}</button>
-					<button type="button" hidden class="st-v10-nav-tab" data-home-target="analytics" aria-pressed="false">${__("Analytics")}</button>
-					<button type="button" class="st-v10-nav-tab" data-home-target="activity" aria-pressed="false">${__("Activity")}</button>
-				</div>
-				<span class="st-v10-nav-caption">${__("ERPNext business overview")}</span>
-			</nav>
 			<section class="st-v10-overview-section" data-home-section="overview">
 				<div class="st-dashboard-section-title"><div><span class="st-dashboard-eyebrow">${__("BUSINESS OVERVIEW")}</span><h2>${__("Financial overview")}</h2></div><small>${__("Selected company · current balances")}</small></div>
 				<div class="st-dash-kpis">
@@ -156,24 +170,24 @@
 			<section class="st-v10-analytics-section" data-home-section="analytics">
 				<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("BUSINESS ANALYTICS")}</span><h2>${__("Performance & operations")}</h2></div><small>${__("Based on your accessible ERPNext records")}</small></div>
 				<div class="st-dash-insights">
-					<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
+					<a hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend" href="${esc(report_route("Profit and Loss Statement"))}" aria-label="${esc(__("View profit and loss report"))}">
 						<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
 						<div class="st-dash-chart" data-dashboard-chart="trend"></div>
-					</article>
-					<article hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production">
+					</a>
+					<a hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production" href="${esc(list_route("Stock Entry"))}" aria-label="${esc(__("View manufacturing stock entries"))}">
 						<div class="st-dash-card-head"><div><strong>${__("Manufacturing Activity")}</strong><small>${__("Completed production runs · six months")}</small></div><strong class="st-v10-stat-total" data-production-total></strong></div>
 						<div class="st-production-chart" data-production-chart></div>
-					</article>
+					</a>
 				</div>
 				<div class="st-dash-lower-grid">
-					<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
+					<a hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap" href="${esc(list_route("Sales Invoice"))}" aria-label="${esc(__("View sales invoices"))}">
 						<div class="st-dash-card-head"><div><strong>${__("Sales Activity")}</strong><small>${__("Submitted invoices · weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
 						<div class="st-sales-heatmap" data-sales-heatmap></div>
-					</article>
-					<article hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices">
+					</a>
+					<a hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices" href="${esc(list_route("Sales Invoice"))}" aria-label="${esc(__("View sales invoice records"))}">
 						<div class="st-dash-card-head"><div><strong>${__("Sales Invoice Status")}</strong><small>${__("Paid vs unpaid · past six months")}</small></div></div>
 						<div class="st-invoice-status" data-invoice-status></div>
-					</article>
+					</a>
 				</div>
 			</section>
 			<section class="st-v10-audit-section" data-home-section="activity">
@@ -253,7 +267,7 @@
 				<path class="st-dash-chart-line ${item.key}" d="${path}"/>${circles}`;
 		}).join("");
 		return `<svg class="st-dash-chart-svg st-v9-trend-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expenses by month"))}">
-			<defs><linearGradient id="st-v9-trend-purple" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity=".24"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity=".015"/></linearGradient>
+			<defs><linearGradient id="st-home-trend-primary" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1762ca" stop-opacity=".24"/><stop offset="100%" stop-color="#1762ca" stop-opacity=".015"/></linearGradient>
 			<linearGradient id="st-v9-trend-cyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity=".14"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
 			${grid}${months}${lines}</svg>`;
 	}
@@ -383,10 +397,7 @@
 				$home.find("[data-production-chart]").html(production_chart(data.production));
 				$home.find("[data-production-total]").text(number(data.production.total));
 			}
-			// Charts are loaded only for permitted data. Never reveal a tab
-			// leading to an empty, restricted analytics section.
-			const hasAnalytics = $home.find('.st-v10-analytics-section [data-dashboard-panel]:not([hidden])').length > 0;
-			$home.find('.st-v10-nav-tab[data-home-target="analytics"]').prop("hidden", !hasAnalytics);
+
 		} catch (error) {
 			// Do not render permission-denied or incomplete KPI cards as zeroes.
 			if (token !== enhance_token) return;
@@ -426,24 +437,6 @@
 			$quick.find('.st-hub-section-head p').text(__('Available module sidebars'));
 			$quick.find('.st-hub-quick-grid').toggleClass('st-hub-sidebar-links', true);
 		}
-	}
-
-	function bind_home_section_navigation() {
-		// Functional in-page navigation (no fake pages or route changes).
-		$(document)
-			.off("click.saas_home_sections", ".st-v10-page-nav [data-home-target]")
-			.on("click.saas_home_sections", ".st-v10-page-nav [data-home-target]", function (event) {
-				event.preventDefault();
-				const $button = $(this);
-				const $home = $button.closest(".st-home-dashboard");
-				const key = String($button.attr("data-home-target") || "");
-				if (!["overview", "analytics", "activity"].includes(key)) return;
-				const section = $home.find(`[data-home-section="${key}"]`).get(0);
-				if (!section) return;
-				$home.find(".st-v10-nav-tab").removeClass("is-active").attr("aria-pressed", "false");
-				$button.addClass("is-active").attr("aria-pressed", "true");
-				section.scrollIntoView({ behavior: "smooth", block: "start" });
-			});
 	}
 
 	function quick_sidebar_hidden() {
@@ -501,7 +494,6 @@
 
 		$home.find(".st-dashboard-activity-section").remove();
 		bind_quick_sidebar_toggle();
-		bind_home_section_navigation();
 		apply_quick_sidebar_state($home);
 		load_dashboard($home, token);
 		load_recent_activity($home, token);
