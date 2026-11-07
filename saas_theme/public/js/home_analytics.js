@@ -8,6 +8,7 @@
 	if (typeof frappe === "undefined") return;
 	let enhance_token = 0;
 	const QUICK_SIDEBAR_KEY = "saas_theme_home_quick_sidebar_hidden_v2";
+	let home_currency = "";
 
 	function esc(value) {
 		const text = value == null ? "" : String(value);
@@ -38,6 +39,22 @@
 		}
 	}
 
+	function kpi_icon(name) {
+		// Fixed inline SVG paths avoid empty icon squares when the icon name
+		// is absent from a particular Frappe v16 icon sprite.
+		const shapes = {
+			"trending-up": '<path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+			"credit-card": '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+			"users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+			"truck": '<path d="M1 5h14v12H1zM15 9h4l3 4v4h-7z"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/>',
+			"package": '<path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+			"landmark": '<path d="m3 10 9-7 9 7M4 10h16M5 10v9m5-9v9m5-9v9m4-9v9M3 21h18"/>',
+			"arrow-down-left": '<path d="M17 7 7 17M17 17H7V7"/>',
+			"arrow-up-right": '<path d="M7 17 17 7M7 7h10v10"/>',
+		};
+		return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name] || shapes.package}</svg>`;
+	}
+
 	function user_name() {
 		try { return frappe.user?.full_name?.() || frappe.boot?.user?.full_name || frappe.session?.user || __("User"); }
 		catch (e) { return frappe.session?.user || __("User"); }
@@ -51,7 +68,7 @@
 	}
 
 	function currency() {
-		return frappe.boot?.sysdefaults?.currency || frappe.sys_defaults?.currency || frappe.defaults?.get_default?.("currency") || "";
+		return home_currency || frappe.boot?.sysdefaults?.currency || frappe.sys_defaults?.currency || frappe.defaults?.get_default?.("currency") || "";
 	}
 
 	function money(value) {
@@ -98,40 +115,94 @@
 		return `<span class="st-dash-delta ${positive ? "positive" : "negative"}">${numeric >= 0 ? "↗" : "↘"} ${Math.abs(numeric).toFixed(1)}% <em>${__("vs last month")}</em></span>`;
 	}
 
+
+	function kpi_card(key, title, icon_name, primary = false) {
+		return `<article hidden class="st-dash-kpi${primary ? " st-dash-kpi-primary" : ""}" data-dashboard-kpi="${esc(key)}">
+			<div class="st-dash-kpi-top"><span>${esc(__(title))}</span><i aria-hidden="true">${kpi_icon(icon_name)}</i></div>
+			<strong data-kpi-value="${esc(key)}">—</strong>
+			<div data-kpi-delta="${esc(key)}"></div>
+			<small data-kpi-note="${esc(key)}"></small>
+		</article>`;
+	}
+
 	function dashboard_html() {
-		return `<section class="st-dashboard-v5">
+		return `<section class="st-dashboard-v5 st-dashboard-v8">
 			<div class="st-dash-kpis">
-				<a class="st-dash-kpi st-dash-kpi-primary" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Revenue")}</span><i>${icon("selling")}</i></div><strong data-kpi-value="revenue">—</strong><div data-kpi-delta="revenue">${delta_html(null)}</div><small data-kpi-note="revenue">${__("Loading sales…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(report_route("Profit and Loss Statement"))}"><div class="st-dash-kpi-top"><span>${__("Expenses")}</span><i>${icon("accounting")}</i></div><strong data-kpi-value="expenses">—</strong><div data-kpi-delta="expenses">${delta_html(null)}</div><small data-kpi-note="expenses">${__("Loading expense ledger…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Customer"))}"><div class="st-dash-kpi-top"><span>${__("Active Customers")}</span><i>${icon("users")}</i></div><strong data-kpi-value="customers">—</strong><div data-kpi-delta="customers"><span class="st-dash-delta neutral">${__("Customer master")}</span></div><small data-kpi-note="customers">${__("Loading customers…")}</small></a>
-				<a class="st-dash-kpi" href="${esc(list_route("Supplier"))}"><div class="st-dash-kpi-top"><span>${__("Active Suppliers")}</span><i>${icon("organization")}</i></div><strong data-kpi-value="suppliers">—</strong><div data-kpi-delta="suppliers"><span class="st-dash-delta neutral">${__("Supplier master")}</span></div><small data-kpi-note="suppliers">${__("Loading suppliers…")}</small></a>
+				${kpi_card("revenue", "Revenue", "trending-up", true)}
+				${kpi_card("expenses", "Expenses", "credit-card")}
+				${kpi_card("customers", "Active Customers", "users")}
+				${kpi_card("suppliers", "Active Suppliers", "truck")}
+			</div>
+			<div class="st-dash-financial-kpis">
+				${kpi_card("stock_value", "Stock Value", "package")}
+				${kpi_card("cash", "Bank & Treasury Cash", "landmark")}
+				${kpi_card("receivables", "Receivables", "arrow-down-left")}
+				${kpi_card("payables", "Payables", "arrow-up-right")}
 			</div>
 			<div class="st-dash-insights">
-				<article class="st-dash-card st-dash-revenue-card"><div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend"><span><i class="revenue"></i>${__("Revenue")}</span><span><i class="expenses"></i>${__("Expenses")}</span></div></div><div class="st-dash-chart" data-dashboard-chart="trend"><div class="st-dash-loading">${__("Loading chart…")}</div></div></article>
-				<article class="st-dash-card st-dash-heatmap-card"><div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Invoice activity by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div><div class="st-sales-heatmap" data-sales-heatmap><div class="st-dash-loading">${__("Loading heatmap…")}</div></div></article>
+				<article hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend">
+					<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Six-month financial movement")}</small></div><div class="st-dash-legend" data-trend-legend></div></div>
+					<div class="st-dash-chart" data-dashboard-chart="trend"></div>
+				</article>
+				<article hidden class="st-dash-card st-dash-heatmap-card" data-dashboard-panel="heatmap">
+					<div class="st-dash-card-head"><div><strong>${__("Sales Heatmap")}</strong><small>${__("Submitted invoices by weekday and time")}</small></div><span class="st-dash-mini-value" data-heatmap-total>—</span></div>
+					<div class="st-sales-heatmap" data-sales-heatmap></div>
+				</article>
 			</div>
 			<div class="st-dash-lower-grid">
-				<article class="st-dash-card st-dash-invoice-card"><div class="st-dash-card-head"><div><strong>${__("Invoices")}</strong><small>${__("Paid vs unpaid · last six months")}</small></div></div><div class="st-invoice-status" data-invoice-status><div class="st-dash-loading">${__("Loading invoice status…")}</div></div></article>
-				<article class="st-dash-card st-dash-activity-card"><div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Recent document actions visible to your account")}</small></div><span class="st-dash-card-pill">${__("Live")}</span></div><div class="st-activity-summary"><div class="st-activity-summary-loading">${__("Loading activity…")}</div></div><div class="st-activity-list"><div class="st-dash-loading">${__("Loading recent activity…")}</div></div></article>
+				<article hidden class="st-dash-card st-dash-invoice-card" data-dashboard-panel="invoices">
+					<div class="st-dash-card-head"><div><strong>${__("Sales Invoices")}</strong><small>${__("Paid vs unpaid · past six months")}</small></div></div>
+					<div class="st-invoice-status" data-invoice-status></div>
+				</article>
+				<article class="st-dash-card st-dash-activity-card">
+					<div class="st-dash-card-head"><div><strong>${__("Recent User Activity")}</strong><small>${__("Document audit events you can view")}</small></div></div>
+					<div class="st-activity-summary"></div>
+					<div class="st-activity-list"><div class="st-dash-loading">${__("Loading activity…")}</div></div>
+				</article>
 			</div>
+			<article hidden class="st-dash-card st-dash-production-card" data-dashboard-panel="production">
+				<div class="st-dash-card-head"><div><strong>${__("Production Runs")}</strong><small>${__("Submitted Manufacture stock entries · six months")}</small></div><strong data-production-total></strong></div>
+				<div class="st-production-chart" data-production-chart></div>
+			</article>
 		</section>`;
 	}
 
 	function trend_chart(data) {
-		const labels = data?.labels || [], revenue = data?.revenue || [], expenses = data?.expenses || [];
-		const values = [...revenue, ...expenses].map(Number).filter((value) => Number.isFinite(value));
-		if (!labels.length || !values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No financial activity is available for this period.")}</div>`;
-		const width = 760, height = 280, left = 52, right = 18, top = 16, bottom = 38;
-		const plotW = width - left - right, plotH = height - top - bottom, max = Math.max(1, ...values), slot = plotW / labels.length, bar = Math.min(28, slot * .24);
+		const labels = data?.labels || [];
+		const series = [
+			{ key: "revenue", title: __("Revenue"), values: data?.revenue },
+			{ key: "expenses", title: __("Expenses"), values: data?.expenses },
+		].filter((item) => Array.isArray(item.values));
+		if (!labels.length || !series.length) return "";
+		const values = series.flatMap((item) => item.values.map(Number).filter(Number.isFinite));
+		if (!values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No posted activity for this period.")}</div>`;
+		const width = 760, height = 280, left = 56, right = 18, top = 16, bottom = 38;
+		const plotW = width - left - right, plotH = height - top - bottom;
+		const max = Math.max(1, ...values), slot = plotW / labels.length;
+		const barWidth = Math.min(27, slot * .27);
 		const grid = [0, .25, .5, .75, 1].map((ratio) => {
 			const y = top + plotH - ratio * plotH;
-			return `<line x1="${left}" x2="${width-right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left-8}" y="${y+3}" text-anchor="end" class="st-dash-axis">${esc(money(max*ratio))}</text>`;
+			return `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left - 8}" y="${y + 3}" text-anchor="end" class="st-dash-axis">${esc(money(max * ratio))}</text>`;
 		}).join("");
 		const bars = labels.map((label, index) => {
-			const cx = left + slot * index + slot / 2, rv = Number(revenue[index] || 0), ev = Number(expenses[index] || 0), rh = rv / max * plotH, eh = ev / max * plotH;
-			return `<rect x="${cx-bar-3}" y="${top+plotH-rh}" width="${bar}" height="${Math.max(2,rh)}" rx="6" class="st-dash-bar revenue"><title>${esc(`${label} ${__("Revenue")}: ${money(rv)}`)}</title></rect><rect x="${cx+3}" y="${top+plotH-eh}" width="${bar}" height="${Math.max(2,eh)}" rx="6" class="st-dash-bar expenses"><title>${esc(`${label} ${__("Expenses")}: ${money(ev)}`)}</title></rect><text x="${cx}" y="${height-12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
+			const center = left + slot * (index + .5);
+			return series.map((item, si) => {
+				const val = Number(item.values[index] || 0);
+				const h = Math.max(0, val / max * plotH);
+				const x = center + (si - (series.length - 1) / 2) * (barWidth + 6) - barWidth / 2;
+				return `<rect x="${x}" y="${top + plotH - h}" width="${barWidth}" height="${h}" rx="5" class="st-dash-bar ${item.key}"><title>${esc(label)} ${esc(item.title)}: ${esc(money(val))}</title></rect>`;
+			}).join("") + `<text x="${center}" y="${height - 12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
 		}).join("");
-		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}">${grid}${bars}</svg>`;
+		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expense totals by month"))}">${grid}${bars}</svg>`;
+	}
+
+	function production_chart(data) {
+		if (!Array.isArray(data?.labels) || !Array.isArray(data?.runs)) return "";
+		const max = Math.max(1, ...data.runs.map(Number));
+		return `<div class="st-production-bars">${data.labels.map((label, index) => {
+			const value = Number(data.runs[index] || 0);
+			return `<div class="st-production-month" title="${esc(label)}: ${number(value)}"><strong>${number(value)}</strong><span class="st-production-bar-track"><i style="height:${Math.max(value ? 7 : 0, Math.round(value / max * 100))}%"></i></span><small>${esc(label)}</small></div>`;
+		}).join("")}</div>`;
 	}
 
 	function heatmap_html(data) {
@@ -160,7 +231,7 @@
 
 	function activity_item_html(item) {
 		const meta = activity_meta(item.activity_type), doctype = item.reference_doctype || __("Document"), name = item.reference_name || item.subject || "", actor = item.actor || __("User");
-		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small></span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
+		return `<a class="st-activity-item" href="${esc(form_route(item.reference_doctype, item.reference_name))}"><span class="st-activity-avatar">${esc(initials(actor))}</span><span class="st-activity-copy"><span class="st-activity-line"><strong>${esc(actor)}</strong> <span>${esc(meta.action)}</span> <b>${esc(doctype)}</b></span><small><span>${esc(name)}</span><i></i>${esc(relative_time(item.creation))}</small>${item.description ? `<small class="st-activity-description">${esc(item.description)}</small>` : ""}</span><span class="st-activity-badge st-activity-${esc(meta.tone)}">${esc(item.activity_type || __("Updated"))}</span></a>`;
 	}
 
 	function activity_summary_html(summary) {
@@ -173,19 +244,45 @@
 			const response = await frappe.call({ method: "saas_theme.home.get_dashboard_overview" });
 			if (token !== enhance_token || !$home.closest("body").length) return;
 			const data = response?.message || {}, kpis = data.kpis || {};
-			[["revenue", false, money], ["expenses", true, money], ["customers", false, number], ["suppliers", false, number]].forEach(([key, inverse, formatter]) => {
-				const item = kpis[key] || {};
-				$home.find(`[data-kpi-value="${key}"]`).text(formatter(item.value));
-				if (key === "revenue" || key === "expenses") $home.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, inverse));
-				$home.find(`[data-kpi-note="${key}"]`).text(item.note || __("No data available"));
+			home_currency = data.currency || "";
+			const money_keys = new Set(["revenue", "expenses", "stock_value", "cash", "receivables", "payables"]);
+			Object.entries(kpis).forEach(([key, item]) => {
+				if (!item || item.value == null) return;
+				const $card = $home.find(`[data-dashboard-kpi="${key}"]`);
+				if (!$card.length) return;
+				$card.removeAttr("hidden");
+				$card.find(`[data-kpi-value="${key}"]`).text(money_keys.has(key) ? money(item.value) : number(item.value));
+				if ((key === "revenue" || key === "expenses") && item.delta != null) {
+					$card.find(`[data-kpi-delta="${key}"]`).html(delta_html(item.delta, key === "expenses"));
+				}
+				$card.find(`[data-kpi-note="${key}"]`).text(item.note || "");
 			});
-			$home.find('[data-dashboard-chart="trend"]').html(trend_chart(data.trend));
-			$home.find('[data-sales-heatmap]').html(heatmap_html(data.heatmap));
-			$home.find('[data-heatmap-total]').text(data.heatmap?.total == null ? "—" : number(data.heatmap.total));
-			$home.find('[data-invoice-status]').html(invoice_html(data.invoices));
-		} catch (e) {
-			if (token !== enhance_token || !$home.closest("body").length) return;
-			$home.find('.st-dash-loading').text(__("Dashboard data could not be loaded."));
+			if (data.trend && (Array.isArray(data.trend.revenue) || Array.isArray(data.trend.expenses))) {
+				$home.find('[data-dashboard-panel="trend"]').removeAttr("hidden");
+				$home.find('[data-dashboard-chart="trend"]').html(trend_chart(data.trend));
+				const legend = [["revenue", __("Revenue")], ["expenses", __("Expenses")]]
+					.filter(([key]) => Array.isArray(data.trend[key]))
+					.map(([key, label]) => `<span><i class="${key}"></i>${esc(label)}</span>`).join("");
+				$home.find("[data-trend-legend]").html(legend);
+			}
+			if (data.heatmap) {
+				$home.find('[data-dashboard-panel="heatmap"]').removeAttr("hidden");
+				$home.find("[data-sales-heatmap]").html(heatmap_html(data.heatmap));
+				$home.find("[data-heatmap-total]").text(number(data.heatmap.total));
+			}
+			if (data.invoices) {
+				$home.find('[data-dashboard-panel="invoices"]').removeAttr("hidden");
+				$home.find("[data-invoice-status]").html(invoice_html(data.invoices));
+			}
+			if (data.production) {
+				$home.find('[data-dashboard-panel="production"]').removeAttr("hidden");
+				$home.find("[data-production-chart]").html(production_chart(data.production));
+				$home.find("[data-production-total]").text(number(data.production.total));
+			}
+		} catch (error) {
+			// Do not render permission-denied or incomplete KPI cards as zeroes.
+			if (token !== enhance_token) return;
+			$home.find(".st-dashboard-v8 [data-dashboard-panel]").attr("hidden", "hidden");
 		}
 	}
 
@@ -198,7 +295,7 @@
 			$home.find('.st-dash-activity-card .st-activity-list').html(items.length ? items.map(activity_item_html).join("") : `<div class="st-dash-empty">${__("No recent user activity is available.")}</div>`);
 		} catch (e) {
 			if (token !== enhance_token || !$home.closest("body").length) return;
-			$home.find('.st-dash-activity-card .st-activity-list').html(`<div class="st-dash-empty">${__("Recent activity could not be loaded.")}</div>`);
+			$home.find('.st-dash-activity-card').remove();
 		}
 	}
 
@@ -217,6 +314,9 @@
 		if ($sidebar.length && $quick.length) {
 			$quick.detach().addClass('st-home-quick-sidebar').prependTo($sidebar);
 			$sidebar.addClass('st-home-navigation-sidebar');
+			$quick.find('.st-hub-section-head h2').text(__('Quick Access'));
+			$quick.find('.st-hub-section-head p').text(__('Available module sidebars'));
+			$quick.find('.st-hub-quick-grid').toggleClass('st-hub-sidebar-links', true);
 		}
 	}
 

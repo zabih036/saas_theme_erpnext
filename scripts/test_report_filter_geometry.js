@@ -11,7 +11,8 @@ const css6 = fs.readFileSync(path.join(root, "saas_theme/public/css/ui_precision
 const css62 = fs.readFileSync(path.join(root, "saas_theme/public/css/ui_precision_v6_2.css"), "utf8");
 
 function declarations(css, selector) {
-    const start = css.indexOf(selector + " {");
+    // Later scoped override wins; the earlier combined selector has no padding reset.
+    const start = css.lastIndexOf(selector + " {");
     assert.ok(start >= 0, "Missing " + selector);
     const open = css.indexOf("{", start);
     const close = css.indexOf("}", open);
@@ -24,8 +25,11 @@ for (const [name, css] of [["v6", css6], ["v6.2", css62]]) {
         /(?:^|[;\n])\s*(?:min-width|max-width|width)\s*:/,
         name + " must not override native DataTable column widths");
 }
-assert.match(declarations(css62, "#page-query-report .report-wrapper .dt-row-filter > .dt-cell"),
-    /padding\s*:\s*0\s*!important/, "Outer cell must have zero padding");
+// The same selector also appears in a combined dark-mode rule. Assert the
+// explicit padding-reset declaration, not the first/last unrelated block.
+assert.match(css62,
+    /#page-query-report \.report-wrapper \.dt-row-filter > \.dt-cell\s*\{\s*padding\s*:\s*0\s*!important/,
+    "Outer filter cell must have zero padding");
 assert.ok(!js.includes("function sync_filter_cell("), "Old width synchronizer must not return");
 
 const functionStart = js.indexOf("\tfunction restore_native_filter_geometry(");

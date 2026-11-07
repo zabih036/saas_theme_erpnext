@@ -12,7 +12,6 @@
 	const RECENT_KEY = "saas_theme_recent_workspaces_v1";
 	const FAVORITES_KEY = "saas_theme_favorite_workspaces_v1";
 	const MAX_RECENT = 6;
-	const MAX_QUICK = 8;
 	let clock_timer = null;
 
 	function escape_html(value) {
@@ -163,19 +162,38 @@
 		return get_recent().map((item) => by_name.get(item.name) || item).filter((item) => item?.name && item?.route);
 	}
 
-	function get_quick_access(workspaces) {
-		const by_name = new Map(workspaces.map((workspace) => [workspace.name, workspace]));
-		const picked = [];
+	function get_quick_access() {
+		// The Home navigation column lists the user's Frappe sidebar modules,
+		// not individual Workspace pages. Boot sidebars are scoped to the user.
+		const modern = frappe.boot?.module_sidebars || {};
+		const legacy = frappe.boot?.workspace_sidebar_item || {};
+		const source = Object.keys(modern).length ? modern : legacy;
 		const seen = new Set();
-		const push = (workspace) => {
-			if (!workspace?.name || !workspace?.route || seen.has(workspace.name)) return;
-			seen.add(workspace.name);
-			picked.push(workspace);
-		};
-		get_favorites().forEach((name) => push(by_name.get(name)));
-		map_recent_to_workspaces(workspaces).forEach(push);
-		workspaces.forEach(push);
-		return picked.slice(0, MAX_QUICK);
+		const result = [];
+		for (const [key, raw] of Object.entries(source)) {
+			const sidebar = raw || {};
+			if (sidebar.hidden === 1 || sidebar.is_hidden === 1 || sidebar.disabled === 1) continue;
+			const name = sidebar.name || sidebar.module || key;
+			const label = sidebar.label || sidebar.title || name;
+			if (!name || seen.has(name)) continue;
+			const linkItems = sidebar.items || sidebar.sidebar_items || [];
+			// Avoid showing modules which have no accessible navigation entries.
+			if (!Array.isArray(linkItems) || !linkItems.length) continue;
+			let route = sidebar.route;
+			try {
+				route = frappe.app?.sidebar?.module_landing_route?.(name) || route;
+			} catch (e) { /* Use the sidebar's own route. */ }
+			if (!route || !String(route).startsWith("/")) {
+				route = `${window.location.pathname.startsWith("/app") ? "/app" : "/desk"}/${slug(name)}`;
+			}
+			seen.add(name);
+			result.push({
+				name, title: label, route,
+				icon: sidebar.header_icon || sidebar.icon || "layout-grid",
+				module: __("Sidebar"),
+			});
+		}
+		return result;
 	}
 
 	function quick_card(workspace) {
@@ -254,7 +272,7 @@
 		$container.addClass("st-workspace-home-active st-home-dashboard-active");
 
 		const modules = [...new Set(workspaces.map((workspace) => workspace.module).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), undefined, { sensitivity: "base" }));
-		const quick = get_quick_access(workspaces);
+		const quick = get_quick_access();
 		const initial_unread = Number(frappe.boot?.notification_unread_count ?? 0);
 		const name = get_user_name();
 		const parts = date_parts();
@@ -268,7 +286,7 @@
 			{ key: "modules", label: __("Modules"), value: modules.length, caption: __("Navigation groups"), icon: "folder-normal" },
 		];
 
-		const $home = $(`<div class="st-home-dashboard"><header class="st-hub-welcome"><div><div class="st-hub-eyebrow">${__("Workspace Home")}</div><h1><span class="st-hub-greeting">${escape_html(greeting_for_hour(parts.hour))}</span>, ${escape_html(name)}</h1><p>${__("Everything you need to continue your work, in one place.")}</p></div><div class="st-hub-workspace-total"><span>${workspaces.length}</span><small>${workspaces.length === 1 ? __("workspace") : __("workspaces")}</small></div></header><div class="st-hub-metrics">${metrics.map(metric_card).join("")}</div><div class="st-hub-layout"><aside class="st-hub-sidebar"><section class="st-hub-clock-card"><div class="st-hub-clock-top"><span class="st-hub-clock-weekday">${escape_html(parts.weekday)}</span><span class="st-hub-live-dot"><i></i>${__("Live")}</span></div><div class="st-hub-clock-time">${escape_html(parts.time)}</div><div class="st-hub-clock-date">${escape_html(parts.date)}</div><div class="st-hub-clock-zone">${escape_html(parts.time_zone)}</div></section><section class="st-hub-side-card"><div class="st-hub-side-head"><div><span>${__("Recent")}</span><small>${__("Continue where you left off")}</small></div></div><div class="st-hub-recent-list">${recent_list(workspaces)}</div></section></aside><main class="st-hub-main"><section class="st-hub-section st-hub-quick-section"><div class="st-hub-section-head"><div><h2>${__("Quick Access")}</h2><p>${__("Favorites and recently used workspaces")}</p></div></div><div class="st-hub-quick-grid">${quick.map(quick_card).join("")}</div></section><section class="st-hub-section st-hub-workspaces-section"><div class="st-hub-section-head st-hub-workspaces-head"><div><h2>${__("All Workspaces")}</h2><p>${__("Navigate to modules, reports and transactions")}</p></div><span class="st-hub-visible-count">${workspaces.length}</span></div><div class="st-hub-search-row"><label class="st-hub-search"><span>${search_icon()}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${escape_html(__("Search workspaces..."))}"></label></div><div class="st-hub-chips">${chips}</div><div class="st-hub-workspace-grid">${workspaces.map(workspace_card).join("")}</div><div class="st-hub-empty"><span>${icon_html("search")}</span><strong>${__("No matching workspaces")}</strong><small>${__("Try a different search or module filter.")}</small></div></section></main></div></div>`);
+		const $home = $(`<div class="st-home-dashboard"><header class="st-hub-welcome"><div><div class="st-hub-eyebrow">${__("Workspace Home")}</div><h1><span class="st-hub-greeting">${escape_html(greeting_for_hour(parts.hour))}</span>, ${escape_html(name)}</h1><p>${__("Everything you need to continue your work, in one place.")}</p></div><div class="st-hub-workspace-total"><span>${workspaces.length}</span><small>${workspaces.length === 1 ? __("workspace") : __("workspaces")}</small></div></header><div class="st-hub-metrics">${metrics.map(metric_card).join("")}</div><div class="st-hub-layout"><aside class="st-hub-sidebar"><section class="st-hub-clock-card"><div class="st-hub-clock-top"><span class="st-hub-clock-weekday">${escape_html(parts.weekday)}</span><span class="st-hub-live-dot"><i></i>${__("Live")}</span></div><div class="st-hub-clock-time">${escape_html(parts.time)}</div><div class="st-hub-clock-date">${escape_html(parts.date)}</div><div class="st-hub-clock-zone">${escape_html(parts.time_zone)}</div></section><section class="st-hub-side-card"><div class="st-hub-side-head"><div><span>${__("Recent")}</span><small>${__("Continue where you left off")}</small></div></div><div class="st-hub-recent-list">${recent_list(workspaces)}</div></section></aside><main class="st-hub-main"><section class="st-hub-section st-hub-quick-section"><div class="st-hub-section-head"><div><h2>${__("Quick Access")}</h2><p>${__("Your available sidebar modules")}</p></div></div><div class="st-hub-quick-grid">${quick.map(quick_card).join("")}</div></section><section class="st-hub-section st-hub-workspaces-section"><div class="st-hub-section-head st-hub-workspaces-head"><div><h2>${__("All Workspaces")}</h2><p>${__("Navigate to modules, reports and transactions")}</p></div><span class="st-hub-visible-count">${workspaces.length}</span></div><div class="st-hub-search-row"><label class="st-hub-search"><span>${search_icon()}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${escape_html(__("Search workspaces..."))}"></label></div><div class="st-hub-chips">${chips}</div><div class="st-hub-workspace-grid">${workspaces.map(workspace_card).join("")}</div><div class="st-hub-empty"><span>${icon_html("search")}</span><strong>${__("No matching workspaces")}</strong><small>${__("Try a different search or module filter.")}</small></div></section></main></div></div>`);
 
 		$container.append($home);
 		start_clock($home);
@@ -318,6 +336,7 @@
 	}
 
 	saas_theme.home_dashboard.render = render_home_dashboard;
+	saas_theme.home_dashboard.get_quick_access = get_quick_access;
 
 	$(document).off("desktop_screen.saas_home_dashboard").on("desktop_screen.saas_home_dashboard", function (_event, payload) {
 		setTimeout(() => render_home_dashboard(payload?.desktop), 80);
