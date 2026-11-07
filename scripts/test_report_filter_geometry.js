@@ -11,7 +11,8 @@ const css6 = fs.readFileSync(path.join(root, "saas_theme/public/css/ui_precision
 const css62 = fs.readFileSync(path.join(root, "saas_theme/public/css/ui_precision_v6_2.css"), "utf8");
 
 function declarations(css, selector) {
-    const start = css.indexOf(selector + " {");
+    // Later scoped override wins; the earlier combined selector has no padding reset.
+    const start = css.lastIndexOf(selector + " {");
     assert.ok(start >= 0, "Missing " + selector);
     const open = css.indexOf("{", start);
     const close = css.indexOf("}", open);
