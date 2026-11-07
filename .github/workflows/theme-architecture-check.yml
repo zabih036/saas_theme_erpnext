@@ -14,6 +14,9 @@ on:
       - 'scripts/validate_theme_late_loaders.py'
       - 'scripts/test_stability_runtime.js'
       - 'scripts/test_report_filter_geometry.js'
+      - 'scripts/test_home_dashboard.py'
+      - 'scripts/test_home_dashboard_ui.js'
+      - 'saas_theme/home.py'
       - 'scripts/validate_phase3c_css_bundle.py'
       - '.github/workflows/theme-architecture-check.yml'
 
@@ -36,3 +39,10 @@ jobs:
         run: |
           node --check saas_theme/public/js/ui_precision_v6_2.js
           node scripts/test_report_filter_geometry.js
+      - name: Validate Home permission and finance analytics
+        run: |
+          python3 -m py_compile saas_theme/home.py
+          python3 scripts/test_home_dashboard.py
+          node --check saas_theme/public/js/home_dashboard.js
+          node --check saas_theme/public/js/home_analytics.js
+          node scripts/test_home_dashboard_ui.js
