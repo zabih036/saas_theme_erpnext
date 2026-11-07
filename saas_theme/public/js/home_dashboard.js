@@ -13,6 +13,8 @@
 	const FAVORITES_KEY = "saas_theme_favorite_workspaces_v1";
 	const MAX_RECENT = 6;
 	let clock_timer = null;
+	let allowed_sidebar_names = null;
+	let sidebar_access_request = 0;
 
 	function escape_html(value) {
 		const text = value == null ? "" : String(value);
@@ -162,7 +164,7 @@
 		return get_recent().map((item) => by_name.get(item.name) || item).filter((item) => item?.name && item?.route);
 	}
 
-	function get_quick_access() {
+	function get_sidebar_candidates() {
 		// The Home navigation column lists the user's Frappe sidebar modules,
 		// not individual Workspace pages. Boot sidebars are scoped to the user.
 		const modern = frappe.boot?.module_sidebars || {};
@@ -194,6 +196,44 @@
 			});
 		}
 		return result;
+	}
+
+	function get_quick_access() {
+		if (!(allowed_sidebar_names instanceof Set)) return [];
+		return get_sidebar_candidates().filter((sidebar) => allowed_sidebar_names.has(sidebar.name));
+	}
+
+	function sidebar_access_ready() {
+		return allowed_sidebar_names instanceof Set;
+	}
+
+	async function load_allowed_sidebars($home) {
+		// Fail closed until the site's custom_allowed_roles child table is
+		// checked server-side. That field is absent from Frappe boot sidebars.
+		const request = ++sidebar_access_request;
+		allowed_sidebar_names = null;
+		const candidates = get_sidebar_candidates();
+		if (!candidates.length) {
+			allowed_sidebar_names = new Set();
+			$(document).trigger("saas_home_sidebars_ready");
+			return;
+		}
+		try {
+			const response = await frappe.call({
+				method: "saas_theme.home.get_home_sidebar_access",
+				args: { names: candidates.map((item) => item.name) },
+			});
+			if (request !== sidebar_access_request || !$home.closest("body").length) return;
+			const names = response?.message?.allowed;
+			if (!Array.isArray(names)) return; // Do not expose unknown permissions.
+			allowed_sidebar_names = new Set(names);
+			$home.find(".st-hub-quick-grid").first().html(get_quick_access().map(quick_card).join(""));
+			$home.find(".st-hub-quick-section").toggle(allowed_sidebar_names.size > 0);
+			$(document).trigger("saas_home_sidebars_ready");
+		} catch (error) {
+			if (request !== sidebar_access_request) return;
+			$home.find(".st-hub-quick-section").hide();
+		}
 	}
 
 	function quick_card(workspace) {
@@ -272,7 +312,7 @@
 		$container.addClass("st-workspace-home-active st-home-dashboard-active");
 
 		const modules = [...new Set(workspaces.map((workspace) => workspace.module).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), undefined, { sensitivity: "base" }));
-		const quick = get_quick_access();
+		const quick = []; // Keep restricted sidebars hidden until role check completes.
 		const initial_unread = Number(frappe.boot?.notification_unread_count ?? 0);
 		const name = get_user_name();
 		const parts = date_parts();
@@ -289,6 +329,7 @@
 		const $home = $(`<div class="st-home-dashboard"><header class="st-hub-welcome"><div><div class="st-hub-eyebrow">${__("Workspace Home")}</div><h1><span class="st-hub-greeting">${escape_html(greeting_for_hour(parts.hour))}</span>, ${escape_html(name)}</h1><p>${__("Everything you need to continue your work, in one place.")}</p></div><div class="st-hub-workspace-total"><span>${workspaces.length}</span><small>${workspaces.length === 1 ? __("workspace") : __("workspaces")}</small></div></header><div class="st-hub-metrics">${metrics.map(metric_card).join("")}</div><div class="st-hub-layout"><aside class="st-hub-sidebar"><section class="st-hub-clock-card"><div class="st-hub-clock-top"><span class="st-hub-clock-weekday">${escape_html(parts.weekday)}</span><span class="st-hub-live-dot"><i></i>${__("Live")}</span></div><div class="st-hub-clock-time">${escape_html(parts.time)}</div><div class="st-hub-clock-date">${escape_html(parts.date)}</div><div class="st-hub-clock-zone">${escape_html(parts.time_zone)}</div></section><section class="st-hub-side-card"><div class="st-hub-side-head"><div><span>${__("Recent")}</span><small>${__("Continue where you left off")}</small></div></div><div class="st-hub-recent-list">${recent_list(workspaces)}</div></section></aside><main class="st-hub-main"><section class="st-hub-section st-hub-quick-section"><div class="st-hub-section-head"><div><h2>${__("Quick Access")}</h2><p>${__("Your available sidebar modules")}</p></div></div><div class="st-hub-quick-grid">${quick.map(quick_card).join("")}</div></section><section class="st-hub-section st-hub-workspaces-section"><div class="st-hub-section-head st-hub-workspaces-head"><div><h2>${__("All Workspaces")}</h2><p>${__("Navigate to modules, reports and transactions")}</p></div><span class="st-hub-visible-count">${workspaces.length}</span></div><div class="st-hub-search-row"><label class="st-hub-search"><span>${search_icon()}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${escape_html(__("Search workspaces..."))}"></label></div><div class="st-hub-chips">${chips}</div><div class="st-hub-workspace-grid">${workspaces.map(workspace_card).join("")}</div><div class="st-hub-empty"><span>${icon_html("search")}</span><strong>${__("No matching workspaces")}</strong><small>${__("Try a different search or module filter.")}</small></div></section></main></div></div>`);
 
 		$container.append($home);
+		load_allowed_sidebars($home);
 		start_clock($home);
 		refresh_personal_metrics($home);
 
@@ -337,6 +378,7 @@
 
 	saas_theme.home_dashboard.render = render_home_dashboard;
 	saas_theme.home_dashboard.get_quick_access = get_quick_access;
+	saas_theme.home_dashboard.sidebar_access_ready = sidebar_access_ready;
 
 	$(document).off("desktop_screen.saas_home_dashboard").on("desktop_screen.saas_home_dashboard", function (_event, payload) {
 		setTimeout(() => render_home_dashboard(payload?.desktop), 80);
