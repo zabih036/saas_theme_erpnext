@@ -152,20 +152,41 @@
 	}
 
 	function trend_chart(data) {
-		const labels = data?.labels || [], revenue = data?.revenue || [], expenses = data?.expenses || [];
-		const values = [...revenue, ...expenses].map(Number).filter((value) => Number.isFinite(value));
-		if (!labels.length || !values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No financial activity is available for this period.")}</div>`;
-		const width = 760, height = 280, left = 52, right = 18, top = 16, bottom = 38;
-		const plotW = width - left - right, plotH = height - top - bottom, max = Math.max(1, ...values), slot = plotW / labels.length, bar = Math.min(28, slot * .24);
+		const labels = data?.labels || [];
+		const series = [
+			{ key: "revenue", title: __("Revenue"), values: data?.revenue },
+			{ key: "expenses", title: __("Expenses"), values: data?.expenses },
+		].filter((item) => Array.isArray(item.values));
+		if (!labels.length || !series.length) return "";
+		const values = series.flatMap((item) => item.values.map(Number).filter(Number.isFinite));
+		if (!values.some((value) => value > 0)) return `<div class="st-dash-empty">${__("No posted activity for this period.")}</div>`;
+		const width = 760, height = 280, left = 56, right = 18, top = 16, bottom = 38;
+		const plotW = width - left - right, plotH = height - top - bottom;
+		const max = Math.max(1, ...values), slot = plotW / labels.length;
+		const barWidth = Math.min(27, slot * .27);
 		const grid = [0, .25, .5, .75, 1].map((ratio) => {
 			const y = top + plotH - ratio * plotH;
-			return `<line x1="${left}" x2="${width-right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left-8}" y="${y+3}" text-anchor="end" class="st-dash-axis">${esc(money(max*ratio))}</text>`;
+			return `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" class="st-dash-grid-line"/><text x="${left - 8}" y="${y + 3}" text-anchor="end" class="st-dash-axis">${esc(money(max * ratio))}</text>`;
 		}).join("");
 		const bars = labels.map((label, index) => {
-			const cx = left + slot * index + slot / 2, rv = Number(revenue[index] || 0), ev = Number(expenses[index] || 0), rh = rv / max * plotH, eh = ev / max * plotH;
-			return `<rect x="${cx-bar-3}" y="${top+plotH-rh}" width="${bar}" height="${Math.max(2,rh)}" rx="6" class="st-dash-bar revenue"><title>${esc(`${label} ${__("Revenue")}: ${money(rv)}`)}</title></rect><rect x="${cx+3}" y="${top+plotH-eh}" width="${bar}" height="${Math.max(2,eh)}" rx="6" class="st-dash-bar expenses"><title>${esc(`${label} ${__("Expenses")}: ${money(ev)}`)}</title></rect><text x="${cx}" y="${height-12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
+			const center = left + slot * (index + .5);
+			return series.map((item, si) => {
+				const val = Number(item.values[index] || 0);
+				const h = Math.max(0, val / max * plotH);
+				const x = center + (si - (series.length - 1) / 2) * (barWidth + 6) - barWidth / 2;
+				return `<rect x="${x}" y="${top + plotH - h}" width="${barWidth}" height="${h}" rx="5" class="st-dash-bar ${item.key}"><title>${esc(label)} ${esc(item.title)}: ${esc(money(val))}</title></rect>`;
+			}).join("") + `<text x="${center}" y="${height - 12}" text-anchor="middle" class="st-dash-axis">${esc(label)}</text>`;
 		}).join("");
-		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}">${grid}${bars}</svg>`;
+		return `<svg class="st-dash-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(__("Revenue and expense totals by month"))}">${grid}${bars}</svg>`;
+	}
+
+	function production_chart(data) {
+		if (!Array.isArray(data?.labels) || !Array.isArray(data?.runs)) return "";
+		const max = Math.max(1, ...data.runs.map(Number));
+		return `<div class="st-production-bars">${data.labels.map((label, index) => {
+			const value = Number(data.runs[index] || 0);
+			return `<div class="st-production-month" title="${esc(label)}: ${number(value)}"><strong>${number(value)}</strong><span class="st-production-bar-track"><i style="height:${Math.max(value ? 7 : 0, Math.round(value / max * 100))}%"></i></span><small>${esc(label)}</small></div>`;
+		}).join("")}</div>`;
 	}
 
 	function heatmap_html(data) {
