@@ -2584,6 +2584,25 @@ body.st-home-sidebar-ui-active .navbar-brand .app-logo {
 	border-color: #39344d !important;
 }
 [data-theme="dark"] .st-dashboard-v10 .st-dash-card-head strong { color: #f0ebff !important; }
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-kpi-value-row > strong,
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-top,
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-top span {
+	color: #e0f2ff !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi small,
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi .st-dash-delta {
+	color: #b6d5ec !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-top i {
+	background: rgba(221,240,255,.13) !important;
+	color: #b8deff !important;
+}
+[data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-dash-kpi-top i svg {
+	color: #b8deff !important;
+	stroke: #b8deff !important;
+}
+[data-theme="dark"] .st-dashboard-v10 .st-v9-kpi-spark path { stroke: #b8deff !important; }
+
 [data-theme="dark"] .st-dashboard-v10 .st-v10-sales-track { background: #342d4a; }
 [data-theme="dark"] .st-home-dashboard.st-dashboard-redesign-v7 .st-dashboard-v10 .st-v9-activity-entry {
 	background: #222035 !important;
