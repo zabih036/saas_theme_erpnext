@@ -8,7 +8,7 @@
 			const link = document.createElement("link");
 			link.id = "st-stability-refinement-v3-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/stability_refinement_v3.css?v=3";
+			link.href = "/assets/saas_theme/css/desk_stability.css?v=1";
 			document.head.appendChild(link);
 		}
 

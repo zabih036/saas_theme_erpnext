@@ -12,7 +12,7 @@ import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BUNDLE = ROOT / "saas_theme/public/css/stability_refinement_v3.css"
+BUNDLE = ROOT / "saas_theme/public/css/desk_stability.css"
 V4_MARKER = b"/*\n * SaaS Theme \xe2\x80\x94 UI Precision v4\n"
 # Original immutable Git blob IDs, before Phase 3C.
 ORIGINAL_V3 = "98e6778f6ffc6869707809003c87f03ebd1003d7"

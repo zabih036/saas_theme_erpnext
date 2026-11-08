@@ -21,6 +21,10 @@ on:
       - 'saas_theme/home.py'
       - 'scripts/validate_phase3c_css_bundle.py'
       - 'scripts/validate_phase3d_popup_bundle.py'
+      - 'scripts/validate_phase3e_overlay_bundle.py'
+      - 'scripts/audit_runtime_asset_references.py'
+      - 'scripts/validate_phase4_canonical_names.py'
+      - 'scripts/validate_phase4b_stability_asset.py'
       - '.github/workflows/theme-architecture-check.yml'
 
 jobs:
@@ -40,6 +44,14 @@ jobs:
         run: python3 scripts/validate_phase3c_css_bundle.py
       - name: Validate Phase 3D popup CSS cascade parity
         run: python3 scripts/validate_phase3d_popup_bundle.py
+      - name: Validate Phase 3E overlay CSS cascade parity
+        run: python3 scripts/validate_phase3e_overlay_bundle.py
+      - name: Audit Phase 3F live CSS and JS references
+        run: python3 scripts/audit_runtime_asset_references.py
+      - name: Validate Phase 4 canonical CSS rename integrity
+        run: python3 scripts/validate_phase4_canonical_names.py
+      - name: Validate Phase 4B stability CSS and loader parity
+        run: python3 scripts/validate_phase4b_stability_asset.py
       - name: Validate report filter geometry and controller syntax
         run: |
           node --check saas_theme/public/js/ui_precision_v6_2.js

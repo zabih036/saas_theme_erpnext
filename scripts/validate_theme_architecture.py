@@ -36,10 +36,9 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/grid_and_action_alignment.css?v=2",
     "/assets/saas_theme/css/report_and_form_shell.css?v=1",
     "/assets/saas_theme/css/child_row_editor_finish.css?v=1",
-    "/assets/saas_theme/css/overlay_stacking_fix.css?v=2",
-    "/assets/saas_theme/css/overlay_stacking_v3.css?v=1",
+    "/assets/saas_theme/css/overlay_layers.css?v=1",
     "/assets/saas_theme/css/interaction_finish_v2.css?v=2",
-    "/assets/saas_theme/css/global_popup_polish_v3.css?v=4",
+    "/assets/saas_theme/css/popup_controls.css?v=1",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
 ]
 
@@ -55,7 +54,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/mobile_shell.js?v=2",
     "/assets/saas_theme/js/workspace_shell_polish.js?v=1",
     "/assets/saas_theme/js/final_shell_cleanup.js?v=2",
-    "/assets/saas_theme/js/user_theme_menu.js?v=3",
+    "/assets/saas_theme/js/user_theme_menu.js?v=4",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
@@ -77,7 +76,7 @@ KNOWN_CSS_FILES = {
     "form.css",
     "form_surface.css",
     "palette.css",
-    "global_popup_polish_v3.css",
+    "popup_controls.css",
     "grid_and_action_alignment.css",
     "home.css",
     "home_clarity_refinement.css",
@@ -88,12 +87,11 @@ KNOWN_CSS_FILES = {
     "login.css",
     "login_refinement.css",
     "mobile_shell.css",
-    "overlay_stacking_fix.css",
-    "overlay_stacking_v3.css",
+    "overlay_layers.css",
     "professional_ui.css",
     "report_and_form_shell.css",
     "saas_theme.css",
-    "stability_refinement_v3.css",
+    "desk_stability.css",
     "tree_view_refinement.css",
     "ui_consolidation_v7.css",
     "ui_precision_v6.css",
@@ -129,6 +127,10 @@ KNOWN_JS_FILES = {
 # Retired filenames from proven no-op removals or completed bundle migrations.
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "stability_refinement_v3.css",
+    "global_popup_polish_v3.css",
+    "overlay_stacking_fix.css",
+    "overlay_stacking_v3.css",
     "compact_autocomplete_and_form_gap_v4.css",
     "form_controls.css",
     "ui_precision_v4.css",
@@ -152,11 +154,10 @@ RETIRED_ASSETS = {
 
 PROTECTED_COMPATIBILITY_FILES = {
     "css/child_row_editor_finish.css",
-    "css/overlay_stacking_fix.css",
-    "css/overlay_stacking_v3.css",
+    "css/overlay_layers.css",
     "css/interaction_finish_v2.css",
-    "css/global_popup_polish_v3.css",
-    "css/stability_refinement_v3.css",
+    "css/popup_controls.css",
+    "css/desk_stability.css",
     "css/child_table_precision_v5.css",
     "css/ui_precision_v6.css",
     "css/ui_precision_v6_2.css",
@@ -173,7 +174,7 @@ PROTECTED_COMPATIBILITY_FILES = {
 
 EXPECTED_LATE_ASSET_TOKENS = {
     "user_theme_menu.js": [
-        "/assets/saas_theme/css/stability_refinement_v3.css?v=3",
+        "/assets/saas_theme/css/desk_stability.css?v=1",
         "/assets/saas_theme/js/stability_refinement_v3.js?v=2",
         "/assets/saas_theme/js/ui_precision_v4.js?v=1",
         "/assets/saas_theme/css/child_table_precision_v5.css?v=1",
@@ -189,7 +190,7 @@ EXPECTED_LATE_ASSET_TOKENS = {
 }
 
 REQUIRED_RUNTIME_GUARDS = {
-    "stability_refinement_v3.css": [
+    "desk_stability.css": [
         "SaaS Theme — Stability Refinement v3",
         "SaaS Theme — UI Precision v4",
         ".form-layout.st-section-card-form",
@@ -201,7 +202,7 @@ REQUIRED_RUNTIME_GUARDS = {
         "min-height: 44px !important",
         ".body-sidebar .sidebar-header .title-container",
     ],
-    "global_popup_polish_v3.css": [
+    "popup_controls.css": [
         "SaaS Theme — Global Popup Polish v3",
         "SaaS Theme — Compact Autocomplete + Form Gap v4",
     ],
@@ -247,7 +248,9 @@ REQUIRED_RUNTIME_GUARDS = {
         'window.addEventListener("scroll", runAfterCurrentEvent',
         "Math.max(180, Math.round(rect.width))",
     ],
-    "overlay_stacking_v3.css": [
+    "overlay_layers.css": [
+        "SaaS Theme — Overlay / Stacking Context Fix v2",
+        "SaaS Theme — Overlay / Stacking Context Fix v3",
         "body > .form-in-grid.st-v7-grid-editor",
         "display: block !important",
         "visibility: visible !important",
