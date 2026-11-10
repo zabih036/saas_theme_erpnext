@@ -32,7 +32,7 @@ LATE_LOADERS = {
         ("js/child_table_ui.js?v=1", 1),
         ("css/control_search_report.css?v=1", 1),
         ("js/control_search_report.js?v=1", 1),
-        ("js/ui_precision_v6_2.js?v=2", 1),
+        ("js/search_report_refinements.js?v=1", 1),
     ],
     "form_sidebar_persistence.js": [
         ("css/inline_grid_link_popup_anchor_v5.css?v=5", 1),
@@ -41,8 +41,8 @@ LATE_LOADERS = {
     "interaction_finish_v2.js": [
         ("css/ui_consolidation_v7.css?v=14", 1),
     ],
-    "ui_precision_v6_2.js": [
-        ("css/ui_precision_v6_2.css?v=3", 2),
+    "search_report_refinements.js": [
+        ("css/search_report_refinements.css?v=1", 2),
     ],
 }
 
