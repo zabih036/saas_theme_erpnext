@@ -18,6 +18,9 @@
 		logo: undefined,
 		logo_promise: null,
 		observer: null,
+		language_dialog: null,
+		language_loading: false,
+		language_saving: false,
 	};
 
 	async function resolve_company_logo() {
@@ -180,6 +183,214 @@
 		});
 	}
 
+
+	/* Both language entry points use the same self-service User.language API.
+	   Frappe reboots translated labels and RTL direction on full-page reload. */
+	function language_icon() {
+		return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>';
+	}
+
+	function current_language() {
+		const code = String(frappe.boot?.lang || frappe.boot?.user?.language || "en");
+		return /^[a-z]{2,3}(?:[-_][A-Za-z]{2,4})?$/.test(code) ? code : "en";
+	}
+
+	async function save_user_language(language) {
+		const response = await frappe.call({
+			method: "saas_theme.language.set_user_language",
+			args: { language },
+		});
+		if (response?.message?.language !== language) {
+			throw new Error("Language preference was not confirmed");
+		}
+		// Reloading, rather than updating only labels, lets Frappe recreate
+		// translated boot data, menus, formatters, text direction and layout.
+		window.location.reload();
+	}
+
+	async function open_language_picker() {
+		if (state.language_loading || state.language_dialog || state.language_saving) return;
+		state.language_loading = true;
+		try {
+			const response = await frappe.call({
+				method: "saas_theme.language.get_available_languages",
+				type: "GET",
+			});
+			const current = String(response?.message?.current || current_language());
+			const enabled = response?.message?.languages;
+			if (!Array.isArray(enabled)) throw new Error("Languages are unavailable");
+			const seen = new Set();
+			const languages = enabled.filter((language) => {
+				const code = language?.code;
+				if (typeof code !== "string" || !code || seen.has(code)) return false;
+				seen.add(code);
+				return true;
+			});
+			if (!languages.length) throw new Error("No enabled languages");
+
+			const dialog = new frappe.ui.Dialog({
+				title: __("Choose Language"),
+				size: "small",
+				fields: [{ fieldtype: "HTML", fieldname: "language_picker" }],
+			});
+			state.language_dialog = dialog;
+			dialog.$wrapper.addClass("st-language-dialog");
+			dialog.$wrapper.on("hidden.bs.modal", () => {
+				if (state.language_dialog === dialog) state.language_dialog = null;
+			});
+
+			const root = dialog.fields_dict.language_picker.$wrapper[0];
+			const picker = document.createElement("div");
+			picker.className = "st-language-picker";
+
+			const intro = document.createElement("p");
+			intro.className = "st-language-picker-help";
+			intro.textContent = __("Select a language to update your Desk. The page will reload.");
+			picker.appendChild(intro);
+
+			const search = document.createElement("input");
+			search.className = "form-control st-language-picker-search";
+			search.type = "search";
+			search.placeholder = __("Search languages");
+			search.setAttribute("aria-label", __("Search languages"));
+			picker.appendChild(search);
+
+			const list = document.createElement("div");
+			list.className = "st-language-picker-options";
+			list.setAttribute("role", "group");
+			list.setAttribute("aria-label", __("Available languages"));
+			const buttons = [];
+
+			for (const language of languages) {
+				const code = language.code;
+				const label = String(language.name || code);
+				const button = document.createElement("button");
+				button.type = "button";
+				button.className = "st-language-picker-option";
+				button.dataset.language = code;
+				button.dataset.search = (label + " " + code).toLocaleLowerCase();
+				if (code === current) {
+					button.classList.add("is-current");
+					button.setAttribute("aria-current", "true");
+				}
+
+				const name = document.createElement("span");
+				name.className = "st-language-picker-name";
+				name.textContent = label;
+				name.dir = "auto";
+				const tag = document.createElement("span");
+				tag.className = "st-language-picker-code";
+				tag.textContent = code.toUpperCase();
+				const status = document.createElement("span");
+				status.className = "st-language-picker-status";
+				status.textContent = code === current ? __("Current") : "";
+				button.append(name, tag, status);
+
+				button.addEventListener("click", async () => {
+					if (state.language_saving) return;
+					if (code === current) {
+						dialog.hide();
+						return;
+					}
+					state.language_saving = true;
+					buttons.forEach((item) => { item.disabled = true; });
+					status.textContent = __("Applying...");
+					try {
+						await save_user_language(code);
+					} catch (error) {
+						state.language_saving = false;
+						buttons.forEach((item) => { item.disabled = false; });
+						status.textContent = "";
+						frappe.msgprint(__("Could not change your language. Please try again."));
+					}
+				});
+				buttons.push(button);
+				list.appendChild(button);
+			}
+
+			search.addEventListener("input", () => {
+				const term = String(search.value || "").trim().toLocaleLowerCase();
+				buttons.forEach((button) => {
+					button.hidden = !!term && !button.dataset.search.includes(term);
+				});
+			});
+
+			picker.appendChild(list);
+			root.appendChild(picker);
+			dialog.show();
+		} catch (error) {
+			frappe.msgprint(__("Could not load available languages. Please try again."));
+		} finally {
+			state.language_loading = false;
+		}
+	}
+
+	function ensure_home_language_button() {
+		if (!frappe.session?.user || frappe.session.user === "Guest") return;
+		document.querySelectorAll(".desktop-wrapper .desktop-navbar").forEach((header) => {
+			if (header.querySelector(".st-home-language-button")) return;
+			const notification = header.querySelector(".st-desktop-top-actions .desktop-notification-icon");
+			if (!notification) return;
+			const button = document.createElement("button");
+			button.type = "button";
+			button.className = "st-home-language-button";
+			button.setAttribute("aria-label", __("Change Language"));
+			button.title = __("Change Language");
+			const icon = document.createElement("span");
+			icon.className = "st-home-language-icon";
+			icon.innerHTML = language_icon();
+			const code = document.createElement("span");
+			code.className = "st-home-language-code";
+			code.textContent = current_language().toUpperCase();
+			button.append(icon, code);
+			button.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				open_language_picker();
+			});
+			notification.insertAdjacentElement("beforebegin", button);
+		});
+	}
+
+	function ensure_user_language_menu(root) {
+		const $root = root ? $(root) : $(document);
+		const $menus = $root.filter(".es-menu")
+			.add($root.find(".es-menu"))
+			.add($root.closest(".es-menu"));
+		$menus.each(function () {
+			const menu = this;
+			if (menu.querySelector(".st-language-user-menu-item")) return;
+			const rows = Array.from(menu.querySelectorAll(".es-menu__item"));
+			const settings = String(__("Settings")).trim();
+			const reload = String(__("Reload")).trim();
+			const logout = String(__("Logout")).trim();
+			const labels = rows.map((row) => String(
+				row.querySelector(".es-menu__label")?.textContent || row.textContent || ""
+			).replace(/\s+/g, " ").trim());
+			if (!labels.includes(settings) || !labels.includes(reload) || !labels.includes(logout)) {
+				return; // Never insert into an unrelated Frappe menu.
+			}
+			const settings_row = rows[labels.indexOf(settings)];
+			const row = document.createElement("button");
+			row.type = "button";
+			row.className = "es-menu__item st-language-user-menu-item";
+			row.setAttribute("role", "menuitem");
+			const icon = document.createElement("span");
+			icon.className = "st-language-user-menu-icon";
+			icon.innerHTML = language_icon();
+			const label = document.createElement("span");
+			label.className = "es-menu__label";
+			label.textContent = __("Language");
+			row.append(icon, label);
+			row.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				open_language_picker();
+			});
+			settings_row.insertAdjacentElement("afterend", row);
+		});
+	}
+
 	function patch_sidebar_help_menu() {
 		const proto = frappe.ui?.SidebarHeader?.prototype;
 		if (!proto || proto.__saas_theme_help_removed || typeof proto.system_items !== "function") {
@@ -280,6 +491,7 @@
 		remove_frappe_support(root);
 		remove_desktop_about(root);
 		remove_open_sidebar_help(root);
+		ensure_user_language_menu(root);
 	}
 
 	function setup_observer() {
@@ -297,6 +509,14 @@
 						$node.find("#brand-logo, .navbar-brand .app-logo").length
 					) {
 						apply_company_logo();
+					}
+					// Desktop toolbar is recreated on route changes. Reattach
+					// the language button beside the actual notification control.
+					if (
+						$node.is(".desktop-navbar, .st-desktop-top-actions, .desktop-notification-icon") ||
+						$node.find(".desktop-navbar, .st-desktop-top-actions, .desktop-notification-icon").length
+					) {
+						ensure_home_language_button();
 					}
 
 					if (
@@ -318,6 +538,7 @@
 		apply_company_logo();
 		clean_menus(document);
 		ensure_sidebar_toggle();
+		ensure_home_language_button();
 		setup_observer();
 	}
 
