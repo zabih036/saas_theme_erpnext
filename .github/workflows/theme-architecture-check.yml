@@ -25,6 +25,8 @@ on:
       - 'scripts/audit_runtime_asset_references.py'
       - 'scripts/validate_phase4_canonical_names.py'
       - 'scripts/validate_phase4b_stability_asset.py'
+      - 'scripts/validate_phase4c_child_table_assets.py'
+      - 'scripts/test_child_table_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
 
 jobs:
@@ -52,6 +54,12 @@ jobs:
         run: python3 scripts/validate_phase4_canonical_names.py
       - name: Validate Phase 4B stability CSS and loader parity
         run: python3 scripts/validate_phase4b_stability_asset.py
+      - name: Validate Phase 4C exact child-table UI assets
+        run: |
+          python3 scripts/validate_phase4c_child_table_assets.py
+          node --check saas_theme/public/js/child_table_ui.js
+          node --check saas_theme/public/js/user_theme_menu.js
+          node scripts/test_child_table_runtime.js
       - name: Validate report filter geometry and controller syntax
         run: |
           node --check saas_theme/public/js/ui_precision_v6_2.js
