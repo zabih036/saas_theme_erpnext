@@ -260,3 +260,127 @@
 		display: none !important;
 	}
 }
+
+
+/* Shared language chooser: user menu row and the one-click option dialog.
+   Header trigger styling belongs to desktop_navbar_refinement.css. */
+.es-menu .st-language-user-menu-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	width: 100%;
+	text-align: start;
+}
+.es-menu .st-language-user-menu-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	color: inherit;
+	flex: 0 0 18px;
+}
+.es-menu .st-language-user-menu-icon svg {
+	width: 18px;
+	height: 18px;
+	stroke: currentColor;
+}
+.st-language-dialog .st-language-picker {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 2px 0 6px;
+}
+.st-language-dialog .st-language-picker-help {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--text-muted, #667085);
+}
+.st-language-dialog .st-language-picker-search {
+	height: 39px;
+	border-radius: 9px;
+	border: 1px solid var(--border-color, #dbe4f0);
+	background: var(--control-bg, #f8fafc);
+	font-size: 13px;
+}
+.st-language-dialog .st-language-picker-search:focus {
+	border-color: #1762ca;
+	box-shadow: 0 0 0 3px rgba(23,98,202,.12);
+	outline: 0;
+}
+.st-language-dialog .st-language-picker-options {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	max-height: min(49vh, 365px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 2px 4px 2px 0;
+	scrollbar-width: thin;
+}
+.st-language-dialog .st-language-picker-option {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	min-height: 43px;
+	padding: 9px 11px;
+	border: 1px solid var(--border-color, #e2e8f0);
+	border-radius: 9px;
+	background: var(--card-bg, #fff);
+	color: var(--text-color, #223653);
+	text-align: start;
+	font: inherit;
+	cursor: pointer;
+	transition: border-color .16s ease, background-color .16s ease,
+		box-shadow .16s ease;
+}
+.st-language-dialog .st-language-picker-option:hover,
+.st-language-dialog .st-language-picker-option:focus-visible {
+	background: var(--control-bg, #eef5ff);
+	border-color: #9bc2f6;
+	box-shadow: 0 0 0 2px rgba(23,98,202,.08);
+	outline: 0;
+}
+.st-language-dialog .st-language-picker-option.is-current {
+	background: rgba(23,98,202,.07);
+	border-color: rgba(23,98,202,.35);
+}
+.st-language-dialog .st-language-picker-name {
+	flex: 1;
+	min-width: 0;
+	font-size: 13px;
+	font-weight: 620;
+}
+.st-language-dialog .st-language-picker-code {
+	font-size: 10px;
+	font-weight: 750;
+	color: var(--text-muted, #667085);
+	letter-spacing: .04em;
+}
+.st-language-dialog .st-language-picker-status {
+	font-size: 10px;
+	font-weight: 650;
+	color: #1762ca;
+}
+.st-language-dialog .st-language-picker-option[hidden] {
+	display: none !important;
+}
+.st-language-dialog .st-language-picker-option:disabled {
+	cursor: progress;
+	opacity: .55;
+}
+[data-theme="dark"] .st-language-dialog .st-language-picker-option.is-current {
+	background: rgba(85,155,255,.13);
+	border-color: #4f8cff;
+}
+[data-theme="dark"] .st-language-dialog .st-language-picker-status {
+	color: #8fbbff;
+}
+@media (prefers-reduced-motion: reduce) {
+	.st-language-dialog .st-language-picker-option {
+		transition: none;
+	}
+}
