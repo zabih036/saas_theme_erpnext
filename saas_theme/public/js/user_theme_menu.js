@@ -40,14 +40,14 @@
 			const link = document.createElement("link");
 			link.id = "st-child-table-precision-v5-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/child_table_precision_v5.css?v=1";
+			link.href = "/assets/saas_theme/css/child_table_ui.css?v=1";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-child-table-precision-v5-js")) {
 			const script = document.createElement("script");
 			script.id = "st-child-table-precision-v5-js";
-			script.src = "/assets/saas_theme/js/child_table_precision_v5.js?v=1";
+			script.src = "/assets/saas_theme/js/child_table_ui.js?v=1";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
