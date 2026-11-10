@@ -366,11 +366,10 @@ and report filter/DataTable styling:
 - Report geometry tests now read the canonical v6 CSS owner and
   continue to validate the **unchanged** v6.2 report behavior.
 
-**The v6.2 CSS and JS remain independently active** and are not merged
-or reordered. The final report filtering and inline-search corrections
-will require their own separate Phase 4E migration. Real browser tests
-on Stock Ledger, General Ledger, form Check fields and AwesomeBar are
-still required before production deployment.
+**The final v6.2 overrides remain independently active**, not merged
+or reordered. Their versioned filenames were subsequently normalized in
+Phase 4E (above). Real browser tests on Stock Ledger, General Ledger,
+form Check fields and AwesomeBar remain required before deployment.
 
 ### Phase 4C — Rename the child-table precision owner (CSS + JS)
 
