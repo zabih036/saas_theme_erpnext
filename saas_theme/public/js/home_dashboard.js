@@ -174,7 +174,10 @@
 		const result = [];
 		for (const [key, raw] of Object.entries(source)) {
 			const sidebar = raw || {};
-			if (sidebar.hidden === 1 || sidebar.is_hidden === 1 || sidebar.disabled === 1) continue;
+			// Boot may contain the site's custom Check field; the server remains
+			// authoritative when boot omits it. Both list and modal use this source.
+			if (sidebar.hidden === 1 || sidebar.is_hidden === 1 || sidebar.disabled === 1 ||
+				Number(sidebar.custom_hidden || 0) === 1) continue;
 			const name = sidebar.name || sidebar.module || key;
 			const label = sidebar.label || sidebar.title || name;
 			if (!name || seen.has(name)) continue;
