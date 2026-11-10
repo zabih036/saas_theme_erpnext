@@ -53,6 +53,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
 | General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
 | Reports / DataTable + flat-form shell | `saas_theme/public/css/report_and_form_shell.css` | Query/Script report surfaces, report tables and the intentionally colocated no-tab/flat-form shell. |
+| Checkbox, inline search and report filter foundations | `saas_theme/public/css/control_search_report.css` / `saas_theme/public/js/control_search_report.js` | Exact v6.1 foundation code, late-loaded immediately before the final v6.2 overrides; do not reimplement checkbox or report geometry in another owner. |
 | Report filter/search behavior | `saas_theme/public/js/ui_precision_v6_2.js` | Final report filter labels/utility classification and search behavior. **Frappe DataTable alone owns filter-cell widths** via `.dt-cell__content--col-N`; do not set outer-cell pixel widths. |
 | Tree / Chart of Accounts | `saas_theme/public/css/tree_view_refinement.css` | Tree-specific rows, controls and checkboxes. |
 | Grid + page-action alignment | `saas_theme/public/css/grid_and_action_alignment.css` | Child-grid geometry and page-head action alignment. Keep separate from form surface and reports because it spans both concerns. |
@@ -83,7 +84,7 @@ These files remain because they still contribute rules or behavior to the curren
 - `popup_controls.css` (the exact former global-popup v3 + compact-autocomplete v4 blocks)
 - `desk_stability.css` (exact original v3 + v4 CSS bundle); `stability_refinement_v3.js` remains its original late-loaded controller
 - `ui_precision_v4.js` (still active)
-- `ui_precision_v6.css` / `.js`
+- `control_search_report.css` / `.js` (byte-identical v6 foundation for checkboxes, inline search and report filters)
 
 Do not remove an active compatibility layer merely because a newer file exists. First prove that every selector, runtime guard, and event behavior it owns has been migrated.
 
@@ -164,7 +165,7 @@ does **not** alter runtime asset order, CSS declarations, or JavaScript handlers
 
 | Existing loader | Late-loaded children | Migration concern |
 | --- | --- | --- |
-| `user_theme_menu.js` | `stability_refinement_v3` bundled CSS + stability JS; `ui_precision_v4.js`; `child_table_ui` CSS/JS; `ui_precision_v6` CSS/JS; `ui_precision_v6_2.js` | Current order is part of the working header, report, checkbox, and child-table behavior |
+| `user_theme_menu.js` | `stability_refinement_v3` bundled CSS + stability JS; `ui_precision_v4.js`; `child_table_ui` CSS/JS; `control_search_report` CSS/JS; `ui_precision_v6_2.js` | Current order is part of the working header, report, checkbox, and child-table behavior |
 | `ui_precision_v6_2.js` | `ui_precision_v6_2.css` | The same CSS URL appears in two intentional branches: update an existing link, or insert a new one |
 | `form_sidebar_persistence.js` | `inline_grid_link_popup_anchor_v5` CSS/JS | Protected inline-grid dropdown positioning/scroll behavior |
 | `interaction_finish_v2.js` | `ui_consolidation_v7.css` | Intentional *second* injection of CSS also included by hooks, preserving final cascade priority |
@@ -306,6 +307,37 @@ For each late layer:
 
 `ui_consolidation_v7.css`, `interaction_finish_v2.js`, and the current inline-grid popup compatibility fix are treated as protected stability owners until the end of this phase.
 
+### Phase 4D — Rename the v6 controls, search and reports foundation
+
+This phase changes **filenames, not behavior**, for the v6.1 foundation
+that implements Check-field visual reliability, inline AwesomeBar search
+and report filter/DataTable styling:
+
+- `ui_precision_v6.css` → `control_search_report.css`.
+- `ui_precision_v6.js` → `control_search_report.js`.
+- Both new files have identical original Git blob SHA hashes. No CSS
+  selector or JS event, timeout, observer, focus behavior or route logic
+  is modified.
+- Only two late asset URL literals change in `user_theme_menu.js`.
+  Its DOM IDs, CSS-then-JS injection order and final v6.2 loader remain
+  as before. Cache-bump that owner hook from `v=5` to `v=6`.
+- The old filenames are retired in the architecture guard; the late
+  loader manifest keeps the precise order. Phase 4B and 4C still
+  reverse the two independently pinned URL renames before verifying
+  their original complete loader SHA IDs.
+- `scripts/validate_phase4d_controls_assets.py` independently checks
+  both exact v6 Git blobs, the complete pre-Phase-4D loader source
+  after reversing **only** the two URLs, original DOM identities,
+  and that v6.2 still executes after v6.
+- Report geometry tests now read the canonical v6 CSS owner and
+  continue to validate the **unchanged** v6.2 report behavior.
+
+**The v6.2 CSS and JS remain independently active** and are not merged
+or reordered. The final report filtering and inline-search corrections
+will require their own separate Phase 4E migration. Real browser tests
+on Stock Ledger, General Ledger, form Check fields and AwesomeBar are
+still required before production deployment.
+
 ### Phase 4C — Rename the child-table precision owner (CSS + JS)
 
 The existing child-table v5 CSS/JS pair has one clear responsibility:
@@ -391,7 +423,7 @@ sub-block integrity. The Phase 3F audit ensures all runtime paths resolve.
 **Still pending in Phase 4:** The other versioned JS/CSS assets are active
 and not yet migrated to single non-versioned ownership, particularly
 `stability_refinement_v3`, `ui_precision_v4.js`,
-`ui_precision_v6` / `v6_2`,
+`ui_precision_v6_2`,
 `inline_grid_link_popup_anchor_v5`, and
 `interaction_finish_v2` / `ui_consolidation_v7`. They cannot be
 deleted or renamed as an untested batch while they contain live runtime
@@ -418,7 +450,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Change List View row hover” → `list_view.css`
 - “Change report table/filter appearance or flat/no-tab form shell” → `report_and_form_shell.css`
 - “Fix report filter behavior/alignment logic” → `ui_precision_v6_2.js`
-- “Fix Stock Ledger / General Ledger DataTable header/filter alignment” → `ui_precision_v6.css` + `ui_precision_v6_2.css` (input styling only, never force widths on `.dt-cell__content`) and `ui_precision_v6_2.js` (remove legacy inline geometry; preserve DataTable column sizing). `scripts/test_report_filter_geometry.js` guards this.
+- “Fix Stock Ledger / General Ledger DataTable header/filter alignment” → `control_search_report.css` + `ui_precision_v6_2.css` (input styling only, never force widths on `.dt-cell__content`) and `ui_precision_v6_2.js` (remove legacy inline geometry; preserve DataTable column sizing). `scripts/test_report_filter_geometry.js` guards this.
 - “Change child-table row visuals” → `child_table_ui.css`
 - “Fix expanded child row opening/clicking” → `interaction_finish_v2.js`; use `overlay_layers.css` only for stacking/visibility compatibility
 - “Fix Item/Warehouse inline dropdown width/position while scrolling” → `inline_grid_link_popup_anchor_v5.js`
