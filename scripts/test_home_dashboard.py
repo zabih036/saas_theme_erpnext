@@ -106,10 +106,10 @@ def get_all(doctype, fields=None, filters=None, order_by=None, limit_page_length
     return [Row(x) for x in audit_rows.get(doctype, [])]
 
 
-def qb_get_query(doctype, fields, filters, group_by=None, ignore_permissions=True):
+def qb_get_query(doctype, fields, filters, group_by=None, ignore_permissions=True, or_filters=None):
     assert ignore_permissions is False, "Aggregates MUST enforce user permissions"
     assert doctype in readable
-    queries.append((doctype, fields, filters, group_by))
+    queries.append((doctype, fields, filters, group_by, or_filters))
     if doctype == "GL Entry" and group_by == "posting_date":
         account_filter = next((item[2] for item in filters if
                                item[0] == "account" and item[1] == "in"), [])
@@ -136,7 +136,8 @@ assert queries == []
 # growth percentage is undefined when the previous month had no sales.
 readable.update({"Sales Invoice", "Customer", "Supplier", "Company"})
 datasets.update({
-    "Company": [dict(name="Demo Company", default_currency="AFN")],
+    "Company": [dict(name="Demo Company", default_currency="AFN",
+                     default_finance_book="Main Book")],
     "Customer": [dict(name="CUST-001")],
     "Supplier": [dict(name="SUP-001")],
     "Sales Invoice": [dict(
@@ -198,11 +199,17 @@ assert overview["kpis"]["payables"]["value"] == 300
 assert overview["kpis"]["stock_value"]["value"] == 12500
 assert overview["production"]["total"] == 1
 assert queries and all(q[0] in readable for q in queries)
-for doctype, fields, filters, group_by in queries:
+for doctype, fields, filters, group_by, or_filters in queries:
     if doctype == "GL Entry" and group_by == "posting_date":
         assert ["company", "=", "Demo Company"] in filters
         assert ["is_cancelled", "=", 0] in filters
         assert ["voucher_type", "!=", "Period Closing Voucher"] in filters
+        assert ["finance_book", "is", "not set"] in or_filters
+        assert ["finance_book", "=", ""] in or_filters
+        assert ["finance_book", "=", "Main Book"] in or_filters
+        assert ["finance_book", "=", "Other Book"] not in or_filters
+        if ["account", "in", ["Income - Demo"]] in filters:
+            assert ["posting_date", ">=", date(2026, 4, 1)] in filters
 
 # The feed must load from Version ONLY, never Comment. It includes the
 # permitted document but not sensitive field values or inaccessible records.
