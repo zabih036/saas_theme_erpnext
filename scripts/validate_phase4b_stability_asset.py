@@ -22,7 +22,7 @@ CSS_ORIGINAL_SHA = "939ab1fb162ab6ad772e81397ff556d191037fef"
 LOADER_ORIGINAL_SHA = "683bd5a5e0ae6dadb5e6fddae7c04e3a66937a0d"
 OLD_URL = "/assets/saas_theme/css/stability_refinement_v3.css?v=3"
 NEW_URL = "/assets/saas_theme/css/desk_stability.css?v=1"
-LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=6"
+LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=7"
 
 
 def git_blob_sha(contents: bytes) -> str:
@@ -64,6 +64,12 @@ def main() -> None:
         if restored_original.count(current) != 1 or original in restored_original:
             raise SystemExit("Phase 4B: unexpected child-table Phase 4C URL changes")
         restored_original = restored_original.replace(current, original)
+    # Phase 4E renames only the final v6.2 controller URL.
+    current_final = b"/assets/saas_theme/js/search_report_refinements.js?v=1"
+    original_final = b"/assets/saas_theme/js/ui_precision_v6_2.js?v=2"
+    if restored_original.count(current_final) != 1 or original_final in restored_original:
+        raise SystemExit("Phase 4B: Phase 4E override URL changed unexpectedly")
+    restored_original = restored_original.replace(current_final, original_final)
     if git_blob_sha(restored_original) != LOADER_ORIGINAL_SHA:
         raise SystemExit("Phase 4B: loader changed beyond the independently guarded asset URL renames")
     hooks = ast.parse(HOOKS.read_text(encoding="utf-8"))
