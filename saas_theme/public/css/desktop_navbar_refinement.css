@@ -216,6 +216,65 @@
 	border-radius: 50% !important;
 }
 
+/* The Home language selector belongs to the navbar and sits immediately
+   before the native notification control. No global Desk navbar overrides. */
+.desktop-wrapper .desktop-navbar .st-home-language-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 36px;
+	height: 36px;
+	padding: 0 10px;
+	border: 1px solid var(--st-topbar-border);
+	border-radius: 9px;
+	background: var(--st-topbar-soft);
+	color: var(--st-topbar-text);
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 750;
+	letter-spacing: .03em;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background-color .18s ease, color .18s ease,
+		border-color .18s ease, box-shadow .18s ease;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-button:hover,
+.desktop-wrapper .desktop-navbar .st-home-language-button:focus-visible {
+	background: var(--st-topbar-surface);
+	color: var(--st-topbar-blue);
+	border-color: var(--st-topbar-blue);
+	box-shadow: 0 0 0 3px rgba(23,98,202,.10);
+	outline: none;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-icon {
+	display: inline-flex;
+	width: 17px;
+	height: 17px;
+	align-items: center;
+	justify-content: center;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-icon svg {
+	width: 17px;
+	height: 17px;
+	stroke: currentColor;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-code {
+	line-height: 1;
+}
+@media (max-width: 767px) {
+	.desktop-wrapper .desktop-navbar .st-home-language-button {
+		width: 34px;
+		min-width: 34px;
+		height: 34px;
+		min-height: 34px;
+		padding: 0;
+	}
+	.desktop-wrapper .desktop-navbar .st-home-language-code {
+		display: none;
+	}
+}
+
 /* =========================================================
    INITIAL DESK SPLASH
    Never expose the Frappe/ERPNext logo while Desk boots.
