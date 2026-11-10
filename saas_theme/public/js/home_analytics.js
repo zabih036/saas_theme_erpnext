@@ -131,7 +131,6 @@
 			return report_route(reports[key]);
 		}
 		const lists = {
-
 			customers: "Customer",
 			suppliers: "Supplier",
 		};
