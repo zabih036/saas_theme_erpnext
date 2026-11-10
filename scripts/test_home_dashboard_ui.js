@@ -47,6 +47,27 @@ assert.ok(hub.includes('const quick = [];'),
 assert.ok(hub.includes("Your available sidebar modules"));
 assert.ok(!hub.includes("get_quick_access(workspaces)"),
     "Quick Access must not regress to Workspace favorites");
+assert.ok(hub.includes("sidebar.custom_hidden") &&
+    hub.includes("Number(sidebar.custom_hidden || 0) === 1"),
+    "Home must exclude custom_hidden from boot when present");
+const candidateStart = hub.indexOf("\tfunction get_sidebar_candidates() {");
+const candidateEnd = hub.indexOf("\n\tfunction get_quick_access()", candidateStart);
+assert.ok(candidateStart >= 0 && candidateEnd > candidateStart);
+const sidebarCandidates = vm.runInNewContext(
+    hub.slice(candidateStart, candidateEnd) + "\nget_sidebar_candidates();", {
+        __: (value) => value,
+        slug: (value) => value.toLowerCase(),
+        window: {location: {pathname: "/desk"}},
+        frappe: {
+            boot: {module_sidebars: {
+                Buying: {name: "Buying", items: [{type: "Link"}]},
+                CustomHidden: {name: "CustomHidden", custom_hidden: 1, items: [{type: "Link"}]},
+            }},
+            app: {sidebar: {module_landing_route: (name) => "/desk/" + name.toLowerCase()}},
+        },
+    });
+assert.deepEqual(Array.from(sidebarCandidates, (x) => x.name), ["Buying"],
+    "A custom_hidden Sidebar cannot reach Quick Access or Customize modal");
 
 const picker = fs.readFileSync(
     path.join(root, "saas_theme/public/js/quick_access_preferences.js"), "utf8");
