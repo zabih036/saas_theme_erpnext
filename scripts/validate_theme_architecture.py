@@ -187,7 +187,7 @@ EXPECTED_LATE_ASSET_TOKENS = {
         "/assets/saas_theme/js/child_table_ui.js?v=1",
         "/assets/saas_theme/css/control_search_report.css?v=1",
         "/assets/saas_theme/js/control_search_report.js?v=1",
-        "/assets/saas_theme/js/search_report_refinements.js?v=2",
+        "/assets/saas_theme/js/search_report_refinements.js?v=1",
     ],
     "form_sidebar_persistence.js": [
         "/assets/saas_theme/css/inline_grid_link_popup_anchor_v5.css?v=5",
