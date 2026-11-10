@@ -19,6 +19,9 @@ on:
       - 'scripts/test_home_visuals_and_picker.js'
       - 'scripts/test_home_v10_layout.js'
       - 'saas_theme/home.py'
+      - 'saas_theme/language.py'
+      - 'scripts/test_language_settings.py'
+      - 'scripts/test_language_switcher.js'
       - 'scripts/validate_phase3c_css_bundle.py'
       - 'scripts/validate_phase3d_popup_bundle.py'
       - 'scripts/validate_phase3e_overlay_bundle.py'
@@ -76,6 +79,12 @@ jobs:
         run: |
           node --check saas_theme/public/js/search_report_refinements.js
           node scripts/test_report_filter_geometry.js
+      - name: Validate personal language switching and menu placement
+        run: |
+          python3 -m py_compile saas_theme/language.py
+          python3 scripts/test_language_settings.py
+          node --check saas_theme/public/js/brand_shell.js
+          node scripts/test_language_switcher.js
       - name: Validate Home permission and finance analytics
         run: |
           python3 -m py_compile saas_theme/home.py
