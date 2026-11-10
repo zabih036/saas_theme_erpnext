@@ -183,8 +183,8 @@ EXPECTED_LATE_ASSET_TOKENS = {
         "/assets/saas_theme/js/ui_precision_v4.js?v=1",
         "/assets/saas_theme/css/child_table_ui.css?v=1",
         "/assets/saas_theme/js/child_table_ui.js?v=1",
-        "/assets/saas_theme/css/control_search_report.css?v=3",
-        "/assets/saas_theme/js/control_search_report.js?v=2",
+        "/assets/saas_theme/css/control_search_report.css?v=1",
+        "/assets/saas_theme/js/control_search_report.js?v=1",
         "/assets/saas_theme/js/ui_precision_v6_2.js?v=2",
     ],
     "form_sidebar_persistence.js": [
