@@ -243,9 +243,11 @@ class FakeMeta:
 
 
 meta = {
-    "Sidebar": FakeMeta({"custom_allowed_roles": types.SimpleNamespace(
-        fieldtype="Table", options="Sidebar Allowed Role",
-    )}),
+    "Sidebar": FakeMeta({
+        "custom_allowed_roles": types.SimpleNamespace(
+            fieldtype="Table", options="Sidebar Allowed Role"),
+        "custom_hidden": types.SimpleNamespace(fieldtype="Check"),
+    }),
     "Workspace Sidebar": FakeMeta({}),
     "Sidebar Allowed Role": FakeMeta([types.SimpleNamespace(
         fieldname="role", fieldtype="Link", options="Role",
@@ -255,18 +257,27 @@ frappe.get_meta = lambda doctype: meta[doctype]
 frappe.db = types.SimpleNamespace(exists=lambda doctype, name: doctype == "DocType")
 frappe.get_roles = lambda user: ["Employee", "Accounts User"]
 frappe.get_all = lambda doctype, fields=None, filters=None, order_by=None, limit_page_length=None: (
-    [Row({"name": "Buying"}), Row({"name": "Accounting"})]
+    [Row({"name": "Buying"}), Row({"name": "Accounting"}),
+     Row({"name": "Manufacturing"}), Row({"name": "Hidden"})]
     if doctype == "Sidebar"
     else [Row(v) for v in audit_rows.get(doctype, [])]
 )
 docs = {
     ("Sidebar", "Buying"): Row({"custom_allowed_roles": [Row({"role": "Employee"})]}),
-    ("Sidebar", "Accounting"): Row({"custom_allowed_roles": [Row({"role": "System Manager"})]}),
+    ("Sidebar", "Accounting"): Row({"custom_allowed_roles": [Row({"role": "System Manager"})], "custom_hidden": 0}),
+    ("Sidebar", "Manufacturing"): Row({"custom_allowed_roles": [], "custom_hidden": 0}),
+    ("Sidebar", "Hidden"): Row({"custom_allowed_roles": [Row({"role": "Employee"})], "custom_hidden": 1}),
 }
 frappe.get_doc = lambda doctype, name: docs[(doctype, name)]
 names = ["Buying", "Accounting", "Manufacturing"]
 allowed = home.get_home_sidebar_access(names)
 assert allowed == {"allowed": ["Buying", "Manufacturing"]}, allowed
+# Hidden Sidebar never appears, even with an allowed role or Administrator.
+assert home.get_home_sidebar_access(["Hidden"]) == {"allowed": []}
+assert home.get_home_sidebar_access(["Buying", "Hidden"]) == {"allowed": ["Buying"]}
+frappe.session.user = "Administrator"
+assert home.get_home_sidebar_access(["Accounting", "Hidden"]) == {"allowed": ["Accounting"]}
+frappe.session.user = "employee@example.com"
 assert home.get_home_sidebar_access('["Buying","Accounting"]') == {"allowed": ["Buying"]}
 assert home.get_home_sidebar_access(["Accounting"]) == {"allowed": []}
 docs[("Sidebar", "Buying")] = Row({"custom_allowed_roles": [Row({"unknown": "Employee"})]})
