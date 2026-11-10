@@ -98,6 +98,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
 | Desktop navbar | `saas_theme/public/css/desktop_navbar_refinement.css` | Desktop navbar appearance/spacing. |
+| Page-header avatar/profile repair (late-loaded) | `saas_theme/public/js/header_profile_repair.js` | Unchanged former v4 controller; ensures the page utility cluster, profile avatar, and native Frappe user menu remain usable after delayed sidebar initialization. |
 | Mobile shell | `saas_theme/public/css/mobile_shell.css` / `saas_theme/public/js/mobile_shell.js` | Mobile-only shell/navigation behavior. |
 | Form controls + navigation | `saas_theme/public/css/form.css` | Exact bundle of the former form controls + form navigation layers. Input/control rules remain first; tab/navigation rules remain second. Cross-layer sticky-state bugs still belong to the final stability layer. |
 | Form palette | `saas_theme/public/css/palette.css` | Exact bundle of the former form palette + palette refinement layers, preserving historical order. |
@@ -141,7 +142,7 @@ These files remain because they still contribute rules or behavior to the curren
 - `interaction_finish_v2.css`
 - `popup_controls.css` (the exact former global-popup v3 + compact-autocomplete v4 blocks)
 - `desk_stability.css` (exact original v3 + v4 CSS bundle); `stability_refinement_v3.js` remains its original late-loaded controller
-- `ui_precision_v4.js` (still active)
+- `header_profile_repair.js` (same active v4 controller after Phase 4F)
 - `control_search_report.css` / `.js` (byte-identical v6 foundation for checkboxes, inline search and report filters)
 
 Do not remove an active compatibility layer merely because a newer file exists. First prove that every selector, runtime guard, and event behavior it owns has been migrated.
@@ -270,7 +271,7 @@ CSS asset URLs. It fails if any CSS/JS file in the public folders has no
 runtime entry point or a runtime reference points to a missing file.
 
 The audit deliberately proves that **versioned active files are not dead**:
-`ui_precision_v4.js` still repairs the header/profile; `login.css` is
+`header_profile_repair.js` still repairs the header/profile; `login.css` is
 loaded by the custom login page; the final `ui_consolidation_v7.css` is
 intentionally in both hooks and a late repositioning controller. These must
 not be deleted solely because the version in their name looks old.
@@ -364,6 +365,33 @@ For each late layer:
 - then delete the old file.
 
 `ui_consolidation_v7.css`, `interaction_finish_v2.js`, and the current inline-grid popup compatibility fix are treated as protected stability owners until the end of this phase.
+
+### Phase 4F — Canonical late header/profile controller (behavior-preserving)
+
+The former `ui_precision_v4.js` remains an **active** Frappe v16 page-header
+and user-menu repair, so the next safe step is to rename it, **not remove or
+rewrite its behavior**:
+
+- Rename `ui_precision_v4.js` to `header_profile_repair.js` with the
+  **identical Git blob** (`65ad6b740bf1e0f998a08839f7e63230a27a08d5`).
+  Keep its duplicate-initialization guard, event namespaces, delayed 100/350ms
+  passes, MutationObserver, native menu binding and fallback avatar untouched.
+- Replace only the single late-loading asset URL in `user_theme_menu.js`,
+  preserving the original `st-ui-precision-v4-js` DOM ID, `defer`, and its
+  stable position **after stability JS, before child-table UI**. Bump the
+  loader's hook cache from `v=7` to `v=8` without reordering any assets.
+- `scripts/validate_phase4f_header_profile_asset.py` pins the full original
+  JS blob and entire pre-4F menu loader blob, verifies the single URL-only
+  change, and protects DOM identity and loader order. Historical Phase 4B–4E
+  validators independently reverse this one additional pinned rename before
+  comparing their own original complete loader hashes.
+- The runtime-reference audit, architecture inventory/retired names, late
+  dependency graph, CI and targeted Node smoke test all use the new filename.
+
+No changes to Home analytics, language selection, Frappe permissions, theme
+switching, form/sidebar behavior, CSS declarations or popup controllers. A real
+Desk browser smoke test of page-header avatar/menu, routes and light/dark/mobile
+is still recommended before production.
 
 ### Phase 4E — Rename final inline-search and Query Report overrides
 
