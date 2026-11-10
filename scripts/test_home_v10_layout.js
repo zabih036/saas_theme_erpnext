@@ -51,7 +51,7 @@ assert.ok(!analytics.includes("bind_home_section_navigation()") &&
           !analytics.includes("hasAnalytics"), "Old tab controller must be removed");
 
 const expectedKpis = {
-    revenue: "/desk/sales-invoice",
+    revenue: "/desk/query-report/Profit%20and%20Loss%20Statement",
     expenses: "/desk/query-report/Profit%20and%20Loss%20Statement",
     customers: "/desk/customer",
     suppliers: "/desk/supplier",
