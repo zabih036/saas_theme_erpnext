@@ -63,6 +63,12 @@ def main() -> None:
         restored = restored.replace(current, original)
     if positions != sorted(positions):
         raise SystemExit("Phase 4C: CSS must load before JS in the original position")
+    # Phase 4E only changes the name of the final v6.2 controller.
+    override = b"/assets/saas_theme/js/search_report_refinements.js?v=1"
+    original_override = b"/assets/saas_theme/js/ui_precision_v6_2.js?v=2"
+    if restored.count(override) != 1 or original_override in restored:
+        raise SystemExit("Phase 4C: Phase 4E override reference changed")
+    restored = restored.replace(override, original_override)
     if blob_sha(restored) != PRE_PHASE_LOADER_SHA:
         raise SystemExit("Phase 4C: loader script changed beyond the exact two URLs")
     # Existing v5 tags, selectors, duplicate-init guard and event namespaces
@@ -82,7 +88,7 @@ def main() -> None:
         if any(isinstance(target, ast.Name) and target.id == "app_include_js"
                for target in node.targets)
     )
-    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=6"
+    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=7"
     if hooks.count(hook_url) != 1:
         raise SystemExit("Phase 4C: user-theme loader hook/cache version changed")
     for folder, new_name, old_name, _ in RENAMED:
