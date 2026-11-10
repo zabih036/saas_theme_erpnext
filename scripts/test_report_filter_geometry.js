@@ -6,9 +6,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const root = path.join(__dirname, "..");
-const js = fs.readFileSync(path.join(root, "saas_theme/public/js/ui_precision_v6_2.js"), "utf8");
+const js = fs.readFileSync(path.join(root, "saas_theme/public/js/search_report_refinements.js"), "utf8");
 const css6 = fs.readFileSync(path.join(root, "saas_theme/public/css/control_search_report.css"), "utf8");
-const css62 = fs.readFileSync(path.join(root, "saas_theme/public/css/ui_precision_v6_2.css"), "utf8");
+const css62 = fs.readFileSync(path.join(root, "saas_theme/public/css/search_report_refinements.css"), "utf8");
 
 function declarations(css, selector) {
     // Later scoped override wins; the earlier combined selector has no padding reset.

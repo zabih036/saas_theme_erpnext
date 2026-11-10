@@ -27,6 +27,8 @@ on:
       - 'scripts/validate_phase4b_stability_asset.py'
       - 'scripts/validate_phase4c_child_table_assets.py'
       - 'scripts/validate_phase4d_controls_assets.py'
+      - 'scripts/validate_phase4e_search_report_overrides.py'
+      - 'scripts/test_search_report_refinements.js'
       - 'scripts/test_child_table_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
 
@@ -65,10 +67,14 @@ jobs:
         run: |
           python3 scripts/validate_phase4d_controls_assets.py
           node --check saas_theme/public/js/control_search_report.js
-          node --check saas_theme/public/js/ui_precision_v6_2.js
+      - name: Validate Phase 4E final search and report overrides
+        run: |
+          python3 scripts/validate_phase4e_search_report_overrides.py
+          node --check saas_theme/public/js/search_report_refinements.js
+          node scripts/test_search_report_refinements.js
       - name: Validate report filter geometry and controller syntax
         run: |
-          node --check saas_theme/public/js/ui_precision_v6_2.js
+          node --check saas_theme/public/js/search_report_refinements.js
           node scripts/test_report_filter_geometry.js
       - name: Validate Home permission and finance analytics
         run: |

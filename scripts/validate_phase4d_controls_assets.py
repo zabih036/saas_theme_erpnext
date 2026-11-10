@@ -52,6 +52,13 @@ def main() -> None:
 
     if positions != sorted(positions):
         raise SystemExit("Phase 4D: v6 CSS must still precede the v6 JS controller")
+    # Phase 4E leaves the final override implementation intact; only its
+    # URL in the user-menu loader has changed.
+    renamed_final = b"/assets/saas_theme/js/search_report_refinements.js?v=1"
+    prior_final = b"/assets/saas_theme/js/ui_precision_v6_2.js?v=2"
+    if restored.count(renamed_final) != 1 or prior_final in restored:
+        raise SystemExit("Phase 4D: unexpected Phase 4E override URL")
+    restored = restored.replace(renamed_final, prior_final)
     if git_blob_sha(restored) != PRE_PHASE_LOADER_SHA:
         raise SystemExit("Phase 4D: user-theme loader changed beyond the two asset URLs")
 
@@ -61,12 +68,12 @@ def main() -> None:
         b"st-ui-precision-v6-css",
         b"st-ui-precision-v6-js",
         b"load_ui_precision_v6_assets",
-        b"/assets/saas_theme/js/ui_precision_v6_2.js?v=2",
+        b"/assets/saas_theme/js/search_report_refinements.js?v=1",
     ):
         if marker not in source:
             raise SystemExit("Phase 4D: original loader identity or v6.2 order changed")
     css_pos, js_pos = positions
-    v62_pos = source.find(b"/assets/saas_theme/js/ui_precision_v6_2.js?v=2")
+    v62_pos = source.find(b"/assets/saas_theme/js/search_report_refinements.js?v=1")
     if not (css_pos < js_pos < v62_pos):
         raise SystemExit("Phase 4D: the v6.2 final override no longer loads last")
 
@@ -77,7 +84,7 @@ def main() -> None:
         if any(isinstance(t, ast.Name) and t.id == "app_include_js"
                for t in node.targets)
     )
-    loader_url = "/assets/saas_theme/js/user_theme_menu.js?v=6"
+    loader_url = "/assets/saas_theme/js/user_theme_menu.js?v=7"
     if app_js.count(loader_url) != 1:
         raise SystemExit("Phase 4D: the user-theme loader hook/cache URL is incorrect")
     for folder, name, old, _, _ in RENAMED:
