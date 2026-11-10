@@ -46,6 +46,37 @@ This document is the source of truth for future theme changes and cleanup work.
   metrics. Regression tests cover the hidden check and finance accounting
   reconciliation, with and without GL permissions.
 
+## Language switcher — Home toolbar + user menu
+
+- `brand_shell.js` owns the compact globe/language-code button directly
+  **before the Home desktop notification icon** and a language row placed
+  immediately **after Settings** in Frappe's existing user popup. Both call
+  the **same dialog**. Never modify Frappe core or copy a second language
+  controller into `user_theme_menu.js`; that late-loaded script is protected
+  by immutable source-hash parity from cleanup Phases 4B–4E.
+- `saas_theme.language.get_available_languages` returns only enabled
+  Language DocType records and the current signed-in user's preference.
+  `set_user_language` validates one enabled code, obtains the session user
+  itself (never from client input), and saves **only that User.language**
+  through the Frappe User document controller. It cannot change global
+  System Settings or another user's preference; Guest calls are denied.
+- The dialog offers a searchable list of languages. A language click
+  saves immediately and performs `window.location.reload()` **only after**
+  Frappe confirms the selected code. The full reload lets Frappe supply the
+  right translated Desk boot, formatters and RTL direction for enabled
+  translations. Never just update an HTML `dir` attribute or a guest cookie.
+- The selector is idempotent across Home/header rebuilds and menu reopenings.
+  Existing bell notifications, avatar/menu, Theme Switcher, search and
+  sidebar behavior remain untouched. The button is compact on mobile.
+  No changes to signed-in user data beyond their chosen language.
+- Maintain translations using Frappe/ERPNext language files and the site's
+  enabled languages. This feature **switches** language; it does not invent
+  missing strings or promise complete translations for third-party apps.
+- Test both entry points, enabled/disabled languages, Guest denial, successful
+  save/reload, failure without reload, dark/light mode, and RTL appearance
+  in a real Frappe v16 browser. CI checks: `scripts/test_language_settings.py`
+  and `scripts/test_language_switcher.js`.
+
 ## Golden baseline
 
 The working theme after PR #53 is the visual and interaction baseline. PR #54 added architecture documentation and validation without changing the runtime theme.
@@ -64,7 +95,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | --- | --- | --- |
 | Base theme foundation | `saas_theme/public/css/saas_theme.css` / `saas_theme/public/js/saas_theme.js` | Treat as base/frozen unless the change truly belongs to the original theme foundation. |
 | Main desktop/workspace shell | `saas_theme/public/css/professional_ui.css` / `saas_theme/public/js/professional_ui.js` | Broad desktop shell and workspace rail. |
-| Company/header branding | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity and branded shell behavior. |
+| Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
 | Desktop navbar | `saas_theme/public/css/desktop_navbar_refinement.css` | Desktop navbar appearance/spacing. |
 | Mobile shell | `saas_theme/public/css/mobile_shell.css` / `saas_theme/public/js/mobile_shell.js` | Mobile-only shell/navigation behavior. |
