@@ -212,6 +212,42 @@ def _stock_balance(company):
     return flt(bins[0].total_stock_value) if bins else (0.0 if bins == [] else None)
 
 
+
+def _profit_and_loss_gl_rows(company, from_date, to_date, root_type):
+    """Read company P&L postings with user permissions, excluding closing vouchers."""
+    if not company:
+        return None
+    accounts = _read_rows(
+        "Account", ["name"],
+        [["company", "=", company], ["root_type", "=", root_type],
+         ["is_group", "=", 0]], limit=3500,
+    )
+    if accounts is None:
+        return None
+    if not accounts:
+        return []
+    return _grouped_sum(
+        "GL Entry",
+        [["company", "=", company], ["is_cancelled", "=", 0],
+         ["voucher_type", "!=", "Period Closing Voucher"],
+         ["posting_date", ">=", from_date], ["posting_date", "<=", to_date],
+         ["account", "in", [row.name for row in accounts]]],
+        ["debit", "credit"], group_by="posting_date",
+    )
+
+
+def _fiscal_year_start(company, today):
+    """Use the company's actual ERPNext fiscal year, not January 1."""
+    if not company:
+        return None
+    try:
+        from erpnext.accounts.utils import get_fiscal_year
+        return getdate(get_fiscal_year(today, company=company)[1])
+    except Exception:
+        frappe.logger("saas_theme").debug("Home fiscal year unavailable for %s", company)
+        return None
+
+
 @frappe.whitelist()
 def get_dashboard_overview() -> dict:
     """Permission-safe Home summary. Missing keys mean 'do not display'."""
@@ -257,21 +293,8 @@ def get_dashboard_overview() -> dict:
                           ["posting_date", ">=", first], ["posting_date", "<=", today]],
         limit=15000, order_by="posting_date desc",
     ) if company else None
-    revenue_monthly = defaultdict(float)
     if sales is not None:
-        counts = Counter()
-        for row in sales:
-            key = _month_key(row.posting_date)
-            counts[key] += 1
-            revenue_monthly[key] += flt(row.base_net_total)
-        current = revenue_monthly[current_key]
-        prior = revenue_monthly[previous_key]
-        kpis["revenue"] = {
-            "value": current,
-            # No percentage is mathematically defined when previous month = 0.
-            "delta": _change(current, prior) if prior else None,
-            "note": _("{0} submitted sales invoices").format(counts[current_key]),
-        }
+        # Sales Invoice counts and status do not represent P&L income.
         paid = [row for row in sales if flt(row.outstanding_amount) <= 0.005]
         unpaid = [row for row in sales if flt(row.outstanding_amount) > 0.005]
         result["invoices"] = {
@@ -295,42 +318,51 @@ def get_dashboard_overview() -> dict:
         result["heatmap"] = {"days": days, "times": times, "values": heatmap,
                              "total": len(sales)}
 
-    # Expense GL entries respect row permissions, are company-scoped and
-    # include only true expense accounts, never other asset/liability debits.
-    expenses = None
-    if company and frappe.has_permission("GL Entry", ptype="read"):
-        accounts = _read_rows(
-            "Account", ["name"],
-            company_filter + [["root_type", "=", "Expense"], ["is_group", "=", 0]],
-            limit=3500,
-        )
-        if accounts is not None:
-            if not accounts:
-                expenses = []
-            else:
-                expenses = _grouped_sum(
-                    "GL Entry",
-                    company_filter + [["is_cancelled", "=", 0],
-                                      ["posting_date", ">=", first],
-                                      ["posting_date", "<=", today],
-                                      ["account", "in", [row.name for row in accounts]]],
-                    ["debit", "credit"], group_by="posting_date",
-                )
+
+    # Match the standard Profit and Loss Income accounts in the company's
+    # fiscal year. Journal Entries, Credit Notes and other income are included.
+    revenue_monthly = defaultdict(float)
+    fiscal_start = _fiscal_year_start(company, today) if (
+        company and frappe.has_permission("GL Entry", ptype="read")
+    ) else None
+    income_entries = _profit_and_loss_gl_rows(
+        company, min(first, fiscal_start), today, "Income",
+    ) if fiscal_start and fiscal_start <= today else None
+    if income_entries is not None:
+        fiscal_revenue = 0.0
+        for row in income_entries:
+            amount = flt(row.total_credit) - flt(row.total_debit)
+            revenue_monthly[_month_key(row.posting_date)] += amount
+            if fiscal_start <= getdate(row.posting_date) <= today:
+                fiscal_revenue += amount
+        kpis["revenue"] = {
+            "value": fiscal_revenue,
+            "delta": None,
+            "note": _("P&L total income · fiscal year to date"),
+        }
+
+    # P&L Expense accounts follow debit-minus-credit with the same
+    # cancelled/period-closing exclusions as Income.
+    expense_entries = _profit_and_loss_gl_rows(company, first, today, "Expense")
     expense_monthly = defaultdict(float)
-    if expenses is not None:
-        for row in expenses:
-            expense_monthly[_month_key(row.posting_date)] += flt(row.total_debit) - flt(row.total_credit)
+    if expense_entries is not None:
+        for row in expense_entries:
+            expense_monthly[_month_key(row.posting_date)] += (
+                flt(row.total_debit) - flt(row.total_credit)
+            )
         current, prior = expense_monthly[current_key], expense_monthly[previous_key]
         kpis["expenses"] = {
             "value": current,
             "delta": _change(current, prior) if prior else None,
-            "note": _("Posted expenses this month"),
+            "note": _("P&L expense postings this month"),
         }
-    if sales is not None or expenses is not None:
+    if income_entries is not None or expense_entries is not None:
         result["trend"] = {
             "labels": [item["label"] for item in series],
-            "revenue": [revenue_monthly[item["key"]] for item in series] if sales is not None else None,
-            "expenses": [expense_monthly[item["key"]] for item in series] if expenses is not None else None,
+            "revenue": [revenue_monthly[item["key"]] for item in series]
+            if income_entries is not None else None,
+            "expenses": [expense_monthly[item["key"]] for item in series]
+            if expense_entries is not None else None,
         }
 
     balances = _account_balances(company, today)
@@ -414,29 +446,35 @@ def get_home_sidebar_access(names=None):
     names = list(dict.fromkeys(str(name) for name in names if isinstance(name, str) and name.strip()))
     if not names or len(names) > 100 or any(len(name) > 180 for name in names):
         return {"allowed": []}
-    if user == "Administrator":
-        return {"allowed": names}
 
+    # Administrator bypasses role checks, but not custom_hidden.
+    is_admin = user == "Administrator"
     try:
-        user_roles = set(frappe.get_roles(user))
+        user_roles = set(frappe.get_roles(user)) if not is_admin else set()
         allowed = set(names)
         for doctype in ("Sidebar", "Workspace Sidebar"):
             if not frappe.db.exists("DocType", doctype):
                 continue
             meta = frappe.get_meta(doctype)
+            hidden_field = meta.get_field("custom_hidden")
             table_field = meta.get_field("custom_allowed_roles")
-            if not table_field or table_field.fieldtype != "Table":
+            has_roles = bool(table_field and table_field.fieldtype == "Table")
+            if not hidden_field and not has_roles:
                 continue
-            fields = _sidebar_role_field_names(table_field)
+            fields = _sidebar_role_field_names(table_field) if has_roles else []
             rows = frappe.get_all(
                 doctype, fields=["name"],
                 filters=[["name", "in", names]], limit_page_length=len(names) + 1,
             )
             for row in rows:
                 doc = frappe.get_doc(doctype, row.name)
-                configured = _sidebar_allowed_roles(doc, fields)
-                if configured is not None and not (configured & user_roles):
+                if hidden_field and cint(doc.get("custom_hidden")):
                     allowed.discard(row.name)
+                    continue
+                if has_roles and not is_admin:
+                    configured = _sidebar_allowed_roles(doc, fields)
+                    if configured is not None and not (configured & user_roles):
+                        allowed.discard(row.name)
         return {"allowed": [name for name in names if name in allowed]}
     except Exception:
         frappe.logger("saas_theme").warning("Home sidebar role check unavailable")
