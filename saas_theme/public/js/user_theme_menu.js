@@ -79,7 +79,7 @@
 		if (!document.getElementById("st-ui-precision-v6-2-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v6-2-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v6_2.js?v=2";
+			script.src = "/assets/saas_theme/js/search_report_refinements.js?v=1";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
