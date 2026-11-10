@@ -20,6 +20,32 @@ This document is the source of truth for future theme changes and cleanup work.
 
 ---
 
+## Home financial revenue and Sidebar hiding
+
+- `Sidebar.custom_hidden = 1` removes that Sidebar from both the Home Quick
+  Access list and the Customize Quick Access selection modal. This check is
+  **server-side** and applies to Administrator too; role checking through
+  `custom_allowed_roles` continues for other users. Clients never show the
+  unverified boot list while permission checks are pending.
+- The Revenue card and monthly Revenue chart must be computed from submitted
+  **General Ledger Income** postings, net `credit - debit`, including returns,
+  journal adjustments, and other Income accounts. Sales Invoice net totals are
+  not P&L income and must not be substituted.
+- Fiscal-year-to-date Revenue uses ERPNext's configured fiscal year for the
+  selected Company. The six-month chart displays the same net Income GL
+  postings per month. Exclude cancelled entries and Period Closing Vouchers.
+  Hide Revenue entirely if the user lacks the necessary GL/Account access.
+- The Revenue card links to Profit and Loss Statement; Sales Invoice counts,
+  paid/unpaid status, and the sales time-of-day chart remain separate.
+- To compare with Profit and Loss Statement, select **the same company,
+  fiscal year, base currency and finance book**, and use the unfiltered Total
+  Income figure rather than Net Profit or invoice totals. Other P&L filter
+  selections (cost center, financial report template, presentation currency)
+  can produce different values.
+- Never change customer/sidebar permissions as a shortcut to show missing
+  metrics. Regression tests cover the hidden check and finance accounting
+  reconciliation, with and without GL permissions.
+
 ## Golden baseline
 
 The working theme after PR #53 is the visual and interaction baseline. PR #54 added architecture documentation and validation without changing the runtime theme.
@@ -47,8 +73,9 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Form surface / layout experience | `saas_theme/public/css/form_surface.css` | Exact bundle of the former form experience + professional form card layers, preserving historical order. |
 | List View | `saas_theme/public/css/list_view.css` | List rows, cards, list filters and list-only hover/spacing. |
 | Home dashboard + ERP analytics styling | `saas_theme/public/css/home.css` | Exact CSS bundle of the former dashboard + analytics styles, preserving historical order. |
+| Home sidebar access | `saas_theme/home.py` / `saas_theme/public/js/home_dashboard.js` / `saas_theme/public/js/quick_access_preferences.js` | The backend enforces **custom_hidden** (even for Administrator) and `custom_allowed_roles` for Sidebar/Workspace Sidebar. Both left Quick Access and Customize use one allowed list; boot can prefilter the hidden field but is not authoritative. |
 | Home dashboard behavior | `saas_theme/public/js/home_dashboard.js` | Navigation uses user-visible **module sidebars** from Frappe boot, not Workspace cards; respect sidebar permission filtering and native routes. |
-| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` / `saas_theme/home.py` | Render only permission-available data. Finance totals are per-company, permission-enforced aggregates; audit activity comes from Comment and Version records filtered by document read access. |
+| ERP analytics behavior | `saas_theme/public/js/home_analytics.js` / `saas_theme/home.py` | Render only permission-available data. Home **Revenue uses GL Income account postings (credit minus debit) for the selected company's fiscal year to date**, not Sales Invoice totals; P&L period-closing vouchers are excluded. Chart Revenue uses the same GL postings grouped monthly. Invoice counts/status remain separate, and audit activity reads permission-filtered Version entries. |
 | Home clarity | `saas_theme/public/css/home_clarity_refinement.css` | Home-only clarity/spacing refinements. |
 | Precision compatibility styling | `saas_theme/public/css/precision.css` | Exact bundle of the former control precision + exact follow-up + final precision layers, preserving historical order. |
 | General interface refinement styling | `saas_theme/public/css/interface.css` | Exact bundle of the former UI finish + interface refinement layers, preserving historical order. |
