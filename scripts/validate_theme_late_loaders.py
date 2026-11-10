@@ -30,8 +30,8 @@ LATE_LOADERS = {
         ("js/ui_precision_v4.js?v=1", 1),
         ("css/child_table_ui.css?v=1", 1),
         ("js/child_table_ui.js?v=1", 1),
-        ("css/ui_precision_v6.css?v=3", 1),
-        ("js/ui_precision_v6.js?v=2", 1),
+        ("css/control_search_report.css?v=1", 1),
+        ("js/control_search_report.js?v=1", 1),
         ("js/ui_precision_v6_2.js?v=2", 1),
     ],
     "form_sidebar_persistence.js": [
