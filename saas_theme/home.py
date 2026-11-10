@@ -118,7 +118,7 @@ def _read_rows(doctype, fields, filters=None, *, limit=1000, order_by=None):
 
 
 
-def _grouped_sum(doctype, filters, fields, *, group_by=None):
+def _grouped_sum(doctype, filters, fields, *, group_by=None, or_filters=None):
     """Frappe v16 permission-enforced SQL aggregation, not raw unrestricted SQL.
 
     Ignore permissions MUST remain False (Frappe's QB default is True).
@@ -130,10 +130,13 @@ def _grouped_sum(doctype, filters, fields, *, group_by=None):
         selections = ([group_by] if group_by else []) + [
             {"SUM": field, "as": f"total_{field}"} for field in fields
         ]
-        query = frappe.qb.get_query(
-            doctype, fields=selections, filters=filters,
-            group_by=group_by, ignore_permissions=False,
-        )
+        options = {
+            "fields": selections, "filters": filters,
+            "group_by": group_by, "ignore_permissions": False,
+        }
+        if or_filters is not None:
+            options["or_filters"] = or_filters
+        query = frappe.qb.get_query(doctype, **options)
         return query.run(as_dict=True)
     except Exception:
         frappe.logger("saas_theme").debug("Home aggregate skipped: %s", doctype)
@@ -226,13 +229,29 @@ def _profit_and_loss_gl_rows(company, from_date, to_date, root_type):
         return None
     if not accounts:
         return []
+    # The default P&L report includes empty/null Finance Books and the
+    # company's default Finance Book (Include Default FB Entries = on).
+    # Do not mix postings from other, independently selected books.
+    companies = _read_rows(
+        "Company", ["name", "default_finance_book"],
+        [["name", "=", company]], limit=1,
+    )
+    if not companies:
+        return None
+    finance_book = companies[0].get("default_finance_book")
+    book_filters = [
+        ["finance_book", "is", "not set"],
+        ["finance_book", "=", ""],
+    ]
+    if finance_book:
+        book_filters.append(["finance_book", "=", finance_book])
     return _grouped_sum(
         "GL Entry",
         [["company", "=", company], ["is_cancelled", "=", 0],
          ["voucher_type", "!=", "Period Closing Voucher"],
          ["posting_date", ">=", from_date], ["posting_date", "<=", to_date],
          ["account", "in", [row.name for row in accounts]]],
-        ["debit", "credit"], group_by="posting_date",
+        ["debit", "credit"], group_by="posting_date", or_filters=book_filters,
     )
 
 
