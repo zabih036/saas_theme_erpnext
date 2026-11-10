@@ -54,7 +54,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/mobile_shell.js?v=2",
     "/assets/saas_theme/js/workspace_shell_polish.js?v=1",
     "/assets/saas_theme/js/final_shell_cleanup.js?v=2",
-    "/assets/saas_theme/js/user_theme_menu.js?v=4",
+    "/assets/saas_theme/js/user_theme_menu.js?v=5",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
@@ -69,7 +69,7 @@ EXPECTED_WEB_JS = [
 KNOWN_CSS_FILES = {
     "brand_shell.css",
     "child_row_editor_finish.css",
-    "child_table_precision_v5.css",
+    "child_table_ui.css",
     "precision.css",
     "dark.css",
     "desktop_navbar_refinement.css",
@@ -101,7 +101,7 @@ KNOWN_CSS_FILES = {
 
 KNOWN_JS_FILES = {
     "brand_shell.js",
-    "child_table_precision_v5.js",
+    "child_table_ui.js",
     "final_shell_cleanup.js",
     "form_sidebar_persistence.js",
     "home_analytics.js",
@@ -127,6 +127,8 @@ KNOWN_JS_FILES = {
 # Retired filenames from proven no-op removals or completed bundle migrations.
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "child_table_precision_v5.css",
+    "child_table_precision_v5.js",
     "stability_refinement_v3.css",
     "global_popup_polish_v3.css",
     "overlay_stacking_fix.css",
@@ -158,14 +160,14 @@ PROTECTED_COMPATIBILITY_FILES = {
     "css/interaction_finish_v2.css",
     "css/popup_controls.css",
     "css/desk_stability.css",
-    "css/child_table_precision_v5.css",
+    "css/child_table_ui.css",
     "css/ui_precision_v6.css",
     "css/ui_precision_v6_2.css",
     "css/ui_consolidation_v7.css",
     "css/inline_grid_link_popup_anchor_v5.css",
     "js/stability_refinement_v3.js",
     "js/ui_precision_v4.js",
-    "js/child_table_precision_v5.js",
+    "js/child_table_ui.js",
     "js/ui_precision_v6.js",
     "js/ui_precision_v6_2.js",
     "js/interaction_finish_v2.js",
@@ -177,8 +179,8 @@ EXPECTED_LATE_ASSET_TOKENS = {
         "/assets/saas_theme/css/desk_stability.css?v=1",
         "/assets/saas_theme/js/stability_refinement_v3.js?v=2",
         "/assets/saas_theme/js/ui_precision_v4.js?v=1",
-        "/assets/saas_theme/css/child_table_precision_v5.css?v=1",
-        "/assets/saas_theme/js/child_table_precision_v5.js?v=1",
+        "/assets/saas_theme/css/child_table_ui.css?v=1",
+        "/assets/saas_theme/js/child_table_ui.js?v=1",
         "/assets/saas_theme/css/ui_precision_v6.css?v=3",
         "/assets/saas_theme/js/ui_precision_v6.js?v=2",
         "/assets/saas_theme/js/ui_precision_v6_2.js?v=2",

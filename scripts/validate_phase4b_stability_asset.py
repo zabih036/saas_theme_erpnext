@@ -2,7 +2,8 @@
 """Phase 4B: rename the already consolidated stability CSS with zero behavior change.
 
 The original CSS Git blob and the full original loader source are immutable.
-The only permitted loader-code difference is the one stylesheet URL literal.
+Only the stability CSS URL and the separately pinned Phase 4C child-table
+asset URL renames may differ from the original loader.
 """
 from __future__ import annotations
 
@@ -21,7 +22,7 @@ CSS_ORIGINAL_SHA = "939ab1fb162ab6ad772e81397ff556d191037fef"
 LOADER_ORIGINAL_SHA = "683bd5a5e0ae6dadb5e6fddae7c04e3a66937a0d"
 OLD_URL = "/assets/saas_theme/css/stability_refinement_v3.css?v=3"
 NEW_URL = "/assets/saas_theme/css/desk_stability.css?v=1"
-LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=4"
+LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=5"
 
 
 def git_blob_sha(contents: bytes) -> str:
@@ -39,9 +40,21 @@ def main() -> None:
     after = NEW_URL.encode("ascii")
     if source.count(after) != 1 or before in source:
         raise SystemExit("Phase 4B: unexpected stability CSS late-loader references")
+    # Phase 4C only renames two other asset URLs. Reverse them here to
+    # preserve the original complete-source Phase 4B parity assertion.
+    replacements = (
+        (b"/assets/saas_theme/css/child_table_ui.css?v=1",
+         b"/assets/saas_theme/css/child_table_precision_v5.css?v=1"),
+        (b"/assets/saas_theme/js/child_table_ui.js?v=1",
+         b"/assets/saas_theme/js/child_table_precision_v5.js?v=1"),
+    )
     restored_original = source.replace(after, before)
+    for current, original in replacements:
+        if restored_original.count(current) != 1 or original in restored_original:
+            raise SystemExit("Phase 4B: unexpected child-table Phase 4C URL changes")
+        restored_original = restored_original.replace(current, original)
     if git_blob_sha(restored_original) != LOADER_ORIGINAL_SHA:
-        raise SystemExit("Phase 4B: loader changed beyond its canonical CSS URL")
+        raise SystemExit("Phase 4B: loader changed beyond the independently guarded asset URL renames")
     hooks = ast.parse(HOOKS.read_text(encoding="utf-8"))
     assets = next(
         ast.literal_eval(node.value)
