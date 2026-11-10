@@ -22,7 +22,7 @@ CSS_ORIGINAL_SHA = "939ab1fb162ab6ad772e81397ff556d191037fef"
 LOADER_ORIGINAL_SHA = "683bd5a5e0ae6dadb5e6fddae7c04e3a66937a0d"
 OLD_URL = "/assets/saas_theme/css/stability_refinement_v3.css?v=3"
 NEW_URL = "/assets/saas_theme/css/desk_stability.css?v=1"
-LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=5"
+LOADER_HOOK = "/assets/saas_theme/js/user_theme_menu.js?v=6"
 
 
 def git_blob_sha(contents: bytes) -> str:
@@ -49,6 +49,17 @@ def main() -> None:
          b"/assets/saas_theme/js/child_table_precision_v5.js?v=1"),
     )
     restored_original = source.replace(after, before)
+    # Reverse the separately validated v6 foundation rename (Phase 4D).
+    foundation = (
+        (b"/assets/saas_theme/css/control_search_report.css?v=1",
+         b"/assets/saas_theme/css/ui_precision_v6.css?v=3"),
+        (b"/assets/saas_theme/js/control_search_report.js?v=1",
+         b"/assets/saas_theme/js/ui_precision_v6.js?v=2"),
+    )
+    for current, original in foundation:
+        if restored_original.count(current) != 1 or original in restored_original:
+            raise SystemExit("Phase 4B: unexpected Phase 4D foundation URL changes")
+        restored_original = restored_original.replace(current, original)
     for current, original in replacements:
         if restored_original.count(current) != 1 or original in restored_original:
             raise SystemExit("Phase 4B: unexpected child-table Phase 4C URL changes")

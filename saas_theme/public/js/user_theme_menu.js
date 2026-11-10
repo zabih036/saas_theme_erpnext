@@ -60,14 +60,14 @@
 			const link = document.createElement("link");
 			link.id = "st-ui-precision-v6-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/ui_precision_v6.css?v=3";
+			link.href = "/assets/saas_theme/css/control_search_report.css?v=1";
 			document.head.appendChild(link);
 		}
 
 		if (!document.getElementById("st-ui-precision-v6-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v6-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v6.js?v=2";
+			script.src = "/assets/saas_theme/js/control_search_report.js?v=1";
 			script.defer = true;
 			document.head.appendChild(script);
 		}

@@ -49,6 +49,18 @@ def main() -> None:
         positions.append(restored.index(current_url))
         restored = restored.replace(current_url, original_url)
 
+
+    # Phase 4D only renames the adjacent v6 foundation CSS and JS URLs.
+    # Undo those changes too before verifying the complete Phase 4C loader.
+    for current, original in (
+        (b"/assets/saas_theme/css/control_search_report.css?v=1",
+         b"/assets/saas_theme/css/ui_precision_v6.css?v=3"),
+        (b"/assets/saas_theme/js/control_search_report.js?v=1",
+         b"/assets/saas_theme/js/ui_precision_v6.js?v=2"),
+    ):
+        if restored.count(current) != 1 or original in restored:
+            raise SystemExit("Phase 4C: unexpected Phase 4D foundation URL changes")
+        restored = restored.replace(current, original)
     if positions != sorted(positions):
         raise SystemExit("Phase 4C: CSS must load before JS in the original position")
     if blob_sha(restored) != PRE_PHASE_LOADER_SHA:
@@ -70,7 +82,7 @@ def main() -> None:
         if any(isinstance(target, ast.Name) and target.id == "app_include_js"
                for target in node.targets)
     )
-    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=5"
+    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=6"
     if hooks.count(hook_url) != 1:
         raise SystemExit("Phase 4C: user-theme loader hook/cache version changed")
     for folder, new_name, old_name, _ in RENAMED:
