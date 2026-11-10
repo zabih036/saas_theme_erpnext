@@ -120,6 +120,7 @@
 	// An unavailable KPI stays hidden and cannot be clicked.
 	function kpi_destination(key) {
 		const reports = {
+			revenue: "Profit and Loss Statement",
 			expenses: "Profit and Loss Statement",
 			stock_value: "Stock Balance",
 			cash: "General Ledger",
@@ -130,7 +131,6 @@
 			return report_route(reports[key]);
 		}
 		const lists = {
-			revenue: "Sales Invoice",
 			customers: "Customer",
 			suppliers: "Supplier",
 		};

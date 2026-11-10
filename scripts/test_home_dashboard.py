@@ -58,6 +58,17 @@ for key in ("cint", "flt", "getdate", "nowdate",
 sys.modules["frappe"] = frappe
 sys.modules["frappe.utils"] = frappe_utils
 
+# ERPNext supplies the company-specific April-to-March fiscal year.
+erpnext = types.ModuleType("erpnext")
+erpnext_accounts = types.ModuleType("erpnext.accounts")
+erpnext_accounts_utils = types.ModuleType("erpnext.accounts.utils")
+erpnext_accounts_utils.get_fiscal_year = lambda posting_date, company=None: (
+    "FY 2026-27", date(2026, 4, 1), date(2027, 3, 31),
+) if company == "Demo Company" else (_ for _ in ()).throw(ValueError("Invalid company"))
+sys.modules["erpnext"] = erpnext
+sys.modules["erpnext.accounts"] = erpnext_accounts
+sys.modules["erpnext.accounts.utils"] = erpnext_accounts_utils
+
 source = Path(__file__).resolve().parents[1] / "saas_theme" / "home.py"
 spec = importlib.util.spec_from_file_location("saas_theme_home_under_test", source)
 home = importlib.util.module_from_spec(spec)
@@ -79,17 +90,33 @@ def can_read(doctype, ptype="read", doc=None, user=None):
 
 def get_list(doctype, fields=None, filters=None, order_by=None, limit_page_length=None):
     assert doctype in readable, "Permission-denied read attempted: " + doctype
-    return [Row(x) for x in datasets.get(doctype, [])]
+    rows = datasets.get(doctype, [])
+    if doctype == "Account":
+        for field, operator, value in filters or []:
+            if field == "root_type" and operator == "=":
+                rows = [row for row in rows if row.get(field) == value]
+            if field == "is_group" and operator == "=":
+                rows = [row for row in rows if row.get(field, 0) == value]
+            if field == "account_type" and operator == "in":
+                rows = [row for row in rows if row.get(field) in value]
+    return [Row(x) for x in rows]
 
 
 def get_all(doctype, fields=None, filters=None, order_by=None, limit_page_length=None):
     return [Row(x) for x in audit_rows.get(doctype, [])]
 
 
-def qb_get_query(doctype, fields, filters, group_by=None, ignore_permissions=True):
+def qb_get_query(doctype, fields, filters, group_by=None, ignore_permissions=True, or_filters=None):
     assert ignore_permissions is False, "Aggregates MUST enforce user permissions"
     assert doctype in readable
-    queries.append((doctype, fields, filters, group_by))
+    queries.append((doctype, fields, filters, group_by, or_filters))
+    if doctype == "GL Entry" and group_by == "posting_date":
+        account_filter = next((item[2] for item in filters if
+                               item[0] == "account" and item[1] == "in"), [])
+        if "Income - Demo" in account_filter:
+            return FakeQuery(query_rows.get(("GL Entry", "Income"), []))
+        if "Expense - Demo" in account_filter:
+            return FakeQuery(query_rows.get(("GL Entry", "Expense"), []))
     return FakeQuery(query_rows.get((doctype, group_by), []))
 
 
@@ -109,7 +136,8 @@ assert queries == []
 # growth percentage is undefined when the previous month had no sales.
 readable.update({"Sales Invoice", "Customer", "Supplier", "Company"})
 datasets.update({
-    "Company": [dict(name="Demo Company", default_currency="AFN")],
+    "Company": [dict(name="Demo Company", default_currency="AFN",
+                     default_finance_book="Main Book")],
     "Customer": [dict(name="CUST-001")],
     "Supplier": [dict(name="SUP-001")],
     "Sales Invoice": [dict(
@@ -120,9 +148,7 @@ datasets.update({
 })
 overview = home.get_dashboard_overview()
 assert overview["currency"] == "AFN"
-assert overview["kpis"]["revenue"]["value"] == 17000
-assert overview["kpis"]["revenue"]["delta"] is None
-assert overview["kpis"]["revenue"]["note"] == "1 submitted sales invoices"
+assert "revenue" not in overview["kpis"], "Invoice totals must not masquerade as P&L revenue"
 assert overview["invoices"]["paid_count"] == 1
 assert overview["invoices"]["unpaid_count"] == 0
 assert "cash" not in overview["kpis"]
@@ -137,6 +163,8 @@ datasets.update({
         dict(name="Bank", account_type="Bank"),
         dict(name="Receivable", account_type="Receivable"),
         dict(name="Payable", account_type="Payable"),
+        dict(name="Income - Demo", root_type="Income", is_group=0),
+        dict(name="Expense - Demo", root_type="Expense", is_group=0),
     ],
     "Warehouse": [dict(name="Stores")],
     "Stock Entry": [dict(name="STE-1", posting_date="2026-11-06")],
@@ -147,15 +175,41 @@ query_rows[("GL Entry", "account")] = [
     dict(account="Receivable", total_debit=1200, total_credit=400),
     dict(account="Payable", total_debit=200, total_credit=500),
 ]
-query_rows[("GL Entry", "posting_date")] = []
+query_rows[("GL Entry", "Income")] = [
+    dict(posting_date="2026-04-15", total_debit=0, total_credit=2000),
+    dict(posting_date="2026-10-15", total_debit=0, total_credit=3000),
+    dict(posting_date="2026-11-06", total_debit=600, total_credit=25000),
+]
+query_rows[("GL Entry", "Expense")] = [
+    dict(posting_date="2026-11-02", total_debit=710, total_credit=20),
+]
 query_rows[("Bin", None)] = [dict(total_stock_value=12500)]
 overview = home.get_dashboard_overview()
+assert overview["kpis"]["revenue"]["value"] == 29400, overview["kpis"]
+assert overview["kpis"]["revenue"]["value"] != 17000
+assert overview["kpis"]["revenue"]["delta"] is None
+assert overview["kpis"]["revenue"]["note"] == "P&L total income · fiscal year to date"
+assert overview["trend"]["revenue"][-1] == 24400
+assert overview["trend"]["revenue"][-2] == 3000
+assert overview["kpis"]["expenses"]["value"] == 690
+assert overview["invoices"]["paid_count"] == 1
 assert overview["kpis"]["cash"]["value"] == 1500, overview["kpis"]
 assert overview["kpis"]["receivables"]["value"] == 800
 assert overview["kpis"]["payables"]["value"] == 300
 assert overview["kpis"]["stock_value"]["value"] == 12500
 assert overview["production"]["total"] == 1
 assert queries and all(q[0] in readable for q in queries)
+for doctype, fields, filters, group_by, or_filters in queries:
+    if doctype == "GL Entry" and group_by == "posting_date":
+        assert ["company", "=", "Demo Company"] in filters
+        assert ["is_cancelled", "=", 0] in filters
+        assert ["voucher_type", "!=", "Period Closing Voucher"] in filters
+        assert ["finance_book", "is", "not set"] in or_filters
+        assert ["finance_book", "=", ""] in or_filters
+        assert ["finance_book", "=", "Main Book"] in or_filters
+        assert ["finance_book", "=", "Other Book"] not in or_filters
+        if ["account", "in", ["Income - Demo"]] in filters:
+            assert ["posting_date", ">=", date(2026, 4, 1)] in filters
 
 # The feed must load from Version ONLY, never Comment. It includes the
 # permitted document but not sensitive field values or inaccessible records.
@@ -196,9 +250,11 @@ class FakeMeta:
 
 
 meta = {
-    "Sidebar": FakeMeta({"custom_allowed_roles": types.SimpleNamespace(
-        fieldtype="Table", options="Sidebar Allowed Role",
-    )}),
+    "Sidebar": FakeMeta({
+        "custom_allowed_roles": types.SimpleNamespace(
+            fieldtype="Table", options="Sidebar Allowed Role"),
+        "custom_hidden": types.SimpleNamespace(fieldtype="Check"),
+    }),
     "Workspace Sidebar": FakeMeta({}),
     "Sidebar Allowed Role": FakeMeta([types.SimpleNamespace(
         fieldname="role", fieldtype="Link", options="Role",
@@ -208,18 +264,27 @@ frappe.get_meta = lambda doctype: meta[doctype]
 frappe.db = types.SimpleNamespace(exists=lambda doctype, name: doctype == "DocType")
 frappe.get_roles = lambda user: ["Employee", "Accounts User"]
 frappe.get_all = lambda doctype, fields=None, filters=None, order_by=None, limit_page_length=None: (
-    [Row({"name": "Buying"}), Row({"name": "Accounting"})]
+    [Row({"name": "Buying"}), Row({"name": "Accounting"}),
+     Row({"name": "Manufacturing"}), Row({"name": "Hidden"})]
     if doctype == "Sidebar"
     else [Row(v) for v in audit_rows.get(doctype, [])]
 )
 docs = {
     ("Sidebar", "Buying"): Row({"custom_allowed_roles": [Row({"role": "Employee"})]}),
-    ("Sidebar", "Accounting"): Row({"custom_allowed_roles": [Row({"role": "System Manager"})]}),
+    ("Sidebar", "Accounting"): Row({"custom_allowed_roles": [Row({"role": "System Manager"})], "custom_hidden": 0}),
+    ("Sidebar", "Manufacturing"): Row({"custom_allowed_roles": [], "custom_hidden": 0}),
+    ("Sidebar", "Hidden"): Row({"custom_allowed_roles": [Row({"role": "Employee"})], "custom_hidden": 1}),
 }
 frappe.get_doc = lambda doctype, name: docs[(doctype, name)]
 names = ["Buying", "Accounting", "Manufacturing"]
 allowed = home.get_home_sidebar_access(names)
 assert allowed == {"allowed": ["Buying", "Manufacturing"]}, allowed
+# Hidden Sidebar never appears, even with an allowed role or Administrator.
+assert home.get_home_sidebar_access(["Hidden"]) == {"allowed": []}
+assert home.get_home_sidebar_access(["Buying", "Hidden"]) == {"allowed": ["Buying"]}
+frappe.session.user = "Administrator"
+assert home.get_home_sidebar_access(["Accounting", "Hidden"]) == {"allowed": ["Accounting"]}
+frappe.session.user = "employee@example.com"
 assert home.get_home_sidebar_access('["Buying","Accounting"]') == {"allowed": ["Buying"]}
 assert home.get_home_sidebar_access(["Accounting"]) == {"allowed": []}
 docs[("Sidebar", "Buying")] = Row({"custom_allowed_roles": [Row({"unknown": "Employee"})]})
