@@ -27,7 +27,7 @@
 		if (!document.getElementById("st-ui-precision-v4-js")) {
 			const script = document.createElement("script");
 			script.id = "st-ui-precision-v4-js";
-			script.src = "/assets/saas_theme/js/ui_precision_v4.js?v=1";
+			script.src = "/assets/saas_theme/js/header_profile_repair.js?v=1";
 			script.defer = true;
 			document.head.appendChild(script);
 		}
