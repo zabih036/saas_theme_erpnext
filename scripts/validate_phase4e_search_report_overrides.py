@@ -25,7 +25,7 @@ CSS_CURRENT = "/assets/saas_theme/css/search_report_refinements.css?v=1"
 CSS_PREVIOUS = "/assets/saas_theme/css/ui_precision_v6_2.css?v=3"
 JS_CURRENT = "/assets/saas_theme/js/search_report_refinements.js?v=1"
 JS_PREVIOUS = "/assets/saas_theme/js/ui_precision_v6_2.js?v=2"
-HOOK_URL = "/assets/saas_theme/js/user_theme_menu.js?v=7"
+HOOK_URL = "/assets/saas_theme/js/user_theme_menu.js?v=8"
 
 
 def blob_sha(data: bytes) -> str:
@@ -64,7 +64,14 @@ def main() -> None:
     final_current, final_old = JS_CURRENT.encode(), JS_PREVIOUS.encode()
     if source.count(final_current) != 1 or final_old in source:
         raise SystemExit("Phase 4E: top-level late-loader URL changed unexpectedly")
-    if blob_sha(source.replace(final_current, final_old)) != LOADER_ORIGINAL_SHA:
+    restored = source.replace(final_current, final_old)
+    # Phase 4F is a separately pinned one-URL rename; retain historical full-loader parity.
+    current_header = b"/assets/saas_theme/js/header_profile_repair.js?v=1"
+    original_header = b"/assets/saas_theme/js/ui_precision_v4.js?v=1"
+    if restored.count(current_header) != 1 or original_header in restored:
+        raise SystemExit("Phase 4F: unexpected header/profile late-loader URL")
+    restored = restored.replace(current_header, original_header)
+    if blob_sha(restored) != LOADER_ORIGINAL_SHA:
         raise SystemExit("Phase 4E: user theme loader changed beyond the JS URL literal")
     for marker in (b"st-ui-precision-v6-2-js", b"load_ui_precision_v6_2_assets"):
         if marker not in source:

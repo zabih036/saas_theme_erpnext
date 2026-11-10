@@ -69,6 +69,12 @@ def main() -> None:
     if restored.count(override) != 1 or original_override in restored:
         raise SystemExit("Phase 4C: Phase 4E override reference changed")
     restored = restored.replace(override, original_override)
+    # Phase 4F is a separately pinned one-URL rename; retain historical full-loader parity.
+    current_header = b"/assets/saas_theme/js/header_profile_repair.js?v=1"
+    original_header = b"/assets/saas_theme/js/ui_precision_v4.js?v=1"
+    if restored.count(current_header) != 1 or original_header in restored:
+        raise SystemExit("Phase 4F: unexpected header/profile late-loader URL")
+    restored = restored.replace(current_header, original_header)
     if blob_sha(restored) != PRE_PHASE_LOADER_SHA:
         raise SystemExit("Phase 4C: loader script changed beyond the exact two URLs")
     # Existing v5 tags, selectors, duplicate-init guard and event namespaces
@@ -88,7 +94,7 @@ def main() -> None:
         if any(isinstance(target, ast.Name) and target.id == "app_include_js"
                for target in node.targets)
     )
-    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=7"
+    hook_url = "/assets/saas_theme/js/user_theme_menu.js?v=8"
     if hooks.count(hook_url) != 1:
         raise SystemExit("Phase 4C: user-theme loader hook/cache version changed")
     for folder, new_name, old_name, _ in RENAMED:
