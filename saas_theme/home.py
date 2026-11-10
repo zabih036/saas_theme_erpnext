@@ -426,12 +426,11 @@ def _sidebar_allowed_roles(doc, field_names):
 
 @frappe.whitelist()
 def get_home_sidebar_access(names=None):
-    """Return only requested sidebars permitted by the custom allowed-roles table.
+    """Check custom_hidden and custom_allowed_roles for Quick Access modules.
 
-    The boot payload is already Frappe permission-filtered. This second check
-    handles a site's custom_allowed_roles child table, which the boot payload
-    does not carry. The client intersects both sources and never exposes a
-    sidebar before this response arrives.
+    Frappe boot supplies only visible module candidates, but does not always
+    include the custom Check field and role child-table. The shared permitted
+    response drives both the left Quick Access list and Customize modal.
     """
     user = frappe.session.user
     if not user or user == "Guest":
