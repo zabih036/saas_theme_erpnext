@@ -61,7 +61,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/user_theme_menu.js?v=8",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
-    "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
+    "/assets/saas_theme/js/interaction_finish_v2.js?v=10",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
     "/assets/saas_theme/js/native_dashboard_view.js?v=4",
 ]
