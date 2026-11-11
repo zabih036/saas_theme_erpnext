@@ -179,6 +179,20 @@ function testScript(filename, kind) {
 	observers[0].cb([{target: first.card, addedNodes: []}]);
 	while (timers.length) timers.shift()();
 	assert.equal(decoratorCreated, expected, "No duplicate nodes after widget data refresh");
+
+	// A ChartWidget may arrive after number cards; its native plot, filters
+	// and controls must remain intact while the scoped class is added.
+	if (kind === "dashboard") {
+		const chart = new Element(["widget", "dashboard-widget-box"]);
+		root.charts.push(chart);
+		observers[0].cb([{target: chart, addedNodes: []}]);
+		while (timers.length) timers.shift()();
+		assert.equal(chart.classList.contains("st-dv-chart-v2"), true,
+			"Late Accounts chart must receive the Dashboard-specific design");
+		assert.equal(decoratorCreated, expected,
+			"Late chart updates cannot create duplicate KPI decoration");
+	}
+
 	// The next visible KPI becomes featured when the leading KPI disappears.
 	first.card.hidden = true;
 	actions[event]();
