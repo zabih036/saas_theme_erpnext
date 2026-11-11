@@ -898,9 +898,9 @@ not inferred from Frappe's older ListView Dashboard implementation.
   implementation, permissions, filtered results or route interception.
   A sidebar-only `/` shortcut is active only outside editable inputs.
 - **Top navbar search** is hidden using `body.st-sidebar-search-available`
-  only on desktop when the native sidebar is visible and expanded.
-  When collapsed, on Home/sidebar-free pages or on mobile, the top
-  search stays available. Notifications, language selection, user menu,
+  only on desktop when the native sidebar is visible (expanded or
+  collapsed as an icon rail). On Home/sidebar-free pages or mobile,
+  the top search remains accessible. Notifications, language selection, user menu,
   search dialog and Ctrl+K continue working as before.
 - New visual/controller assets are last in their respective Desk hook
   lists. Existing historical/byte-pinned styles and scripts are not

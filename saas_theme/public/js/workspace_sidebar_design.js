@@ -104,15 +104,14 @@
 		let available = false;
 		document.querySelectorAll(ROOT).forEach((panel) => {
 			ensureSearch(panel);
-			if (visible(panel) && panel.classList.contains("expanded") &&
-				!panel.classList.contains("sidebar-hidden") &&
+			if (visible(panel) && !panel.classList.contains("sidebar-hidden") &&
 				!isMobile()) {
 				available = true;
 			}
 		});
 		// Hide only the top search on desktop, and only when the sidebar
-		// replacement is actually available. Collapsed/sidebar-free pages
-		// and mobile retain their original Frappe search entry.
+		// replacement is actually visible. Collapsed rail still exposes its
+		// Search icon; sidebar-free pages and mobile retain navbar Search.
 		document.body.classList.toggle("st-sidebar-search-available", available);
 	}
 

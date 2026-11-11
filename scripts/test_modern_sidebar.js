@@ -168,11 +168,11 @@ runTimers();
 controls = sidebar.children.filter(x=>x.classList.contains("st-sidebar-search"));
 assert.equal(controls.length,1,"Rebuilding a sidebar must not duplicate Search");
 
-// Navbar search returns when sidebar collapses.
+// Collapsed desktop rail exposes a Search icon, so navbar stays clean.
 panel.classList.remove("expanded");
 events["sidebar-expand.st_sidebar_modern"]();
 runTimers();
-assert.equal(body.classList.contains("st-sidebar-search-available"),false);
+assert.equal(body.classList.contains("st-sidebar-search-available"),true);
 panel.classList.add("expanded");
 events["page-change.st_sidebar_modern"]();
 runTimers();
