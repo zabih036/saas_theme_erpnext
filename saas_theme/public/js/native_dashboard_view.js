@@ -7,7 +7,7 @@
 	if (window.__st_dashboard_view_design_v2__) return;
 	window.__st_dashboard_view_design_v2__ = true;
 
-	const ROOT = ".dashboard-page .dashboard-view";
+	const ROOT = ".dashboard-view";
 	const KPI = ".widget.number-widget-box";
 	const featuredIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg>';
 	const standardIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="M3.5 10h17"/></svg>';
@@ -94,7 +94,11 @@
 	}
 
 	if (typeof $ !== "undefined") {
-		$(document).on("page-change.st_dashboard_view_cards_v2", schedule);
+		$(document).on("page-change.st_dashboard_view_cards_v2", () => {
+			schedule();
+			setTimeout(enhance, 200);
+			setTimeout(enhance, 650);
+		});
 		$(document).on("list_view_refresh.st_dashboard_view_cards_v2", schedule);
 		$(start);
 	} else if (document.readyState === "loading") {

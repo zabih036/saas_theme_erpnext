@@ -825,3 +825,20 @@ Preferred order:
 8. rename/simplify filenames only after ownership has been proven.
 
 The current working `version-16` remains the regression baseline throughout the migration.
+
+### Phase 4 — Workspace compact sizing and DashboardView root correction (2026-11-11)
+
+- **Workspace:** the v2 `height:100%` number-card rule stretched each card to the
+  full grid track (observed approximately 180px). A scoped final rule now uses
+  142px cards (130px/mobile, natural height while editing), 70px shortcuts,
+  shorter inner padding, and keeps native filter/widget functionality.
+- **Dashboard View:** the v2 CSS and enhancer both assumed
+  `.dashboard-page .dashboard-view`. Frappe v16 guarantees
+  `.dashboard-view` inside the actual view, while `.dashboard-page`
+  is applied opportunistically to a wrapper. All v2 Dashboard design selectors
+  and the enhancer now target the stable `.dashboard-view` directly.
+  Essential styles (including three P&L summary tiles) also work before JS
+  runs. Native chart datasets and currency formats remain untouched.
+- Cache-bust only changed CSS / Dashboard JS to `?v=3`; retain independent
+  Workspace JS `?v=2`. Run `scripts/test_native_design_v2.py`,
+  `scripts/test_native_design_v2.js` and all existing CI checks.
