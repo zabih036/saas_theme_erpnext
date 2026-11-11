@@ -6,8 +6,8 @@
  */
 (() => {
 	"use strict";
-	if (window.__st_sidebar_awesomebar_search_v3__) return;
-	window.__st_sidebar_awesomebar_search_v3__ = true;
+	if (window.__st_sidebar_awesomebar_search_v4__) return;
+	window.__st_sidebar_awesomebar_search_v4__ = true;
 
 	const ROOT = ".body-sidebar-container";
 	const MIN_QUERY = 2;
@@ -23,7 +23,25 @@
 	const isMobile = () => typeof window.frappe?.is_mobile === "function"
 		? frappe.is_mobile() : !!window.matchMedia?.("(max-width: 767px)")?.matches;
 	const visible = node => !!(node && node.isConnected && node.getClientRects().length);
-	const ownLabel = (node) => (node?.textContent || "").trim();
+	// AwesomeBar formats some labels with HTML (<b>, <span>, entities).
+	// Results are rendered via textContent; remove presentation markup only.
+	function plainLabel(value) {
+		return String(value ?? "")
+			.replace(/<[^>]*>/g, "")
+			.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, entity => {
+				const key = entity.slice(1, -1).toLowerCase();
+				if (key[0] === "#") {
+					const hex = key[1] === "x";
+					const code = Number.parseInt(key.slice(hex ? 2 : 1), hex ? 16 : 10);
+					return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
+						? String.fromCodePoint(code) : "";
+				}
+				return {amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " "}[key] || entity;
+			})
+			.replace(/\s+/g, " ")
+			.trim();
+	}
+	const ownLabel = (node) => plainLabel(node?.textContent || "");
 
 	function routeTo(option) {
 		if (option.route_options && window.frappe) frappe.route_options = option.route_options;
@@ -92,7 +110,7 @@
 			]) collect(method, query);
 		}
 		return result.map(item => ({
-			label: String(item.value || item.match || item.label || "").trim(),
+			label: plainLabel(item.value || item.match || item.label || ""),
 			type: item.type || "",
 			route: item.route,
 			onclick: item.onclick,
@@ -103,6 +121,9 @@
 	}
 
 	function close(state) {
+		clearTimeout(state.timer);
+		state.timer = null;
+		state.version += 1; // Ignore delayed results on route changes.
 		state.open = false;
 		state.active = -1;
 		state.popover.hidden = true;
@@ -152,6 +173,7 @@
 		if (!item) return;
 		close(state);
 		state.input.value = "";
+		state.input.blur?.(); // Next Form focus must show fresh search results.
 		routeTo(item);
 	}
 
@@ -197,9 +219,9 @@
 					if (token !== state.version || !state.open || state.input.value.trim() !== query) return;
 					const docs = (Array.isArray(groups) ? groups : []).flatMap(group =>
 						(Array.isArray(group.results) ? group.results : []).map(item => ({
-							label: String(item.label || item.value || "").trim(),
+							label: plainLabel(item.label || item.value || ""),
 							route: item.route,
-							type: group.title || translate("Document"),
+							type: plainLabel(group.title || translate("Document")),
 						}))
 					);
 					// Reserve visible slots for permitted documents when command
@@ -222,7 +244,10 @@
 			if (typeof window.frappe?.app?.sidebar?.open === "function") {
 				window.frappe.app.sidebar.open();
 			}
-			setTimeout(() => { if (state.input.isConnected) state.input.focus(); }, 90);
+			setTimeout(() => {
+				const current = states.get(panel) || state;
+				if (current.input.isConnected) current.input.focus();
+			}, 90);
 			return;
 		}
 		state.input.focus();
@@ -305,10 +330,12 @@
 			if (!sidebar) return;
 			panel.classList.add("st-sidebar-modern");
 			let state = states.get(panel);
-			if (!state || !state.shell.isConnected) {
-				// Reuse search input when Frappe redraws only sidebar links;
-				// new complete Sidebar instances get one new state, not clones.
+			if (!state || !state.shell.isConnected || state.sidebar !== sidebar) {
+				// Frappe may replace .body-sidebar on List/Form navigation while
+				// retaining the outer Sidebar panel.
+				if (state) close(state);
 				state = makeSearch(panel);
+				state.sidebar = sidebar;
 			}
 			const header = sidebar.querySelector(":scope > .sidebar-header");
 			const anchor = sidebar.querySelector(":scope > .standard-items-band, :scope > .body-sidebar-top");
@@ -322,7 +349,7 @@
 			if (visible(panel) && !panel.classList.contains("sidebar-hidden") && !isMobile()) {
 				available = true;
 			}
-			if (!visible(panel) && state.open) close(state);
+			if ((!visible(panel) || panel.classList.contains("sidebar-hidden")) && state.open) close(state);
 		});
 		document.body.classList.toggle("st-sidebar-search-available", available);
 	}
@@ -335,7 +362,15 @@
 	function relevant(record) {
 		const target = record.target;
 		if (target?.nodeType === 1 && target.closest?.(ROOT)) {
-			return [...record.addedNodes, ...record.removedNodes].some(node =>
+			// Losing our own input means Frappe rebuilt the sidebar on route
+			// change; schedule restoration. Ignore our own insertions.
+			if (Array.from(record.removedNodes).some(node =>
+				node.nodeType === 1 && (
+					node.classList?.contains("st-sidebar-search") ||
+					node.querySelector?.(".st-sidebar-search")
+				)
+			)) return true;
+			return Array.from(record.addedNodes).some(node =>
 				node.nodeType === 1 &&
 				!node.classList?.contains("st-sidebar-search") &&
 				!node.closest?.(".st-sidebar-search")
@@ -383,8 +418,12 @@
 	}, true);
 	if (typeof window.$ === "function") {
 		$(document).on(
-			"page-change.st_sidebar_modern sidebar_setup.st_sidebar_modern sidebar-expand.st_sidebar_modern desktop_screen.st_sidebar_modern toolbar_setup.st_sidebar_modern",
-			() => schedule(30)
+			"page-change.st_sidebar_modern form-refresh.st_sidebar_modern sidebar_setup.st_sidebar_modern sidebar-expand.st_sidebar_modern desktop_screen.st_sidebar_modern toolbar_setup.st_sidebar_modern",
+			() => {
+				schedule(30);
+				// Native Form can rebuild its Sidebar after the first page-change.
+				setTimeout(refresh, 180);
+			}
 		);
 		$(start);
 	} else if (document.readyState === "loading") {

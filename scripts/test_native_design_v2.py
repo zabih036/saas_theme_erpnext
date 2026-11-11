@@ -121,7 +121,7 @@ def main() -> None:
     ]
     expected_js = [
         ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
-        ASSET_ROOT + "js/workspace_sidebar_design.js?v=3",
+        ASSET_ROOT + "js/workspace_sidebar_design.js?v=4",
     ]
     assert css[-4:-1] == expected_css, "Native design rules must remain ahead of final header polish"
     assert js[-2:] == expected_js, "Controllers load after existing Desk widget owners"
