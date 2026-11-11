@@ -469,3 +469,21 @@
 		transform: none !important;
 	}
 }
+
+
+/* Frappe's Dashboard Customize mode is detected from the real native drag
+   and edit controls. It must never be covered by our decorative motifs. */
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing::after {
+	display: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing:is(:hover, :focus-within) {
+	transform: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing :is(
+	.st-dv-kpi-icon, .st-dv-kpi-wave, .st-dv-kpi-open
+) {
+	display: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing .widget-control {
+	opacity: 1 !important;
+}
