@@ -1,0 +1,608 @@
+/*
+ * SaaS Theme — Native Frappe Dashboard View (v16)
+ *
+ * Applies to ListView's "Dashboard" view, including Accounts / Buying dashboards.
+ * Frappe creates .dashboard-page .dashboard-view (not a Workspaces route).
+ * Keep this separate from workspace_dashboard.css and the custom Home dashboard.
+ * Presentation only: do not replace NumberCardWidget, ChartWidget, data,
+ * selectors for other views, report navigation or customization behavior.
+ */
+
+.dashboard-page .dashboard-view {
+	--st-dv-canvas: #f6f9fd;
+	--st-dv-card: #ffffff;
+	--st-dv-soft: #f7faff;
+	--st-dv-border: #dfe7f1;
+	--st-dv-divider: #edf2f8;
+	--st-dv-heading: #254c66;
+	--st-dv-ink: #254b65;
+	--st-dv-muted: #70849d;
+	--st-dv-accent: #1762ca;
+	--st-dv-hover: #eff5ff;
+	--st-dv-shadow: 0 1px 2px rgba(20, 50, 84, .025), 0 5px 18px rgba(20, 50, 84, .045);
+	--st-dv-shadow-hover: 0 9px 24px rgba(20, 50, 84, .09);
+	padding: 20px 2px 32px !important;
+	color: var(--st-dv-ink);
+}
+
+/* Do not override the List/Report page container, native actions or sidebar.
+   The block below is the entire content of the actual Dashboard view. */
+.dashboard-page .dashboard-view > .widget-group {
+	margin-bottom: 24px !important;
+}
+
+.dashboard-page .dashboard-view .widget-group-body {
+	align-items: stretch !important;
+	column-gap: 16px !important;
+	row-gap: 16px !important;
+}
+
+.dashboard-page .dashboard-view .widget-group-head .widget-group-title {
+	color: var(--st-dv-heading) !important;
+	font-size: 15px !important;
+	font-weight: 740 !important;
+	letter-spacing: -.02em !important;
+}
+
+/* Frappe groups get a consistent surface even while numbers/charts load. */
+.dashboard-page .dashboard-view :is(
+	.widget.number-widget-box,
+	.widget.dashboard-widget-box
+) {
+	border: 1px solid var(--st-dv-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-dv-card) !important;
+	box-shadow: var(--st-dv-shadow) !important;
+	color: var(--st-dv-ink) !important;
+	transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease !important;
+}
+
+.dashboard-page .dashboard-view .widget .widget-title {
+	color: var(--st-dv-heading) !important;
+	font-size: 13px !important;
+	font-weight: 700 !important;
+	letter-spacing: -.01em !important;
+	line-height: 1.4 !important;
+}
+
+.dashboard-page .dashboard-view .widget .widget-label {
+	min-width: 0 !important;
+}
+
+.dashboard-page .dashboard-view .widget .widget-label .ellipsis {
+	overflow-wrap: anywhere;
+}
+
+/* ----------------- KPI CARDS: compact Home-like geometry ----------------
+ * The NumberCardWidget provides the label, value, stats and action menu.
+ * Do not insert descriptions, pretend trends exist or reformat currency.
+ */
+.dashboard-page .dashboard-view .widget.number-widget-box {
+	position: relative !important;
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 9px !important;
+	isolation: isolate;
+	min-height: 145px !important;
+	height: 100% !important;
+	margin: 0 !important;
+	padding: 18px 19px 15px !important;
+	overflow: visible !important; /* Native Refresh/Edit dropdown stays visible. */
+	cursor: pointer !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box::before {
+	/* The gentle Home card accent belongs to the surface, not to the value. */
+	content: "" !important;
+	position: absolute !important;
+	inset: 0 !important;
+	left: 0 !important;
+	top: 0 !important;
+	bottom: 0 !important;
+	right: 0 !important;
+	width: auto !important;
+	height: auto !important;
+	border-radius: inherit !important;
+	background: radial-gradient(circle 65px at 100% 0, rgba(23, 98, 202, .035) 0 98%, transparent 100%) !important;
+	opacity: 1 !important;
+	pointer-events: none !important;
+	z-index: -1 !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-head {
+	display: flex !important;
+	align-items: flex-start !important;
+	justify-content: space-between !important;
+	min-height: 29px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-label {
+	position: static !important;
+	flex: 1 1 auto;
+	padding-inline-end: 38px;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-title {
+	color: var(--st-dv-heading) !important;
+	font-size: 12.5px !important;
+	font-weight: 720 !important;
+	letter-spacing: -.01em !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-body {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	align-items: flex-start !important;
+	padding: 3px 0 0 !important;
+	margin: 0 !important;
+	min-width: 0 !important;
+	border: none !important;
+	background: transparent !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-content {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: flex-start !important;
+	gap: 7px !important;
+	min-height: 0 !important;
+	min-width: 0 !important;
+	width: 100% !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .number,
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-content .number {
+	display: block !important;
+	max-width: 100% !important;
+	color: var(--st-dv-ink) !important;
+	font-size: clamp(22px, 1.85vw, 28px) !important;
+	font-weight: 760 !important;
+	letter-spacing: -.027em !important;
+	line-height: 1.18 !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .number-card-loading {
+	color: var(--st-dv-muted) !important;
+	font-size: 12px !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .card-stats {
+	display: block !important;
+	margin: 3px 0 0 !important;
+	padding: 0 !important;
+	font-size: 11px !important;
+	line-height: 1.5 !important;
+	color: var(--st-dv-muted) !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .percentage-stat-area {
+	display: inline-flex !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	gap: 4px !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .card-stats.green-stat {
+	color: #0d9369 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box .card-stats.red-stat {
+	color: #c24859 !important;
+}
+
+/* A small static icon, not a fake mini-chart. The real action/menu is still
+   provided by Frappe's widget-control and appears in the same corner. */
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-head::after {
+	content: "↗" !important;
+	display: flex !important;
+	position: absolute !important;
+	inset-block-start: 16px !important;
+	inset-inline-end: 16px !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 32px !important;
+	height: 32px !important;
+	border: 1px solid var(--st-dv-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-dv-soft) !important;
+	color: var(--st-dv-accent) !important;
+	font-size: 19px !important;
+	font-weight: 500 !important;
+	line-height: 1 !important;
+	pointer-events: none !important;
+	opacity: 1;
+	transition: opacity .16s ease, background .16s ease !important;
+}
+
+/* Reveal the existing native refresh/edit control rather than obscuring it. */
+.dashboard-page .dashboard-view .widget.number-widget-box:is(:hover, :focus-within) .widget-head::after,
+.dashboard-page .dashboard-view .widget.number-widget-box.edit-mode .widget-head::after {
+	opacity: 0 !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .widget-control {
+	z-index: 4 !important;
+	position: relative !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box .card-actions > a {
+	display: inline-flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	min-width: 30px !important;
+	min-height: 30px !important;
+	border-radius: 9px !important;
+	background: var(--st-dv-soft) !important;
+	color: var(--st-dv-ink) !important;
+}
+
+.dashboard-page .dashboard-view .widget.number-widget-box:is(:hover, :focus-within) {
+	border-color: #b9cdee !important;
+	transform: translateY(-2px) !important;
+	box-shadow: var(--st-dv-shadow-hover) !important;
+}
+
+/* Highlight the leading *visible* KPI (as the Home overview does).
+   This is presentation priority only; it does not name a card "Revenue",
+   create totals, or infer whether the first KPI is income or expense. */
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child {
+	background: linear-gradient(125deg, #1762ca 0%, #1a63c8 75%, #1b6edc 100%) !important;
+	border-color: #1762ca !important;
+	box-shadow: 0 8px 22px rgba(23, 98, 202, .18) !important;
+}
+
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child::before {
+	background: radial-gradient(circle 76px at 100% 0, rgba(255, 255, 255, .15) 0 98%, transparent 100%) !important;
+}
+
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child :is(
+	.widget-title, .widget-body, .number, .widget-content .number,
+	.card-stats, .percentage-stat-area, .number-card-loading
+) {
+	color: #ffffff !important;
+}
+
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child .widget-head::after,
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child .card-actions > a {
+	background: rgba(255, 255, 255, .13) !important;
+	border-color: rgba(255, 255, 255, .24) !important;
+	color: #ffffff !important;
+}
+
+.dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child:is(:hover, :focus-within) {
+	border-color: #1762ca !important;
+	box-shadow: 0 13px 28px rgba(23, 98, 202, .24) !important;
+}
+
+/* --------------------- Charts: modern Home-like panels ---------------- */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box {
+	position: relative !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	min-width: 0 !important;
+	min-height: 270px !important;
+	overflow: visible !important; /* Don't clip native chart menus/date filters. */
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-head {
+	display: flex !important;
+	align-items: flex-start !important;
+	justify-content: space-between !important;
+	flex-wrap: wrap !important;
+	gap: 10px 14px !important;
+	min-height: 68px !important;
+	padding: 17px 19px 14px !important;
+	margin: 0 !important;
+	border: none !important;
+	border-bottom: 1px solid var(--st-dv-divider) !important;
+	border-radius: 16px 16px 0 0 !important;
+	background: transparent !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-label {
+	min-width: 0 !important;
+	flex: 1 1 190px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-title {
+	color: var(--st-dv-heading) !important;
+	font-size: 14px !important;
+	font-weight: 740 !important;
+	line-height: 1.35 !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-subtitle {
+	color: var(--st-dv-muted) !important;
+	font-size: 11.5px !important;
+	margin-top: 4px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-control {
+	z-index: 4 !important;
+	display: flex !important;
+	flex: 0 1 auto !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex-wrap: wrap !important;
+	gap: 6px !important;
+	min-width: 0 !important;
+	margin-inline-start: auto !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-control > * {
+	margin: 0 !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(
+	.widget-control .btn, .widget-control .es-button,
+	.filter-chart, .chart-actions .chart-menu
+) {
+	min-height: 31px !important;
+	border: 1px solid var(--st-dv-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-dv-soft) !important;
+	color: var(--st-dv-heading) !important;
+	box-shadow: none !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(
+	.widget-control .btn, .widget-control .es-button,
+	.filter-chart, .chart-actions .chart-menu
+):is(:hover, :focus-visible) {
+	background: var(--st-dv-hover) !important;
+	border-color: #94b7ec !important;
+	color: var(--st-dv-accent) !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-body {
+	min-width: 0 !important;
+	padding: 17px 19px 19px !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-footer {
+	background: transparent !important;
+	padding-inline: 19px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(.chart-container, .frappe-chart) {
+	max-width: 100%;
+	background: transparent !important;
+}
+
+/* Chart labels stay inside the original Frappe SVG coordinate system.
+   Never force chart dimensions, hide series, or override dataset colors. */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(
+	.chart-label, .tick, .axis-label, .legend-dataset-text, .chart-legend
+) {
+	color: var(--st-dv-muted) !important;
+	fill: var(--st-dv-muted) !important;
+	font-size: 11px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(
+	.line-vertical, .line-horizontal, .guide-line
+) {
+	stroke: var(--st-dv-divider) !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .chart-container rect.bar {
+	rx: 6px;
+	ry: 6px;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .chart-container .line-graph-path {
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+}
+
+/* Frappe's "Profit and Loss" report summary becomes a quiet three-column
+   KPI sub-grid. It keeps the original summary values and semantic colors. */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)) !important;
+	gap: 12px !important;
+	padding: 0 !important;
+	margin: 0 0 16px !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-item {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 8px !important;
+	min-width: 0 !important;
+	min-height: 90px !important;
+	margin: 0 !important;
+	padding: 13px 16px !important;
+	border: 1px solid var(--st-dv-divider) !important;
+	border-radius: 12px !important;
+	background: var(--st-dv-soft) !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-label {
+	color: var(--st-dv-muted) !important;
+	font-size: 11.5px !important;
+	font-weight: 600 !important;
+	line-height: 1.4 !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value,
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value div {
+	font-size: clamp(18px, 1.65vw, 24px) !important;
+	font-weight: 740 !important;
+	line-height: 1.2 !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+	text-align: start !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value.green,
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value.green div {
+	color: #11956b !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value.red,
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-value.red div {
+	color: #d34a58 !important;
+}
+
+/* --------------------- Native chart legend / empty states ------------ */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .chart-legend {
+	margin-top: 9px !important;
+	padding-top: 9px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .legend-dataset {
+	color: var(--st-dv-muted) !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box :is(
+	.chart-loading-state, .chart-empty-state, .chart-error-state
+) {
+	border-radius: 12px !important;
+}
+
+.dashboard-page .dashboard-view .widget.dashboard-widget-box .chart-empty-state {
+	background: var(--st-dv-soft) !important;
+	color: var(--st-dv-muted) !important;
+}
+
+/* -------------- Responsive, keyboard, RTL and reduced motion --------- */
+@media (max-width: 991px) {
+	.dashboard-page .dashboard-view .widget-group-body.grid-col-3 {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)) !important;
+	}
+}
+
+@media (max-width: 767px) {
+	.dashboard-page .dashboard-view {
+		padding: 12px 1px 24px !important;
+	}
+	.dashboard-page .dashboard-view .widget-group-body.grid-col-2 {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box {
+		min-height: 126px !important;
+		padding: 15px 15px 13px !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box .widget-head::after {
+		inset-block-start: 12px !important;
+		inset-inline-end: 12px !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box .number {
+		font-size: clamp(22px, 5.5vw, 27px) !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-head {
+		padding: 14px 14px 12px !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-body {
+		padding: 13px 12px 15px !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-control {
+		justify-content: flex-start !important;
+		width: 100%;
+		margin-inline-start: 0 !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-label {
+		flex-basis: 100% !important;
+	}
+}
+
+[dir="rtl"] .dashboard-page .dashboard-view .widget.number-widget-box :is(
+	.widget-head, .widget-body, .widget-content, .number
+) {
+	text-align: start !important;
+}
+/* Do not change the direction of financial amounts, chart axes or date filters. */
+
+.dashboard-page .dashboard-view .widget.number-widget-box:focus-within,
+.dashboard-page .dashboard-view .widget.dashboard-widget-box:focus-within {
+	outline: 2px solid rgba(23, 98, 202, .38) !important;
+	outline-offset: 2px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dashboard-page .dashboard-view :is(
+		.widget.number-widget-box, .widget.dashboard-widget-box
+	),
+	.dashboard-page .dashboard-view .widget.number-widget-box .widget-head::after {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+
+/* Dark-mode surfaces are scoped to DashboardView; never style Workspaces,
+   the custom Home renderer, Form/List/QueryReport or unrelated widget roots. */
+[data-theme="dark"] .dashboard-page .dashboard-view {
+	--st-dv-card: #162232;
+	--st-dv-soft: #1c2d42;
+	--st-dv-border: #32455e;
+	--st-dv-divider: #30425a;
+	--st-dv-heading: #dcecff;
+	--st-dv-ink: #edf5ff;
+	--st-dv-muted: #9eb2ca;
+	--st-dv-hover: #213a59;
+	--st-dv-accent: #89b7ff;
+	--st-dv-shadow: 0 5px 17px rgba(0, 0, 0, .18);
+	--st-dv-shadow-hover: 0 10px 27px rgba(0, 0, 0, .3);
+}
+
+[data-theme="dark"] .dashboard-page .dashboard-view .widget :is(
+	.widget-head, .widget-body, .widget-footer
+) {
+	background: transparent !important;
+	border-color: var(--st-dv-divider) !important;
+}
+
+[data-theme="dark"] .dashboard-page .dashboard-view :is(
+	.widget.number-widget-box, .widget.dashboard-widget-box
+) {
+	background: var(--st-dv-card) !important;
+	border-color: var(--st-dv-border) !important;
+	box-shadow: var(--st-dv-shadow) !important;
+}
+
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.number-widget-box .number,
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.number-widget-box .widget-title,
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.dashboard-widget-box .widget-title {
+	color: var(--st-dv-ink) !important;
+}
+
+/* The first dashboard KPI remains blue in both light and dark themes. */
+[data-theme="dark"] .dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child {
+	background: linear-gradient(125deg, #155cb9, #1762ca) !important;
+	border-color: #2478e6 !important;
+}
+
+[data-theme="dark"] .dashboard-page .dashboard-view > .widget-group:first-child .widget-group-body > .widget.number-widget-box:first-child :is(
+	.widget-title, .widget-body, .number, .widget-content .number,
+	.card-stats, .percentage-stat-area, .number-card-loading
+) {
+	color: #ffffff !important;
+}
+
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.dashboard-widget-box .report-summary .summary-item {
+	background: var(--st-dv-soft) !important;
+	border-color: var(--st-dv-divider) !important;
+}

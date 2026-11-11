@@ -39,6 +39,7 @@ app_include_css = [
 	"/assets/saas_theme/css/interaction_finish_v2.css?v=2",
 	"/assets/saas_theme/css/popup_controls.css?v=1",
 	"/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
+	"/assets/saas_theme/css/native_dashboard_view.css?v=1",
 ]
 
 app_include_js = [

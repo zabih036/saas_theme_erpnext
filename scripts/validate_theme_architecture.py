@@ -41,6 +41,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/interaction_finish_v2.css?v=2",
     "/assets/saas_theme/css/popup_controls.css?v=1",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
+    "/assets/saas_theme/css/native_dashboard_view.css?v=1",
 ]
 
 EXPECTED_DESK_JS = [
@@ -99,6 +100,7 @@ KNOWN_CSS_FILES = {
     "search_report_refinements.css",
     "workspace_shell_polish.css",
     "workspace_dashboard.css",
+    "native_dashboard_view.css",
 }
 
 KNOWN_JS_FILES = {
@@ -203,6 +205,17 @@ REQUIRED_RUNTIME_GUARDS = {
         "SaaS Theme — Stability Refinement v3",
         "SaaS Theme — UI Precision v4",
         ".form-layout.st-section-card-form",
+    ],
+    "native_dashboard_view.css": [
+        ".dashboard-page .dashboard-view",
+        ".widget.number-widget-box",
+        ".widget.dashboard-widget-box",
+        ".report-summary",
+        ".summary-item",
+        ".chart-legend",
+        '[data-theme="dark"]',
+        '@media (max-width: 767px)',
+        '@media (prefers-reduced-motion: reduce)',
     ],
     "workspace_dashboard.css": [
         '[data-page-route="Workspaces"]',

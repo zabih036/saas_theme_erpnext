@@ -34,6 +34,7 @@ on:
       - 'scripts/validate_phase4f_header_profile_asset.py'
       - 'scripts/test_header_profile_repair.js'
       - 'scripts/test_native_workspace_dashboard.py'
+      - 'scripts/test_native_dashboard_view.py'
       - 'scripts/test_search_report_refinements.js'
       - 'scripts/test_child_table_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
@@ -93,6 +94,8 @@ jobs:
           python3 scripts/test_language_settings.py
           node --check saas_theme/public/js/brand_shell.js
           node scripts/test_language_switcher.js
+      - name: Validate native Dashboard View card and chart styling
+        run: python3 scripts/test_native_dashboard_view.py
       - name: Validate native ERPNext Workspace dashboard styling
         run: python3 scripts/test_native_workspace_dashboard.py
       - name: Validate Home permission and finance analytics
