@@ -139,6 +139,7 @@ async function main(){
 	input.handlers.input();
 	assert.equal(list.children[0].children[0].textContent,"Purchase Invoice List");
 	flush();
+	await Promise.resolve(); // Global search is dispatched on the next microtask.
 	assert.ok(requestResolvers.invoice);
 	requestResolvers.invoice([{title:"Purchase Invoice",results:[
 		{label:"INV-00042",route:["Form","Purchase Invoice","INV-00042"]},
@@ -154,7 +155,9 @@ async function main(){
 
 	// Ignore responses to stale prior queries.
 	input.value="old";input.handlers.input();flush();
+	await Promise.resolve();
 	input.value="invoice";input.handlers.input();flush();
+	await Promise.resolve();
 	requestResolvers.old([{title:"Test",results:[{label:"STALE",route:["Form","Doc","Stale"]}]}]);
 	await Promise.resolve();await Promise.resolve();await Promise.resolve();
 	assert.equal(list.children.some(n=>n.children[0]?.textContent==="STALE"),false);
