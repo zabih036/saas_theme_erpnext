@@ -77,10 +77,13 @@ async function main(){
 	a.append(caption);panel.links=[a];
 	const body=new Element("body");
 	const handlers={};
+	let homeVisible=false;
+	const homeHeader={getClientRects:()=>homeVisible?[{}]:[]};
 	const doc={
 		body,readyState:"complete",
 		createElement:tag=>new Element(tag),
 		querySelectorAll:s=>s===".body-sidebar-container"?[panel]:[],
+		querySelector:s=>s===".desktop-wrapper .desktop-navbar"?homeHeader:null,
 		addEventListener:(name,handler)=>handlers[name]=handler,
 	};
 	const tasks=[];const cancelled=new Set();let taskID=0;
@@ -128,7 +131,7 @@ async function main(){
 	const window={frappe,$,addEventListener:()=>{},matchMedia:()=>({matches:mobile})};
 	vm.runInNewContext(code,{document:doc,window,frappe,$,setTimeout:later,
 		clearTimeout:id=>cancelled.add(id),console});
-	assert.equal(window.__st_sidebar_awesomebar_search_v4__,true);
+	assert.equal(window.__st_sidebar_awesomebar_search_v5__,true);
 	assert.equal(panel.classList.contains("st-sidebar-modern"),true);
 	assert.equal(body.classList.contains("st-sidebar-search-available"),true);
 	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
@@ -210,6 +213,16 @@ async function main(){
 	assert.equal(blocked,true,"Ctrl+K must prevent the old navbar AwesomeBar modal");
 	assert.equal(input.focused,true);
 	assert.equal(modal,0);
+
+	// Home has its own native navbar search, so do NOT steal its Ctrl+K.
+	homeVisible=true;
+	blocked=false; prevented=false;
+	handlers.keydown({key:"k",ctrlKey:true,metaKey:false,altKey:false,
+		defaultPrevented:false,target:new Element("div"),
+		preventDefault(){prevented=true;},stopImmediatePropagation(){blocked=true;}});
+	assert.equal(prevented,false,"Home should keep the native global search shortcut");
+	assert.equal(blocked,false,"Home search must not be intercepted by sidebar");
+	homeVisible=false;
 
 	// Refresh must not produce duplicate fields.
 	events["sidebar_setup.st_sidebar_modern"]();flush();

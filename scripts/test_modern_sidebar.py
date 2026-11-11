@@ -88,18 +88,19 @@ def main() -> None:
     assert vals["app_include_css"][-4:] == [
         P + "css/workspace_dashboard_design.css?v=4",
         P + "css/native_dashboard_view_design.css?v=4",
-        P + "css/workspace_sidebar_design.css?v=3",
-        P + "css/desk_header_finish.css?v=3",
+        P + "css/workspace_sidebar_design.css?v=4",
+        P + "css/desk_header_finish.css?v=4",
     ]
-    assert vals["app_include_js"][-2:] == [
+    assert vals["app_include_js"][-3:] == [
         P + "js/native_dashboard_view.js?v=4",
-        P + "js/workspace_sidebar_design.js?v=4",
+        P + "js/workspace_sidebar_design.js?v=5",
+        P + "js/desk_header_search.js?v=1",
     ]
     assert len(vals["app_include_css"]) == len(set(vals["app_include_css"]))
     assert len(vals["app_include_js"]) == len(set(vals["app_include_js"]))
     manifest = ARCH.read_text(encoding="utf-8")
-    for asset in ("desk_header_finish.css", "workspace_sidebar_design.css?v=3",
-                  "workspace_sidebar_design.js?v=4"):
+    for asset in ("desk_header_finish.css?v=4", "workspace_sidebar_design.css?v=4",
+                  "workspace_sidebar_design.js?v=5", "desk_header_search.js?v=1"):
         assert asset in manifest, f"Architecture manifest missing {asset}"
     print("Inline Sidebar Search: results dropdown, native permissions, keyboard navigation,"
           " no modal, navbar actions, compact Workspaces, asset order validated.")
