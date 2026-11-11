@@ -78,6 +78,25 @@ def main() -> None:
     check_js(DV_SCRIPT, ".dashboard-view",
              "__st_dashboard_view_design_v2__")
 
+
+    # Regression: the last implementation looked correct on Workspace but
+    # skipped native DashboardView completely. The stable root is .dashboard-view
+    # even when Frappe's layout wrapper does not acquire .dashboard-page.
+    dashboard_css = (PUBLIC / "css" / DV_STYLE).read_text(encoding="utf-8")
+    dashboard_js = (PUBLIC / "js" / DV_SCRIPT).read_text(encoding="utf-8")
+    workspace_css = (PUBLIC / "css" / WS_STYLE).read_text(encoding="utf-8")
+    assert ".dashboard-page .dashboard-view" not in dashboard_css
+    assert 'const ROOT = ".dashboard-view";' in dashboard_js
+    assert "height: 142px !important;" in workspace_css
+    assert "height: 70px !important;" in workspace_css
+    assert "height: 100% !important;" not in workspace_css
+    assert ".widget.number-widget-box:not(.st-dv-kpi-v2)" in dashboard_css
+    assert ".widget.dashboard-widget-box:not(.st-dv-chart-v2)" in dashboard_css
+    assert '.report-summary > .summary-item' in dashboard_css
+    assert '.report-summary[style*="display: none"]' in dashboard_css
+    assert '.report-summary[style*="display:none"]' in dashboard_css
+    assert "display: none !important;" in dashboard_css
+
     source = ast.parse(HOOKS.read_text(encoding="utf-8"))
     variables = {
         name: next(
