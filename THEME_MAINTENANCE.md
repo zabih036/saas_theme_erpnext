@@ -97,6 +97,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Main desktop/workspace shell | `saas_theme/public/css/professional_ui.css` / `saas_theme/public/js/professional_ui.js` | Broad desktop shell and workspace rail. |
 | Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
+| Native Workspace dashboard styling | `saas_theme/public/css/workspace_dashboard.css` | Dedicated route-scoped visual owner for standard Frappe v16 number cards, shortcuts, charts, link cards and quick lists. Does not touch custom Home analytics or Frappe widget behavior. |
 | Desktop navbar | `saas_theme/public/css/desktop_navbar_refinement.css` | Desktop navbar appearance/spacing. |
 | Page-header avatar/profile repair (late-loaded) | `saas_theme/public/js/header_profile_repair.js` | Unchanged former v4 controller; ensures the page utility cluster, profile avatar, and native Frappe user menu remain usable after delayed sidebar initialization. |
 | Mobile shell | `saas_theme/public/css/mobile_shell.css` / `saas_theme/public/js/mobile_shell.js` | Mobile-only shell/navigation behavior. |
@@ -576,6 +577,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
+- “Change native Workspace KPI, shortcut or chart appearance” → `workspace_dashboard.css`; leave `home.css` for the separate custom Home analytics layout.
 - “Change dashboard/analytics styling” → `home.css`
 - “Fix Home KPI data and invoice counts” → `saas_theme/home.py` with permission checks and base-currency totals; do not default inaccessible metrics to zero.
 - “Change Home Quick Access links” → `home_dashboard.js`: use the current user's module sidebars, not Workspace favorites; never inject unauthorized navigation.
@@ -588,6 +590,33 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+## Native ERPNext Workspace dashboards — visual-only design
+
+The built-in **Buying, Selling, Stock, Accounts, and other** ERPNext/Frappe
+v16 Workspaces use the framework's native Number Card, Shortcut, Dashboard
+Chart, Link Card and Quick List widgets. Their content and permissions remain
+under Frappe's own controllers. They are not the custom `.st-home-dashboard`.
+
+- The dedicated `workspace_dashboard.css?v=1` is loaded after
+  `workspace_shell_polish.css` and before `dark.css`, with no changes to the
+  relative ordering of any existing stylesheet. It uses scoped
+  `[data-page-route="Workspaces"]` selectors that outrank historical broad
+  widget rules in `saas_theme.css` and `precision.css`.
+- The design follows the custom Home visual language: crisp white/slate
+  surfaces, restrained blue accents, compact readable KPI typography,
+  consistent borders/radii, quiet shadows and accessible hover/focus states.
+- Frappe Number Card values and currency formatting are unchanged. Native
+  chart data, SVG dataset colors, plotting dimensions, tooltips, loading and
+  empty states, chart filters, date inputs and dropdown actions remain intact.
+- Native shortcut navigation/quick entry, link destinations, report permissions,
+  edit-mode controls, widgets resizing, drag handles and layout grid are
+  unchanged; no wrapping, custom onclicks or synthetic data are introduced.
+- The style supports light/dark themes, RTL locales (including Pashto and
+  Dari), mobile widths, and reduced-motion users.
+- CI runs `python3 scripts/test_native_workspace_dashboard.py` to guard
+  native widget contracts, CSS route isolation and safe asset loading.
+  Live browser review is still necessary for real chart tooltips, filters,
+  dropdowns, native workspace edit mode and RTL presentation.
 ## Home dashboard data contracts (v8)
 
 - Only keys included in `get_dashboard_overview().kpis` may render a KPI. A missing key means unavailable or unauthorized, **not zero**. Never show a permission warning inside the dashboard.
