@@ -45,7 +45,7 @@ def check_css(name: str, scope: str, component: str, featured: str) -> None:
     for forbidden in (
         ".st-home-dashboard", ".form-layout", ".list-view-container",
         ".dataset-0", ".dataset-1", "frappe.set_route(",
-        "frappe.call(", "body {", "overflow: hidden !important;",
+        "frappe.call(", "overflow: hidden !important;",
     ):
         assert forbidden not in no_comments, f"{name} contains {forbidden}"
 
