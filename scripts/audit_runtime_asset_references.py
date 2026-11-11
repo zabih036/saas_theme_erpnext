@@ -61,7 +61,7 @@ def audit() -> None:
     v7 = references.get(("css", "ui_consolidation_v7.css"), set())
     if not {"saas_theme/hooks.py", "saas_theme/public/js/interaction_finish_v2.js"} <= v7:
         raise SystemExit("The intentional final CSS reinjection changed")
-    late_v4 = references.get(("js", "ui_precision_v4.js"), set())
+    late_v4 = references.get(("js", "header_profile_repair.js"), set())
     if "saas_theme/public/js/user_theme_menu.js" not in late_v4:
         raise SystemExit("Live v4 header/profile controller lost")
     print(

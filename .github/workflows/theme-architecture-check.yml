@@ -31,6 +31,8 @@ on:
       - 'scripts/validate_phase4c_child_table_assets.py'
       - 'scripts/validate_phase4d_controls_assets.py'
       - 'scripts/validate_phase4e_search_report_overrides.py'
+      - 'scripts/validate_phase4f_header_profile_asset.py'
+      - 'scripts/test_header_profile_repair.js'
       - 'scripts/test_search_report_refinements.js'
       - 'scripts/test_child_table_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
@@ -75,6 +77,11 @@ jobs:
           python3 scripts/validate_phase4e_search_report_overrides.py
           node --check saas_theme/public/js/search_report_refinements.js
           node scripts/test_search_report_refinements.js
+      - name: Validate Phase 4F late header/profile controller integrity
+        run: |
+          python3 scripts/validate_phase4f_header_profile_asset.py
+          node --check saas_theme/public/js/header_profile_repair.js
+          node scripts/test_header_profile_repair.js
       - name: Validate report filter geometry and controller syntax
         run: |
           node --check saas_theme/public/js/search_report_refinements.js

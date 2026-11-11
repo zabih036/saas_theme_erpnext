@@ -54,7 +54,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/mobile_shell.js?v=2",
     "/assets/saas_theme/js/workspace_shell_polish.js?v=1",
     "/assets/saas_theme/js/final_shell_cleanup.js?v=2",
-    "/assets/saas_theme/js/user_theme_menu.js?v=7",
+    "/assets/saas_theme/js/user_theme_menu.js?v=8",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
@@ -117,7 +117,7 @@ KNOWN_JS_FILES = {
     "saas_theme.js",
     "stability_refinement_v3.js",
     "ui_finish.js",
-    "ui_precision_v4.js",
+    "header_profile_repair.js",
     "control_search_report.js",
     "search_report_refinements.js",
     "user_theme_menu.js",
@@ -127,6 +127,7 @@ KNOWN_JS_FILES = {
 # Retired filenames from proven no-op removals or completed bundle migrations.
 # They must not return through a new hook or runtime loader.
 RETIRED_ASSETS = {
+    "ui_precision_v4.js",
     "ui_precision_v6_2.css",
     "ui_precision_v6_2.js",
     "ui_precision_v6.css",
@@ -170,7 +171,7 @@ PROTECTED_COMPATIBILITY_FILES = {
     "css/ui_consolidation_v7.css",
     "css/inline_grid_link_popup_anchor_v5.css",
     "js/stability_refinement_v3.js",
-    "js/ui_precision_v4.js",
+    "js/header_profile_repair.js",
     "js/child_table_ui.js",
     "js/control_search_report.js",
     "js/search_report_refinements.js",
@@ -182,7 +183,7 @@ EXPECTED_LATE_ASSET_TOKENS = {
     "user_theme_menu.js": [
         "/assets/saas_theme/css/desk_stability.css?v=1",
         "/assets/saas_theme/js/stability_refinement_v3.js?v=2",
-        "/assets/saas_theme/js/ui_precision_v4.js?v=1",
+        "/assets/saas_theme/js/header_profile_repair.js?v=1",
         "/assets/saas_theme/css/child_table_ui.css?v=1",
         "/assets/saas_theme/js/child_table_ui.js?v=1",
         "/assets/saas_theme/css/control_search_report.css?v=1",
@@ -229,6 +230,15 @@ REQUIRED_RUNTIME_GUARDS = {
         'list.page.show_form();',
         'list.page.page_form.hasClass("st-list-filters-collapsed")',
         '$button.insertAfter($reload)',
+    ],
+    "header_profile_repair.js": [
+        "__saas_theme_ui_precision_v4__",
+        "function ensure_profile($head)",
+        "function bind_profile_menu($profile, $button)",
+        "function setup_observer()",
+        "setTimeout(repair_headers, 100);",
+        "setTimeout(repair_headers, 350);",
+        "page-change.saas_ui_precision_v4",
     ],
     "stability_refinement_v3.js": [
         "__saas_theme_stability_v3__",

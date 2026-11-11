@@ -27,7 +27,7 @@ LATE_LOADERS = {
     "user_theme_menu.js": [
         ("css/desk_stability.css?v=1", 1),
         ("js/stability_refinement_v3.js?v=2", 1),
-        ("js/ui_precision_v4.js?v=1", 1),
+        ("js/header_profile_repair.js?v=1", 1),
         ("css/child_table_ui.css?v=1", 1),
         ("js/child_table_ui.js?v=1", 1),
         ("css/control_search_report.css?v=1", 1),
