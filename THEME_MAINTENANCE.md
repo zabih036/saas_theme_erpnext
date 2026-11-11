@@ -98,6 +98,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
 | Native Workspace dashboard styling | `saas_theme/public/css/workspace_dashboard.css` | Dedicated route-scoped visual owner for standard Frappe v16 number cards, shortcuts, charts, link cards and quick lists. Does not touch custom Home analytics or Frappe widget behavior. |
+| Native Dashboard view styling | `saas_theme/public/css/native_dashboard_view.css` | The Frappe v16 ListView Dashboard tab (`.dashboard-page .dashboard-view`), including Accounts and Buying dashboards; separate from Workspaces and custom Home. |
 | Desktop navbar | `saas_theme/public/css/desktop_navbar_refinement.css` | Desktop navbar appearance/spacing. |
 | Page-header avatar/profile repair (late-loaded) | `saas_theme/public/js/header_profile_repair.js` | Unchanged former v4 controller; ensures the page utility cluster, profile avatar, and native Frappe user menu remain usable after delayed sidebar initialization. |
 | Mobile shell | `saas_theme/public/css/mobile_shell.css` / `saas_theme/public/js/mobile_shell.js` | Mobile-only shell/navigation behavior. |
@@ -578,6 +579,7 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
 - “Change native Workspace KPI, shortcut or chart appearance” → `workspace_dashboard.css`; leave `home.css` for the separate custom Home analytics layout.
+- “Change Dashboard / Accounts (or another native Dashboard view) number cards and charts” → `native_dashboard_view.css`, not Workspace CSS.
 - “Change dashboard/analytics styling” → `home.css`
 - “Fix Home KPI data and invoice counts” → `saas_theme/home.py` with permission checks and base-currency totals; do not default inaccessible metrics to zero.
 - “Change Home Quick Access links” → `home_dashboard.js`: use the current user's module sidebars, not Workspace favorites; never inject unauthorized navigation.
@@ -590,6 +592,40 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+## Native Dashboard View — Home-style KPI and chart cards
+
+**Dashboard / Accounts** in Frappe 16 is *not* a Workspace route.
+Frappe's `frappe.views.DashboardView` builds `.dashboard-page .dashboard-view`
+and renders native Number Cards and Dashboard Charts with `WidgetGroup`.
+This distinct markup is why the previous Workspace CSS did not restyle
+the user's Dashboard / Accounts screenshot.
+
+- `native_dashboard_view.css?v=1` is the dedicated scoped styling owner.
+  It is appended after the existing Desk styles, intentionally outranking
+  broad widget compatibility rules without modifying their original bytes
+  or order. `workspace_dashboard.css` remains the actual Workspaces owner;
+  `home.css` remains the separate custom Home analytics owner.
+- KPI cards use Home-like proportions, left/start-aligned text, quiet
+  borders/shadows, and a blue highlighted *first visible dashboard KPI*.
+  This is visual prominence, not a claim that the first item is Revenue.
+  The arrow glyph is static decoration, not a fake sparkline or trend.
+  Hover/focus reveals Frappe's original Number Card Refresh/Edit menu.
+- Chart headers/filters, bar corners, legends and axes receive only
+  cosmetic polish. The Profit & Loss report summary becomes responsive
+  individual metric tiles rather than one gray band; amounts, signs,
+  currencies and semantic profit/loss colors remain native.
+- The theme does not change chart data, dataset colors, tooltips,
+  filtering, dashboard customization, widget ordering, navigation,
+  page title, DocType permissions or any backend query.
+- Explicit support for dark/light, mobile, RTL and reduced-motion.
+  `scripts/test_native_dashboard_view.py` guards route isolation,
+  components, chart interactions, and last-load asset placement.
+
+Browser acceptance: Open Dashboard / Accounts and at least one other
+native Dashboard tab; check KPI currency values and Refresh/Edit,
+Profit & Loss chart and summary, chart menus/date filters/legends,
+Receivable/Payable donut tooltips, Save/Discard customizations,
+mobile widths, dark theme and RTL locales.
 ## Native ERPNext Workspace dashboards — visual-only design
 
 The built-in **Buying, Selling, Stock, Accounts, and other** ERPNext/Frappe
