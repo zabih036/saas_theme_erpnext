@@ -35,6 +35,8 @@ on:
       - 'scripts/test_header_profile_repair.js'
       - 'scripts/test_native_workspace_dashboard.py'
       - 'scripts/test_native_dashboard_view.py'
+      - 'scripts/test_native_design_v2.py'
+      - 'scripts/test_native_design_v2.js'
       - 'scripts/test_search_report_refinements.js'
       - 'scripts/test_child_table_runtime.js'
       - '.github/workflows/theme-architecture-check.yml'
@@ -94,6 +96,12 @@ jobs:
           python3 scripts/test_language_settings.py
           node --check saas_theme/public/js/brand_shell.js
           node scripts/test_language_switcher.js
+      - name: Validate separate Home-style native dashboard and Workspace designs
+        run: |
+          python3 scripts/test_native_design_v2.py
+          node --check saas_theme/public/js/workspace_dashboard.js
+          node --check saas_theme/public/js/native_dashboard_view.js
+          node scripts/test_native_design_v2.js
       - name: Validate native Dashboard View card and chart styling
         run: python3 scripts/test_native_dashboard_view.py
       - name: Validate native ERPNext Workspace dashboard styling

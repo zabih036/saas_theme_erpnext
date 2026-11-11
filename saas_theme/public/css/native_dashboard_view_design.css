@@ -1,0 +1,489 @@
+/*
+ * Frappe v16 native ListView Dashboard (e.g. Dashboard / Accounts).
+ * This file is independent of Workspace and custom Home page styling.
+ * Requires native_dashboard_view.js only for decorative KPI markup/classes;
+ * all cards, amounts, chart series, filters, routes and menus remain native.
+ */
+.dashboard-page .dashboard-view {
+	--st-dv2-blue: #1762ca;
+	--st-dv2-ink: #244f68;
+	--st-dv2-muted: #7389a2;
+	--st-dv2-border: #e0e8f2;
+	--st-dv2-soft: #f7faff;
+	--st-dv2-surface: #fff;
+	--st-dv2-divider: #ebf0f6;
+	--st-dv2-shadow: 0 3px 14px rgba(20, 50, 84, .05);
+	--st-dv2-hover-shadow: 0 9px 23px rgba(23, 98, 202, .13);
+}
+
+.dashboard-page .dashboard-view .widget-group-body {
+	align-items: stretch !important;
+	column-gap: 16px !important;
+	row-gap: 16px !important;
+}
+
+/* DashboardView groups render KPIs directly inside .widget-group-body.
+   This class is set on real, visible cards; do not assume :first-child. */
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 {
+	position: relative !important;
+	display: flex !important;
+	flex-direction: column !important;
+	justify-content: flex-start !important;
+	isolation: isolate !important;
+	overflow: visible !important; /* Keep actual native Refresh/Edit dropdown. */
+	gap: 0 !important;
+	height: 100% !important;
+	min-height: 148px !important;
+	padding: 16px 18px 17px !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-dv2-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-dv2-surface) !important;
+	color: var(--st-dv2-ink) !important;
+	box-shadow: var(--st-dv2-shadow) !important;
+	transform: none;
+	transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease !important;
+	cursor: pointer;
+}
+
+/* Override old left stripe and old icon ::after; use a soft corner accent. */
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2::before {
+	content: "" !important;
+	position: absolute !important;
+	inset: 0 0 auto auto !important;
+	inset-inline-end: -1px !important;
+	inset-block-start: -1px !important;
+	left: auto !important;
+	right: -1px !important;
+	top: -1px !important;
+	bottom: auto !important;
+	width: 84px !important;
+	height: 84px !important;
+	border-radius: 0 16px 0 90px !important;
+	background: rgba(23, 98, 202, .035) !important;
+	pointer-events: none !important;
+	opacity: 1 !important;
+	z-index: 0 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:not(.st-dv-kpi-featured)::after {
+	content: "" !important;
+	position: absolute !important;
+	inset: 0 !important;
+	border-radius: inherit !important;
+	background: var(--st-dv2-blue) !important;
+	clip-path: circle(0% at 100% 0%) !important;
+	transition: clip-path .55s cubic-bezier(.22, 1, .36, 1) !important;
+	pointer-events: none !important;
+	z-index: 0 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:not(.st-dv-kpi-featured):is(:hover, :focus-within)::after {
+	clip-path: circle(155% at 100% 0%) !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 > :is(
+	.widget-head, .widget-body, .widget-footer, .st-dv-kpi-wave, .st-dv-kpi-open
+) {
+	position: relative !important;
+	z-index: 1 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-head {
+	display: flex !important;
+	align-items: flex-start !important;
+	justify-content: space-between !important;
+	flex: 0 0 auto !important;
+	min-height: 31px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-label {
+	min-width: 0 !important;
+	padding-inline-end: 38px !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-title,
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-label .widget-title {
+	color: var(--st-dv2-ink) !important;
+	font-size: 12px !important;
+	font-weight: 720 !important;
+	line-height: 1.35 !important;
+	letter-spacing: -.008em !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-body {
+	display: flex !important;
+	align-items: flex-start !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	padding: 6px 0 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-content {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 8px !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	min-height: 58px !important;
+	padding: 0 0 15px !important;
+	margin: 0 !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .number,
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-content .number {
+	display: block !important;
+	width: auto !important;
+	max-width: 100% !important;
+	color: var(--st-dv2-ink) !important;
+	font-size: clamp(22px, 2.15vw, 29px) !important;
+	font-weight: 770 !important;
+	line-height: 1.15 !important;
+	letter-spacing: -.03em !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+	text-align: start !important;
+	margin: 0 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .card-stats,
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .number-card-loading {
+	color: var(--st-dv2-muted) !important;
+	font-size: 11px !important;
+	line-height: 1.35 !important;
+	margin: 0 !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .percentage-stat-area {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 3px !important;
+	flex-wrap: wrap !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .card-stats.green-stat {
+	color: #0b936b !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .card-stats.red-stat {
+	color: #cc5362 !important;
+}
+/* Decorative visual treatment, never a substitute for real dashboard data. */
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-icon {
+	position: absolute !important;
+	inset-block-start: 0 !important;
+	inset-inline-end: 0 !important;
+	display: inline-flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	width: 36px !important;
+	height: 36px !important;
+	border: 1px solid var(--st-dv2-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-dv2-soft) !important;
+	color: var(--st-dv2-blue) !important;
+	z-index: 1 !important;
+	pointer-events: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-icon svg {
+	width: 19px !important;
+	height: 19px !important;
+	stroke: currentColor !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave {
+	position: absolute !important;
+	inset-block-end: 25px !important;
+	inset-inline-end: 17px !important;
+	width: 88px !important;
+	height: 31px !important;
+	color: #4186f1 !important;
+	opacity: .84 !important;
+	pointer-events: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave svg {
+	width: 100%;
+	height: 100%;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-open {
+	position: absolute !important;
+	inset-block-end: 12px !important;
+	inset-inline-end: 14px !important;
+	display: grid !important;
+	place-items: center !important;
+	width: 25px !important;
+	height: 25px !important;
+	border: 1px solid var(--st-dv2-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-dv2-surface) !important;
+	color: var(--st-dv2-blue) !important;
+	pointer-events: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-open svg {
+	width: 14px;
+	height: 14px;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-control {
+	position: relative !important;
+	z-index: 8 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:is(:hover, :focus-within) .st-dv-kpi-icon,
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing .st-dv-kpi-icon {
+	opacity: 0 !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:is(:hover, :focus-within) {
+	border-color: rgba(23, 98, 202, .25) !important;
+	box-shadow: var(--st-dv2-hover-shadow) !important;
+	transform: translateY(-2px) !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-featured {
+	background: #1762ca !important;
+	border-color: #1762ca !important;
+	box-shadow: 0 7px 22px rgba(23, 98, 202, .19) !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-featured::before {
+	background: rgba(255, 255, 255, .13) !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:is(
+	.st-dv-kpi-featured,
+	:not(.st-dv-kpi-featured):hover,
+	:not(.st-dv-kpi-featured):focus-within
+) :is(.widget-title, .widget-label .widget-title, .number, .widget-content .number, .card-stats, .percentage-stat-area, .number-card-loading) {
+	color: #fff !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:is(
+	.st-dv-kpi-featured,
+	:not(.st-dv-kpi-featured):hover,
+	:not(.st-dv-kpi-featured):focus-within
+) :is(.st-dv-kpi-icon, .st-dv-kpi-open) {
+	background: rgba(255, 255, 255, .14) !important;
+	border-color: rgba(255, 255, 255, .26) !important;
+	color: #fff !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2:is(
+	.st-dv-kpi-featured,
+	:not(.st-dv-kpi-featured):hover,
+	:not(.st-dv-kpi-featured):focus-within
+) .st-dv-kpi-wave {
+	color: #fff !important;
+}
+
+/* ---------------- Chart content and filter controls ---------------- */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 {
+	min-width: 0 !important;
+	min-height: 270px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-dv2-border) !important;
+	border-radius: 17px !important;
+	background: var(--st-dv2-surface) !important;
+	box-shadow: var(--st-dv2-shadow) !important;
+	overflow: visible !important; /* Keep chart filter/dropdown overlays. */
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-head {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	flex-wrap: wrap !important;
+	min-height: 67px !important;
+	gap: 10px 14px !important;
+	padding: 16px 18px !important;
+	margin: 0 !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--st-dv2-divider) !important;
+	background: transparent !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-title {
+	color: var(--st-dv2-ink) !important;
+	font-size: 14px !important;
+	font-weight: 740 !important;
+	line-height: 1.35 !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-subtitle {
+	color: var(--st-dv2-muted) !important;
+	font-size: 11px !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-control {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex-wrap: wrap !important;
+	gap: 6px !important;
+	z-index: 4 !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-control > * {
+	margin: 0 !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 :is(
+	.widget-control .btn, .widget-control .es-button, .filter-chart, .chart-actions .chart-menu
+) {
+	min-height: 31px !important;
+	border: 1px solid var(--st-dv2-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-dv2-soft) !important;
+	color: var(--st-dv2-ink) !important;
+	box-shadow: none !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-body {
+	min-width: 0 !important;
+	padding: 15px 18px 17px !important;
+	margin: 0 !important;
+	background: transparent !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 :is(
+	.chart-label, .tick, .axis-label, .legend-dataset-text, .chart-legend
+) {
+	color: var(--st-dv2-muted) !important;
+	fill: var(--st-dv2-muted) !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 :is(
+	.line-horizontal, .line-vertical, .guide-line
+) {
+	stroke: var(--st-dv2-divider) !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .chart-container rect.bar {
+	rx: 6px;
+	ry: 6px;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .chart-container .line-graph-path {
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+}
+
+/* Frappe ChartWidget's set_summary() inserts .report-summary immediately
+   after .widget-head — NOT inside .widget-body. Decorate its real children,
+   never copy, reformat, recalculate or move the numbers. */
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)) !important;
+	gap: 12px !important;
+	margin: 0 !important;
+	padding: 15px 17px 8px !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary > * {
+	min-width: 0 !important;
+	min-height: 84px !important;
+	margin: 0 !important;
+	padding: 12px 14px !important;
+	border: 1px solid var(--st-dv2-divider) !important;
+	border-radius: 12px !important;
+	background: var(--st-dv2-soft) !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary .summary-item {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 8px !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary .summary-label {
+	font-size: 11.5px !important;
+	line-height: 1.4 !important;
+	font-weight: 620 !important;
+	color: var(--st-dv2-muted) !important;
+	text-align: start !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary :is(.summary-value, .summary-value div) {
+	font-size: clamp(18px, 1.7vw, 24px) !important;
+	font-weight: 750 !important;
+	line-height: 1.23 !important;
+	color: var(--st-dv2-ink) !important;
+	text-align: start !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary :is(.summary-value.green, .summary-value.green div) {
+	color: #11956b !important;
+}
+.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary :is(.summary-value.red, .summary-value.red div) {
+	color: #d34a58 !important;
+}
+/* SVG chart size, series colors, axis direction, legend tooltips and
+   filters are intentionally left to Frappe. */
+
+/* ---------------- Dark, mobile, RTL and accessibility ------------- */
+[data-theme="dark"] .dashboard-page .dashboard-view {
+	--st-dv2-blue: #76acff;
+	--st-dv2-ink: #e2f1ff;
+	--st-dv2-muted: #a7bad1;
+	--st-dv2-border: #32475f;
+	--st-dv2-surface: #192738;
+	--st-dv2-soft: #22334b;
+	--st-dv2-divider: #2c4058;
+	--st-dv2-shadow: 0 6px 20px rgba(0, 0, 0, .17);
+	--st-dv2-hover-shadow: 0 12px 28px rgba(0, 0, 0, .28);
+}
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-featured {
+	background: #1762ca !important;
+	border-color: #1762ca !important;
+}
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 :is(.widget-head, .widget-body),
+[data-theme="dark"] .dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 :is(.widget-head, .widget-body) {
+	background: transparent !important;
+}
+[dir="rtl"] .dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-content {
+	text-align: start !important;
+}
+@media (hover: none) {
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-icon {
+		opacity: 0 !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .widget-control {
+		opacity: 1 !important;
+	}
+}
+@media (max-width: 991px) {
+	.dashboard-page .dashboard-view .widget-group-body.grid-col-3 {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)) !important;
+	}
+}
+@media (max-width: 767px) {
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 {
+		min-height: 130px !important;
+		padding: 14px 15px !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .number {
+		font-size: clamp(21px, 5.4vw, 26px) !important;
+	}
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave {
+		width: 72px !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 .widget-head {
+		padding: 14px !important;
+	}
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 > .report-summary {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)) !important;
+		padding: 12px 13px 5px !important;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2,
+	.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2::after,
+	.dashboard-page .dashboard-view .widget.dashboard-widget-box.st-dv-chart-v2 {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+
+
+/* Frappe's Dashboard Customize mode is detected from the real native drag
+   and edit controls. It must never be covered by our decorative motifs. */
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing::after {
+	display: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing:is(:hover, :focus-within) {
+	transform: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing :is(
+	.st-dv-kpi-icon, .st-dv-kpi-wave, .st-dv-kpi-open
+) {
+	display: none !important;
+}
+.dashboard-page .dashboard-view .widget.number-widget-box.st-dv-kpi-v2.st-dv-kpi-editing .widget-control {
+	opacity: 1 !important;
+}

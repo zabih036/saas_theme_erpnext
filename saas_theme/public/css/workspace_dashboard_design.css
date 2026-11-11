@@ -1,0 +1,464 @@
+/*
+ * Native ERPNext Workspaces v2 — Home visual parity.
+ * Unlike ListView Dashboard, these are EditorJS Workspace blocks.
+ * Scoped to Frappe's Workspaces route; chart data, edit controls, menu
+ * behavior, number formatting, and link targets remain fully native.
+ */
+[data-page-route="Workspaces"] {
+	--st-ws2-blue: #1762ca;
+	--st-ws2-blue-soft: #eaf3ff;
+	--st-ws2-ink: #244f68;
+	--st-ws2-muted: #7389a2;
+	--st-ws2-border: #e0e8f2;
+	--st-ws2-surface: #fff;
+	--st-ws2-soft: #f7faff;
+	--st-ws2-divider: #ebf0f6;
+	--st-ws2-shadow: 0 3px 14px rgba(20, 50, 84, .05);
+	--st-ws2-hover-shadow: 0 9px 23px rgba(23, 98, 202, .13);
+}
+
+/* This final layer is after the older global precision and card rules.
+   Deliberately stronger specificity overrides their blue left/top bar. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
+	position: relative !important;
+	display: flex !important;
+	flex-direction: column !important;
+	justify-content: flex-start !important;
+	isolation: isolate !important;
+	overflow: visible !important; /* Native Frappe card menus may escape. */
+	gap: 0 !important;
+	min-height: 148px !important;
+	height: 100% !important;
+	padding: 16px 18px 17px !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-ws2-surface) !important;
+	color: var(--st-ws2-ink) !important;
+	box-shadow: var(--st-ws2-shadow) !important;
+	transform: none;
+	transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease !important;
+	cursor: pointer;
+}
+
+/* Remove old left or top blue stripe; replace with Home's corner motif. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2::before {
+	content: "" !important;
+	position: absolute !important;
+	inset: 0 0 auto auto !important;
+	inset-inline-end: -1px !important;
+	inset-block-start: -1px !important;
+	left: auto !important;
+	right: -1px !important;
+	top: -1px !important;
+	bottom: auto !important;
+	width: 84px !important;
+	height: 84px !important;
+	border-radius: 0 16px 0 90px !important;
+	background: rgba(23, 98, 202, .035) !important;
+	pointer-events: none !important;
+	opacity: 1 !important;
+	z-index: 0 !important;
+}
+
+/* Neutral cards change blue via the same circular-reveal direction as Home. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:not(.st-ws-kpi-featured)::after {
+	content: "" !important;
+	position: absolute !important;
+	inset: 0 !important;
+	border-radius: inherit !important;
+	background: var(--st-ws2-blue) !important;
+	clip-path: circle(0% at 100% 0%) !important;
+	transition: clip-path .55s cubic-bezier(.22, 1, .36, 1) !important;
+	pointer-events: none !important;
+	z-index: 0 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:not(.st-ws-kpi-featured):is(:hover, :focus-within)::after {
+	clip-path: circle(155% at 100% 0%) !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 > :is(
+	.widget-head, .widget-body, .widget-footer, .st-ws-kpi-wave, .st-ws-kpi-open
+) {
+	position: relative !important;
+	z-index: 1 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-head {
+	display: flex !important;
+	align-items: flex-start !important;
+	justify-content: space-between !important;
+	flex: 0 0 auto !important;
+	min-height: 31px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-label {
+	min-width: 0 !important;
+	padding-inline-end: 38px !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-title,
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-label .widget-title {
+	color: var(--st-ws2-ink) !important;
+	font-size: 12px !important;
+	font-weight: 720 !important;
+	line-height: 1.35 !important;
+	letter-spacing: -.008em !important;
+	text-align: start !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-body {
+	display: flex !important;
+	align-items: flex-start !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	padding: 6px 0 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	text-align: start !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 8px !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	min-height: 58px !important;
+	padding: 0 0 15px !important;
+	margin: 0 !important;
+	text-align: start !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .number,
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content .number {
+	display: block !important;
+	width: auto !important;
+	max-width: 100% !important;
+	color: var(--st-ws2-ink) !important;
+	font-size: clamp(22px, 2.15vw, 29px) !important;
+	font-weight: 770 !important;
+	line-height: 1.15 !important;
+	letter-spacing: -.03em !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+	text-align: start !important;
+	margin: 0 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .card-stats,
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .number-card-loading {
+	font-size: 11px !important;
+	line-height: 1.35 !important;
+	margin: 0 !important;
+	color: var(--st-ws2-muted) !important;
+	text-align: start !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .percentage-stat-area {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 3px !important;
+	flex-wrap: wrap !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .card-stats.green-stat {
+	color: #0b936b !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .card-stats.red-stat {
+	color: #cc5362 !important;
+}
+
+/* All added presentation elements are non-interactive. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-icon {
+	position: absolute !important;
+	inset-block-start: 0 !important;
+	inset-inline-end: 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 36px !important;
+	height: 36px !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 10px !important;
+	background: var(--st-ws2-soft) !important;
+	color: var(--st-ws2-blue) !important;
+	pointer-events: none !important;
+	z-index: 1 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-icon svg {
+	width: 19px !important;
+	height: 19px !important;
+	stroke: currentColor !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave {
+	position: absolute !important;
+	inset-block-end: 25px !important;
+	inset-inline-end: 17px !important;
+	color: #4186f1 !important;
+	width: 88px !important;
+	height: 31px !important;
+	opacity: .84 !important;
+	pointer-events: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave svg {
+	width: 100%;
+	height: 100%;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-open {
+	position: absolute !important;
+	inset-block-end: 12px !important;
+	inset-inline-end: 14px !important;
+	display: grid !important;
+	place-items: center !important;
+	width: 25px !important;
+	height: 25px !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 8px !important;
+	background: var(--st-ws2-surface) !important;
+	color: var(--st-ws2-blue) !important;
+	pointer-events: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-open svg {
+	width: 14px;
+	height: 14px;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-control {
+	position: relative !important;
+	z-index: 8 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(:hover, :focus-within) .st-ws-kpi-icon,
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode .st-ws-kpi-icon {
+	opacity: 0 !important; /* Reveal the native control in the same position. */
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(:hover, :focus-within) {
+	border-color: rgba(23, 98, 202, .25) !important;
+	box-shadow: var(--st-ws2-hover-shadow) !important;
+	transform: translateY(-2px) !important;
+}
+
+/* Featured first **visible** KPI: same Home blue surface. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.st-ws-kpi-featured {
+	background: #1762ca !important;
+	border-color: #1762ca !important;
+	box-shadow: 0 7px 22px rgba(23, 98, 202, .19) !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.st-ws-kpi-featured::before {
+	background: rgba(255, 255, 255, .13) !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(
+	.st-ws-kpi-featured,
+	:not(.st-ws-kpi-featured):hover,
+	:not(.st-ws-kpi-featured):focus-within
+) :is(.widget-title, .widget-label .widget-title, .number, .widget-content .number, .card-stats, .percentage-stat-area, .number-card-loading) {
+	color: #fff !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(
+	.st-ws-kpi-featured,
+	:not(.st-ws-kpi-featured):hover,
+	:not(.st-ws-kpi-featured):focus-within
+) :is(.st-ws-kpi-icon, .st-ws-kpi-open) {
+	background: rgba(255, 255, 255, .14) !important;
+	border-color: rgba(255, 255, 255, .26) !important;
+	color: #fff !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(
+	.st-ws-kpi-featured,
+	:not(.st-ws-kpi-featured):hover,
+	:not(.st-ws-kpi-featured):focus-within
+) .st-ws-kpi-wave {
+	color: #fff !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:is(
+	.st-ws-kpi-featured,
+	:not(.st-ws-kpi-featured):hover,
+	:not(.st-ws-kpi-featured):focus-within
+) .card-stats.green-stat {
+	color: #bcffdf !important;
+}
+
+/* ------------------ Native shortcut / link cards ------------------ */
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 {
+	display: flex !important;
+	justify-content: center !important;
+	min-height: 76px !important;
+	padding: 16px 18px !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-ws2-surface) !important;
+	box-shadow: var(--st-ws2-shadow) !important;
+	transform: none !important;
+	transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 .widget-head {
+	display: flex !important;
+	align-items: center !important;
+	gap: 10px !important;
+	min-height: 40px !important;
+	width: 100% !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 .widget-title {
+	color: var(--st-ws2-ink) !important;
+	font-size: 13px !important;
+	font-weight: 720 !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 .widget-control .icon {
+	width: 22px !important;
+	height: 22px !important;
+	color: var(--st-ws2-blue) !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2:hover {
+	border-color: #aac7f1 !important;
+	box-shadow: var(--st-ws2-hover-shadow) !important;
+	transform: translateY(-2px) !important;
+}
+
+/* ------------------ Modern native chart panels ------------------- */
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 {
+	min-width: 0 !important;
+	min-height: 260px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 17px !important;
+	background: var(--st-ws2-surface) !important;
+	box-shadow: var(--st-ws2-shadow) !important;
+	overflow: visible !important; /* No clipped filter menus/tooltips. */
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-head {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 9px 14px !important;
+	align-items: center !important;
+	min-height: 68px !important;
+	padding: 17px 19px !important;
+	margin: 0 !important;
+	border-bottom: 1px solid var(--st-ws2-divider) !important;
+	background: transparent !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-title {
+	color: var(--st-ws2-ink) !important;
+	font-size: 14px !important;
+	font-weight: 740 !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-subtitle {
+	color: var(--st-ws2-muted) !important;
+	font-size: 11px !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-control {
+	z-index: 4 !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 6px !important;
+	flex-wrap: wrap !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-control > * {
+	margin: 0 !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 :is(
+	.widget-control .btn, .widget-control .es-button, .filter-chart, .chart-actions .chart-menu
+) {
+	min-height: 31px !important;
+	background: var(--st-ws2-soft) !important;
+	border: 1px solid var(--st-ws2-border) !important;
+	border-radius: 9px !important;
+	color: var(--st-ws2-ink) !important;
+	box-shadow: none !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-body {
+	min-width: 0 !important;
+	padding: 15px 18px 18px !important;
+	background: transparent !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 :is(
+	.chart-label, .tick, .axis-label, .legend-dataset-text, .chart-legend
+) {
+	color: var(--st-ws2-muted) !important;
+	fill: var(--st-ws2-muted) !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 :is(
+	.line-horizontal, .line-vertical, .guide-line
+) {
+	stroke: var(--st-ws2-divider) !important;
+}
+[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .chart-container rect.bar {
+	rx: 6px;
+	ry: 6px;
+}
+/* Preserve original chart datasets, bar heights, SVG pointer events and axes. */
+
+/* ------------------ Dark/RTL/mobile/accessibility ------------------ */
+[data-theme="dark"] [data-page-route="Workspaces"] {
+	--st-ws2-blue: #76acff;
+	--st-ws2-ink: #e2f1ff;
+	--st-ws2-muted: #a7bad1;
+	--st-ws2-border: #32475f;
+	--st-ws2-surface: #192738;
+	--st-ws2-soft: #22334b;
+	--st-ws2-divider: #2c4058;
+	--st-ws2-shadow: 0 6px 20px rgba(0, 0, 0, .17);
+	--st-ws2-hover-shadow: 0 12px 28px rgba(0, 0, 0, .28);
+}
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.st-ws-kpi-featured {
+	background: #1762ca !important;
+	border-color: #1762ca !important;
+}
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 :is(
+	.widget-head, .widget-body
+) {
+	background: transparent !important;
+}
+[dir="rtl"] [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
+	text-align: start !important;
+}
+@media (hover: none) {
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-icon {
+		opacity: 0 !important;
+	}
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-control {
+		opacity: 1 !important;
+	}
+}
+@media (max-width: 767px) {
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
+		min-height: 130px !important;
+		padding: 14px 15px !important;
+	}
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .number {
+		font-size: clamp(21px, 5.4vw, 26px) !important;
+	}
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave {
+		width: 72px !important;
+	}
+	[data-page-route="Workspaces"] .widget.dashboard-widget-box.st-ws-chart-v2 .widget-head {
+		padding: 13px 14px !important;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2,
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2::after,
+	[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+
+
+/* Workspace customization remains a native editor, not a marketing tile.
+   Hide decorative layers and disable animated motion while blocks are edited. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode::after {
+	display: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode:is(:hover, :focus-within) {
+	transform: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode :is(
+	.st-ws-kpi-icon, .st-ws-kpi-wave, .st-ws-kpi-open
+) {
+	display: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode .widget-control {
+	opacity: 1 !important;
+}
