@@ -911,3 +911,34 @@ not inferred from Frappe's older ListView Dashboard implementation.
   dark/RTL, user dropdown, global search, keyboard shortcuts and navbar
   restoration when the sidebar is unavailable. CI includes
   `scripts/test_modern_sidebar.py` and `scripts/test_modern_sidebar.js`.
+
+### Inline sidebar search and Desk header finish (November 11, 2026)
+
+The previous sidebar search button invoked `frappe.searchdialog.search.open_global_search_dialog()`
+and opened a full-width modal. This is **not** the requested interaction.
+
+- `workspace_sidebar_design.js?v=2` now owns an editable combobox under
+  `.body-sidebar .sidebar-header`. Focus shows permitted navigation links in
+  an **anchored dropdown**; typing filters local links plus Frappe's permission-aware
+  DocType/report/workspace/dashboard options, with delayed
+  `frappe.search.utils.get_global_results` for document results.
+  All visible labels use `textContent`, not untrusted HTML.
+- ArrowUp/ArrowDown select, Enter navigates, Escape closes, clicking outside
+  closes; `/` focuses the sidebar input only outside editable fields.
+  Remote results are debounced, stale results discarded, and failures leave
+  local results available. Frappe's original sidebar anchor owns local
+  navigation; no route or permission bypass. No search modal is launched.
+- `workspace_sidebar_design.css?v=2` anchors a small scrollable dropdown
+  under its control, stays usable in light/dark and collapsed/mobile modes.
+- New `desk_header_finish.css?v=1` removes the large **desktop** navbar
+  command-search field from Desk Home and list/form page headers, without
+  removing global keyboard shortcuts or mobile search fallback. It also
+  modernizes the **existing** notification bell/badge and avatar controls.
+  Native popover, unread count, language chooser and user-menu behavior
+  are untouched; only the final CSS surface changes.
+- Keep all historic assets in their original positions. Only new sidebar
+  CSS/JS asset versions increment and new header CSS loads last.
+- Test targets: Manufacturing/Production Plan, Buying Workspace,
+  Accounts Dashboard, collapsed sidebar, mobile, RTL/dark, permission-limited
+  users, autocomplete results, empty/results states, keyboard navigation,
+  notification popover and profile dropdown.

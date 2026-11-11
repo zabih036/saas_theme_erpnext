@@ -1,126 +1,94 @@
 #!/usr/bin/env python3
-"""Protect compact Workspace KPI sizing and modern Desk sidebar search.
-
-This is static because the production navigation uses Frappe's native
-Sidebar and SearchDialog; a companion Node VM smoke test checks lifecycle.
-"""
+"""Protect v2 inline Sidebar dropdown, final navbar and existing Workspaces."""
 from __future__ import annotations
 
 import ast
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CSS = ROOT / "saas_theme/public/css/workspace_sidebar_design.css"
 JS = ROOT / "saas_theme/public/js/workspace_sidebar_design.js"
+HEADER = ROOT / "saas_theme/public/css/desk_header_finish.css"
 WORKSPACE = ROOT / "saas_theme/public/css/workspace_dashboard_design.css"
 HOOKS = ROOT / "saas_theme/hooks.py"
 ARCH = ROOT / "scripts/validate_theme_architecture.py"
-PREFIX = "/assets/saas_theme/"
-
+P = "/assets/saas_theme/"
 
 def main() -> None:
-    sidebar_css = CSS.read_text(encoding="utf-8")
-    sidebar_js = JS.read_text(encoding="utf-8")
-    workspace_css = WORKSPACE.read_text(encoding="utf-8")
-
-    # Nav CSS intentionally never targets Form-sidebars, custom Home analytics,
-    # or native Dashboard view charts.
+    nav_css = CSS.read_text(encoding="utf-8")
+    nav_js = JS.read_text(encoding="utf-8")
+    header = HEADER.read_text(encoding="utf-8")
+    workspace = WORKSPACE.read_text(encoding="utf-8")
     for marker in (
         ".body-sidebar-container.st-sidebar-modern",
-        ".st-sidebar-search-control",
-        ".sidebar-items > .sidebar-item-container",
-        ".sidebar-item-container.section-item",
-        ".section-break",
-        ".standard-sidebar-item.active-sidebar",
-        ".body-sidebar-bottom",
-        "body.st-sidebar-search-available .desktop-navbar",
-        '@media (min-width: 768px)',
-        '@media (max-width: 767px)',
-        '[data-theme="dark"]',
-        '@media (prefers-reduced-motion: reduce)',
-        ".st-sidebar-search-shortcut",
+        ".st-sidebar-search-control", ".st-sidebar-search-input",
+        ".st-sidebar-search-dropdown", ".st-sidebar-search-list",
+        ".st-sidebar-search-option", "[hidden]",
+        ".st-sidebar-search-shortcut", ".sidebar-item-container.section-item",
+        '[data-theme="dark"]', '@media (max-width: 767px)',
     ):
-        assert marker in sidebar_css, "Missing sidebar owner: " + marker
-    for forbidden in (
-        ".form-sidebar", ".st-home-dashboard", "#page-dashboard-view",
-        ".widget.dashboard-widget-box", ".widget.number-widget-box",
-        ".chart-container", ".search-dialog",
-    ):
-        assert forbidden not in sidebar_css, "Sidebar CSS leaked into " + forbidden
-
+        assert marker in nav_css, f"Missing sidebar design: {marker}"
     for marker in (
-        "__st_modern_sidebar_v1__",
-        'const ROOT = ".body-sidebar-container";',
-        "searchdialog?.search",
-        "open_global_search_dialog()",
-        "ensureSearch(panel)",
-        'sidebar.querySelector(":scope > .sidebar-header")',
-        "standard-items-band",
-        "st-sidebar-search-available",
-        "sidebar-expand.st_sidebar_modern",
-        "MutationObserver",
-        "event.key !== \"/\"",
-        "isContentEditable",
-        "aria-label",
+        "__st_sidebar_inline_search_v2__", "function makeSearch(panel)",
+        "get_global_results", "get_doctypes", "get_reports",
+        "get_workspaces", "get_dashboards",
+        'input.setAttribute("role", "combobox")',
+        'list.setAttribute("role", "listbox")',
+        'row.setAttribute("role", "option")',
+        'event.key === "ArrowDown"', 'event.key === "ArrowUp"',
+        'event.key === "Escape"', 'event.key === "Enter"',
+        "input.addEventListener(\"input\"",
+        "token !== state.version", "render(state",
+        "MutationObserver", "isContentEditable",
     ):
-        assert marker in sidebar_js, "Sidebar lifecycle missing " + marker
+        assert marker in nav_js, f"Missing dropdown behavior: {marker}"
     for forbidden in (
-        "frappe.call(", "frappe.set_route(", "frappe.route_options",
-        "localStorage.", "innerHTML = label(",
-        "addEventListener(\"input\",",
-        "replaceChild(", "removeChild(",
+        "open_global_search_dialog(", "init_search(", "frappe.call(",
+        "SearchDialog", "window.location.assign(", "frappe.new_doc(",
+        "localStorage.", ".innerHTML = item.label", "frappe.route_options",
     ):
-        assert forbidden not in sidebar_js, "Sidebar modified unrelated navigation: " + forbidden
+        assert forbidden not in nav_js, f"Modal or unsafe navigation: {forbidden}"
+    for marker in (
+        "page-head .st-page-utility-actions",
+        "page-head .search-widget-wrapper",
+        "desktop-navbar .search-widget-wrapper",
+        ".st-top-notification-button", ".st-top-profile-button",
+        ".desktop-avatar", "notification-count",
+        "@media (min-width: 768px)", "@media (max-width: 767px)",
+        '[data-theme="dark"]',
+    ):
+        assert marker in header, f"Missing header treatment: {marker}"
+    assert ".modal" not in header
+    assert ".form-layout" not in header
+    assert "#page-dashboard-view" not in header + nav_css
+    assert "height: 120px !important;" in workspace
+    assert "height: 60px !important;" in workspace
 
-    # Compact KPI controls must not affect chart heights or native Dashboard.
-    assert re.search(
-        r"\.widget\.number-widget-box\.st-ws-kpi-v2\s*\{[^}]*"
-        r"min-height:\s*120px\s*!important;\s*height:\s*120px\s*!important;",
-        workspace_css, flags=re.S
-    ), "Workspace KPI is still oversized"
-    assert "min-height: 60px !important;" in workspace_css
-    assert "height: 60px !important;" in workspace_css
-    assert "height: 120px !important;" in workspace_css
-    assert '[data-page-route="Workspaces"]' in workspace_css
-    assert ".st-ws-chart-v2" in workspace_css
-    assert "#page-dashboard-view" not in workspace_css
-
-    obj = ast.parse(HOOKS.read_text(encoding="utf-8"))
-    hooks = {}
-    for node in obj.body:
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id in (
-                    "app_include_css", "app_include_js"
-                ):
-                    hooks[target.id] = ast.literal_eval(node.value)
-    css_urls = hooks["app_include_css"]
-    js_urls = hooks["app_include_js"]
-    ws_url = PREFIX + "css/workspace_dashboard_design.css?v=4"
-    nav_url = PREFIX + "css/workspace_sidebar_design.css?v=1"
-    js_url = PREFIX + "js/workspace_sidebar_design.js?v=1"
-    assert css_urls[-3:] == [
-        ws_url,
-        PREFIX + "css/native_dashboard_view_design.css?v=4",
-        nav_url,
-    ], "Sidebar CSS must follow older precision/navigation CSS"
-    assert js_urls[-2:] == [
-        PREFIX + "js/native_dashboard_view.js?v=4",
-        js_url,
-    ], "Sidebar JS must load after the existing shell owners"
-    assert css_urls.count(nav_url) == 1 and js_urls.count(js_url) == 1
-    assert css_urls.count(ws_url) == 1
+    parsed = ast.parse(HOOKS.read_text(encoding="utf-8"))
+    vals = {
+        key: next(ast.literal_eval(node.value) for node in parsed.body
+                  if isinstance(node, ast.Assign) and any(
+                      isinstance(t, ast.Name) and t.id == key for t in node.targets))
+        for key in ("app_include_css", "app_include_js")
+    }
+    assert vals["app_include_css"][-4:] == [
+        P + "css/workspace_dashboard_design.css?v=4",
+        P + "css/native_dashboard_view_design.css?v=4",
+        P + "css/workspace_sidebar_design.css?v=2",
+        P + "css/desk_header_finish.css?v=1",
+    ]
+    assert vals["app_include_js"][-2:] == [
+        P + "js/native_dashboard_view.js?v=4",
+        P + "js/workspace_sidebar_design.js?v=2",
+    ]
+    assert len(vals["app_include_css"]) == len(set(vals["app_include_css"]))
+    assert len(vals["app_include_js"]) == len(set(vals["app_include_js"]))
     manifest = ARCH.read_text(encoding="utf-8")
-    for filename in (
-        "workspace_sidebar_design.css",
-        "workspace_sidebar_design.js",
-        "workspace_dashboard_design.css?v=4",
-    ):
-        assert filename in manifest, "Architecture manifest missing " + filename
-    print("Modern sidebar passed: native search API, safe scoping, collapsed/mobile,"
-          " dark/RTL support, compact Workspace cards and final asset priority.")
-
+    for asset in ("desk_header_finish.css", "workspace_sidebar_design.css?v=2",
+                  "workspace_sidebar_design.js?v=2"):
+        assert asset in manifest, f"Architecture manifest missing {asset}"
+    print("Inline Sidebar Search: results dropdown, native permissions, keyboard navigation,"
+          " no modal, navbar actions, compact Workspaces, asset order validated.")
 
 if __name__ == "__main__":
     main()

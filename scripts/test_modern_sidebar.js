@@ -1,192 +1,192 @@
 #!/usr/bin/env node
 "use strict";
-/* Frappe v16 sidebar shell smoke test: no dependency on browser/jsdom. */
+/* Browserless Frappe v16 Sidebar integration regression: inline dropdown,
+   permission-aware sources, asynchronous stale guard and no modal. */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const path = require("node:path");
 const vm = require("node:vm");
+const path = require("node:path");
+const code = fs.readFileSync(path.join(__dirname, "../saas_theme/public/js/workspace_sidebar_design.js"),"utf8");
+new vm.Script(code);
 
-const source = fs.readFileSync(
-	path.join(__dirname, "../saas_theme/public/js/workspace_sidebar_design.js"), "utf8"
-);
-new vm.Script(source);
-
-class Node {
-	constructor(tag, classes = []) {
-		this.tag = tag;
-		this.classes = new Set(classes);
-		this.children = [];
-		this.parentElement = null;
-		this.nodeType = 1;
-		this.isConnected = true;
-		this.handlers = {};
-		this.attributes = {};
-		this.classList = {
-			add: c => this.classes.add(c),
-			remove: c => this.classes.delete(c),
-			contains: c => this.classes.has(c),
-			toggle: (c, flag) => {
-				if (flag) this.classes.add(c);
-				else this.classes.delete(c);
+class Element {
+	constructor(tag="div",classes=[]) {
+		this.tagName=tag.toUpperCase();this.nodeType=1;this.children=[];this.parentElement=null;
+		this.classes=new Set(classes);this.attributes={};this.handlers={};this.hidden=false;
+		this.isConnected=true;this.textContent="";this.value="";this.id="";
+		this.classList={
+			add:x=>this.classes.add(x),remove:x=>this.classes.delete(x),
+			contains:x=>this.classes.has(x),toggle:(x,on)=>{
+				if(on)this.classes.add(x);else this.classes.delete(x);
 			},
 		};
 	}
-	set className(value) { this.classes = new Set(String(value).split(/\s+/)); }
-	get className() { return [...this.classes].join(" "); }
-	setAttribute(k,v) { this.attributes[k] = v; }
-	append(...nodes) {
-		for(const n of nodes) {n.parentElement=this;this.children.push(n);}
+	set className(v){this.classes=new Set(String(v).split(/\s+/).filter(Boolean));}
+	get className(){return [...this.classes].join(" ");}
+	setAttribute(k,v){this.attributes[k]=String(v);}
+	removeAttribute(k){delete this.attributes[k];}
+	getAttribute(k){return this.attributes[k]||null;}
+	getClientRects(){return this.hidden?[]:[{}];}
+	append(...nodes){
+		for(const n of nodes){this.detach(n);n.parentElement=this;this.children.push(n);}
 	}
-	appendChild(n) {this.append(n);}
-	prepend(n) {
-		n.parentElement = this;
-		this.children.unshift(n);
+	detach(n){
+		if(n.parentElement){const a=n.parentElement.children;a.splice(a.indexOf(n),1);}
 	}
-	getClientRects() { return this.hidden ? [] : [{}]; }
-	querySelector(sel) {
-		if (sel === ".body-sidebar") return this.children.find(n => n.classes.has("body-sidebar")) || null;
-		if (sel === ":scope > .st-sidebar-search") return this.children.find(n => n.classes.has("st-sidebar-search")) || null;
-		if (sel === ":scope > .sidebar-header") return this.children.find(n => n.classes.has("sidebar-header")) || null;
-		if (sel === ":scope > .standard-items-band") return this.children.find(n => n.classes.has("standard-items-band")) || null;
-		if (sel === ":scope > .body-sidebar-top") return this.children.find(n => n.classes.has("body-sidebar-top")) || null;
+	appendChild(n){this.append(n);}
+	prepend(n){this.detach(n);n.parentElement=this;this.children.unshift(n);}
+	after(n){const p=this.parentElement;if(!p)throw Error("detached");this.detach(n);const a=p.children;a.splice(a.indexOf(this)+1,0,n);n.parentElement=p;}
+	before(n){const p=this.parentElement;if(!p)throw Error("detached");this.detach(n);const a=p.children;a.splice(a.indexOf(this),0,n);n.parentElement=p;}
+	replaceChildren(...nodes){this.children=[];this.append(...nodes);}
+	get nextElementSibling(){if(!this.parentElement)return null;return this.parentElement.children[this.parentElement.children.indexOf(this)+1]||null;}
+	get previousElementSibling(){if(!this.parentElement)return null;return this.parentElement.children[this.parentElement.children.indexOf(this)-1]||null;}
+	querySelector(s){
+		if(s===".body-sidebar")return this.children.find(n=>n.classes.has("body-sidebar"))||null;
+		if(s.startsWith(":scope > ")) {
+			const all=s.split(",").map(x=>x.trim().replace(":scope > .",""));
+			return this.children.find(n=>all.some(cls=>n.classes.has(cls)))||null;
+		}
+		if(s===".sidebar-item-label")return this.children.find(n=>n.classes.has("sidebar-item-label"))||null;
 		return null;
 	}
-	get nextElementSibling() {
-		if (!this.parentElement) return null;
-		const a = this.parentElement.children;
-		return a[a.indexOf(this) + 1] || null;
+	querySelectorAll(s){
+		if(s===".sidebar-items a.item-anchor[href]")return this.links||[];
+		if(s===".st-sidebar-search-option")return this.children.filter(n=>n.classes.has("st-sidebar-search-option"));
+		return [];
 	}
-	get previousElementSibling() {
-		if (!this.parentElement) return null;
-		const a = this.parentElement.children;
-		return a[a.indexOf(this) - 1] || null;
-	}
-	after(n) {
-		const a = this.parentElement.children;
-		if (n.parentElement) {
-			const prev = n.parentElement.children;
-			prev.splice(prev.indexOf(n),1);
-		}
-		a.splice(a.indexOf(this)+1,0,n);
-		n.parentElement=this.parentElement;
-	}
-	before(n) {
-		const a=this.parentElement.children;
-		if(n.parentElement){
-			const prev=n.parentElement.children;
-			prev.splice(prev.indexOf(n),1);
-		}
-		a.splice(a.indexOf(this),0,n);
-		n.parentElement=this.parentElement;
-	}
-	addEventListener(k,fn) {this.handlers[k]=fn;}
-	closest(sel) { return null; }
+	closest(s){if(s===".hidden, [hidden]")return null;return null;}
+	matches(s){if(s===".body-sidebar-container")return this.classes.has("body-sidebar-container");return false;}
+	contains(n){return n===this||this.children.some(x=>x.contains(n));}
+	addEventListener(k,fn){this.handlers[k]=fn;}
+	click(){this.clicked=(this.clicked||0)+1;this.handlers.click?.({preventDefault(){},stopPropagation(){}});}
+	focus(){this.focused=true;this.handlers.focus?.();}
+	scrollIntoView(){}
 }
 
-const sidebar = new Node("div", ["body-sidebar"]);
-const header = new Node("div", ["sidebar-header"]);
-const band = new Node("div", ["standard-items-band"]);
-const list = new Node("div", ["body-sidebar-top"]);
-const bottom = new Node("div", ["body-sidebar-bottom"]);
-sidebar.append(header, band, list, bottom);
-const panel = new Node("div", ["body-sidebar-container", "expanded"]);
-panel.append(sidebar);
-const body = new Node("body",[]);
-const listeners = {};
-const document = {
-	body,
-	readyState: "complete",
-	querySelectorAll(sel) {
-		return sel === ".body-sidebar-container" ? [panel] : [];
-	},
-	querySelector() { return null; },
-	createElement(tag) {return new Node(tag);},
-	addEventListener(name,fn) {listeners[name] = fn;},
-};
-let dialogs=0;
-let mobile=false;
-const frappe = {
-	is_mobile:()=>mobile,
-	searchdialog:{search:{open_global_search_dialog(){dialogs += 1;}}},
-};
-const window = {
-	frappe,
-	addEventListener(name,fn){listeners["window:"+name]=fn;},
-	matchMedia(){return {matches:mobile};},
-};
-const events = {};
-const timeouts = [];
-const dollar = value => {
-	if(typeof value==="function"){value();return;}
-	return {on(name,fn){for(const key of name.split(" "))events[key]=fn;return this;}};
-};
-window.$ = dollar;
-const context = {
-	window, document, frappe, $:dollar,
-	setTimeout(fn){timeouts.push(fn);return timeouts.length;},
-	clearTimeout(){},
-	MutationObserver:class {
-		constructor(cb){this.callback=cb;}
-		observe(t,opts){assert.equal(t,body);assert.equal(opts.childList,true);}
-	},
-};
-function runTimers() {
-	// A throttled refresh should not re-append or duplicate the search.
-	for(let n=0;timeouts.length&&n<10;n++)timeouts.shift()();
-	assert.equal(timeouts.length,0);
+async function main(){
+	const panel=new Element("div",["body-sidebar-container","expanded"]);
+	const sidebar=new Element("div",["body-sidebar"]);
+	const header=new Element("div",["sidebar-header"]);
+	const band=new Element("div",["standard-items-band"]);
+	const menu=new Element("div",["body-sidebar-top"]);
+	const bottom=new Element("div",["body-sidebar-bottom"]);
+	sidebar.append(header,band,menu,bottom);panel.append(sidebar);
+	const a=new Element("a",["item-anchor"]);
+	a.setAttribute("href","/desk/manufacturing");
+	const caption=new Element("span",["sidebar-item-label"]);caption.textContent="Manufacturing";
+	a.append(caption);panel.links=[a];
+	const body=new Element("body");
+	const handlers={};
+	const doc={
+		body,readyState:"complete",
+		createElement:tag=>new Element(tag),
+		querySelectorAll:s=>s===".body-sidebar-container"?[panel]:[],
+		addEventListener:(name,handler)=>handlers[name]=handler,
+	};
+	const tasks=[];const cancelled=new Set();let taskID=0;
+	const later=fn=>{const id=++taskID;tasks.push({id,fn});return id;};
+	const flush=()=>{for(let i=0;tasks.length&&i<30;i++){const t=tasks.shift();if(!cancelled.has(t.id))t.fn();}assert.equal(tasks.length,0);}
+	const events={};
+	const $=value=>typeof value==="function"?(value(),null):{
+		on(spec,fn){for(const key of spec.split(" "))events[key]=fn;return this;}
+	};
+	const routes=[];
+	let modal=0;
+	let mobile=false;
+	const requestResolvers={};
+	const utils={
+		get_doctypes(query){return query.toLowerCase().includes("invoice")?[{value:"Purchase Invoice List",route:["List","Purchase Invoice"],type:"List"}]:[];},
+		get_reports(){return [];},get_workspaces(){return [];},get_dashboards(){return [];},
+		get_global_results(query){return new Promise(resolve=>{requestResolvers[query]=resolve;});},
+	};
+	const frappe={
+		is_mobile(){return mobile;},
+		app:{sidebar:{open(){panel.classList.add("expanded");}}},
+		set_route(...route){routes.push(route);},
+		search:{utils},
+		searchdialog:{search:{open_global_search_dialog(){modal+=1;}}},
+	};
+	const window={frappe,$,addEventListener:()=>{},matchMedia:()=>({matches:mobile})};
+	vm.runInNewContext(code,{document:doc,window,frappe,$,setTimeout:later,
+		clearTimeout:id=>cancelled.add(id),console});
+	assert.equal(window.__st_sidebar_inline_search_v2__,true);
+	assert.equal(panel.classList.contains("st-sidebar-modern"),true);
+	assert.equal(body.classList.contains("st-sidebar-search-available"),true);
+	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
+	const shell=sidebar.children[1];
+	const control=shell.children[0],popover=shell.children[1];
+	const trigger=control.children[0],input=control.children[1],list=popover.children[0];
+	assert.equal(input.tagName,"INPUT");
+	assert.equal(input.attributes.role,"combobox");
+	assert.equal(input.attributes["aria-controls"],list.id);
+	assert.equal(popover.hidden,true);
+	trigger.click();
+	assert.equal(modal,0,"Sidebar click must never open global-search modal");
+	assert.equal(input.focused,true);
+	assert.equal(popover.hidden,false);
+	assert.equal(input.attributes["aria-expanded"],"true");
+	assert.equal(list.children.length,1,"Empty query lists existing permitted navigation");
+	assert.equal(list.children[0].children[0].textContent,"Manufacturing");
+
+	// Enter selects a real Frappe sidebar anchor (no new route rewriting).
+	input.handlers.keydown({key:"Enter",preventDefault(){}});
+	assert.equal(a.clicked,1);
+	assert.equal(popover.hidden,true);
+	assert.equal(input.attributes["aria-expanded"],"false");
+
+	// Typed query gives permitted menu/doctype options and async global records.
+	input.value="invoice";
+	input.handlers.input();
+	assert.equal(list.children[0].children[0].textContent,"Purchase Invoice List");
+	flush();
+	assert.ok(requestResolvers.invoice);
+	requestResolvers.invoice([{title:"Purchase Invoice",results:[
+		{label:"INV-00042",route:["Form","Purchase Invoice","INV-00042"]},
+	]}]);
+	await Promise.resolve();await Promise.resolve();await Promise.resolve();
+	assert.equal(list.children.length,2);
+	assert.equal(list.children[1].children[0].textContent,"INV-00042");
+	input.handlers.keydown({key:"ArrowDown",preventDefault(){}});
+	input.handlers.keydown({key:"ArrowDown",preventDefault(){}});
+	input.handlers.keydown({key:"Enter",preventDefault(){}});
+	assert.deepEqual(routes[0],["Form","Purchase Invoice","INV-00042"]);
+	assert.equal(modal,0);
+
+	// Ignore responses to stale prior queries.
+	input.value="old";input.handlers.input();flush();
+	input.value="invoice";input.handlers.input();flush();
+	requestResolvers.old([{title:"Test",results:[{label:"STALE",route:["Form","Doc","Stale"]}]}]);
+	await Promise.resolve();await Promise.resolve();await Promise.resolve();
+	assert.equal(list.children.some(n=>n.children[0]?.textContent==="STALE"),false);
+	requestResolvers.invoice([]);await Promise.resolve();await Promise.resolve();
+
+	// Escape and outside pointerdown both close, without any modal.
+	input.handlers.keydown({key:"Escape",preventDefault(){}});
+	assert.equal(popover.hidden,true);
+	input.focus();
+	handlers.pointerdown({target:new Element("div")});
+	assert.equal(popover.hidden,true);
+	assert.equal(modal,0);
+
+	// Refresh must not produce duplicate fields.
+	events["sidebar_setup.st_sidebar_modern"]();flush();
+	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
+
+	// Collapsed rail stays searchable by expanding the native Sidebar first.
+	panel.classList.remove("expanded");
+	trigger.click();
+	flush();
+	assert.equal(panel.classList.contains("expanded"),true);
+	assert.equal(input.focused,true);
+
+	// Mobile drawer retains global navbar search fallback.
+	mobile=true;
+	events["page-change.st_sidebar_modern"]();flush();
+	assert.equal(body.classList.contains("st-sidebar-search-available"),false);
+	trigger.click();
+	assert.equal(modal,0);
+	assert.equal(sidebar.children[1],shell);
+	console.log("Sidebar v2: inline dropdown, real links, permitted doctypes/docs,"
+		+" stale async guard, keyboard, Escape/outside, collapsed/mobile, no modal.");
 }
-vm.runInNewContext(source,context);
-assert.equal(window.__st_modern_sidebar_v1__, true);
-assert.equal(panel.classList.contains("st-sidebar-modern"),true);
-assert.equal(body.classList.contains("st-sidebar-search-available"),true);
-let controls = sidebar.children.filter(x=>x.classList.contains("st-sidebar-search"));
-assert.equal(controls.length,1);
-assert.equal(sidebar.children[1],controls[0],"Search must follow native SidebarHeader");
-let button = controls[0].children[0];
-assert.equal(button.type, "button");
-assert.equal(button.attributes["aria-label"],"Search");
-assert.equal(button.children.length,3);
-button.handlers.click({preventDefault(){},stopPropagation(){}});
-assert.equal(dialogs,1,"Click should open Frappe's actual global search");
-
-// / keyboard search works without stealing input editing.
-listeners.keydown({
-	key:"/",target:{isContentEditable:false,closest(){return null;}},
-	ctrlKey:false,altKey:false,metaKey:false,defaultPrevented:false,
-	preventDefault(){}
-});
-assert.equal(dialogs,2);
-listeners.keydown({
-	key:"/",target:{isContentEditable:false,closest(){return {};}},
-	ctrlKey:false,altKey:false,metaKey:false,defaultPrevented:false,
-	preventDefault(){throw Error("Must not steal typing in inputs");}
-});
-assert.equal(dialogs,2);
-
-events["sidebar_setup.st_sidebar_modern"]();
-runTimers();
-controls = sidebar.children.filter(x=>x.classList.contains("st-sidebar-search"));
-assert.equal(controls.length,1,"Rebuilding a sidebar must not duplicate Search");
-
-// Collapsed desktop rail exposes a Search icon, so navbar stays clean.
-panel.classList.remove("expanded");
-events["sidebar-expand.st_sidebar_modern"]();
-runTimers();
-assert.equal(body.classList.contains("st-sidebar-search-available"),true);
-panel.classList.add("expanded");
-events["page-change.st_sidebar_modern"]();
-runTimers();
-assert.equal(body.classList.contains("st-sidebar-search-available"),true);
-
-// Mobile drawer retains top-navbar access and search inside the drawer.
-mobile = true;
-events["page-change.st_sidebar_modern"]();
-runTimers();
-assert.equal(body.classList.contains("st-sidebar-search-available"),false);
-button.handlers.click({preventDefault(){},stopPropagation(){}});
-assert.equal(dialogs,3);
-assert.equal(sidebar.children[1],controls[0],"Native sidebar menus must remain in place");
-
-vm.runInNewContext(source,context);
-assert.equal(sidebar.children.filter(x=>x.classList.contains("st-sidebar-search")).length,1);
-console.log("Sidebar smoke checks passed: native SearchDialog, route lifecycle, collapse/mobile, no duplication.");
+main().catch(e=>{console.error(e);process.exitCode=1;});

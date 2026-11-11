@@ -44,7 +44,8 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/native_dashboard_view.css?v=1",
     "/assets/saas_theme/css/workspace_dashboard_design.css?v=4",
     "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
-    "/assets/saas_theme/css/workspace_sidebar_design.css?v=1",
+    "/assets/saas_theme/css/workspace_sidebar_design.css?v=2",
+    "/assets/saas_theme/css/desk_header_finish.css?v=1",
 ]
 
 EXPECTED_DESK_JS = [
@@ -65,7 +66,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/interaction_finish_v2.js?v=10",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
     "/assets/saas_theme/js/native_dashboard_view.js?v=4",
-    "/assets/saas_theme/js/workspace_sidebar_design.js?v=1",
+    "/assets/saas_theme/js/workspace_sidebar_design.js?v=2",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -108,6 +109,7 @@ KNOWN_CSS_FILES = {
     "workspace_dashboard.css",
     "workspace_dashboard_design.css",
     "workspace_sidebar_design.css",
+    "desk_header_finish.css",
     "native_dashboard_view_design.css",
     "native_dashboard_view.css",
 }
@@ -229,9 +231,20 @@ REQUIRED_RUNTIME_GUARDS = {
         '@media (max-width: 767px)',
         '@media (prefers-reduced-motion: reduce)',
     ],
+    "desk_header_finish.css": [
+        ".page-head .st-page-utility-actions",
+        ".desktop-navbar .search-widget-wrapper",
+        ".st-top-notification-button",
+        ".st-top-profile-button",
+        '.desktop-avatar',
+        '@media (max-width: 767px)',
+        '[data-theme="dark"]',
+    ],
     "workspace_sidebar_design.css": [
         ".body-sidebar-container.st-sidebar-modern",
         ".st-sidebar-search-control",
+        ".st-sidebar-search-dropdown",
+        ".st-sidebar-search-option",
         ".sidebar-item-container.section-item",
         ".standard-sidebar-item.active-sidebar",
         "st-sidebar-search-available",
@@ -239,10 +252,11 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-theme="dark"]',
     ],
     "workspace_sidebar_design.js": [
-        "__st_modern_sidebar_v1__",
-        "ensureSearch(panel)",
-        "frappe?.searchdialog?.search",
-        "open_global_search_dialog()",
+        "__st_sidebar_inline_search_v2__",
+        "makeSearch(panel)",
+        "st-sidebar-search-dropdown",
+        "get_global_results",
+        "get_doctypes",
         "st-sidebar-search-available",
         "MutationObserver",
     ],
