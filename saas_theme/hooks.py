@@ -25,6 +25,7 @@ app_include_css = [
 	"/assets/saas_theme/css/interface.css?v=1",
 	"/assets/saas_theme/css/mobile_shell.css?v=1",
 	"/assets/saas_theme/css/workspace_shell_polish.css?v=1",
+	"/assets/saas_theme/css/workspace_dashboard.css?v=1",
 	"/assets/saas_theme/css/dark.css?v=1",
 	"/assets/saas_theme/css/desktop_navbar_refinement.css?v=2",
 	"/assets/saas_theme/css/tree_view_refinement.css?v=1",

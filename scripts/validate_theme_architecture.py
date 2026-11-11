@@ -27,6 +27,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/interface.css?v=1",
     "/assets/saas_theme/css/mobile_shell.css?v=1",
     "/assets/saas_theme/css/workspace_shell_polish.css?v=1",
+    "/assets/saas_theme/css/workspace_dashboard.css?v=1",
     "/assets/saas_theme/css/dark.css?v=1",
     "/assets/saas_theme/css/desktop_navbar_refinement.css?v=2",
     "/assets/saas_theme/css/tree_view_refinement.css?v=1",
@@ -97,6 +98,7 @@ KNOWN_CSS_FILES = {
     "control_search_report.css",
     "search_report_refinements.css",
     "workspace_shell_polish.css",
+    "workspace_dashboard.css",
 }
 
 KNOWN_JS_FILES = {
@@ -201,6 +203,17 @@ REQUIRED_RUNTIME_GUARDS = {
         "SaaS Theme — Stability Refinement v3",
         "SaaS Theme — UI Precision v4",
         ".form-layout.st-section-card-form",
+    ],
+    "workspace_dashboard.css": [
+        '[data-page-route="Workspaces"]',
+        '.widget.number-widget-box',
+        '.widget.shortcut-widget-box',
+        '.widget.dashboard-widget-box',
+        '.widget.links-widget-box',
+        '.widget.quick-list-widget-box',
+        '[data-theme="dark"]',
+        '@media (max-width: 767px)',
+        '@media (prefers-reduced-motion: reduce)',
     ],
     "brand_shell.css": [
         "DESKTOP SIDEBAR HEADER — ALIGN WITH PAGE HEADER ACTION ROW",
