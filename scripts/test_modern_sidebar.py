@@ -44,7 +44,8 @@ def main() -> None:
         assert marker in nav_js, f"Missing dropdown behavior: {marker}"
     for forbidden in (
         "open_global_search_dialog(", "init_search(", "frappe.call(",
-        "SearchDialog", "window.location.assign(", "frappe.new_doc(",
+        "new frappe.search.SearchDialog", ".search_dialog.show(",
+        "window.location.assign(", "frappe.new_doc(",
         "localStorage.", ".innerHTML = item.label", "frappe.route_options",
     ):
         assert forbidden not in nav_js, f"Modal or unsafe navigation: {forbidden}"
