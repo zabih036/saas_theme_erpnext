@@ -99,24 +99,75 @@
 - Frappe Framework v16
 ---
 
-## Installation
+## Installation (this customized fork)
+
+The ERPNext theme maintained in this repository is **not** the upstream
+`vineyrawat/saas_theme` theme. Installing the upstream repository will **not**
+include dashboard, Workspace, form, or language changes merged here.
 
 ```bash
-cd $PATH_TO_YOUR_BENCH
-bench get-app https://github.com/vineyrawat/saas_theme.git --branch version-16
-bench install-app saas_theme
+cd "$PATH_TO_YOUR_BENCH"
+bench get-app --branch version-16 https://github.com/zabih036/saas_theme_erpnext.git
+bench --site YOUR_SITE_NAME install-app saas_theme
 bench build --app saas_theme
 bench restart
 ```
 
-## Update
+For an existing installation, check the actual local repository before updating.
+A GitHub pull-request merge does **not** deploy code to your Frappe bench.
+
+## Safely update the customized theme
 
 ```bash
-cd $PATH_TO_YOUR_BENCH
-bench update --apps saas_theme
+cd "$PATH_TO_YOUR_BENCH"
+
+# Ensure local app modifications will not be overwritten.
+git -C apps/saas_theme status --short
+git -C apps/saas_theme remote -v
+git -C apps/saas_theme branch --show-current
+
+# On the existing version-16 branch, fetch this customized fork.
+git -C apps/saas_theme fetch https://github.com/zabih036/saas_theme_erpnext.git version-16
+git -C apps/saas_theme merge --ff-only FETCH_HEAD
+
+# Refresh built/public assets and the target site's cached hook values.
 bench build --app saas_theme
+bench --site YOUR_SITE_NAME clear-cache
+
+# Apply updated Python hooks on a maintenance window (may interrupt requests).
 bench restart
 ```
+
+**Do not** use `git reset --hard`, discard local changes, or force-pull if
+`git merge --ff-only` fails. Inspect the divergent history first, especially
+on production. If the app is inside a Docker deployment, run the Git and build
+steps in the persistent source/build environment used to create the running
+containers and redeploy the updated image as appropriate.
+
+### Verify PR #113 is really deployed
+
+The read-only verifier checks that the installed repository contains the
+merged design, that the correct public files exist, and optionally that the
+site serves the current CSS/JS rather than old or cached versions:
+
+```bash
+cd "$PATH_TO_YOUR_BENCH"
+bash apps/saas_theme/scripts/check_theme_deployment.sh "$PWD" https://YOUR_ERP_DOMAIN
+```
+
+Expected source baseline is merge commit `265abc5ca50c9ec69475013a1e216d1d1662383b`
+(PR #113) or a later descendant. Required asset URLs include:
+
+- `/assets/saas_theme/css/workspace_dashboard_design.css?v=3`
+- `/assets/saas_theme/css/native_dashboard_view_design.css?v=3`
+- `/assets/saas_theme/js/native_dashboard_view.js?v=3`
+
+Finally, log into Desk, open the **Buying Workspace** and
+**Dashboard / Accounts**, and hard-refresh with **Ctrl+Shift+R**. The
+CI suite validates the *repository*, not the running server or its cache.
+If the verifier passes but the browser still shows old cards, use DevTools
+Network to ensure these assets load with HTTP 200 and inspect their computed
+CSS rules for overrides.
 
 ## Uninstall
 
@@ -133,11 +184,9 @@ bench restart
 
 No additional configuration required. The theme activates automatically on installation and applies to all desk pages.
 
-To bust browser cache after updates, the asset version is incremented in `hooks.py`:
-```python
-app_include_css = "/assets/saas_theme/css/saas_theme.css?v=59"
-app_include_js = "/assets/saas_theme/js/saas_theme.js?v=59"
-```
+Desk CSS and JS assets are listed in `saas_theme/hooks.py`; changed
+asset URLs use versioned query strings. A PR merge alone does not update the
+server checkout, its built assets, or the user's browser cache.
 
 ---
 
