@@ -128,7 +128,7 @@ async function main(){
 	const window={frappe,$,addEventListener:()=>{},matchMedia:()=>({matches:mobile})};
 	vm.runInNewContext(code,{document:doc,window,frappe,$,setTimeout:later,
 		clearTimeout:id=>cancelled.add(id),console});
-	assert.equal(window.__st_sidebar_awesomebar_search_v3__,true);
+	assert.equal(window.__st_sidebar_awesomebar_search_v4__,true);
 	assert.equal(panel.classList.contains("st-sidebar-modern"),true);
 	assert.equal(body.classList.contains("st-sidebar-search-available"),true);
 	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
