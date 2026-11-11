@@ -104,7 +104,9 @@ def main() -> None:
         )
     )
     assert css_hooks.count(URL) == 1
-    assert css_hooks[-1] == URL, "Native DashboardView must outrank older widget styles"
+    assert css_hooks[-3] == URL, "Native DashboardView base remains before the separate final design layers"
+    assert css_hooks[-2] == "/assets/saas_theme/css/workspace_dashboard_design.css?v=2"
+    assert css_hooks[-1] == "/assets/saas_theme/css/native_dashboard_view_design.css?v=2"
     assert css_hooks[-2] == "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
     assert "/assets/saas_theme/css/workspace_dashboard.css?v=1" in css_hooks
     assert "/assets/saas_theme/css/home.css?v=13" in css_hooks

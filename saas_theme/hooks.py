@@ -40,6 +40,8 @@ app_include_css = [
 	"/assets/saas_theme/css/popup_controls.css?v=1",
 	"/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
 	"/assets/saas_theme/css/native_dashboard_view.css?v=1",
+	"/assets/saas_theme/css/workspace_dashboard_design.css?v=2",
+	"/assets/saas_theme/css/native_dashboard_view_design.css?v=2",
 ]
 
 app_include_js = [
@@ -58,6 +60,8 @@ app_include_js = [
 	"/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
 	"/assets/saas_theme/js/quick_access_preferences.js?v=3",
 	"/assets/saas_theme/js/interaction_finish_v2.js?v=9",
+	"/assets/saas_theme/js/workspace_dashboard.js?v=2",
+	"/assets/saas_theme/js/native_dashboard_view.js?v=2",
 ]
 
 # -----------------------------------------------------------------------------

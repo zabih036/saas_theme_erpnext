@@ -42,6 +42,8 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/popup_controls.css?v=1",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
     "/assets/saas_theme/css/native_dashboard_view.css?v=1",
+    "/assets/saas_theme/css/workspace_dashboard_design.css?v=2",
+    "/assets/saas_theme/css/native_dashboard_view_design.css?v=2",
 ]
 
 EXPECTED_DESK_JS = [
@@ -60,6 +62,8 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
+    "/assets/saas_theme/js/workspace_dashboard.js?v=2",
+    "/assets/saas_theme/js/native_dashboard_view.js?v=2",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -100,6 +104,8 @@ KNOWN_CSS_FILES = {
     "search_report_refinements.css",
     "workspace_shell_polish.css",
     "workspace_dashboard.css",
+    "workspace_dashboard_design.css",
+    "native_dashboard_view_design.css",
     "native_dashboard_view.css",
 }
 
@@ -126,6 +132,8 @@ KNOWN_JS_FILES = {
     "search_report_refinements.js",
     "user_theme_menu.js",
     "workspace_shell_polish.js",
+    "workspace_dashboard.js",
+    "native_dashboard_view.js",
 }
 
 # Retired filenames from proven no-op removals or completed bundle migrations.
@@ -216,6 +224,38 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-theme="dark"]',
         '@media (max-width: 767px)',
         '@media (prefers-reduced-motion: reduce)',
+    ],
+    "workspace_dashboard_design.css": [
+        '[data-page-route="Workspaces"]',
+        ".widget.number-widget-box.st-ws-kpi-v2",
+        ".st-ws-kpi-featured",
+        ".st-ws-kpi-wave",
+        ".widget.shortcut-widget-box.st-ws-shortcut-v2",
+        ".widget.dashboard-widget-box.st-ws-chart-v2",
+        '@media (max-width: 767px)',
+    ],
+    "native_dashboard_view_design.css": [
+        ".dashboard-page .dashboard-view",
+        ".widget.number-widget-box.st-dv-kpi-v2",
+        ".st-dv-kpi-featured",
+        ".st-dv-kpi-wave",
+        ".widget.dashboard-widget-box.st-dv-chart-v2",
+        "> .report-summary",
+        '@media (max-width: 767px)',
+    ],
+    "workspace_dashboard.js": [
+        "__st_workspace_card_design_v2__",
+        "function enhance()",
+        "MutationObserver",
+        "st-ws-kpi-featured",
+        "st-ws-kpi-icon",
+    ],
+    "native_dashboard_view.js": [
+        "__st_dashboard_view_design_v2__",
+        "function enhance()",
+        "MutationObserver",
+        "st-dv-kpi-featured",
+        "st-dv-kpi-icon",
     ],
     "workspace_dashboard.css": [
         '[data-page-route="Workspaces"]',

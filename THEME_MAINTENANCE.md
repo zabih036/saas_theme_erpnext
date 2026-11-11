@@ -97,6 +97,8 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Main desktop/workspace shell | `saas_theme/public/css/professional_ui.css` / `saas_theme/public/js/professional_ui.js` | Broad desktop shell and workspace rail. |
 | Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
+| Final Home-style Workspace KPI and chart treatment | `saas_theme/public/css/workspace_dashboard_design.css` / `saas_theme/public/js/workspace_dashboard.js` | Blue featured first visible native Workspace KPI, decorative (non-data) icon/mini-line, white KPI cards, native shortcuts/charts, responsive/dark/RTL; no Frappe controller patches. |
+| Final Home-style Dashboard View treatment | `saas_theme/public/css/native_dashboard_view_design.css` / `saas_theme/public/js/native_dashboard_view.js` | Independent per-DocType Dashboard View appearance, real Frappe chart summary mini-cards, native KPI visuals, unchanged chart/menu behavior. |
 | Native Workspace dashboard styling | `saas_theme/public/css/workspace_dashboard.css` | Dedicated route-scoped visual owner for standard Frappe v16 number cards, shortcuts, charts, link cards and quick lists. Does not touch custom Home analytics or Frappe widget behavior. |
 | Native Dashboard view styling | `saas_theme/public/css/native_dashboard_view.css` | The Frappe v16 ListView Dashboard tab (`.dashboard-page .dashboard-view`), including Accounts and Buying dashboards; separate from Workspaces and custom Home. |
 | Desktop navbar | `saas_theme/public/css/desktop_navbar_refinement.css` | Desktop navbar appearance/spacing. |
@@ -578,7 +580,8 @@ Only when each concern has one real owner should filenames be simplified. This a
 - “Change normal Link suggestion density” → `ui_consolidation_v7.css`
 - “Fix expanded child-table Link open/clear icon block or native show/hide behavior” → `ui_consolidation_v7.css` (body-portaled editor only; never restyle all `.link-btn` wrappers globally).
 - “Change workspace navigation” → `workspace_shell_polish.css` / `.js`
-- “Change native Workspace KPI, shortcut or chart appearance” → `workspace_dashboard.css`; leave `home.css` for the separate custom Home analytics layout.
+- “Change native Workspace KPI, shortcut or chart appearance” → `workspace_dashboard_design.css` + `workspace_dashboard.js` (final design), with legacy `workspace_dashboard.css` as the preserved base.
+- “Change native Dashboard View KPI, native chart summary or icon treatment” → `native_dashboard_view_design.css` + `native_dashboard_view.js`; leave `home.css` for the separate custom Home analytics layout.
 - “Change Dashboard / Accounts (or another native Dashboard view) number cards and charts” → `native_dashboard_view.css`, not Workspace CSS.
 - “Change dashboard/analytics styling” → `home.css`
 - “Fix Home KPI data and invoice counts” → `saas_theme/home.py` with permission checks and base-currency totals; do not default inaccessible metrics to zero.
@@ -592,6 +595,46 @@ Only when each concern has one real owner should filenames be simplified. This a
 
 ---
 
+## Home-style KPI parity v2 — separated native designs
+
+PRs #110/#111 correctly introduced **Workspace** and **Dashboard View**
+CSS owners, but broad historic widget `!important` rules and CSS-only
+approaches did not produce the user's reference Home KPI composition.
+
+- **Workspace:** `workspace_dashboard_design.css?v=2` and
+  `workspace_dashboard.js?v=2` run only under
+  `[data-page-route="Workspaces"]`. First visible KPI is blue; remaining
+  KPIs are white cards with compact left/start-aligned real values,
+  decorative top icon, decorative mini-line and bottom corner mark.
+  Real native Shortcut and Dashboard Chart widgets get aligned surfaces.
+- **Dashboard View:** `native_dashboard_view_design.css?v=2` and
+  `native_dashboard_view.js?v=2` target Frappe's ListView Dashboard
+  `.dashboard-page .dashboard-view` independently. The first visible
+  real KPI is the blue featured card. The ChartWidget summary is inserted
+  directly after `.widget-head`, so its actual `.report-summary` children
+  become **separate** mini-cards. Existing chart filters/menus/data stay native.
+- The small curved line in each KPI is an **aria-hidden visual motif**,
+  not a fabricated trend or user data; we never change the Number Card
+  value, percentage, currency, label or click handler. The native menu
+  is above the decorative icon on hover/focus; touch modes leave menus usable.
+- Existing broad and historical parity-locked CSS stays byte-for-byte
+  untouched. The two **separate v2** stylesheets are appended last so
+  native widget CSS can no longer override their layout; the two scripts
+  only add scoped, deduplicated presentation nodes and CSS classes.
+- Both retain Frappe permissions, widget reorder/edit controls, RTL
+  layout, charts, report financial values, reduced motion and dark theme.
+  They never patch `frappe.set_route`, widget prototypes, report data,
+  or click handlers. Each script activates after AJAX/page navigation and
+  watches only relevant widget mutations for async dashboard rendering.
+- CI validates file and hook ownership, final CSS asset priority,
+  unique first-card highlight, no duplicate icon nodes, stable native
+  widget markup, hover menu safety and separate root scoping.
+
+After merging, **bench build --app saas_theme**, clear site cache if needed,
+and hard-refresh the browser. Check Buying Workspace and
+Dashboard / Accounts on desktop/mobile and light/dark, including KPI
+values, P&L summary, filters, donut legends, native widget menus and
+Workspace/Dashboard customization.
 ## Native Dashboard View — Home-style KPI and chart cards
 
 **Dashboard / Accounts** in Frappe 16 is *not* a Workspace route.
