@@ -1,17 +1,18 @@
 /*
  * SaaS Theme — Frappe v16 native sidebar search, inline autocomplete.
  * Owns only .body-sidebar-container and this file's st-sidebar-search classes.
- * No SearchDialog/awesome-bar modal interception, app route rewrites or
- * replacement of Frappe's Sidebar nav handlers / permissions.
+ * Reuses Frappe AwesomeBar sources and user permissions, without showing
+ * or moving its modal, or replacing native Sidebar navigation handlers.
  */
 (() => {
 	"use strict";
-	if (window.__st_sidebar_inline_search_v2__) return;
-	window.__st_sidebar_inline_search_v2__ = true;
+	if (window.__st_sidebar_awesomebar_search_v3__) return;
+	window.__st_sidebar_awesomebar_search_v3__ = true;
 
 	const ROOT = ".body-sidebar-container";
 	const MIN_QUERY = 2;
-	const LIMIT = 9;
+	const LIMIT = 10;
+	const LOCAL_WHEN_REMOTE = 7;
 	const states = new WeakMap();
 	const magnifier = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.9" cy="10.9" r="6.7"/><path d="m16 16 4.6 4.6"/></svg>';
 	let refreshTimer = null;
@@ -25,11 +26,12 @@
 	const ownLabel = (node) => (node?.textContent || "").trim();
 
 	function routeTo(option) {
+		if (option.route_options && window.frappe) frappe.route_options = option.route_options;
 		if (option.element && typeof option.element.click === "function") {
 			// Delegate to the original Frappe sidebar anchor; it owns the router.
 			option.element.click();
 		} else if (typeof option.onclick === "function") {
-			option.onclick();
+			option.onclick(option.match);
 		} else if (Array.isArray(option.route) && typeof frappe.set_route === "function") {
 			frappe.set_route(...option.route);
 		} else if (typeof option.route === "string" && typeof frappe.set_route === "function") {
@@ -60,34 +62,44 @@
 			.filter(o => !query || o.label.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
 	}
 
-	function permissionSafeOptions(query) {
+	// Reuse the same user-scoped route and command sources as Frappe AwesomeBar.
+	// Blank query must show Recent and Frequently Visited globally, not the
+	// current Manufacturing sidebar's Home/Dashboard/BOM links.
+	function awesomeOptions(query) {
 		const u = window.frappe?.search?.utils;
-		if (!u || query.length < MIN_QUERY) return [];
-		let results = [];
-		for (const [method, type] of [
-			["get_doctypes", translate("DocType")],
-			["get_reports", translate("Report")],
-			["get_workspaces", translate("Workspace")],
-			["get_dashboards", translate("Dashboard")],
-		]) {
-			if (typeof u[method] !== "function") continue;
-			try {
-				const values = u[method](query) || [];
-				for (const option of values) {
-					if (!option.route && !option.onclick) continue;
-					results.push({
-						label: String(option.value || option.match || "").trim(),
-						type: option.type || type,
-						route: option.route,
-						onclick: option.onclick,
-					});
-				}
-			} catch (error) {
-				// Frappe may initialize modules after Sidebar; still show module links.
-				console.debug("Sidebar autocomplete source not ready:", method, error);
-			}
+		if (!u) return [];
+		if (!Array.isArray(u.recent) && typeof u.setup_recent === "function") {
+			try { u.setup_recent(); } catch (_) { /* boot might still be initializing */ }
 		}
-		return results;
+		const result = [];
+		const collect = (method, argument) => {
+			if (typeof u[method] !== "function") return;
+			try {
+				const options = argument === undefined ? u[method]() : u[method](argument);
+				if (Array.isArray(options)) result.push(...options);
+			} catch (error) {
+				console.debug("Sidebar AwesomeBar source unavailable:", method, error);
+			}
+		};
+		if (!query || query.length < MIN_QUERY) {
+			collect("get_recent_pages", query);
+			collect("get_frequent_links");
+		} else {
+			for (const method of [
+				"get_creatables", "get_search_in_list", "get_doctypes",
+				"get_reports", "get_pages", "get_workspaces",
+				"get_dashboards", "get_recent_pages", "get_executables",
+			]) collect(method, query);
+		}
+		return result.map(item => ({
+			label: String(item.value || item.match || item.label || "").trim(),
+			type: item.type || "",
+			route: item.route,
+			onclick: item.onclick,
+			match: item.match,
+			index: typeof item.index === "number" ? item.index : 0,
+			route_options: item.route_options,
+		})).filter(item => item.label && (item.route || item.onclick));
 	}
 
 	function close(state) {
@@ -122,7 +134,7 @@
 				name.textContent = item.label;
 				const type = document.createElement("span");
 				type.className = "st-sidebar-search-option-type";
-				type.textContent = item.type || translate("Navigation");
+				type.textContent = item.type || "";
 				row.append(name, type);
 				row.addEventListener("pointerdown", e => e.preventDefault());
 				row.addEventListener("click", () => choose(state, index));
@@ -132,6 +144,7 @@
 		state.open = true;
 		state.popover.hidden = false;
 		state.input.setAttribute("aria-expanded", "true");
+		if (hasResults) select(state, 0);
 	}
 
 	function choose(state, index) {
@@ -157,9 +170,13 @@
 	}
 
 	function localResults(state, query) {
-		const nav = sidebarLinks(state.panel, query);
-		const system = permissionSafeOptions(query);
-		return unique([...nav, ...system], LIMIT);
+		const commands = awesomeOptions(query);
+		if (!query) {
+			return unique(commands.length ? commands : sidebarLinks(state.panel), LIMIT);
+		}
+		const sidebar = sidebarLinks(state.panel, query);
+		if (query.length >= MIN_QUERY) commands.sort((a, b) => b.index - a.index);
+		return unique([...commands, ...sidebar], LIMIT);
 	}
 
 	function update(state, value) {
@@ -168,7 +185,7 @@
 		const token = state.version;
 		const query = value.trim();
 		const local = localResults(state, query);
-		render(state, local, query ? translate("No results found") : translate("No available shortcuts"));
+		render(state, local, query ? translate("No results found") : translate("No recent pages"));
 		if (query.length < MIN_QUERY || !state.open) return;
 		const getGlobal = window.frappe?.search?.utils?.get_global_results;
 		if (typeof getGlobal !== "function") return;
@@ -185,7 +202,12 @@
 							type: group.title || translate("Document"),
 						}))
 					);
-					render(state, unique([...local, ...docs], LIMIT));
+					// Reserve visible slots for permitted documents when command
+					// suggestions are numerous (the former 9-command cap hid all docs).
+					const merged = docs.length
+						? unique([...local.slice(0, LOCAL_WHEN_REMOTE), ...docs], LIMIT)
+						: local;
+					render(state, merged);
 				})
 				.catch(error => {
 					// Offline / server search errors must not erase local results.
@@ -221,6 +243,7 @@
 		input.type = "search";
 		input.className = "st-sidebar-search-input";
 		input.placeholder = translate("Search");
+		input.setAttribute("title", translate("Search or type a command"));
 		input.autocomplete = "off";
 		input.spellcheck = false;
 		input.setAttribute("role", "combobox");
@@ -231,7 +254,7 @@
 		const shortcut = document.createElement("kbd");
 		shortcut.className = "st-sidebar-search-shortcut";
 		shortcut.setAttribute("aria-hidden", "true");
-		shortcut.textContent = "/";
+		shortcut.textContent = window.frappe?.utils?.is_mac?.() ? "⌘K" : "Ctrl K";
 		const popover = document.createElement("div");
 		popover.className = "st-sidebar-search-dropdown";
 		popover.hidden = true;
@@ -340,17 +363,24 @@
 		});
 	});
 	document.addEventListener("keydown", event => {
-		if (event.defaultPrevented || event.key !== "/" || event.ctrlKey || event.altKey ||
-			event.metaKey || isMobile() || !document.body.classList.contains("st-sidebar-search-available")) return;
+		const key = String(event.key || "").toLowerCase();
+		const command = key === "k" && (event.ctrlKey || event.metaKey) && !event.altKey;
+		const slash = key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey;
+		if (event.defaultPrevented || (!command && !slash) || isMobile() ||
+			!document.body.classList.contains("st-sidebar-search-available")) return;
 		const target = event.target;
-		if (target?.isContentEditable || target?.closest?.("input, textarea, select, [contenteditable], [role='textbox']")) return;
+		if (slash && (target?.isContentEditable ||
+			target?.closest?.("input, textarea, select, [contenteditable], [role='textbox']"))) return;
 		const panel = Array.from(document.querySelectorAll(ROOT)).find(el =>
 			visible(el) && !el.classList.contains("sidebar-hidden"));
 		const state = panel && states.get(panel);
 		if (!state) return;
 		event.preventDefault();
+		// Ctrl/Cmd+K opens the sidebar command suggestions instead of a
+		// second AwesomeBar modal in the old navbar.
+		if (command) event.stopImmediatePropagation?.();
 		focusInput(state);
-	});
+	}, true);
 	if (typeof window.$ === "function") {
 		$(document).on(
 			"page-change.st_sidebar_modern sidebar_setup.st_sidebar_modern sidebar-expand.st_sidebar_modern desktop_screen.st_sidebar_modern toolbar_setup.st_sidebar_modern",

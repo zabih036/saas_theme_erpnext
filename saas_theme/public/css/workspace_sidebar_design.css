@@ -520,3 +520,69 @@
 
 /* The navbar has its own final styling file. Do not hide any search input
    by changing its original Frappe DOM attributes or global search behavior. */
+
+
+/* Global AwesomeBar-style palette, anchored to the sidebar (v3).
+   Wide enough for report / Workspace names like the native suggestions. */
+.body-sidebar-container.st-sidebar-modern.expanded {
+	overflow: visible !important;
+}
+.body-sidebar-container.st-sidebar-modern.expanded .st-sidebar-search {
+	isolation: isolate !important;
+	z-index: 90 !important;
+}
+.body-sidebar-container.st-sidebar-modern.expanded .st-sidebar-search-dropdown {
+	position: absolute !important;
+	inset-inline-start: 8px !important;
+	inset-inline-end: auto !important;
+	width: min(430px, calc(100vw - 40px)) !important;
+	max-width: calc(100vw - 40px) !important;
+	max-height: min(410px, 65vh) !important;
+	padding: 6px !important;
+	border-radius: 14px !important;
+	border: 1px solid var(--st-nav-line) !important;
+	background: var(--st-nav-bg) !important;
+	box-shadow: 0 14px 35px rgba(27, 55, 91, .14), 0 3px 9px rgba(27, 55, 91, .065) !important;
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option {
+	min-height: 43px !important;
+	padding: 10px 13px !important;
+	gap: 12px !important;
+	border-radius: 10px !important;
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option.is-selected,
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option:hover {
+	background: #ebf2ff !important;
+	border-color: transparent !important;
+	color: #1558cc !important;
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option-name {
+	font-size: 13px !important;
+	font-weight: 620 !important;
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option-type:empty {
+	display: none !important; /* No repetitive "Navigation" column for recents */
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-input {
+	text-overflow: ellipsis;
+}
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-shortcut {
+	min-width: 42px !important;
+	font-size: 10px !important;
+}
+[data-theme="dark"] .body-sidebar-container.st-sidebar-modern .st-sidebar-search-option.is-selected,
+[data-theme="dark"] .body-sidebar-container.st-sidebar-modern .st-sidebar-search-option:hover {
+	background: #203b65 !important;
+	color: #d7e9ff !important;
+}
+@media (max-width: 767px) {
+	.body-sidebar-container.st-sidebar-modern.expanded .st-sidebar-search-dropdown {
+		width: calc(100% - 16px) !important;
+		max-width: calc(100% - 16px) !important;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.body-sidebar-container.st-sidebar-modern .st-sidebar-search-option {
+		transition: none !important;
+	}
+}

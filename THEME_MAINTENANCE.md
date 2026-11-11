@@ -942,3 +942,29 @@ and opened a full-width modal. This is **not** the requested interaction.
   Accounts Dashboard, collapsed sidebar, mobile, RTL/dark, permission-limited
   users, autocomplete results, empty/results states, keyboard navigation,
   notification popover and profile dropdown.
+
+### Sidebar uses real Frappe AwesomeBar suggestions (November 11, 2026)
+
+The previous inline dropdown listed only the active module's links (Home,
+Dashboard, BOM...), not the global AwesomeBar's recent/frequent destinations.
+This update uses Frappe's existing user-scoped AwesomeBar sources:
+
+- `workspace_sidebar_design.js?v=3`: On focus with an empty query,
+  `get_recent_pages` and `get_frequent_links` yield entries from across
+  permitted modules; on typing it uses Frappe's native DocType, Report,
+  Workspace, Dashboard, Page, Create, List Search, Recent and Executable
+  providers. The existing `get_global_results` supplies permitted document
+  records, with slots reserved for results.
+- Preserve native `onclick(match)`, `route_options`, and Frappe routing
+  when selecting items. Keyboard Up/Down, Enter, Escape, slash, and Ctrl/Cmd+K
+  work in the anchored search dropdown. Ctrl/Cmd+K opens this sidebar palette
+  when the sidebar is available; sidebar-free pages and mobile retain native
+  hotkeys. No modal is opened from this control.
+- `workspace_sidebar_design.css?v=3` widens the desktop dropdown to up
+  to 430px, highlights the first global suggestion, hides repeated Navigation
+  metadata, keeps light/dark and RTL behavior. On mobile it stays drawer width.
+- `desk_header_finish.css?v=2` explicitly hides remaining desktop
+  navbar search-widget variants, without removing native Frappe handlers.
+- Regression tests check global recent/frequent ordering, typed commands,
+  document results, route/onclick behavior, Ctrl+K, no duplicate search,
+  mobile fallback, and the unchanged Workspace/Dashboard visual owners.

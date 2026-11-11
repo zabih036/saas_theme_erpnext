@@ -94,8 +94,27 @@ async function main(){
 	let modal=0;
 	let mobile=false;
 	const requestResolvers={};
+	let recentInitialized=0;
+	const recentEntries=[
+		{value:"BOM List",route:["List","BOM"],index:80},
+		{value:"Manufacturing Workspace",route:["Workspaces","Manufacturing"],index:79},
+		{value:"Role List",route:["List","Role"],index:78},
+		{value:"Purchase Invoice List",route:["List","Purchase Invoice"],index:77},
+	];
+	const frequentEntries=[
+		{value:"Buying Workspace",route:["Workspaces","Buying"],index:70},
+		{value:"User List",route:["List","User"],index:69},
+		{value:"General Ledger Report",route:["query-report","General Ledger"],index:68},
+	];
 	const utils={
-		get_doctypes(query){return query.toLowerCase().includes("invoice")?[{value:"Purchase Invoice List",route:["List","Purchase Invoice"],type:"List"}]:[];},
+		setup_recent(){recentInitialized++;this.recent=[];},
+		get_recent_pages(query){return recentEntries.filter(o=>!query||o.value.toLowerCase().includes(query.toLowerCase()));},
+		get_frequent_links(){return frequentEntries;},
+		get_doctypes(query){return query.toLowerCase().includes("invoice")?[{value:"Purchase Invoice List",route:["List","Purchase Invoice"],type:"List",index:40}]:[];},
+		get_creatables(){return [];},
+		get_search_in_list(){return [];},
+		get_pages(){return [];},
+		get_executables(){return [];},
 		get_reports(){return [];},get_workspaces(){return [];},get_dashboards(){return [];},
 		get_global_results(query){return new Promise(resolve=>{requestResolvers[query]=resolve;});},
 	};
@@ -109,7 +128,7 @@ async function main(){
 	const window={frappe,$,addEventListener:()=>{},matchMedia:()=>({matches:mobile})};
 	vm.runInNewContext(code,{document:doc,window,frappe,$,setTimeout:later,
 		clearTimeout:id=>cancelled.add(id),console});
-	assert.equal(window.__st_sidebar_inline_search_v2__,true);
+	assert.equal(window.__st_sidebar_awesomebar_search_v3__,true);
 	assert.equal(panel.classList.contains("st-sidebar-modern"),true);
 	assert.equal(body.classList.contains("st-sidebar-search-available"),true);
 	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
@@ -125,12 +144,20 @@ async function main(){
 	assert.equal(input.focused,true);
 	assert.equal(popover.hidden,false);
 	assert.equal(input.attributes["aria-expanded"],"true");
-	assert.equal(list.children.length,1,"Empty query lists existing permitted navigation");
-	assert.equal(list.children[0].children[0].textContent,"Manufacturing");
+	assert.equal(recentInitialized,1,"Native Frappe recent links should initialize once");
+	assert.equal(list.children.length,7,"Blank query must show recent + frequent global pages");
+	assert.equal(list.children[0].children[0].textContent,"BOM List");
+	assert.equal(list.children[1].children[0].textContent,"Manufacturing Workspace");
+	assert.equal(list.children[2].children[0].textContent,"Role List");
+	assert.equal(list.children[4].children[0].textContent,"Buying Workspace");
+	assert.equal(list.children[0].classList.contains("is-selected"),true,"First recent command highlighted");
+	assert.equal(list.children[0].children.length,2);
+	assert.equal(list.children[0].children[1].textContent,"","No repetitive Navigation labels");
 
-	// Enter selects a real Frappe sidebar anchor (no new route rewriting).
+	// Enter selects a real user-scoped Frappe route, not only sidebar links.
 	input.handlers.keydown({key:"Enter",preventDefault(){}});
-	assert.equal(a.clicked,1);
+	assert.deepEqual(routes[0],["List","BOM"]);
+	assert.equal(a.clicked||0,0);
 	assert.equal(popover.hidden,true);
 	assert.equal(input.attributes["aria-expanded"],"false");
 
@@ -148,9 +175,8 @@ async function main(){
 	assert.equal(list.children.length,2);
 	assert.equal(list.children[1].children[0].textContent,"INV-00042");
 	input.handlers.keydown({key:"ArrowDown",preventDefault(){}});
-	input.handlers.keydown({key:"ArrowDown",preventDefault(){}});
 	input.handlers.keydown({key:"Enter",preventDefault(){}});
-	assert.deepEqual(routes[0],["Form","Purchase Invoice","INV-00042"]);
+	assert.deepEqual(routes[1],["Form","Purchase Invoice","INV-00042"]);
 	assert.equal(modal,0);
 
 	// Ignore responses to stale prior queries.
@@ -171,6 +197,16 @@ async function main(){
 	assert.equal(popover.hidden,true);
 	assert.equal(modal,0);
 
+	// Ctrl/Cmd+K focuses the global sidebar search without opening navbar modal.
+	let blocked=false, prevented=false;
+	handlers.keydown({key:"k",ctrlKey:true,metaKey:false,altKey:false,
+		defaultPrevented:false,target:new Element("div"),
+		preventDefault(){prevented=true;},stopImmediatePropagation(){blocked=true;}});
+	assert.equal(prevented,true);
+	assert.equal(blocked,true,"Ctrl+K must prevent the old navbar AwesomeBar modal");
+	assert.equal(input.focused,true);
+	assert.equal(modal,0);
+
 	// Refresh must not produce duplicate fields.
 	events["sidebar_setup.st_sidebar_modern"]();flush();
 	assert.equal(sidebar.children.filter(n=>n.className==="st-sidebar-search").length,1);
@@ -189,7 +225,7 @@ async function main(){
 	trigger.click();
 	assert.equal(modal,0);
 	assert.equal(sidebar.children[1],shell);
-	console.log("Sidebar v2: inline dropdown, real links, permitted doctypes/docs,"
-		+" stale async guard, keyboard, Escape/outside, collapsed/mobile, no modal.");
+	console.log("Sidebar v3: Frappe AwesomeBar recent/frequent, global commands and docs,"
+		+" Ctrl+K, no navbar modal, stale guard, collapsed/mobile, no duplicates.");
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
