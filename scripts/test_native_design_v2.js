@@ -96,7 +96,7 @@ function testScript(filename, kind) {
 		readyState: "complete",
 		querySelectorAll(selector) {
 			if (kind === "workspace" && selector === '[data-page-route="Workspaces"]') return [root];
-			if (kind === "dashboard" && selector === ".dashboard-page .dashboard-view") return [root];
+			if (kind === "dashboard" && selector === ".dashboard-view") return [root];
 			return [];
 		},
 		createElement(tag) {
