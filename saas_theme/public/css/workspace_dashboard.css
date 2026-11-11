@@ -605,3 +605,42 @@
 [data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box .card-stats.red-stat {
 	color: #ff8894 !important;
 }
+
+
+/* ------------------------- RTL LINK AND CHART FINISH ---------------- */
+/* The earlier Workspace links layer used physical right padding/arrow
+   positions. Flip them for Frappe's RTL languages rather than mirroring
+   numeric values or SVG plots. */
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item {
+	padding-inline-start: 12px !important;
+	padding-inline-end: 38px !important;
+	text-align: start !important;
+}
+
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item::after {
+	content: "↖" !important;
+	right: auto !important;
+	left: 13px !important;
+}
+
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible)::after {
+	transform: translate(-2px, -2px) !important;
+}
+
+@media (min-width: 768px) {
+	[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible) {
+		transform: translateX(-3px) !important;
+	}
+}
+
+/* Rounded native chart marks: this changes only SVG paint appearance, never
+   series colors, values, axes positions, graph data or hover hit targets. */
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .chart-container rect.bar {
+	rx: 4px;
+	ry: 4px;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .chart-container .line-graph-path {
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+}
