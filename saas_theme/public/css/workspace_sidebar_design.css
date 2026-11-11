@@ -297,12 +297,9 @@
 	background: var(--st-nav-hover) !important;
 }
 
-/* Remove the top command-search surface only while a visible expanded
- * desktop sidebar search is available. Navbar notifications, language,
- * user profile and Home's sidebar-free search keep their native positions. */
+/* Hide duplicated Desk-only search controls when the sidebar offers global
+ * search. Home uses its separate native Desktop navbar search widget. */
 @media (min-width: 768px) {
-	body.st-sidebar-search-available .desktop-navbar .search-widget-wrapper,
-	body.st-sidebar-search-available .desktop-navbar .st-home-search-relocated,
 	body.st-sidebar-search-available .page-head .st-top-search,
 	body.st-sidebar-search-available .page-head #small-search-button {
 		display: none !important;

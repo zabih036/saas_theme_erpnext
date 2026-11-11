@@ -117,14 +117,15 @@ def main() -> None:
     expected_css = [
         ASSET_ROOT + "css/" + WS_STYLE + "?v=4",
         ASSET_ROOT + "css/" + DV_STYLE + "?v=4",
-        ASSET_ROOT + "css/workspace_sidebar_design.css?v=3",
+        ASSET_ROOT + "css/workspace_sidebar_design.css?v=4",
     ]
     expected_js = [
         ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
-        ASSET_ROOT + "js/workspace_sidebar_design.js?v=4",
+        ASSET_ROOT + "js/workspace_sidebar_design.js?v=5",
     ]
     assert css[-4:-1] == expected_css, "Native design rules must remain ahead of final header polish"
-    assert js[-2:] == expected_js, "Controllers load after existing Desk widget owners"
+    assert js[-3:-1] == expected_js, "Native controllers remain ahead of Desk header search owner"
+    assert js[-1] == ASSET_ROOT + "js/desk_header_search.js?v=1"
     assert all(css.count(path) == 1 for path in expected_css)
     assert all(js.count(path) == 1 for path in expected_js)
     assert css.index(ASSET_ROOT + "css/workspace_dashboard.css?v=1") < len(css) - 2

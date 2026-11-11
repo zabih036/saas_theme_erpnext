@@ -5,18 +5,13 @@
  * Search field moved to Sidebar on desktop; keep fallback on mobile.
  */
 
-/* Do not show the duplicated big "Search or type a command" field in
-   page headers (Lists/Forms/Workspaces/Dashboards) or Desktop Home. */
+/* Desk page headers use Sidebar Search; Desktop Home keeps its real
+   Frappe search widget and must never be hidden by Desk-only rules. */
 @media (min-width: 768px) {
 	.page-head .st-page-utility-actions > .st-top-search,
 	.page-head .st-page-utility-actions > #small-search-button,
 	.page-head .standard-items-section > #small-search-button,
-	.page-head .search-widget-wrapper,
-	.page-head .st-home-search-relocated,
-	.desktop-wrapper .desktop-navbar .search-widget-wrapper,
-	.desktop-wrapper .desktop-navbar .st-home-search-relocated,
-	.desktop-navbar .search-widget-wrapper,
-	.desktop-navbar .st-home-search-relocated {
+	.page-head .search-widget-wrapper {
 		display: none !important;
 	}
 }
@@ -199,10 +194,8 @@
    but NEVER hide the AwesomeBar modal itself, which remains available
    as a fallback on pages without a Sidebar and on mobile. */
 @media (min-width: 768px) {
-	.desktop-navbar :is(.navbar-search-bar, .search-bar, .search-widget-wrapper),
 	.page-head :is(.navbar-search-bar, .search-widget-wrapper, .st-top-search),
-	.page-head .st-page-utility-actions #small-search-button,
-	.navbar :is(.navbar-search-bar, .search-widget-wrapper, #full-search-button) {
+	.page-head .st-page-utility-actions #small-search-button {
 		display: none !important;
 	}
 }
@@ -223,9 +216,8 @@
 	body .page-head #small-search-button,
 	body .page-head .navbar-search-bar,
 	body .page-head .standard-items-section .search-bar,
-	body .navbar .navbar-search-bar,
-	body .desktop-wrapper .desktop-navbar .search-widget-wrapper,
-	body .desktop-wrapper .desktop-navbar #search-widget-button {
+	body .page-head .st-header-search-shell,
+	body .page-head .st-header-search-slot {
 		display: none !important;
 		visibility: hidden !important;
 	}
@@ -239,7 +231,7 @@
 		position: sticky !important;
 		top: 0 !important;
 		z-index: 1100 !important;
-		background: var(--bg-color, #fff) !important;
+		background: #fff !important;
 		border-bottom: 1px solid var(--border-color, #e1e7ee) !important;
 		box-shadow: 0 2px 10px rgba(25, 49, 83, .045) !important;
 	}
@@ -247,7 +239,7 @@
 		position: sticky !important;
 		top: 0 !important;
 		z-index: 1100 !important;
-		background: var(--bg-color, #fff) !important;
+		background: #fff !important;
 	}
 }
 @media (max-width: 767px) {
@@ -256,11 +248,72 @@
 		position: sticky !important;
 		top: 0 !important;
 		z-index: 1100 !important;
-		background: var(--bg-color, #fff) !important;
+		background: #fff !important;
 	}
 }
 @media print {
 	body .page-container > .page-head {
+		position: static !important;
+		box-shadow: none !important;
+	}
+}
+
+
+/* ---------------------------------------------------------------
+ * v4 – keep a completely solid white sticky Desk navbar, including
+ * Accounts Dashboard. Never force the Home search invisible.
+ * --------------------------------------------------------------- */
+@media screen {
+	body .page-head {
+		position: sticky !important;
+		top: 0 !important;
+		z-index: 1100 !important;
+		background: #fff !important;
+		background-color: #fff !important;
+		background-image: none !important;
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
+	}
+	body .page-head > .container,
+	body .page-head .page-head-content {
+		background: transparent !important;
+		background-image: none !important;
+	}
+	body .desktop-wrapper .desktop-navbar {
+		background: #fff !important;
+		background-color: #fff !important;
+		background-image: none !important;
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
+	}
+}
+@media screen and (min-width: 768px) {
+	/* Undo previous global suppressors. This is intentionally Home-only:
+	   form/list/dashboard page headers never use these native Home nodes. */
+	body .desktop-wrapper .desktop-navbar .search-widget-wrapper,
+	body .desktop-wrapper .desktop-navbar .st-home-search-relocated {
+		display: flex !important;
+		visibility: visible !important;
+	}
+	body .desktop-wrapper .desktop-navbar .search-widget-button {
+		display: flex !important;
+		visibility: visible !important;
+	}
+	/* Frappe and extensions can create an additional centered Desk
+	   command-search field at runtime. The final JS owner marks that
+	   exact header control, without touching document filters or Home. */
+	body .page-head .st-desk-command-search-hidden {
+		display: none !important;
+		visibility: hidden !important;
+	}
+}
+[data-theme="dark"] body .page-head,
+[data-theme="dark"] body .desktop-wrapper .desktop-navbar {
+	background: var(--st-topbar-bg, #141e2c) !important;
+	background-color: var(--st-topbar-bg, #141e2c) !important;
+}
+@media print {
+	body .page-head {
 		position: static !important;
 		box-shadow: none !important;
 	}

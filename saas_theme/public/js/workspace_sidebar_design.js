@@ -6,8 +6,8 @@
  */
 (() => {
 	"use strict";
-	if (window.__st_sidebar_awesomebar_search_v4__) return;
-	window.__st_sidebar_awesomebar_search_v4__ = true;
+	if (window.__st_sidebar_awesomebar_search_v5__) return;
+	window.__st_sidebar_awesomebar_search_v5__ = true;
 
 	const ROOT = ".body-sidebar-container";
 	const MIN_QUERY = 2;
@@ -400,6 +400,9 @@
 	document.addEventListener("keydown", event => {
 		const key = String(event.key || "").toLowerCase();
 		const command = key === "k" && (event.ctrlKey || event.metaKey) && !event.altKey;
+		// Desktop Home owns its own visible Frappe search field and shortcuts.
+		// Never steal Ctrl/Cmd+K from that Home navbar.
+		if (command && document.querySelector?.(".desktop-wrapper .desktop-navbar")?.getClientRects()?.length) return;
 		const slash = key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey;
 		if (event.defaultPrevented || (!command && !slash) || isMobile() ||
 			!document.body.classList.contains("st-sidebar-search-available")) return;

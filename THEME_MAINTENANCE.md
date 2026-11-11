@@ -996,3 +996,39 @@ The screenshots after PR #119 exposed three issues:
    positioning and theme-aware borders/background, with a print exception.
 The separate Workspace KPI, Accounts Dashboard, form controllers,
 notification menus and business computations are unchanged.
+
+### Fixed Desk header search ownership and white sticky navbar (11 November 2026)
+
+Investigation found **three distinct CSS owners suppressing the Home search**
+and an unrelated failure to hide later-rendered Desk header search UI:
+
+1. `workspace_sidebar_design.css` hid `.desktop-navbar .search-widget-wrapper`
+   under `body.st-sidebar-search-available`. This accidentally hid **Home**.
+   Restrict suppression to `.page-head` only; `?v=4`.
+2. `desk_header_finish.css` hid Home's `.search-widget-wrapper` and
+   `.st-home-search-relocated` in three successive rule groups, including
+   a broad `.navbar` rule. Those are now gone. Home's **native Frappe
+   Desktop** search is explicitly displayed and retains its original
+   click/search behavior. The real Frappe `.page-head` is opaque **white**
+   (#fff) in light mode, dark-mode background is retained, and the
+   `.desktop-navbar` remains sticky with white background; `?v=4`.
+3. Frappe can dynamically render `#full-search-button`,
+   `#small-search-button`, or a custom "Search or type a command"
+   input/button after `page-change` or `form-refresh`.
+   New **`desk_header_search.js?v=1`** scans only
+   `.page-container .page-head` for exact command-search triggers,
+   marks them hidden, repeats after Frappe route events and late DOM
+   insertions, and restores them on mobile. It never touches Desktop Home
+   `.desktop-navbar`, individual document filter controls, global search
+   services, notification/profile, or modal fallback.
+4. `workspace_sidebar_design.js?v=5` preserves the **Home** navbar's
+   Ctrl/Cmd+K shortcut when its desktop navbar is visible. Other Desk
+   pages keep sidebar search and its keyboard access.
+
+Tests: `scripts/test_desk_header_search_scope.py` rejects future CSS
+that hides Home's search and validates asset order/white styling;
+`scripts/test_desk_header_search.js` mocks native Desktop/Desk controls,
+late Form navigation, mobile restoration and untouched Home/profile/filter.
+Existing sidebar regression also verifies that Home Ctrl+K is not stolen.
+No Workspace KPI, Accounts Dashboard chart, form data or Frappe core
+component is modified.

@@ -42,8 +42,8 @@ app_include_css = [
 	"/assets/saas_theme/css/native_dashboard_view.css?v=1",
 	"/assets/saas_theme/css/workspace_dashboard_design.css?v=4",
 	"/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
-	"/assets/saas_theme/css/workspace_sidebar_design.css?v=3",
-	"/assets/saas_theme/css/desk_header_finish.css?v=3",
+	"/assets/saas_theme/css/workspace_sidebar_design.css?v=4",
+	"/assets/saas_theme/css/desk_header_finish.css?v=4",
 ]
 
 app_include_js = [
@@ -64,7 +64,8 @@ app_include_js = [
 	"/assets/saas_theme/js/interaction_finish_v2.js?v=10",
 	"/assets/saas_theme/js/workspace_dashboard.js?v=2",
 	"/assets/saas_theme/js/native_dashboard_view.js?v=4",
-	"/assets/saas_theme/js/workspace_sidebar_design.js?v=4",
+	"/assets/saas_theme/js/workspace_sidebar_design.js?v=5",
+	"/assets/saas_theme/js/desk_header_search.js?v=1",
 ]
 
 # -----------------------------------------------------------------------------

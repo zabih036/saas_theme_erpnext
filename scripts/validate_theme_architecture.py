@@ -44,8 +44,8 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/native_dashboard_view.css?v=1",
     "/assets/saas_theme/css/workspace_dashboard_design.css?v=4",
     "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
-    "/assets/saas_theme/css/workspace_sidebar_design.css?v=3",
-    "/assets/saas_theme/css/desk_header_finish.css?v=3",
+    "/assets/saas_theme/css/workspace_sidebar_design.css?v=4",
+    "/assets/saas_theme/css/desk_header_finish.css?v=4",
 ]
 
 EXPECTED_DESK_JS = [
@@ -66,7 +66,8 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/interaction_finish_v2.js?v=10",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
     "/assets/saas_theme/js/native_dashboard_view.js?v=4",
-    "/assets/saas_theme/js/workspace_sidebar_design.js?v=4",
+    "/assets/saas_theme/js/workspace_sidebar_design.js?v=5",
+    "/assets/saas_theme/js/desk_header_search.js?v=1",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -139,6 +140,7 @@ KNOWN_JS_FILES = {
     "workspace_shell_polish.js",
     "workspace_dashboard.js",
     "workspace_sidebar_design.js",
+    "desk_header_search.js",
     "native_dashboard_view.js",
 }
 
@@ -235,6 +237,9 @@ REQUIRED_RUNTIME_GUARDS = {
         ".page-head .st-page-utility-actions",
         ".desktop-navbar .search-widget-wrapper",
         "body #full-search-button",
+        "body .page-head {",
+        "background: #fff !important;",
+        ".st-desk-command-search-hidden",
         "position: sticky !important;",
         ".st-top-notification-button",
         ".st-top-profile-button",
@@ -254,8 +259,20 @@ REQUIRED_RUNTIME_GUARDS = {
         '@media (max-width: 767px)',
         '[data-theme="dark"]',
     ],
+    "desk_header_search.js": [
+        "__st_desk_header_search_scope_v1__",
+        "function searchControl(el)",
+        '"#full-search-button"',
+        '"#small-search-button"',
+        "st-desk-command-search-hidden",
+        'el.style?.setProperty("display", "none", "important")',
+        "page-change.st_desk_header_search",
+        "form-refresh.st_desk_header_search",
+        "MutationObserver",
+    ],
     "workspace_sidebar_design.js": [
-        "__st_sidebar_awesomebar_search_v4__",
+        "__st_sidebar_awesomebar_search_v5__",
+        ".desktop-wrapper .desktop-navbar",
         "plainLabel",
         "form-refresh.st_sidebar_modern",
         "state.sidebar !== sidebar",
