@@ -444,3 +444,21 @@
 		transform: none !important;
 	}
 }
+
+
+/* Workspace customization remains a native editor, not a marketing tile.
+   Hide decorative layers and disable animated motion while blocks are edited. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode::after {
+	display: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode:is(:hover, :focus-within) {
+	transform: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode :is(
+	.st-ws-kpi-icon, .st-ws-kpi-wave, .st-ws-kpi-open
+) {
+	display: none !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode .widget-control {
+	opacity: 1 !important;
+}
