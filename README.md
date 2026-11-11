@@ -144,11 +144,11 @@ on production. If the app is inside a Docker deployment, run the Git and build
 steps in the persistent source/build environment used to create the running
 containers and redeploy the updated image as appropriate.
 
-### Verify PR #113 is really deployed
+### Verify the native Accounts Dashboard root correction is deployed
 
 The read-only verifier checks that the installed repository contains the
-merged design, that the correct public files exist, and optionally that the
-site serves the current CSS/JS rather than old or cached versions:
+updated design, that the current public files exist, and optionally that the
+site serves the latest Dashboard CSS/JS rather than stale assets:
 
 ```bash
 cd "$PATH_TO_YOUR_BENCH"
@@ -156,14 +156,20 @@ bash apps/saas_theme/scripts/check_theme_deployment.sh "$PWD" https://YOUR_ERP_D
 ```
 
 Expected source baseline is merge commit `265abc5ca50c9ec69475013a1e216d1d1662383b`
-(PR #113) or a later descendant. Required asset URLs include:
+(PR #113) or a later descendant, **plus the new Dashboard route fix**.
+Required current asset URLs include:
 
 - `/assets/saas_theme/css/workspace_dashboard_design.css?v=3`
-- `/assets/saas_theme/css/native_dashboard_view_design.css?v=3`
-- `/assets/saas_theme/js/native_dashboard_view.js?v=3`
+- `/assets/saas_theme/css/native_dashboard_view_design.css?v=4`
+- `/assets/saas_theme/js/native_dashboard_view.js?v=4`
 
 Finally, log into Desk, open the **Buying Workspace** and
-**Dashboard / Accounts**, and hard-refresh with **Ctrl+Shift+R**. The
+**Dashboard / Accounts**, and hard-refresh with **Ctrl+Shift+R**.
+For this Dashboard the live DOM must have `#page-dashboard-view .dashboard`
+with 4 KPI and 6 chart widgets in the user-supplied example;
+`.dashboard-view` and `.dashboard-page` are absent. The dashboard enhancer
+must mark the real cards with `st-dv-kpi-v2` and chart widgets with
+`st-dv-chart-v2`. Verify those classes in browser DevTools if needed. The
 CI suite validates the *repository*, not the running server or its cache.
 If the verifier passes but the browser still shows old cards, use DevTools
 Network to ensure these assets load with HTTP 200 and inspect their computed

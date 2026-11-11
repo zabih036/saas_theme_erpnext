@@ -43,7 +43,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
     "/assets/saas_theme/css/native_dashboard_view.css?v=1",
     "/assets/saas_theme/css/workspace_dashboard_design.css?v=3",
-    "/assets/saas_theme/css/native_dashboard_view_design.css?v=3",
+    "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
 ]
 
 EXPECTED_DESK_JS = [
@@ -63,7 +63,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
     "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
-    "/assets/saas_theme/js/native_dashboard_view.js?v=3",
+    "/assets/saas_theme/js/native_dashboard_view.js?v=4",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -235,7 +235,8 @@ REQUIRED_RUNTIME_GUARDS = {
         '@media (max-width: 767px)',
     ],
     "native_dashboard_view_design.css": [
-        ".dashboard-view",
+        "#page-dashboard-view .dashboard",
+        ".dashboard-graph > .widget-group:first-child",
         ".widget.number-widget-box.st-dv-kpi-v2",
         ".st-dv-kpi-featured",
         ".st-dv-kpi-wave",
@@ -252,6 +253,9 @@ REQUIRED_RUNTIME_GUARDS = {
     ],
     "native_dashboard_view.js": [
         "__st_dashboard_view_design_v2__",
+        'const ROOT = "#page-dashboard-view .dashboard";',
+        'route[0] !== "dashboard-view"',
+        "widget.dashboard-widget-box",
         "function enhance()",
         "MutationObserver",
         "st-dv-kpi-featured",

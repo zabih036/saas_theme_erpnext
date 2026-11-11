@@ -49,11 +49,13 @@ check() {
     fi
 }
 check "saas_theme/hooks.py" "workspace_dashboard_design.css?v=3"
-check "saas_theme/hooks.py" "native_dashboard_view_design.css?v=3"
-check "saas_theme/hooks.py" "native_dashboard_view.js?v=3"
+check "saas_theme/hooks.py" "native_dashboard_view_design.css?v=4"
+check "saas_theme/hooks.py" "native_dashboard_view.js?v=4"
 check "saas_theme/public/css/workspace_dashboard_design.css" "height: 142px !important;"
-check "saas_theme/public/css/native_dashboard_view_design.css" ".dashboard-view .widget.number-widget-box.st-dv-kpi-v2"
-check "saas_theme/public/js/native_dashboard_view.js" 'const ROOT = ".dashboard-view";'
+check "saas_theme/public/css/native_dashboard_view_design.css" "#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2"
+check "saas_theme/public/js/native_dashboard_view.js" 'const ROOT = "#page-dashboard-view .dashboard";'
+check "saas_theme/public/js/native_dashboard_view.js" 'route[0] !== "dashboard-view"'
+check "saas_theme/public/css/native_dashboard_view_design.css" ".dashboard-graph > .widget-group:first-child"
 
 if [[ -d "$asset_dir" ]]; then
     for item in css/workspace_dashboard_design.css css/native_dashboard_view_design.css js/native_dashboard_view.js; do
@@ -72,12 +74,12 @@ if [[ -n "$site_base_url" ]]; then
         warn "curl unavailable; skipping HTTP checks"
     else
         site_base_url="$(printf '%s' "$site_base_url" | sed 's#/$##')"
-        for item in "css/native_dashboard_view_design.css?v=3" "js/native_dashboard_view.js?v=3"; do
+        for item in "css/native_dashboard_view_design.css?v=4" "js/native_dashboard_view.js?v=4"; do
             body="$(curl -fsSL --max-time 20 "$site_base_url/assets/saas_theme/$item" 2>/dev/null)" || body=""
             if [[ "$item" == css/* ]]; then
-                marker=".dashboard-view .widget.number-widget-box.st-dv-kpi-v2"
+                marker="#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2"
             else
-                marker='const ROOT = ".dashboard-view";'
+                marker='const ROOT = "#page-dashboard-view .dashboard";'
             fi
             if [[ "$body" == *"$marker"* ]]; then
                 pass "Live HTTP serves current asset: $item"

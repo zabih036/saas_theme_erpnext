@@ -77,15 +77,32 @@ function testScript(filename, kind) {
 		path.join(__dirname, "..", "saas_theme/public/js", filename), "utf8"
 	);
 	new vm.Script(source, {filename});
-	const root = new Element(["root"]);
+	const root = new Element(kind === "dashboard" ? ["dashboard"] : ["root"]);
+	const page = new Element(["content", "page-container"]);
+	page.id = "page-dashboard-view";
+	const graph = new Element(["dashboard-graph"]);
+	const group = new Element(["widget-group"]);
+	const groupBody = new Element(["widget-group-body", "grid-col-3"]);
+	if (kind === "dashboard") {
+		page.appendChild(root);
+		root.appendChild(graph);
+		graph.appendChild(group);
+		group.appendChild(groupBody);
+	}
 	const first = makeCard();
 	const second = makeCard();
 	const outside = makeCard();
 	root.kpis = [first.card, second.card];
+	if (kind === "dashboard") {
+		groupBody.appendChild(first.card);
+		groupBody.appendChild(second.card);
+		assert.equal(first.card.closest(".dashboard-graph"), graph,
+			"Frappe's actual Accounts Dashboard widget hierarchy must be represented");
+	}
 	root.charts = [new Element(["widget", "dashboard-widget-box"])];
 	root.shortcuts = [new Element(["widget", "shortcut-widget-box"])];
 	const original = [first, second].map(x => x.card.textContent);
-	let route = ["Workspaces", "Buying"];
+	let route = kind === "dashboard" ? ["dashboard-view", "Accounts"] : ["Workspaces", "Buying"];
 	const timers = [];
 	const observers = [];
 	const actions = {};
@@ -96,7 +113,7 @@ function testScript(filename, kind) {
 		readyState: "complete",
 		querySelectorAll(selector) {
 			if (kind === "workspace" && selector === '[data-page-route="Workspaces"]') return [root];
-			if (kind === "dashboard" && selector === ".dashboard-view") return [root];
+			if (kind === "dashboard" && selector === "#page-dashboard-view .dashboard") return [root];
 			return [];
 		},
 		createElement(tag) {
@@ -162,12 +179,26 @@ function testScript(filename, kind) {
 	observers[0].cb([{target: first.card, addedNodes: []}]);
 	while (timers.length) timers.shift()();
 	assert.equal(decoratorCreated, expected, "No duplicate nodes after widget data refresh");
+
+	// A ChartWidget may arrive after number cards; its native plot, filters
+	// and controls must remain intact while the scoped class is added.
+	if (kind === "dashboard") {
+		const chart = new Element(["widget", "dashboard-widget-box"]);
+		root.charts.push(chart);
+		observers[0].cb([{target: chart, addedNodes: []}]);
+		while (timers.length) timers.shift()();
+		assert.equal(chart.classList.contains("st-dv-chart-v2"), true,
+			"Late Accounts chart must receive the Dashboard-specific design");
+		assert.equal(decoratorCreated, expected,
+			"Late chart updates cannot create duplicate KPI decoration");
+	}
+
 	// The next visible KPI becomes featured when the leading KPI disappears.
 	first.card.hidden = true;
 	actions[event]();
 	while (timers.length) timers.shift()();
 	assert.equal(second.card.classList.contains("st-" + key + "-kpi-featured"), true);
-	// No scope leakage when leaving Workspaces.
+	// No scope leakage when leaving the active Desk route.
 	if (kind === "workspace") {
 		route = ["Form", "Sales Invoice", "ACC-0001"];
 		const third = makeCard();
@@ -175,6 +206,15 @@ function testScript(filename, kind) {
 		actions[event]();
 		while (timers.length) timers.shift()();
 		assert.equal(third.card.classList.contains("st-ws-kpi-v2"), false);
+	} else {
+		route = ["List", "Sales Invoice", "List"];
+		const third = makeCard();
+		groupBody.appendChild(third.card);
+		root.kpis.push(third.card);
+		actions[event]();
+		while (timers.length) timers.shift()();
+		assert.equal(third.card.classList.contains("st-dv-kpi-v2"), false,
+			"Inactive native Dashboard must not decorate another route");
 	}
 	console.log(filename + ": page scoping, featured KPI, async refresh, no duplicates, native menus preserved");
 }

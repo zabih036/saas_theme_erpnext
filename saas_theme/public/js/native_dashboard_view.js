@@ -1,5 +1,5 @@
 /* Native Frappe ListView Dashboard — Home-inspired presentation only.
- * Owns .dashboard-page .dashboard-view; never touches Workspaces or custom Home.
+ * Owns #page-dashboard-view .dashboard (real /dashboard-view/Accounts page).
  * Keep NumberCardWidget/ChartWidget routes, data, dates, menus and editor native.
  */
 (() => {
@@ -7,7 +7,7 @@
 	if (window.__st_dashboard_view_design_v2__) return;
 	window.__st_dashboard_view_design_v2__ = true;
 
-	const ROOT = ".dashboard-view";
+	const ROOT = "#page-dashboard-view .dashboard";
 	const KPI = ".widget.number-widget-box";
 	const featuredIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg>';
 	const standardIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="M3.5 10h17"/></svg>';
@@ -21,6 +21,12 @@
 		!node.classList.contains("hidden"));
 
 	function currentRoot() {
+		// A Desk dashboard can remain mounted while another route is active.
+		// Guard by Frappe's real route, independently of the root DOM class.
+		const route = (window.frappe && typeof frappe.get_route === "function")
+			? frappe.get_route()
+			: [];
+		if (route && route.length && route[0] !== "dashboard-view") return null;
 		return Array.from(document.querySelectorAll(ROOT)).find(visible) || null;
 	}
 
@@ -72,11 +78,14 @@
 
 	function relatesToKPI(mutation) {
 		const target = mutation.target;
+		const widgets = KPI + ", .widget.dashboard-widget-box";
 		if (target && target.nodeType === 1 &&
-			(target.matches?.(KPI) || target.closest?.(KPI))) return true;
+			(target.matches?.(widgets) || target.closest?.(widgets))) return true;
 		return Array.from(mutation.addedNodes || []).some(node =>
-			node.nodeType === 1 && (node.matches?.(KPI + ", .dashboard-view, .widget-group") ||
-				node.querySelector?.(KPI))
+			node.nodeType === 1 && (
+				node.matches?.(widgets + ", .dashboard-graph, .widget-group") ||
+				node.querySelector?.(widgets)
+			)
 		);
 	}
 
