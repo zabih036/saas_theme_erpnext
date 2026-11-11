@@ -1,0 +1,194 @@
+/*
+ * SaaS Theme — final Desk header controls.
+ * Presentation only. Frappe owns search keyboard shortcuts, notifications,
+ * unread counts, user-menu dropdown, language chooser and profile binding.
+ * Search field moved to Sidebar on desktop; keep fallback on mobile.
+ */
+
+/* Do not show the duplicated big "Search or type a command" field in
+   page headers (Lists/Forms/Workspaces/Dashboards) or Desktop Home. */
+@media (min-width: 768px) {
+	.page-head .st-page-utility-actions > .st-top-search,
+	.page-head .st-page-utility-actions > #small-search-button,
+	.page-head .standard-items-section > #small-search-button,
+	.page-head .search-widget-wrapper,
+	.page-head .st-home-search-relocated,
+	.desktop-wrapper .desktop-navbar .search-widget-wrapper,
+	.desktop-wrapper .desktop-navbar .st-home-search-relocated,
+	.desktop-navbar .search-widget-wrapper,
+	.desktop-navbar .st-home-search-relocated {
+		display: none !important;
+	}
+}
+
+/* Right-hand utilities retain original native buttons and menu bindings. */
+.page-head .st-page-utility-actions {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	gap: 10px !important;
+	margin-inline-start: 8px !important;
+}
+.page-head .st-page-utility-actions .st-top-notification-host {
+	position: relative;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+}
+.page-head .st-page-utility-actions .st-top-notification-button,
+.page-head .st-page-utility-actions button.desktop-notification-icon,
+.page-head .st-page-utility-actions .st-top-action:not(.st-top-search) {
+	position: relative !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 38px !important;
+	height: 38px !important;
+	min-width: 38px !important;
+	min-height: 38px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 1px solid var(--st-topbar-border, #dfe7f1) !important;
+	border-radius: 12px !important;
+	background: var(--st-topbar-surface, #fff) !important;
+	color: var(--st-topbar-text, #14213d) !important;
+	box-shadow: 0 2px 7px rgba(22, 53, 88, .04) !important;
+	transition: color .17s ease, background .17s ease, border-color .17s ease,
+		box-shadow .17s ease !important;
+}
+.page-head .st-page-utility-actions :is(
+	.st-top-notification-button, button.desktop-notification-icon,
+	.st-top-action:not(.st-top-search)
+):is(:hover, :focus-visible) {
+	background: var(--st-topbar-soft, #f2f7fd) !important;
+	border-color: #c1d4f2 !important;
+	color: var(--st-topbar-blue, #135ce1) !important;
+	box-shadow: 0 0 0 3px rgba(19, 92, 225, .08) !important;
+	outline: none !important;
+}
+.page-head .st-page-utility-actions :is(
+	.st-top-notification-button, button.desktop-notification-icon
+) :is(svg, .icon) {
+	width: 19px !important;
+	height: 19px !important;
+	stroke: currentColor !important;
+	color: currentColor !important;
+}
+.page-head .st-page-utility-actions .st-top-notification-host .notification-count,
+.page-head .st-page-utility-actions .st-top-notification-button .notification-count {
+	position: absolute !important;
+	inset-block-start: -5px !important;
+	inset-inline-end: -5px !important;
+	min-width: 17px !important;
+	height: 17px !important;
+	padding: 0 4px !important;
+	border: 2px solid var(--st-topbar-surface, #fff) !important;
+	border-radius: 999px !important;
+	background: #135ce1 !important;
+	color: #fff !important;
+	font-size: 9px !important;
+	font-weight: 800 !important;
+	line-height: 1 !important;
+}
+
+/* Profile: a soft surfaced circle with a real avatar, not a raw initials
+   label or decoration that could block the menu click. */
+.page-head .st-page-utility-actions .st-top-profile {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+.page-head .st-page-utility-actions .st-top-profile-button {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 40px !important;
+	height: 40px !important;
+	min-width: 40px !important;
+	min-height: 40px !important;
+	padding: 3px !important;
+	border: 1px solid var(--st-topbar-border, #dfe7f1) !important;
+	border-radius: 50% !important;
+	background: var(--st-topbar-surface, #fff) !important;
+	box-shadow: 0 2px 9px rgba(22, 53, 88, .055) !important;
+	transition: background .17s ease, border-color .17s ease, box-shadow .17s ease !important;
+}
+.page-head .st-page-utility-actions .st-top-profile-button:is(:hover, :focus-visible) {
+	border-color: #aec8ed !important;
+	background: var(--st-topbar-soft, #f2f7fd) !important;
+	box-shadow: 0 0 0 3px rgba(19, 92, 225, .08) !important;
+	outline: none !important;
+}
+.page-head .st-page-utility-actions .st-top-profile-button :is(
+	.avatar, .avatar-frame, img, .st-profile-fallback-avatar
+) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px !important;
+	height: 32px !important;
+	min-width: 32px !important;
+	border-radius: 50% !important;
+	object-fit: cover;
+}
+
+/* Desktop Home uses separate Frappe navbar markup and existing handlers. */
+.desktop-wrapper .desktop-navbar .desktop-notification-icon,
+.desktop-wrapper .desktop-navbar .desktop-cloud-settings {
+	border: 1px solid var(--st-topbar-border, #dfe7f1) !important;
+	border-radius: 12px !important;
+	background: var(--st-topbar-surface, #fff) !important;
+	box-shadow: 0 2px 7px rgba(22, 53, 88, .04) !important;
+}
+.desktop-wrapper .desktop-navbar .desktop-notification-icon:is(:hover, :focus-visible),
+.desktop-wrapper .desktop-navbar .desktop-cloud-settings:is(:hover, :focus-visible) {
+	border-color: #c1d4f2 !important;
+	color: var(--st-topbar-blue, #135ce1) !important;
+	box-shadow: 0 0 0 3px rgba(19, 92, 225, .08) !important;
+	outline: none !important;
+}
+.desktop-wrapper .desktop-navbar .desktop-avatar {
+	border-color: var(--st-topbar-border, #dfe7f1) !important;
+	padding: 3px !important;
+	background: var(--st-topbar-surface, #fff) !important;
+	box-shadow: 0 2px 9px rgba(22, 53, 88, .055) !important;
+	transition: border-color .17s ease, background .17s ease, box-shadow .17s ease !important;
+}
+.desktop-wrapper .desktop-navbar .desktop-avatar:is(:hover, :focus-visible) {
+	border-color: #aec8ed !important;
+	background: var(--st-topbar-soft, #f2f7fd) !important;
+	box-shadow: 0 0 0 3px rgba(19, 92, 225, .08) !important;
+	outline: none !important;
+}
+
+@media (max-width: 767px) {
+	.page-head .st-page-utility-actions {
+		gap: 6px !important;
+		margin-inline-start: 4px !important;
+	}
+	.page-head .st-page-utility-actions .st-top-profile-button {
+		width: 34px !important;
+		height: 34px !important;
+		min-width: 34px !important;
+		min-height: 34px !important;
+		padding: 2px !important;
+	}
+	.page-head .st-page-utility-actions .st-top-profile-button :is(.avatar, .avatar-frame, img) {
+		width: 28px !important;
+		height: 28px !important;
+		min-width: 28px !important;
+	}
+}
+[data-theme="dark"] .page-head .st-page-utility-actions :is(
+	.st-top-notification-button, .st-top-profile-button
+) {
+	border-color: #33455d !important;
+	background: #182539 !important;
+	color: #e9f1fd !important;
+}
+@media (prefers-reduced-motion: reduce) {
+	.page-head .st-page-utility-actions :is(button, .st-top-notification-button),
+	.desktop-wrapper .desktop-navbar :is(.desktop-avatar, .desktop-notification-icon) {
+		transition: none !important;
+	}
+}

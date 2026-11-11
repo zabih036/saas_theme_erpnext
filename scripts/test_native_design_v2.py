@@ -117,19 +117,19 @@ def main() -> None:
     expected_css = [
         ASSET_ROOT + "css/" + WS_STYLE + "?v=4",
         ASSET_ROOT + "css/" + DV_STYLE + "?v=4",
-        ASSET_ROOT + "css/workspace_sidebar_design.css?v=1",
+        ASSET_ROOT + "css/workspace_sidebar_design.css?v=2",
     ]
     expected_js = [
         ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
-        ASSET_ROOT + "js/workspace_sidebar_design.js?v=1",
+        ASSET_ROOT + "js/workspace_sidebar_design.js?v=2",
     ]
-    assert css[-3:] == expected_css, "New visual rules must outrank all old widget CSS"
+    assert css[-4:-1] == expected_css, "Native design rules must remain ahead of final header polish"
     assert js[-2:] == expected_js, "Controllers load after existing Desk widget owners"
     assert all(css.count(path) == 1 for path in expected_css)
     assert all(js.count(path) == 1 for path in expected_js)
     assert css.index(ASSET_ROOT + "css/workspace_dashboard.css?v=1") < len(css) - 2
     assert css.index(ASSET_ROOT + "css/native_dashboard_view.css?v=1") < len(css) - 2
-    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 3
+    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 4
     assert ASSET_ROOT + "js/" + WS_SCRIPT + "?v=2" in js
 
     arch = ARCH.read_text(encoding="utf-8")
