@@ -603,3 +603,97 @@
 		min-height: 130px !important;
 	}
 }
+
+
+/* Stable-root chart fallback for the initial render before asynchronous
+   DashboardView enhancement. The previous root-class dependence caused the
+   user's Accounts charts to remain on the default Frappe skin. */
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) {
+	border: 1px solid var(--st-dv2-border, #e0e8f2) !important;
+	border-radius: 16px !important;
+	background: var(--st-dv2-surface, #fff) !important;
+	box-shadow: var(--st-dv2-shadow, 0 3px 14px rgba(20, 50, 84, .05)) !important;
+	overflow: visible !important;
+	padding: 0 !important;
+}
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) > .widget-head {
+	padding: 15px 18px !important;
+	min-height: 67px !important;
+	border-bottom: 1px solid var(--st-dv2-divider, #ebf0f6) !important;
+	background: transparent !important;
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 10px !important;
+}
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) > .widget-head .widget-title {
+	color: var(--st-dv2-ink, #244f68) !important;
+	font-size: 14px !important;
+	font-weight: 740 !important;
+}
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) > .widget-head .widget-subtitle {
+	color: var(--st-dv2-muted, #7389a2) !important;
+	font-size: 11px !important;
+}
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) > .widget-body {
+	padding: 15px 18px 18px !important;
+	margin: 0 !important;
+	background: transparent !important;
+}
+.dashboard-view .widget.dashboard-widget-box:not(.st-dv-chart-v2) > .widget-head .widget-control {
+	position: relative !important;
+	z-index: 4 !important;
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: center !important;
+	gap: 6px !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)) !important;
+	gap: 12px !important;
+	padding: 14px 17px 8px !important;
+	margin: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary > .summary-item {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	min-width: 0 !important;
+	min-height: 82px !important;
+	gap: 7px !important;
+	margin: 0 !important;
+	padding: 12px 15px !important;
+	border: 1px solid var(--st-dv2-divider, #ebf0f6) !important;
+	border-radius: 12px !important;
+	background: var(--st-dv2-soft, #f7faff) !important;
+	text-align: start !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary .summary-label {
+	font-size: 11.5px !important;
+	color: var(--st-dv2-muted, #7389a2) !important;
+	text-align: start !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary .summary-value {
+	font-size: clamp(18px, 1.7vw, 24px) !important;
+	font-weight: 750 !important;
+	line-height: 1.2 !important;
+	font-variant-numeric: tabular-nums !important;
+	text-align: start !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary .summary-value.green {
+	color: #11956b !important;
+}
+.dashboard-view .widget.dashboard-widget-box:is(.st-dv-chart-v2, .dashboard-widget-box) > .report-summary .summary-value.red {
+	color: #d34a58 !important;
+}
+@media (max-width: 767px) {
+	.dashboard-view .widget.dashboard-widget-box > .report-summary {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)) !important;
+	}
+}
