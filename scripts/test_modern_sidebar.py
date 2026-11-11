@@ -29,7 +29,9 @@ def main() -> None:
     ):
         assert marker in nav_css, f"Missing sidebar design: {marker}"
     for marker in (
-        "__st_sidebar_inline_search_v2__", "function makeSearch(panel)",
+        "__st_sidebar_awesomebar_search_v3__", "function makeSearch(panel)",
+        "get_recent_pages", "get_frequent_links", "get_executables",
+        "get_pages", "stopImmediatePropagation",
         "get_global_results", "get_doctypes", "get_reports",
         "get_workspaces", "get_dashboards",
         'input.setAttribute("role", "combobox")',
@@ -46,7 +48,7 @@ def main() -> None:
         "open_global_search_dialog(", "init_search(", "frappe.call(",
         "new frappe.search.SearchDialog", ".search_dialog.show(",
         "window.location.assign(", "frappe.new_doc(",
-        "localStorage.", ".innerHTML = item.label", "frappe.route_options",
+        "localStorage.", ".innerHTML = item.label",
     ):
         assert forbidden not in nav_js, f"Modal or unsafe navigation: {forbidden}"
     for marker in (
@@ -60,6 +62,8 @@ def main() -> None:
     ):
         assert marker in header, f"Missing header treatment: {marker}"
     assert ".modal" not in header
+    assert "width: min(430px" in nav_css
+    assert "get_frequent_links" in nav_js
     assert ".form-layout" not in header
     assert "#page-dashboard-view" not in header + nav_css
     assert "height: 120px !important;" in workspace
@@ -75,18 +79,18 @@ def main() -> None:
     assert vals["app_include_css"][-4:] == [
         P + "css/workspace_dashboard_design.css?v=4",
         P + "css/native_dashboard_view_design.css?v=4",
-        P + "css/workspace_sidebar_design.css?v=2",
-        P + "css/desk_header_finish.css?v=1",
+        P + "css/workspace_sidebar_design.css?v=3",
+        P + "css/desk_header_finish.css?v=2",
     ]
     assert vals["app_include_js"][-2:] == [
         P + "js/native_dashboard_view.js?v=4",
-        P + "js/workspace_sidebar_design.js?v=2",
+        P + "js/workspace_sidebar_design.js?v=3",
     ]
     assert len(vals["app_include_css"]) == len(set(vals["app_include_css"]))
     assert len(vals["app_include_js"]) == len(set(vals["app_include_js"]))
     manifest = ARCH.read_text(encoding="utf-8")
-    for asset in ("desk_header_finish.css", "workspace_sidebar_design.css?v=2",
-                  "workspace_sidebar_design.js?v=2"):
+    for asset in ("desk_header_finish.css", "workspace_sidebar_design.css?v=3",
+                  "workspace_sidebar_design.js?v=3"):
         assert asset in manifest, f"Architecture manifest missing {asset}"
     print("Inline Sidebar Search: results dropdown, native permissions, keyboard navigation,"
           " no modal, navbar actions, compact Workspaces, asset order validated.")

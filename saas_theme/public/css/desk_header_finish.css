@@ -192,3 +192,17 @@
 		transition: none !important;
 	}
 }
+
+
+/* Global command input is now in the persistent Sidebar palette.
+   These selectors cover native Desktop / List / Form navbar variants,
+   but NEVER hide the AwesomeBar modal itself, which remains available
+   as a fallback on pages without a Sidebar and on mobile. */
+@media (min-width: 768px) {
+	.desktop-navbar :is(.navbar-search-bar, .search-bar, .search-widget-wrapper),
+	.page-head :is(.navbar-search-bar, .search-widget-wrapper, .st-top-search),
+	.page-head .st-page-utility-actions #small-search-button,
+	.navbar :is(.navbar-search-bar, .search-widget-wrapper, #full-search-button) {
+		display: none !important;
+	}
+}
