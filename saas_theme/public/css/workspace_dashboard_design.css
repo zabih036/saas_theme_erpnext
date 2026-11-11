@@ -27,8 +27,8 @@
 	isolation: isolate !important;
 	overflow: visible !important; /* Native Frappe card menus may escape. */
 	gap: 0 !important;
-	min-height: 142px !important;
-	height: 142px !important;
+	min-height: 120px !important;
+	height: 120px !important;
 	align-self: start !important;
 	padding: 16px 18px 17px !important;
 	margin: 0 !important;
@@ -88,7 +88,7 @@
 	align-items: flex-start !important;
 	justify-content: space-between !important;
 	flex: 0 0 auto !important;
-	min-height: 31px !important;
+	min-height: 27px !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	border: 0 !important;
@@ -177,8 +177,8 @@
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	width: 36px !important;
-	height: 36px !important;
+	width: 32px !important;
+	height: 32px !important;
 	border: 1px solid var(--st-ws2-border) !important;
 	border-radius: 10px !important;
 	background: var(--st-ws2-soft) !important;
@@ -193,10 +193,10 @@
 }
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave {
 	position: absolute !important;
-	inset-block-end: 25px !important;
+	inset-block-end: 21px !important;
 	inset-inline-end: 17px !important;
 	color: #4186f1 !important;
-	width: 88px !important;
+	width: 72px !important;
 	height: 31px !important;
 	opacity: .84 !important;
 	pointer-events: none !important;
@@ -281,8 +281,8 @@
 [data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 {
 	display: flex !important;
 	justify-content: center !important;
-	min-height: 70px !important;
-	height: 70px !important;
+	min-height: 60px !important;
+	height: 60px !important;
 	padding: 11px 17px !important;
 	border: 1px solid var(--st-ws2-border) !important;
 	border-radius: 16px !important;
@@ -295,7 +295,7 @@
 	display: flex !important;
 	align-items: center !important;
 	gap: 10px !important;
-	min-height: 36px !important;
+	min-height: 33px !important;
 	width: 100% !important;
 	padding: 0 !important;
 	border: 0 !important;
@@ -425,7 +425,7 @@
 }
 @media (max-width: 767px) {
 	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
-		min-height: 130px !important;
+		min-height: 116px !important;
 		height: auto !important;
 		padding: 14px 15px !important;
 	}
@@ -473,17 +473,57 @@
 }
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode {
 	height: auto !important;
-	min-height: 142px !important;
+	min-height: 120px !important;
 }
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-body,
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
 	justify-content: flex-start !important;
 }
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
-	padding-top: 8px !important;
+	padding-top: 4px !important;
 	padding-bottom: 0 !important;
 }
 /* Keep native shortcut click target at reference Home-card density. */
 [data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 .widget-head {
 	min-height: 35px !important;
+}
+
+/* Final density: no tall grid stretches, full native control access. */
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
+	box-sizing: border-box !important;
+	align-self: start !important;
+	gap: 0 !important;
+	padding: 12px 15px 11px !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-title {
+	font-size: 12px !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .number {
+	font-size: clamp(21px, 1.8vw, 25px) !important;
+	line-height: 1.16 !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
+	min-height: 0 !important;
+	gap: 5px !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 {
+	box-sizing: border-box !important;
+	align-self: start !important;
+	padding: 7px 13px !important;
+}
+[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 .widget-title {
+	font-size: 12.5px !important;
+}
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2.edit-mode {
+	height: auto !important;
+	min-height: 120px !important;
+}
+@media (max-width: 767px) {
+	[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
+		padding: 12px 13px !important;
+	}
+	[data-page-route="Workspaces"] .widget.shortcut-widget-box.st-ws-shortcut-v2 {
+		height: auto !important;
+		min-height: 58px !important;
+	}
 }

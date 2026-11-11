@@ -37,6 +37,8 @@ on:
       - 'scripts/test_native_dashboard_view.py'
       - 'scripts/test_native_design_v2.py'
       - 'scripts/test_native_design_v2.js'
+      - 'scripts/test_modern_sidebar.py'
+      - 'scripts/test_modern_sidebar.js'
       - 'scripts/check_theme_deployment.sh'
       - 'README.md'
       - 'scripts/test_search_report_refinements.js'
@@ -104,6 +106,11 @@ jobs:
           node --check saas_theme/public/js/workspace_dashboard.js
           node --check saas_theme/public/js/native_dashboard_view.js
           node scripts/test_native_design_v2.js
+      - name: Validate modern navigation/sidebar search and compact Workspaces
+        run: |
+          python3 scripts/test_modern_sidebar.py
+          node --check saas_theme/public/js/workspace_sidebar_design.js
+          node scripts/test_modern_sidebar.js
       - name: Validate deployment checker shell syntax
         run: bash -n scripts/check_theme_deployment.sh
       - name: Validate native Dashboard View card and chart styling

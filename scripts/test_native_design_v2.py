@@ -91,8 +91,8 @@ def main() -> None:
     assert 'const ROOT = "#page-dashboard-view .dashboard";' in dashboard_js
     assert 'route[0] !== "dashboard-view"' in dashboard_js
     assert 'widget.dashboard-widget-box' in dashboard_js
-    assert "height: 142px !important;" in workspace_css
-    assert "height: 70px !important;" in workspace_css
+    assert "height: 120px !important;" in workspace_css
+    assert "height: 60px !important;" in workspace_css
     assert "height: 100% !important;" not in workspace_css
     assert ".widget.number-widget-box:not(.st-dv-kpi-v2)" in dashboard_css
     assert ".widget.dashboard-widget-box:not(.st-dv-chart-v2)" in dashboard_css
@@ -115,20 +115,22 @@ def main() -> None:
     css = variables["app_include_css"]
     js = variables["app_include_js"]
     expected_css = [
-        ASSET_ROOT + "css/" + WS_STYLE + "?v=3",
+        ASSET_ROOT + "css/" + WS_STYLE + "?v=4",
         ASSET_ROOT + "css/" + DV_STYLE + "?v=4",
+        ASSET_ROOT + "css/workspace_sidebar_design.css?v=1",
     ]
     expected_js = [
-        ASSET_ROOT + "js/" + WS_SCRIPT + "?v=2",
         ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
+        ASSET_ROOT + "js/workspace_sidebar_design.js?v=1",
     ]
-    assert css[-2:] == expected_css, "New visual rules must outrank all old widget CSS"
+    assert css[-3:] == expected_css, "New visual rules must outrank all old widget CSS"
     assert js[-2:] == expected_js, "Controllers load after existing Desk widget owners"
     assert all(css.count(path) == 1 for path in expected_css)
     assert all(js.count(path) == 1 for path in expected_js)
     assert css.index(ASSET_ROOT + "css/workspace_dashboard.css?v=1") < len(css) - 2
     assert css.index(ASSET_ROOT + "css/native_dashboard_view.css?v=1") < len(css) - 2
-    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 2
+    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 3
+    assert ASSET_ROOT + "js/" + WS_SCRIPT + "?v=2" in js
 
     arch = ARCH.read_text(encoding="utf-8")
     for name in (WS_STYLE, DV_STYLE, WS_SCRIPT, DV_SCRIPT):

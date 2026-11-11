@@ -42,8 +42,9 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/popup_controls.css?v=1",
     "/assets/saas_theme/css/ui_consolidation_v7.css?v=14",
     "/assets/saas_theme/css/native_dashboard_view.css?v=1",
-    "/assets/saas_theme/css/workspace_dashboard_design.css?v=3",
+    "/assets/saas_theme/css/workspace_dashboard_design.css?v=4",
     "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
+    "/assets/saas_theme/css/workspace_sidebar_design.css?v=1",
 ]
 
 EXPECTED_DESK_JS = [
@@ -61,9 +62,10 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/user_theme_menu.js?v=8",
     "/assets/saas_theme/js/form_sidebar_persistence.js?v=2",
     "/assets/saas_theme/js/quick_access_preferences.js?v=3",
-    "/assets/saas_theme/js/interaction_finish_v2.js?v=9",
+    "/assets/saas_theme/js/interaction_finish_v2.js?v=10",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
     "/assets/saas_theme/js/native_dashboard_view.js?v=4",
+    "/assets/saas_theme/js/workspace_sidebar_design.js?v=1",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -105,6 +107,7 @@ KNOWN_CSS_FILES = {
     "workspace_shell_polish.css",
     "workspace_dashboard.css",
     "workspace_dashboard_design.css",
+    "workspace_sidebar_design.css",
     "native_dashboard_view_design.css",
     "native_dashboard_view.css",
 }
@@ -133,6 +136,7 @@ KNOWN_JS_FILES = {
     "user_theme_menu.js",
     "workspace_shell_polish.js",
     "workspace_dashboard.js",
+    "workspace_sidebar_design.js",
     "native_dashboard_view.js",
 }
 
@@ -224,6 +228,23 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-theme="dark"]',
         '@media (max-width: 767px)',
         '@media (prefers-reduced-motion: reduce)',
+    ],
+    "workspace_sidebar_design.css": [
+        ".body-sidebar-container.st-sidebar-modern",
+        ".st-sidebar-search-control",
+        ".sidebar-item-container.section-item",
+        ".standard-sidebar-item.active-sidebar",
+        "st-sidebar-search-available",
+        '@media (max-width: 767px)',
+        '[data-theme="dark"]',
+    ],
+    "workspace_sidebar_design.js": [
+        "__st_modern_sidebar_v1__",
+        "ensureSearch(panel)",
+        "frappe?.searchdialog?.search",
+        "open_global_search_dialog()",
+        "st-sidebar-search-available",
+        "MutationObserver",
     ],
     "workspace_dashboard_design.css": [
         '[data-page-route="Workspaces"]',
