@@ -968,3 +968,31 @@ This update uses Frappe's existing user-scoped AwesomeBar sources:
 - Regression tests check global recent/frequent ordering, typed commands,
   document results, route/onclick behavior, Ctrl+K, no duplicate search,
   mobile fallback, and the unchanged Workspace/Dashboard visual owners.
+
+### Form navigation, formatted search labels, sticky navbar (11 November 2026)
+
+The screenshots after PR #119 exposed three issues:
+1. The native Frappe AwesomeBar formats `value` with e.g.
+   `<b>Role</b> List`, but the Sidebar rendered those literal tags
+   because it used `textContent` without stripping the markup.
+   `workspace_sidebar_design.js?v=4` safely converts Frappe's limited
+   formatting to **plain text** (HTML tags and basic character entities),
+   and continues rendering with `textContent`. No untrusted HTML executes.
+2. During Form navigation, Frappe can reconstruct `.body-sidebar`
+   (or remove the inserted search shell) while retaining the surrounding
+   `.body-sidebar-container`. The enhancer now checks Sidebar DOM identity,
+   reattaches after `form-refresh` and `page-change`, observes the removed
+   search control, invalidates stale async results and blurs after a chosen
+   route so subsequent focus works. No duplicate Search input.
+3. Frappe v16's **actual Desk search button** is
+   `#full-search-button`; the `AwesomeBar.setup_correct_button()`
+   method actively unhides it after `page-change` and `form-refresh`.
+   Earlier CSS only hid wrappers and so the central navbar Search remained.
+   `desk_header_finish.css?v=3` now targets this exact control at desktop
+   breakpoints, plus the documented `#small-search-button` and Home
+   `.search-widget-wrapper`, while keeping the underlying native
+   SearchDialog for sidebar-free/mobile fallback. The real
+   `.page-container > .page-head` and `.desktop-navbar` use sticky
+   positioning and theme-aware borders/background, with a print exception.
+The separate Workspace KPI, Accounts Dashboard, form controllers,
+notification menus and business computations are unchanged.

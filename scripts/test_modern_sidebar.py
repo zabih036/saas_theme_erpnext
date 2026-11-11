@@ -29,7 +29,10 @@ def main() -> None:
     ):
         assert marker in nav_css, f"Missing sidebar design: {marker}"
     for marker in (
-        "__st_sidebar_awesomebar_search_v3__", "function makeSearch(panel)",
+        "__st_sidebar_awesomebar_search_v4__", "function makeSearch(panel)",
+        "function plainLabel(value)",
+        "form-refresh.st_sidebar_modern",
+        "state.sidebar !== sidebar",
         "get_recent_pages", "get_frequent_links", "get_executables",
         "get_pages", "stopImmediatePropagation",
         "get_global_results", "get_doctypes", "get_reports",
@@ -55,6 +58,9 @@ def main() -> None:
         "page-head .st-page-utility-actions",
         "page-head .search-widget-wrapper",
         "desktop-navbar .search-widget-wrapper",
+        "body #full-search-button",
+        ".page-container > .page-head",
+        "position: sticky !important;",
         ".st-top-notification-button", ".st-top-profile-button",
         ".desktop-avatar", "notification-count",
         "@media (min-width: 768px)", "@media (max-width: 767px)",
@@ -63,6 +69,9 @@ def main() -> None:
         assert marker in header, f"Missing header treatment: {marker}"
     assert ".modal" not in header
     assert "width: min(430px" in nav_css
+    assert "plainLabel(item.value" in nav_js
+    assert "plainLabel(item.label" in nav_js
+    assert "node.classList?.contains(\"st-sidebar-search\")" in nav_js
     assert "get_frequent_links" in nav_js
     assert ".form-layout" not in header
     assert "#page-dashboard-view" not in header + nav_css
@@ -80,17 +89,17 @@ def main() -> None:
         P + "css/workspace_dashboard_design.css?v=4",
         P + "css/native_dashboard_view_design.css?v=4",
         P + "css/workspace_sidebar_design.css?v=3",
-        P + "css/desk_header_finish.css?v=2",
+        P + "css/desk_header_finish.css?v=3",
     ]
     assert vals["app_include_js"][-2:] == [
         P + "js/native_dashboard_view.js?v=4",
-        P + "js/workspace_sidebar_design.js?v=3",
+        P + "js/workspace_sidebar_design.js?v=4",
     ]
     assert len(vals["app_include_css"]) == len(set(vals["app_include_css"]))
     assert len(vals["app_include_js"]) == len(set(vals["app_include_js"]))
     manifest = ARCH.read_text(encoding="utf-8")
     for asset in ("desk_header_finish.css", "workspace_sidebar_design.css?v=3",
-                  "workspace_sidebar_design.js?v=3"):
+                  "workspace_sidebar_design.js?v=4"):
         assert asset in manifest, f"Architecture manifest missing {asset}"
     print("Inline Sidebar Search: results dropdown, native permissions, keyboard navigation,"
           " no modal, navbar actions, compact Workspaces, asset order validated.")

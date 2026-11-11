@@ -98,13 +98,13 @@ async function main(){
 	const recentEntries=[
 		{value:"BOM List",route:["List","BOM"],index:80},
 		{value:"Manufacturing Workspace",route:["Workspaces","Manufacturing"],index:79},
-		{value:"Role List",route:["List","Role"],index:78},
+		{value:"<b>Role</b> List",route:["List","Role"],index:78},
 		{value:"Purchase Invoice List",route:["List","Purchase Invoice"],index:77},
 	];
 	const frequentEntries=[
-		{value:"Buying Workspace",route:["Workspaces","Buying"],index:70},
-		{value:"User List",route:["List","User"],index:69},
-		{value:"General Ledger Report",route:["query-report","General Ledger"],index:68},
+		{value:"<b>Buying</b> Workspace",route:["Workspaces","Buying"],index:70},
+		{value:"<b>User</b> List",route:["List","User"],index:69},
+		{value:"<b>General Ledger</b> Report",route:["query-report","General Ledger"],index:68},
 	];
 	const utils={
 		setup_recent(){recentInitialized++;this.recent=[];},
@@ -150,6 +150,10 @@ async function main(){
 	assert.equal(list.children[1].children[0].textContent,"Manufacturing Workspace");
 	assert.equal(list.children[2].children[0].textContent,"Role List");
 	assert.equal(list.children[4].children[0].textContent,"Buying Workspace");
+	assert.equal(list.children[2].children[0].textContent,"Role List","Frappe <b> formatting must not leak");
+	assert.equal(list.children[5].children[0].textContent,"User List");
+	assert.equal(list.children[6].children[0].textContent,"General Ledger Report");
+	assert.equal(list.children.some(n=>n.children[0]?.textContent?.includes("<b>")),false);
 	assert.equal(list.children[0].classList.contains("is-selected"),true,"First recent command highlighted");
 	assert.equal(list.children[0].children.length,2);
 	assert.equal(list.children[0].children[1].textContent,"","No repetitive Navigation labels");
@@ -218,14 +222,51 @@ async function main(){
 	assert.equal(panel.classList.contains("expanded"),true);
 	assert.equal(input.focused,true);
 
-	// Mobile drawer retains global navbar search fallback.
+	// Mobile drawer retains native search fallback.
 	mobile=true;
 	events["page-change.st_sidebar_modern"]();flush();
 	assert.equal(body.classList.contains("st-sidebar-search-available"),false);
 	trigger.click();
 	assert.equal(modal,0);
 	assert.equal(sidebar.children[1],shell);
-	console.log("Sidebar v3: Frappe AwesomeBar recent/frequent, global commands and docs,"
-		+" Ctrl+K, no navbar modal, stale guard, collapsed/mobile, no duplicates.");
+
+	// Frappe may remove the search shell when rebuilding Sidebar on Form
+	// navigation, while leaving .body-sidebar-container alive.
+	mobile=false;
+	const oldSearch = shell;
+	sidebar.children.splice(sidebar.children.indexOf(oldSearch), 1);
+	oldSearch.parentElement=null;
+	oldSearch.isConnected=false;
+	events["form-refresh.st_sidebar_modern"]();
+	flush();
+	const replacements = sidebar.children.filter(n=>n.className==="st-sidebar-search");
+	assert.equal(replacements.length,1,"Form refresh must restore exactly one Search field");
+	assert.notEqual(replacements[0],oldSearch,"Removed Form search control must be recreated");
+	const formSearch = replacements[0].children[0].children[1];
+	formSearch.focus();
+	assert.equal(replacements[0].children[1].hidden,false);
+	const formList = replacements[0].children[1].children[0];
+	assert.equal(formList.children[2].children[0].textContent,"Role List");
+	formSearch.value="invoice";formSearch.handlers.input();
+	assert.equal(formList.children[0].children[0].textContent,"Purchase Invoice List");
+	assert.equal(modal,0);
+
+	// Also cover replacement of the entire native Sidebar element on route
+	// change; form search must keep its global providers and focus behavior.
+	const newSidebar=new Element("div",["body-sidebar"]);
+	newSidebar.append(new Element("div",["sidebar-header"]),
+		new Element("div",["standard-items-band"]),
+		new Element("div",["body-sidebar-top"]),
+		new Element("div",["body-sidebar-bottom"]));
+	panel.children.splice(panel.children.indexOf(sidebar),1,newSidebar);
+	newSidebar.parentElement=panel;
+	events["page-change.st_sidebar_modern"]();flush();
+	const newShell = newSidebar.children.find(n=>n.className==="st-sidebar-search");
+	assert.ok(newShell && newShell!==replacements[0]);
+	newShell.children[0].children[1].focus();
+	assert.equal(newShell.children[1].hidden,false);
+	assert.equal(newShell.children[1].children[0].children[2].children[0].textContent,"Role List");
+	console.log("Sidebar v4: formatted labels stripped, Form search reattached,"
+		+" global command providers, Ctrl+K, no modal, collapsed/mobile safe.");
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

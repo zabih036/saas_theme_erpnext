@@ -45,7 +45,7 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/workspace_dashboard_design.css?v=4",
     "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
     "/assets/saas_theme/css/workspace_sidebar_design.css?v=3",
-    "/assets/saas_theme/css/desk_header_finish.css?v=2",
+    "/assets/saas_theme/css/desk_header_finish.css?v=3",
 ]
 
 EXPECTED_DESK_JS = [
@@ -66,7 +66,7 @@ EXPECTED_DESK_JS = [
     "/assets/saas_theme/js/interaction_finish_v2.js?v=10",
     "/assets/saas_theme/js/workspace_dashboard.js?v=2",
     "/assets/saas_theme/js/native_dashboard_view.js?v=4",
-    "/assets/saas_theme/js/workspace_sidebar_design.js?v=3",
+    "/assets/saas_theme/js/workspace_sidebar_design.js?v=4",
 ]
 
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
@@ -234,6 +234,8 @@ REQUIRED_RUNTIME_GUARDS = {
     "desk_header_finish.css": [
         ".page-head .st-page-utility-actions",
         ".desktop-navbar .search-widget-wrapper",
+        "body #full-search-button",
+        "position: sticky !important;",
         ".st-top-notification-button",
         ".st-top-profile-button",
         '.desktop-avatar',
@@ -253,7 +255,10 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-theme="dark"]',
     ],
     "workspace_sidebar_design.js": [
-        "__st_sidebar_awesomebar_search_v3__",
+        "__st_sidebar_awesomebar_search_v4__",
+        "plainLabel",
+        "form-refresh.st_sidebar_modern",
+        "state.sidebar !== sidebar",
         "get_frequent_links", "get_recent_pages", "get_executables",
         "stopImmediatePropagation",
         "makeSearch(panel)",

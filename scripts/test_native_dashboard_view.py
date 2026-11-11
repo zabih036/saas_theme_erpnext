@@ -108,7 +108,7 @@ def main() -> None:
     assert css_hooks[-4] == "/assets/saas_theme/css/workspace_dashboard_design.css?v=4"
     assert css_hooks[-3] == "/assets/saas_theme/css/native_dashboard_view_design.css?v=4"
     assert css_hooks[-2] == "/assets/saas_theme/css/workspace_sidebar_design.css?v=3"
-    assert css_hooks[-1] == "/assets/saas_theme/css/desk_header_finish.css?v=2"
+    assert css_hooks[-1] == "/assets/saas_theme/css/desk_header_finish.css?v=3"
     assert css_hooks[-6] == "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
     assert "/assets/saas_theme/css/workspace_dashboard.css?v=1" in css_hooks
     assert "/assets/saas_theme/css/home.css?v=13" in css_hooks
