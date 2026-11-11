@@ -1,0 +1,646 @@
+/*
+ * SaaS Theme — Native Workspace Dashboard
+ *
+ * Frappe v16 renders built-in number cards, shortcuts, Dashboard Charts,
+ * link cards, onboarding and quick lists inside [data-page-route="Workspaces"].
+ * This stylesheet changes presentation only. Never replace/reparent widgets,
+ * synthesize KPI values, recolor chart datasets, or intercept native actions.
+ *
+ * The selectors intentionally outrank the historical unscoped widget CSS
+ * in saas_theme.css / precision.css without changing those parity-guarded
+ * compatibility bundles. Custom Home (.st-home-dashboard) is separate.
+ */
+
+/* Workspace-only palette. The Home dashboard shares these visual principles,
+   but its own design tokens and widgets remain independent. */
+[data-page-route="Workspaces"] {
+	--st-ws-canvas: #f6f9fd;
+	--st-ws-surface: #ffffff;
+	--st-ws-soft: #f8faff;
+	--st-ws-border: #dfe8f3;
+	--st-ws-divider: #edf1f7;
+	--st-ws-heading: #254b65;
+	--st-ws-value: #1b3f58;
+	--st-ws-muted: #71869c;
+	--st-ws-primary: #1762ca;
+	--st-ws-primary-soft: #edf4ff;
+	--st-ws-shadow: 0 1px 2px rgba(19, 47, 84, .025), 0 7px 22px rgba(19, 47, 84, .04);
+	--st-ws-shadow-hover: 0 3px 9px rgba(19, 47, 84, .045), 0 13px 32px rgba(19, 47, 84, .075);
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] {
+	--st-ws-canvas: #0b1220;
+	--st-ws-surface: #151e2a;
+	--st-ws-soft: #1b293b;
+	--st-ws-border: #2b3d55;
+	--st-ws-divider: #28394e;
+	--st-ws-heading: #e9f2ff;
+	--st-ws-value: #f0f7ff;
+	--st-ws-muted: #a0b1c8;
+	--st-ws-primary: #78adff;
+	--st-ws-primary-soft: rgba(88, 146, 255, .14);
+	--st-ws-shadow: 0 4px 18px rgba(0, 0, 0, .18);
+	--st-ws-shadow-hover: 0 7px 26px rgba(0, 0, 0, .29);
+}
+
+/* No change to workspace block width, grid columns, drag handles or order. */
+[data-page-route="Workspaces"] .page-body,
+[data-page-route="Workspaces"] .layout-main,
+[data-page-route="Workspaces"] .layout-main-section {
+	background-color: var(--st-ws-canvas) !important;
+}
+
+[data-page-route="Workspaces"] .layout-main-section {
+	color: var(--st-ws-heading);
+}
+
+[data-page-route="Workspaces"] .ce-header,
+[data-page-route="Workspaces"] .widget-group-head .widget-group-title {
+	color: var(--st-ws-heading) !important;
+	font-size: 16px !important;
+	font-weight: 720 !important;
+	letter-spacing: -.02em !important;
+	line-height: 1.4 !important;
+}
+
+[data-page-route="Workspaces"] .ce-delimiter::before {
+	color: var(--st-ws-border) !important;
+}
+
+/* An aligned, reusable card surface for native Frappe widget types. */
+[data-page-route="Workspaces"] :is(
+	.widget.number-widget-box,
+	.widget.shortcut-widget-box,
+	.widget.dashboard-widget-box,
+	.widget.links-widget-box,
+	.widget.quick-list-widget-box
+) {
+	min-width: 0 !important;
+	border: 1px solid var(--st-ws-border) !important;
+	border-radius: 16px !important;
+	background: var(--st-ws-surface) !important;
+	box-shadow: var(--st-ws-shadow) !important;
+	transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease !important;
+}
+
+[data-page-route="Workspaces"] :is(
+	.widget.number-widget-box,
+	.widget.shortcut-widget-box,
+	.widget.dashboard-widget-box,
+	.widget.links-widget-box,
+	.widget.quick-list-widget-box
+) :is(.widget-head, .widget-body, .widget-footer) {
+	background: transparent !important;
+}
+
+[data-page-route="Workspaces"] .widget .widget-label {
+	min-width: 0 !important;
+}
+
+[data-page-route="Workspaces"] .widget .widget-title {
+	color: var(--st-ws-heading) !important;
+	font-weight: 670 !important;
+	letter-spacing: -.01em !important;
+}
+
+[data-page-route="Workspaces"] .widget .widget-title .ellipsis {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+[data-page-route="Workspaces"] :is(
+	.widget.number-widget-box:not(.edit-mode),
+	.widget.shortcut-widget-box:not(.edit-mode),
+	.widget.links-widget-box:not(.edit-mode)
+):hover,
+[data-page-route="Workspaces"] :is(
+	.widget.number-widget-box,
+	.widget.shortcut-widget-box,
+	.widget.links-widget-box
+):focus-within {
+	border-color: #a9c7f3 !important;
+	box-shadow: var(--st-ws-shadow-hover) !important;
+}
+
+/* ------------------------- NUMBER CARDS ------------------------------ */
+/* Frappe Number Card labels, values, stats and menus stay native. */
+[data-page-route="Workspaces"] .widget.number-widget-box {
+	position: relative !important;
+	gap: 8px !important;
+	height: 100% !important;
+	min-height: 140px !important;
+	padding: 19px 20px 17px !important;
+	overflow: visible !important; /* Keep the native Refresh/Edit menu usable. */
+	transform: none;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box::before {
+	content: "" !important;
+	position: absolute !important;
+	inset-inline-start: 20px !important;
+	inset-block-start: -1px !important;
+	left: auto !important;
+	right: auto !important;
+	top: -1px !important;
+	bottom: auto !important;
+	width: 43px !important;
+	height: 3px !important;
+	border-radius: 999px !important;
+	background: var(--st-ws-primary) !important;
+	opacity: .95 !important;
+	pointer-events: none !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-head {
+	min-height: 22px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	align-items: flex-start !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-title,
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-label .widget-title {
+	font-size: 12.5px !important;
+	font-weight: 680 !important;
+	line-height: 1.4 !important;
+	color: var(--st-ws-heading) !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-body {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	padding: 9px 0 0 !important;
+	margin: 0 !important;
+	text-align: start !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-content {
+	display: flex !important;
+	flex: 1 1 auto !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 10px !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	width: 100% !important;
+	text-align: start !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .number {
+	max-width: 100% !important;
+	color: var(--st-ws-value) !important;
+	font-size: clamp(22px, 2vw, 30px) !important;
+	font-weight: 750 !important;
+	line-height: 1.22 !important;
+	letter-spacing: -.025em !important;
+	font-variant-numeric: tabular-nums !important;
+	overflow-wrap: anywhere !important;
+	text-align: start !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .card-stats {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 5px !important;
+	margin: 0 !important;
+	color: var(--st-ws-muted) !important;
+	font-size: 11.5px !important;
+	line-height: 1.5 !important;
+	text-align: start !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .percentage-stat-area {
+	display: inline-flex !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	gap: 3px !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .card-stats.green-stat,
+[data-page-route="Workspaces"] .widget.number-widget-box .card-stats.green-stat .percentage-stat-area {
+	color: #0b936b !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .card-stats.red-stat,
+[data-page-route="Workspaces"] .widget.number-widget-box .card-stats.red-stat .percentage-stat-area {
+	color: #c64e60 !important;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .widget-control {
+	z-index: 2;
+}
+
+[data-page-route="Workspaces"] .widget.number-widget-box .card-actions > a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 26px;
+	min-height: 26px;
+	color: var(--st-ws-muted) !important;
+	border-radius: 8px !important;
+}
+
+/* ------------------------- SHORTCUT CARDS ---------------------------- */
+/* Do not cover the card with a link: Frappe's own click/quick-entry handlers
+   handle routes, count filters, modified keys and edit mode. */
+[data-page-route="Workspaces"] .widget.shortcut-widget-box {
+	display: flex !important;
+	justify-content: center !important;
+	min-height: 76px !important;
+	padding: 14px 16px !important;
+	overflow: visible !important;
+	cursor: pointer;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-head {
+	display: flex !important;
+	align-items: center !important;
+	gap: 12px !important;
+	width: 100% !important;
+	min-height: 42px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: none !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-label {
+	flex: 1 1 auto;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-title {
+	font-size: 13.5px !important;
+	line-height: 1.4 !important;
+	font-weight: 680 !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-control {
+	display: flex !important;
+	align-items: center !important;
+	flex: 0 0 auto !important;
+	gap: 6px !important;
+	color: var(--st-ws-primary) !important;
+}
+
+/* Native Frappe shortcut arrow/count still indicate actual destination/data. */
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-control svg {
+	color: var(--st-ws-primary) !important;
+	stroke: currentColor !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-control .es-badge {
+	border-radius: 8px !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-body:empty,
+[data-page-route="Workspaces"] .widget.shortcut-widget-box .widget-footer:empty {
+	display: none !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box:not(.edit-mode):hover {
+	background: var(--st-ws-primary-soft) !important;
+	transform: translateY(-2px) !important;
+}
+
+[data-page-route="Workspaces"] .widget.shortcut-widget-box:focus-visible {
+	outline: 3px solid var(--st-ws-primary) !important;
+	outline-offset: 2px !important;
+}
+
+/* ------------------------- CHART CARDS ------------------------------- */
+/* Preserve SVG dimensions, tooltips, native filters, empty/loading states,
+   report summary semantics and per-dataset colors. */
+[data-page-route="Workspaces"] .widget.dashboard-widget-box {
+	min-height: 260px !important;
+	padding: 0 !important;
+	overflow: visible !important; /* Chart menu and date popover must escape. */
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-head {
+	display: flex !important;
+	justify-content: space-between !important;
+	align-items: flex-start !important;
+	flex-wrap: wrap !important;
+	gap: 12px !important;
+	min-height: 75px !important;
+	padding: 18px 20px 15px !important;
+	margin: 0 !important;
+	border-bottom: 1px solid var(--st-ws-divider) !important;
+	border-radius: 16px 16px 0 0 !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-label {
+	flex: 1 1 180px;
+	min-width: 0 !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-title {
+	color: var(--st-ws-heading) !important;
+	font-size: 14px !important;
+	font-weight: 730 !important;
+	line-height: 1.4 !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-subtitle {
+	margin-top: 5px !important;
+	color: var(--st-ws-muted) !important;
+	font-size: 11.5px !important;
+	line-height: 1.4 !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-control {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	flex: 0 1 auto !important;
+	flex-wrap: wrap !important;
+	gap: 6px !important;
+	margin-inline-start: auto !important;
+	min-width: 0 !important;
+	z-index: 3;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-control > * {
+	margin: 0 !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box :is(
+	.widget-control .btn,
+	.widget-control .es-button,
+	.filter-chart,
+	.chart-actions .chart-menu
+) {
+	min-height: 30px !important;
+	border: 1px solid var(--st-ws-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-ws-soft) !important;
+	color: var(--st-ws-heading) !important;
+	box-shadow: none !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box :is(
+	.widget-control .btn,
+	.widget-control .es-button,
+	.filter-chart,
+	.chart-actions .chart-menu
+):is(:hover, :focus-visible) {
+	border-color: var(--st-ws-primary) !important;
+	background: var(--st-ws-primary-soft) !important;
+	color: var(--st-ws-primary) !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-body {
+	min-width: 0 !important;
+	padding: 16px 18px 18px !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-footer {
+	padding-inline: 18px !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .chart-container,
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .frappe-chart {
+	max-width: 100%;
+	background: transparent !important;
+}
+
+/* Chart axis and legend polish. Do not force graph height, recolor datasets
+   or alter chart library pointer-events/hover handlers. */
+[data-page-route="Workspaces"] .widget.dashboard-widget-box :is(
+	.chart-label, .tick, .axis-label, .legend-dataset-text, .chart-legend
+) {
+	color: var(--st-ws-muted) !important;
+	fill: var(--st-ws-muted) !important;
+	font-size: 11px !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box :is(
+	.line-vertical, .line-horizontal, .guide-line
+) {
+	stroke: var(--st-ws-divider) !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .report-summary {
+	padding: 14px 16px !important;
+	border: 1px solid var(--st-ws-divider) !important;
+	border-radius: 12px !important;
+	background: var(--st-ws-soft) !important;
+	box-shadow: none !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .report-summary .summary-label {
+	color: var(--st-ws-muted) !important;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .report-summary .summary-value {
+	color: var(--st-ws-value) !important;
+}
+
+/* ------------------------- LINK / QUICK-LIST CARDS ------------------- */
+[data-page-route="Workspaces"] .widget.links-widget-box,
+[data-page-route="Workspaces"] .widget.quick-list-widget-box {
+	padding: 0 0 12px !important;
+	overflow: visible !important;
+}
+
+[data-page-route="Workspaces"] :is(
+	.widget.links-widget-box, .widget.quick-list-widget-box
+) .widget-head {
+	padding: 15px 17px 12px !important;
+	margin: 0 !important;
+	border-bottom: 1px solid var(--st-ws-divider) !important;
+}
+
+[data-page-route="Workspaces"] :is(
+	.widget.links-widget-box, .widget.quick-list-widget-box
+) .widget-title {
+	font-size: 13.5px !important;
+	font-weight: 700 !important;
+}
+
+[data-page-route="Workspaces"] .widget.links-widget-box .widget-body {
+	padding: 5px 12px 0 !important;
+}
+
+[data-page-route="Workspaces"] .widget.links-widget-box .link-item {
+	margin-top: 6px !important;
+	border: 1px solid transparent !important;
+	border-radius: 9px !important;
+	background: var(--st-ws-soft) !important;
+	color: var(--st-ws-heading) !important;
+}
+
+[data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible) {
+	border-color: var(--st-ws-border) !important;
+	background: var(--st-ws-primary-soft) !important;
+	color: var(--st-ws-primary) !important;
+}
+
+[data-page-route="Workspaces"] .widget.links-widget-box .link-item.disabled-link {
+	opacity: .55 !important;
+	cursor: not-allowed !important;
+}
+
+[data-page-route="Workspaces"] .widget.quick-list-widget-box .widget-body {
+	padding: 8px 12px !important;
+}
+
+[data-page-route="Workspaces"] .widget.quick-list-widget-box .quick-list-item {
+	margin: 2px 0 !important;
+	padding: 10px 12px !important;
+	border-radius: 10px !important;
+}
+
+[data-page-route="Workspaces"] .widget.quick-list-widget-box .quick-list-item:hover {
+	background: var(--st-ws-primary-soft) !important;
+}
+
+[data-page-route="Workspaces"] .widget.quick-list-widget-box .widget-footer .see-all {
+	margin: 0 12px 2px !important;
+	border: 1px solid var(--st-ws-border) !important;
+	border-radius: 9px !important;
+	background: var(--st-ws-soft) !important;
+	color: var(--st-ws-primary) !important;
+}
+
+/* Frappe's onboarding, Quick List and Custom HTML blocks have their own
+   behaviors. Do not alter their content/layout/permissions in this pass. */
+
+/* ------------------------- SMALL / RTL / ACCESSIBILITY --------------- */
+@media (max-width: 767px) {
+	[data-page-route="Workspaces"] .widget.number-widget-box {
+		min-height: 125px !important;
+		padding: 16px 16px 14px !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.number-widget-box::before {
+		inset-inline-start: 16px !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.number-widget-box .number {
+		font-size: clamp(22px, 6vw, 28px) !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.shortcut-widget-box {
+		min-height: 65px !important;
+		padding: 11px 13px !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-head {
+		padding: 15px 14px 12px !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-body {
+		padding: 14px 11px 16px !important;
+	}
+}
+
+@media (max-width: 480px) {
+	[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-control {
+		justify-content: flex-start !important;
+		width: 100%;
+		margin-inline-start: 0 !important;
+	}
+
+	[data-page-route="Workspaces"] .widget.dashboard-widget-box .widget-label {
+		flex-basis: 100% !important;
+	}
+}
+
+/* Locale-safe logical spacing rather than forcing left-to-right on
+   money values, legends or Frappe's translated title text. */
+[dir="rtl"] [data-page-route="Workspaces"] .widget.number-widget-box .widget-content,
+[dir="rtl"] [data-page-route="Workspaces"] .widget.number-widget-box .widget-body {
+	text-align: start !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-page-route="Workspaces"] :is(
+		.widget.number-widget-box,
+		.widget.shortcut-widget-box,
+		.widget.dashboard-widget-box,
+		.widget.links-widget-box,
+		.widget.quick-list-widget-box
+	) {
+		transition: none !important;
+	}
+}
+
+/* Dark overrides must outrank the older broad and route-specific theme
+   layers without leaking into report/DataTable or the custom Home page. */
+[data-theme="dark"] [data-page-route="Workspaces"] :is(
+	.widget.number-widget-box,
+	.widget.shortcut-widget-box,
+	.widget.dashboard-widget-box,
+	.widget.links-widget-box,
+	.widget.quick-list-widget-box
+) {
+	background: var(--st-ws-surface) !important;
+	border-color: var(--st-ws-border) !important;
+	color: var(--st-ws-heading) !important;
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box .number,
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.dashboard-widget-box .report-summary .summary-value {
+	color: var(--st-ws-value) !important;
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] .widget :is(
+	.widget-head, .widget-body, .widget-footer
+) {
+	background: transparent !important;
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.shortcut-widget-box:not(.edit-mode):hover,
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible) {
+	background: var(--st-ws-primary-soft) !important;
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box .card-stats.green-stat {
+	color: #50d2aa !important;
+}
+
+[data-theme="dark"] [data-page-route="Workspaces"] .widget.number-widget-box .card-stats.red-stat {
+	color: #ff8894 !important;
+}
+
+
+/* ------------------------- RTL LINK AND CHART FINISH ---------------- */
+/* The earlier Workspace links layer used physical right padding/arrow
+   positions. Flip them for Frappe's RTL languages rather than mirroring
+   numeric values or SVG plots. */
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item {
+	padding-inline-start: 12px !important;
+	padding-inline-end: 38px !important;
+	text-align: start !important;
+}
+
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item::after {
+	content: "↖" !important;
+	right: auto !important;
+	left: 13px !important;
+}
+
+[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible)::after {
+	transform: translate(-2px, -2px) !important;
+}
+
+@media (min-width: 768px) {
+	[dir="rtl"] [data-page-route="Workspaces"] .widget.links-widget-box .link-item:is(:hover, :focus-visible) {
+		transform: translateX(-3px) !important;
+	}
+}
+
+/* Rounded native chart marks: this changes only SVG paint appearance, never
+   series colors, values, axes positions, graph data or hover hit targets. */
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .chart-container rect.bar {
+	rx: 4px;
+	ry: 4px;
+}
+
+[data-page-route="Workspaces"] .widget.dashboard-widget-box .chart-container .line-graph-path {
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+}
