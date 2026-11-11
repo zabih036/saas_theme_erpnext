@@ -97,6 +97,7 @@ Never use file-count reduction as proof that a refactor is better. Runtime parit
 | Main desktop/workspace shell | `saas_theme/public/css/professional_ui.css` / `saas_theme/public/js/professional_ui.js` | Broad desktop shell and workspace rail. |
 | Company/header branding + language selection | `saas_theme/public/css/brand_shell.css` / `saas_theme/public/js/brand_shell.js` | Company identity, existing native user menu cleanup, and **one shared language dialog** for the Home toolbar and the Settings-adjacent profile menu. The language API belongs to `saas_theme/language.py`. |
 | Workspace navigation polish | `saas_theme/public/css/workspace_shell_polish.css` / `saas_theme/public/js/workspace_shell_polish.js` | Workspace-specific navigation refinements only. |
+| Modern native Desk sidebar + global Search | `saas_theme/public/css/workspace_sidebar_design.css` / `saas_theme/public/js/workspace_sidebar_design.js` | Modern light/dark Sidebar items and section spacing, accessible global Search launch in the sidebar, Desktop navbar search suppression only while expanded sidebar is available; native user menu, icons, routes and keyboard shortcuts unchanged. |
 | Final Home-style Workspace KPI and chart treatment | `saas_theme/public/css/workspace_dashboard_design.css` / `saas_theme/public/js/workspace_dashboard.js` | Blue featured first visible native Workspace KPI, decorative (non-data) icon/mini-line, white KPI cards, native shortcuts/charts, responsive/dark/RTL; no Frappe controller patches. |
 | Final Home-style Dashboard View treatment | `saas_theme/public/css/native_dashboard_view_design.css` / `saas_theme/public/js/native_dashboard_view.js` | Independent per-DocType Dashboard View appearance, real Frappe chart summary mini-cards, native KPI visuals, unchanged chart/menu behavior. |
 | Native Workspace dashboard styling | `saas_theme/public/css/workspace_dashboard.css` | Dedicated route-scoped visual owner for standard Frappe v16 number cards, shortcuts, charts, link cards and quick lists. Does not touch custom Home analytics or Frappe widget behavior. |
@@ -877,3 +878,36 @@ Regression coverage now models the real dashboard parent hierarchy, route,
 visible KPI and chart counts, async updates, no duplicate decorations,
 and inactive-route safety. This DOM structure was supplied by the user,
 not inferred from Frappe's older ListView Dashboard implementation.
+
+### Native Workspace compact cards + modern sidebar search (November 2026)
+
+- Compact the existing Workspace-only `workspace_dashboard_design.css` from
+  **142px to 120px KPI cards**, from **70px to 60px shortcut rows**, keeping
+  auto height during editing and 116px minimum on narrow screens. This is
+  a pure Workspace visual change: the separate `#page-dashboard-view`
+  Accounts Dashboard style and its financial calculations remain untouched.
+- Add **`workspace_sidebar_design.css?v=1`** to own the Frappe v16 native
+  `.body-sidebar-container` appearance. Items have a 42px click target,
+  modern typography, icon alignment, clear first-row and native
+  Section Break grouping, subtle hover, quiet borders, a blue selected
+  row, an improved profile footer, dark mode, RTL-safe spacing and
+  reduced-motion handling. Do not reparent/rewrite menu rows or links.
+- Add **`workspace_sidebar_design.js?v=1`** to insert a single Search
+  control directly beneath Frappe's SidebarHeader (before the scrolling
+  menu). It opens **Frappe's own SearchDialog**; no duplicate search
+  implementation, permissions, filtered results or route interception.
+  A sidebar-only `/` shortcut is active only outside editable inputs.
+- **Top navbar search** is hidden using `body.st-sidebar-search-available`
+  only on desktop when the native sidebar is visible (expanded or
+  collapsed as an icon rail). On Home/sidebar-free pages or mobile,
+  the top search remains accessible. Notifications, language selection, user menu,
+  search dialog and Ctrl+K continue working as before.
+- New visual/controller assets are last in their respective Desk hook
+  lists. Existing historical/byte-pinned styles and scripts are not
+  changed or reordered. Cache-bust only the modified Workspace card CSS
+  to `?v=4`. The Dashboard View stays at CSS/JS `v=4`.
+- Verify in Buying and other Workspace sidebars: spacing, collapse,
+  nested sections, Search click and `/`, Edit Workspace, mobile drawer,
+  dark/RTL, user dropdown, global search, keyboard shortcuts and navbar
+  restoration when the sidebar is unavailable. CI includes
+  `scripts/test_modern_sidebar.py` and `scripts/test_modern_sidebar.js`.

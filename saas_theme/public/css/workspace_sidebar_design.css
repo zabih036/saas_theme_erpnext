@@ -1,0 +1,360 @@
+/*
+ * SaaS Theme — sidebar navigation owner (Frappe v16).
+ *
+ * Only the actual left Desk navigation: .body-sidebar-container.
+ * Preserve Frappe item semantics, section-break state, collapse/expand,
+ * user dropdown, mobile drawer, all links, permissions and keyboard search.
+ * No form sidebar, overlay, Home custom sidebar, or chart layout selectors.
+ */
+.body-sidebar-container.st-sidebar-modern {
+	--st-nav-bg: #ffffff;
+	--st-nav-ink: #26445e;
+	--st-nav-muted: #788aa0;
+	--st-nav-line: #e7edf5;
+	--st-nav-hover: #f2f6fc;
+	--st-nav-accent: #135ce1;
+	--st-nav-active-ink: #ffffff;
+	--st-nav-search-bg: #f8faff;
+	--st-nav-shadow: 0 2px 8px rgba(30, 69, 120, .045);
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar {
+	background: var(--st-nav-bg) !important;
+	border-inline-end: 1px solid var(--st-nav-line) !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .sidebar-header {
+	margin-bottom: 2px !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .sidebar-header .header-title {
+	font-weight: 720 !important;
+	letter-spacing: -.012em !important;
+	color: var(--st-nav-ink) !important;
+}
+
+/* The top search *opens Frappe global search*, not a fake local filter. */
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search {
+	padding: 7px 8px 14px !important;
+	margin: 2px 0 6px !important;
+	border-bottom: 1px solid var(--st-nav-line);
+	flex: 0 0 auto !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-control {
+	display: flex !important;
+	align-items: center !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	height: 42px !important;
+	gap: 10px !important;
+	padding: 0 11px !important;
+	border: 1px solid #dce5f1 !important;
+	border-radius: 12px !important;
+	background: var(--st-nav-search-bg) !important;
+	color: var(--st-nav-muted) !important;
+	text-align: start !important;
+	font: inherit !important;
+	font-size: 12.5px !important;
+	font-weight: 520 !important;
+	cursor: pointer !important;
+	box-shadow: 0 1px 3px rgba(33, 71, 118, .035) !important;
+	transition: border-color .17s ease, box-shadow .17s ease, background-color .17s ease !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-control:hover,
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-control:focus-visible {
+	color: var(--st-nav-ink) !important;
+	border-color: rgba(19, 92, 225, .44) !important;
+	background: var(--st-nav-bg) !important;
+	box-shadow: 0 0 0 3px rgba(19, 92, 225, .085) !important;
+	outline: none !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 19px;
+	color: inherit;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-icon svg {
+	width: 19px !important;
+	height: 19px !important;
+	stroke: currentColor !important;
+	fill: none !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-caption {
+	flex: 1 1 auto;
+	min-width: 0;
+	text-align: start;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.body-sidebar-container.st-sidebar-modern .st-sidebar-search-shortcut {
+	display: grid;
+	place-items: center;
+	flex: 0 0 auto;
+	min-width: 24px;
+	height: 23px;
+	padding: 0 6px;
+	border: 1px solid var(--st-nav-line);
+	border-radius: 7px;
+	background: var(--st-nav-bg);
+	color: var(--st-nav-muted);
+	font: inherit;
+	font-size: 11px;
+	font-weight: 690;
+}
+
+/* Respect Frappe's persistent collapsed rail, never widen it. */
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .st-sidebar-search {
+	padding: 6px 0 12px !important;
+	margin: 0 4px 7px !important;
+}
+
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .st-sidebar-search-control {
+	width: 38px !important;
+	height: 38px !important;
+	min-width: 38px !important;
+	padding: 0 !important;
+	margin: 0 auto !important;
+	justify-content: center !important;
+	border-radius: 11px !important;
+}
+
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .st-sidebar-search-caption,
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .st-sidebar-search-shortcut {
+	display: none !important;
+}
+
+/* Actual module navigation rows — Frappe owns their hrefs and click handlers. */
+.body-sidebar-container.st-sidebar-modern .body-sidebar .body-sidebar-top {
+	padding: 5px 8px 16px !important;
+	gap: 0 !important;
+	min-height: 0;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .sidebar-items > .sidebar-item-container {
+	margin: 2px 0 !important;
+}
+
+/* A quiet group break after the landing/dashboard link, when present. */
+.body-sidebar-container.st-sidebar-modern.expanded .body-sidebar .sidebar-items > .sidebar-item-container:first-child:not(.section-item) {
+	padding-bottom: 11px !important;
+	margin-bottom: 12px !important;
+	border-bottom: 1px solid var(--st-nav-line);
+}
+
+/* Real Frappe Section Break nodes provide module grouping; never invent
+ * or rename the administrator's configured section titles. */
+.body-sidebar-container.st-sidebar-modern.expanded .body-sidebar .sidebar-items > .sidebar-item-container.section-item {
+	margin: 16px 0 8px !important;
+	padding-top: 11px !important;
+	border-top: 1px solid var(--st-nav-line);
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item {
+	margin: 0 !important;
+	border-radius: 10px !important;
+	box-shadow: none !important;
+	background: transparent !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item .item-anchor:not(.section-break) {
+	display: flex !important;
+	align-items: center !important;
+	gap: 12px !important;
+	height: 42px !important;
+	min-height: 42px !important;
+	padding: 0 12px !important;
+	margin: 0 !important;
+	border: 1px solid transparent !important;
+	border-radius: 10px !important;
+	background: transparent !important;
+	color: var(--st-nav-ink) !important;
+	transition: color .17s ease, background-color .17s ease, border-color .17s ease !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item .sidebar-item-label {
+	min-width: 0 !important;
+	font-size: 13px !important;
+	font-weight: 580 !important;
+	line-height: 1.38 !important;
+	color: var(--st-nav-ink) !important;
+	letter-spacing: -.012em !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item .sidebar-item-icon {
+	display: inline-flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	flex: 0 0 22px !important;
+	width: 22px !important;
+	height: 24px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	color: var(--st-nav-muted) !important;
+	background: transparent !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item .sidebar-item-icon :is(svg, .icon) {
+	width: 18px !important;
+	height: 18px !important;
+	color: var(--st-nav-muted) !important;
+	stroke: currentColor !important;
+}
+
+/* Soft inactive hover; the current location stays explicitly recognizable. */
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item:not(.active-sidebar):hover {
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item:not(.active-sidebar) .item-anchor:not(.section-break):is(:hover, :focus-visible) {
+	background: var(--st-nav-hover) !important;
+	border-color: var(--st-nav-line) !important;
+	color: var(--st-nav-ink) !important;
+	outline: none !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item.active-sidebar {
+	background: var(--st-nav-accent) !important;
+	border-radius: 11px !important;
+	box-shadow: 0 2px 6px rgba(19, 92, 225, .14) !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item.active-sidebar .item-anchor:not(.section-break) {
+	color: var(--st-nav-active-ink) !important;
+	background: transparent !important;
+	border-color: transparent !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item.active-sidebar :is(
+	.sidebar-item-label, .sidebar-item-icon, .sidebar-item-icon svg, .sidebar-item-icon .icon,
+	.sidebar-item-control, .sidebar-item-control svg
+) {
+	color: var(--st-nav-active-ink) !important;
+	stroke: currentColor !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-label {
+	font-weight: 700 !important;
+}
+
+/* Section-break headings and nested items preserve their native expand logic. */
+.body-sidebar-container.st-sidebar-modern .body-sidebar .section-item > .standard-sidebar-item,
+.body-sidebar-container.st-sidebar-modern .body-sidebar .section-item > .standard-sidebar-item:hover {
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .section-break {
+	min-height: 28px !important;
+	padding: 0 8px !important;
+	margin: 0 !important;
+	color: var(--st-nav-muted) !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .section-break .sidebar-item-label {
+	color: var(--st-nav-muted) !important;
+	font-size: 10.5px !important;
+	font-weight: 740 !important;
+	text-transform: uppercase !important;
+	letter-spacing: .085em !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .nested-container {
+	padding-inline-start: 10px !important;
+	margin: 3px 0 7px !important;
+	border-inline-start: 1px solid var(--st-nav-line);
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .sidebar-item-control :is(.drop-icon, .btn-reset) {
+	border-radius: 8px !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .body-sidebar-bottom {
+	border-top: 1px solid var(--st-nav-line);
+	padding-top: 9px !important;
+	background: var(--st-nav-bg) !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .st-sidebar-persist-toggle {
+	border-radius: 10px !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .dropdown-navbar-user .sidebar-user-button {
+	border-radius: 11px !important;
+	transition: background-color .16s ease !important;
+}
+
+.body-sidebar-container.st-sidebar-modern .body-sidebar .dropdown-navbar-user .sidebar-user-button:hover {
+	background: var(--st-nav-hover) !important;
+}
+
+/* Remove the top command-search surface only while a visible expanded
+ * desktop sidebar search is available. Navbar notifications, language,
+ * user profile and Home's sidebar-free search keep their native positions. */
+@media (min-width: 768px) {
+	body.st-sidebar-search-available .desktop-navbar .search-widget-wrapper,
+	body.st-sidebar-search-available .desktop-navbar .st-home-search-relocated,
+	body.st-sidebar-search-available .page-head .st-top-search,
+	body.st-sidebar-search-available .page-head #small-search-button {
+		display: none !important;
+	}
+}
+
+/* Fully usable in mobile drawer: the navbar search remains accessible
+ * while the drawer is closed, and the same Search button works inside it. */
+@media (max-width: 767px) {
+	.body-sidebar-container.st-sidebar-modern .st-sidebar-search {
+		padding: 8px 11px 14px !important;
+	}
+	.body-sidebar-container.st-sidebar-modern .st-sidebar-search-control {
+		height: 43px !important;
+	}
+	.body-sidebar-container.st-sidebar-modern .body-sidebar .body-sidebar-top {
+		padding-inline: 10px !important;
+	}
+}
+
+/* Frappe is responsible for hiding text in collapsed rail mode. */
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .body-sidebar .body-sidebar-top {
+	padding-inline: 3px !important;
+}
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .body-sidebar .standard-sidebar-item .item-anchor:not(.section-break) {
+	justify-content: center !important;
+	padding: 0 !important;
+}
+.body-sidebar-container.st-sidebar-modern:not(.expanded) .body-sidebar .standard-sidebar-item .sidebar-item-label {
+	display: none !important;
+}
+
+/* Dark tokens are private to navigation and cannot recolor Form sidebar. */
+[data-theme="dark"] .body-sidebar-container.st-sidebar-modern {
+	--st-nav-bg: #151e2c;
+	--st-nav-ink: #e4edf9;
+	--st-nav-muted: #a1b1ca;
+	--st-nav-line: #293b54;
+	--st-nav-hover: #20324a;
+	--st-nav-accent: #1f64d8;
+	--st-nav-search-bg: #1b283c;
+	--st-nav-shadow: 0 2px 9px rgba(0, 0, 0, .19);
+}
+[data-theme="dark"] .body-sidebar-container.st-sidebar-modern .st-sidebar-search-control {
+	border-color: #34475f !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.body-sidebar-container.st-sidebar-modern .body-sidebar :is(
+		.item-anchor, .st-sidebar-search-control, .standard-sidebar-item,
+		.st-sidebar-persist-toggle
+	) {
+		transition: none !important;
+	}
+}
