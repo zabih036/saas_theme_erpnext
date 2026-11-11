@@ -298,10 +298,44 @@
 		});
 	}
 
+
+	/* Repair an inconsistent Frappe v16 inline-grid state: Journal Entry may
+	   show Debit/Credit columns while their row-level Currency docfields remain
+	   hidden. Never override field permissions, dependencies, or other grids. */
+	function repairJournalEntryAmountColumns() {
+		const frm = window.cur_frm;
+		if (frm?.doctype !== "Journal Entry" || Number(frm.doc?.docstatus) !== 0 || frm.doc?.reversal_of) return;
+
+		const grid = frm.fields_dict?.accounts?.grid;
+		if (
+			!grid?.is_editable?.() ||
+			!grid?.allow_on_grid_editing?.() ||
+			!Array.isArray(grid.visible_columns) ||
+			!Array.isArray(grid.grid_rows) ||
+			typeof grid.toggle_display !== "function"
+		) return;
+
+		const visible = new Set(grid.visible_columns.map(([df]) => df?.fieldname));
+		for (const fieldname of ["debit_in_account_currency", "credit_in_account_currency"]) {
+			if (!visible.has(fieldname)) continue;
+
+			const stale = grid.grid_rows.some((row) =>
+				row?.doc && row.columns_list?.some((column) =>
+					column.df?.fieldname === fieldname &&
+					Boolean(column.df.hidden) &&
+					!column.df.hidden_due_to_dependency &&
+					!column.df.read_only
+				)
+			);
+			if (stale) grid.toggle_display(fieldname, true);
+		}
+	}
+
 	function scan() {
 		scanRaf = 0;
 		patchLinkSelector();
 		scanEditors();
+		repairJournalEntryAmountColumns();
 		scanGridPopups();
 		bindScrollContainers();
 		syncTabsAtTop();
