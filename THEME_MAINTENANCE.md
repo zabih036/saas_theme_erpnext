@@ -842,3 +842,38 @@ The current working `version-16` remains the regression baseline throughout the 
 - Cache-bust only changed CSS / Dashboard JS to `?v=3`; retain independent
   Workspace JS `?v=2`. Run `scripts/test_native_design_v2.py`,
   `scripts/test_native_design_v2.js` and all existing CI checks.
+
+### Dashboard / Accounts browser-verified selector correction (2026-11-11)
+
+The user's actual Frappe v16 console confirms route
+`["dashboard-view", "Accounts"]`, URL
+`/desk/accounts/dashboard-view/Accounts`, **four** live
+`.widget.number-widget-box` elements, **six**
+`.widget.dashboard-widget-box` elements, and **zero**
+`.dashboard-view` / `.dashboard-page` elements. The parent hierarchy is:
+
+```
+#page-dashboard-view.content.page-container
+  .page-wrapper
+    .page-content
+      .dashboard
+        .dashboard-graph
+          .widget-group
+            .widget-group-body.grid-col-3
+              .widget.number-widget-box
+```
+
+Fix the **separate Dashboard** design owner only: target
+`#page-dashboard-view .dashboard` throughout
+`native_dashboard_view_design.css` and its JS enhancer. Style all Dashboard
+charts, P&L mini-summary tiles and KPI cards through this route-scoped root,
+including before async JS initialization. The dashboard controller gates
+activation on the actual Frappe route, observes asynchronously inserted chart
+widgets as well as cards, and retains native filters and menus.
+Cache-bust only the changed Dashboard CSS/JS from v3 to **v4**.
+Leave Workspace design CSS/JS and custom Home untouched.
+
+Regression coverage now models the real dashboard parent hierarchy, route,
+visible KPI and chart counts, async updates, no duplicate decorations,
+and inactive-route safety. This DOM structure was supplied by the user,
+not inferred from Frappe's older ListView Dashboard implementation.

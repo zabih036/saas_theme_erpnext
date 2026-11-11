@@ -71,22 +71,26 @@ def check_js(name: str, scope: str, sentinel: str) -> None:
 def main() -> None:
     check_css(WS_STYLE, '[data-page-route="Workspaces"]',
               "st-ws-kpi-v2", "st-ws-kpi-featured")
-    check_css(DV_STYLE, ".dashboard-view",
+    check_css(DV_STYLE, "#page-dashboard-view .dashboard",
               "st-dv-kpi-v2", "st-dv-kpi-featured")
     check_js(WS_SCRIPT, '[data-page-route="Workspaces"]',
              "__st_workspace_card_design_v2__")
-    check_js(DV_SCRIPT, ".dashboard-view",
+    check_js(DV_SCRIPT, "#page-dashboard-view .dashboard",
              "__st_dashboard_view_design_v2__")
 
 
-    # Regression: the last implementation looked correct on Workspace but
-    # skipped native DashboardView completely. The stable root is .dashboard-view
-    # even when Frappe's layout wrapper does not acquire .dashboard-page.
+    # Regression: the live Frappe v16 dashboard-view/Accounts page renders
+    # #page-dashboard-view .dashboard > .dashboard-graph > .widget-group.
+    # Neither .dashboard-view nor .dashboard-page exists in the real browser.
     dashboard_css = (PUBLIC / "css" / DV_STYLE).read_text(encoding="utf-8")
     dashboard_js = (PUBLIC / "js" / DV_SCRIPT).read_text(encoding="utf-8")
     workspace_css = (PUBLIC / "css" / WS_STYLE).read_text(encoding="utf-8")
     assert ".dashboard-page .dashboard-view" not in dashboard_css
-    assert 'const ROOT = ".dashboard-view";' in dashboard_js
+    assert "#page-dashboard-view .dashboard" in dashboard_css
+    assert ".dashboard-graph > .widget-group:first-child" in dashboard_css
+    assert 'const ROOT = "#page-dashboard-view .dashboard";' in dashboard_js
+    assert 'route[0] !== "dashboard-view"' in dashboard_js
+    assert 'widget.dashboard-widget-box' in dashboard_js
     assert "height: 142px !important;" in workspace_css
     assert "height: 70px !important;" in workspace_css
     assert "height: 100% !important;" not in workspace_css
@@ -112,11 +116,11 @@ def main() -> None:
     js = variables["app_include_js"]
     expected_css = [
         ASSET_ROOT + "css/" + WS_STYLE + "?v=3",
-        ASSET_ROOT + "css/" + DV_STYLE + "?v=3",
+        ASSET_ROOT + "css/" + DV_STYLE + "?v=4",
     ]
     expected_js = [
         ASSET_ROOT + "js/" + WS_SCRIPT + "?v=2",
-        ASSET_ROOT + "js/" + DV_SCRIPT + "?v=3",
+        ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
     ]
     assert css[-2:] == expected_css, "New visual rules must outrank all old widget CSS"
     assert js[-2:] == expected_js, "Controllers load after existing Desk widget owners"
