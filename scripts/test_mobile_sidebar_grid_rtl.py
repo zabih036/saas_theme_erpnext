@@ -89,10 +89,10 @@ def main():
                 if isinstance(t,ast.Name) and t.id in ("app_include_css","app_include_js"):
                     values[t.id]=ast.literal_eval(n.value)
     for href in (
-        '/assets/saas_theme/css/brand_shell.css?v=5',
+        '/assets/saas_theme/css/brand_shell.css?v=6',
         '/assets/saas_theme/css/grid_and_action_alignment.css?v=3',
         '/assets/saas_theme/css/mobile_shell.css?v=2',
-        '/assets/saas_theme/js/brand_shell.js?v=3',
+        '/assets/saas_theme/js/brand_shell.js?v=4',
         '/assets/saas_theme/js/mobile_shell.js?v=3',
         '/assets/saas_theme/js/user_theme_menu.js?v=8',
     ):
@@ -101,8 +101,8 @@ def main():
     assert len(set(values["app_include_css"])) == len(values["app_include_css"])
     assert len(set(values["app_include_js"])) == len(values["app_include_js"])
     arch=read(ROOT/"scripts/validate_theme_architecture.py")
-    for tok in ("child_table_ui.css?v=1", "brand_shell.css?v=5",
-                "mobile_shell.css?v=2","brand_shell.js?v=3",
+    for tok in ("child_table_ui.css?v=1", "brand_shell.css?v=6",
+                "mobile_shell.css?v=2","brand_shell.js?v=4",
                 "mobile_shell.js?v=3","user_theme_menu.js?v=8"):
         assert tok in arch, f"architecture missing asset {tok}"
     print("Native grid row selection, mobile Desk drawer and RTL persistent menu contracts passed")
