@@ -29,7 +29,7 @@ def main() -> None:
     ):
         assert marker in nav_css, f"Missing sidebar design: {marker}"
     for marker in (
-        "__st_sidebar_awesomebar_search_v4__", "function makeSearch(panel)",
+        "__st_sidebar_awesomebar_search_v5__", "function makeSearch(panel)",
         "function plainLabel(value)",
         "form-refresh.st_sidebar_modern",
         "state.sidebar !== sidebar",
@@ -85,7 +85,7 @@ def main() -> None:
                       isinstance(t, ast.Name) and t.id == key for t in node.targets))
         for key in ("app_include_css", "app_include_js")
     }
-    assert vals["app_include_css"][-4:] == [
+    assert vals["app_include_css"][-6:-2] == [
         P + "css/workspace_dashboard_design.css?v=4",
         P + "css/native_dashboard_view_design.css?v=4",
         P + "css/workspace_sidebar_design.css?v=4",

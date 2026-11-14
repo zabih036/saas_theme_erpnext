@@ -1,0 +1,92 @@
+/*
+ * SaaS Theme — native Form autocomplete layer.
+ *
+ * Root cause: desk_stability.css intentionally clips each bordered Form
+ * section (.form-layout.st-section-card-form > .form-page > .form-section)
+ * using overflow:hidden!important. Frappe Awesomplete lives INSIDE that
+ * section, so z-index on the Link field cannot escape and subsequent
+ * section cards paint over all but the first suggestion.
+ *
+ * Open ONLY the Form section containing an actively focused/open
+ * Awesomplete. Keep other cards, hidden sections, Grid row editors,
+ * dialogs, Select2, Dashboards and the rest of the app unchanged.
+ */
+
+/* Baseline establishes no stacking level; still keeps existing card
+   borders, shadows and rounded corners in the unfocused state. */
+body .form-layout.st-section-card-form > .form-page > .form-section:not(.hide-control):not(.empty-section) {
+	position: relative !important;
+}
+
+/* Promote the *whole parent card*; promoting only .frappe-control
+   cannot defeat overflow:hidden or the following sibling section. */
+body .form-layout.st-section-card-form > .form-page > .form-section:not(.hide-control):not(.empty-section):is(
+	:has(.awesomplete:focus-within),
+	:has(.awesomplete > ul:not([hidden]))
+) {
+	position: relative !important;
+	overflow: visible !important;
+	isolation: auto !important;
+	z-index: 320 !important; /* below sticky header (1100) and all dialogs */
+}
+
+/* Some standard Form/Translation layouts do not carry st-section-card-form;
+   they can still use bordered sibling .form-section cards. */
+body .form-layout:not(.st-section-card-form) > .form-page > .form-section:is(
+	:has(.awesomplete:focus-within),
+	:has(.awesomplete > ul:not([hidden]))
+),
+body .std-form-layout > .form-section:is(
+	:has(.awesomplete:focus-within),
+	:has(.awesomplete > ul:not([hidden]))
+) {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: 320 !important;
+}
+
+/* Let the suggestions escape nested section content wrappers, but only
+   while their corresponding field is active. A collapsed section retains
+   its native display:none/collapsed state; not forced open. */
+body .form-page .form-section:has(.awesomplete:focus-within) > .section-body:not(.hide),
+body .form-page .form-section:has(.awesomplete > ul:not([hidden])) > .section-body:not(.hide),
+body .std-form-layout .form-section:has(.awesomplete:focus-within) > .section-body:not(.hide),
+body .std-form-layout .form-section:has(.awesomplete > ul:not([hidden])) > .section-body:not(.hide) {
+	overflow: visible !important;
+	isolation: auto !important;
+}
+body .form-page .form-column:has(.awesomplete:focus-within),
+body .form-page .form-column:has(.awesomplete > ul:not([hidden])),
+body .std-form-layout .form-column:has(.awesomplete:focus-within),
+body .std-form-layout .form-column:has(.awesomplete > ul:not([hidden])) {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: 2 !important;
+}
+
+/* In-tab forms must not clip a tall Link result list at the tab/card edge. */
+body .form-tab-content:has(.awesomplete:focus-within),
+body .form-tab-content:has(.awesomplete > ul:not([hidden])),
+body .form-layout.st-section-card-form > .form-page:has(> .form-section .awesomplete:focus-within),
+body .form-layout.st-section-card-form > .form-page:has(> .form-section .awesomplete > ul:not([hidden])) {
+	overflow: visible !important;
+}
+
+/* Present the native list as a usable, independently scrolling surface
+   instead of clipping its remaining options to a single row. */
+body .form-layout .form-section .awesomplete > ul:not([hidden]),
+body .std-form-layout .form-section .awesomplete > ul:not([hidden]) {
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	max-height: min(280px, 42vh) !important;
+	overscroll-behavior: contain;
+	background: var(--fg-color, #fff) !important;
+	box-shadow: 0 14px 32px rgba(22, 48, 89, .13), 0 3px 8px rgba(22, 48, 89, .065) !important;
+	z-index: 3 !important;
+}
+
+/* Never fight Frappe's list visibility state. */
+body .form-layout .form-section .awesomplete > ul[hidden],
+body .std-form-layout .form-section .awesomplete > ul[hidden] {
+	display: none !important;
+}

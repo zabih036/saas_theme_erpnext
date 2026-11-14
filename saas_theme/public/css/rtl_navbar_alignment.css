@@ -1,0 +1,126 @@
+/*
+ * SaaS Theme — Pashto/Dari/Arabic RTL navbar alignment.
+ *
+ * Frappe Desktop DOM: .desktop-navbar > .navbar-home (company logo),
+ * .desktop-navbar > .flex.st-desktop-top-actions (native cloud/search,
+ * personal language button, bell/notification, avatar/profile).
+ *
+ * The existing LTR styles use margin-left:auto!important on the action
+ * group. In RTL that is the WRONG physical edge: it pushes the group back
+ * toward the right, separating it from the expected left-hand corner.
+ * Reset the physical margin and use logical inline-start:auto instead.
+ * Do not move or recreate any Frappe buttons, and do not reverse input
+ * text direction, callback ownership, unread count or native menu logic.
+ */
+
+@media screen {
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar {
+		display: flex !important;
+		direction: rtl !important;
+		flex-direction: row !important;
+		align-items: center !important;
+		justify-content: space-between !important;
+		width: 100% !important;
+		gap: clamp(8px, 1.4vw, 18px) !important;
+	}
+
+	/* Logo stays anchored on the physical right. */
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar > .navbar-home {
+		order: 0 !important;
+		flex: 0 0 auto !important;
+		margin: 0 !important;
+		margin-inline-end: 0 !important;
+	}
+
+	/* All native utilities move TOGETHER to the physical left in RTL.
+	   Earlier desktop_navbar_refinement.css and mobile_shell.css both
+	   set margin-left:auto!important. This rule deliberately cancels it. */
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar > .st-desktop-top-actions {
+		order: 1 !important;
+		direction: rtl !important;
+		display: inline-flex !important;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		justify-content: flex-start !important;
+		align-items: center !important;
+		gap: 7px !important;
+		margin-left: 0 !important;
+		margin-right: auto !important;
+		margin-inline-start: auto !important;
+		margin-inline-end: 0 !important;
+		width: max-content !important;
+		max-width: calc(100% - 76px) !important;
+		min-width: 0 !important;
+	}
+
+	/* Search, language, notification and profile remain native children of
+	   the same flex group, preserving their tab/click/notification handlers. */
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar .st-desktop-top-actions > :is(
+		.st-home-search-relocated, .desktop-cloud-settings,
+		.desktop-notifications, .st-home-language-button,
+		.st-home-language-host, .desktop-avatar
+	) {
+		flex-shrink: 0 !important;
+	}
+
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar .st-desktop-top-actions > .st-home-search-relocated {
+		width: clamp(180px, 24vw, 320px) !important;
+		min-width: 0 !important;
+		max-width: 320px !important;
+		flex: 0 1 320px !important;
+		margin: 0 !important;
+	}
+
+	/* Frappe's search icon sits at the RTL field edge; the English Ctrl+K
+	   shortcut stays legible, while the translated placeholder is RTL. */
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar .st-home-search-relocated .search-widget-button {
+		width: 100% !important;
+		text-align: start !important;
+		justify-content: flex-start !important;
+		direction: rtl !important;
+	}
+
+	/* Other Desk pages (Forms, Lists, Dashboards) have a separate native
+	   .page-head utility group; align it left in RTL without changing
+	   breadcrumbs, action order, or the existing Sidebar search. */
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.page-head .standard-items-section > .st-page-utility-actions {
+		margin-left: 0 !important;
+		margin-right: auto !important;
+		margin-inline-start: auto !important;
+		margin-inline-end: 0 !important;
+		direction: rtl !important;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar > .st-desktop-top-actions {
+		max-width: calc(100% - 65px) !important;
+		gap: 4px !important;
+	}
+
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-wrapper .desktop-navbar .st-desktop-top-actions > .st-home-search-relocated {
+		/* Native mobile search is a compact icon, not a 320px text box. */
+		width: 36px !important;
+		min-width: 36px !important;
+		max-width: 36px !important;
+		flex: 0 0 36px !important;
+	}
+}

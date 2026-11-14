@@ -44,6 +44,8 @@ app_include_css = [
 	"/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
 	"/assets/saas_theme/css/workspace_sidebar_design.css?v=4",
 	"/assets/saas_theme/css/desk_header_finish.css?v=4",
+	"/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
+	"/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
 ]
 
 app_include_js = [

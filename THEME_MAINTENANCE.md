@@ -1032,3 +1032,50 @@ late Form navigation, mobile restoration and untouched Home/profile/filter.
 Existing sidebar regression also verifies that Home Ctrl+K is not stolen.
 No Workspace KPI, Accounts Dashboard chart, form data or Frappe core
 component is modified.
+
+### Form autocomplete cards + RTL Desktop navbar (14 November 2026)
+
+**Issue 1 — Link and Autocomplete dropdown behind the following section.**
+
+The Form section-card owner `desk_stability.css` deliberately sets
+`overflow: hidden !important` on
+`.form-layout.st-section-card-form > .form-page > .form-section`.
+That clips Frappe's nested Awesomplete popup at the card edge; a high
+z-index on the input/UL cannot escape an ancestor's overflow. The result
+is precisely the reported dropdown showing one visible option and hiding
+the rest behind the next Form section.
+
+- New **`form_autocomplete_layer.css?v=1`** is loaded after the existing
+  stylesheets. Only the *currently active* Form section containing a
+  focused/open Awesomplete gets `overflow:visible` and a bounded local
+  z-index (`320`, below the sticky header and dialogs). Its body,
+  column and Form tab wrappers similarly allow the results to extend.
+  The native list has an independently scrollable maximum height of
+  `min(280px,42vh)`. Hidden lists remain hidden.
+- The surrounding sections keep their rounded card appearance and original
+  overflow. Separate child-row editor portals, native modal overlays,
+  Select2 and grid editing are **not modified**.
+
+**Issue 2 — Pashto / RTL navbar layout.**
+
+The Desktop Home native navbar contains `.navbar-home` (the logo) and
+the `.flex.st-desktop-top-actions` group (search, language, notifications
+and avatar). Earlier CSS set `margin-left:auto!important` on the group,
+which is the wrong physical edge after Frappe switches to RTL.
+
+- New **`rtl_navbar_alignment.css?v=1`** applies only to RTL document
+  direction or `ps/fa/ar/ur` language. It fixes the logo at the physical
+  right, cancels the conflicting left auto margin, uses
+  `margin-inline-start:auto` / `margin-right:auto` to place **all**
+  utility controls together at the physical left. Keeps native ordering,
+  click handlers, unread counts and dropdowns untouched.
+- Also aligns Form/List/Dashboard page-header utilities on the left when
+  RTL. Narrow widths use Frappe's compact 36px search icon.
+- LTR layout, normal Home navbar search restoration, full-white sticky
+  header, and theme-specific dark-mode colors are not changed.
+
+The CI test `scripts/test_form_autocomplete_rtl.py` guards the actual
+source of clipping, active-only promotion, native Frappe list visibility,
+RTL physical margins, original Desktop markup and asset load order.
+A final visual check is still required on live Form pages and Home in
+English, Pashto and Dari at desktop/mobile widths.
