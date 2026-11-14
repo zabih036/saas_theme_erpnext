@@ -569,3 +569,124 @@ body > .form-in-grid.st-grid-row-portal .awesomplete > ul > li[aria-selected="tr
 		max-height: min(280px, 40vh) !important;
 	}
 }
+
+
+/* =========================================================
+   QUICK ENTRY / DIALOG LINK ACTIONS — native Frappe v16
+   =========================================================
+   form.css originally paints the WHOLE .link-btn bright blue; the
+   later generic .link-btn>a rule forces inline-flex!important even
+   after ControlLink toggles the actions off. Keep the transparent
+   wrapper and size only the actual native Open/Clear buttons.
+
+   Limit this owner to .modal: full Form, expanded child-row editor,
+   Navbar global search, Link dropdowns and Workspace remain intact.
+*/
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field {
+	position: relative !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn {
+	box-sizing: border-box !important;
+	position: absolute !important;
+	top: 50% !important;
+	right: 5px !important;
+	left: auto !important;
+	transform: translateY(-50%) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 3px !important;
+	width: auto !important;
+	height: 32px !important;
+	min-width: 0 !important;
+	min-height: 32px !important;
+	max-width: calc(100% - 10px) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	color: var(--text-color, #183a5a) !important;
+	box-shadow: none !important;
+	overflow: visible !important;
+	white-space: nowrap !important;
+	z-index: 3 !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn:is(.hide, [style*="display: none"], [style*="display:none"]),
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn > :is(.btn-open, .btn-clear):is(.hide, [style*="display: none"], [style*="display:none"]) {
+	display: none !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn > :is(.btn-open, .btn-clear) {
+	box-sizing: border-box !important;
+	position: relative !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 30px !important;
+	height: 30px !important;
+	min-width: 30px !important;
+	min-height: 30px !important;
+	max-width: 30px !important;
+	max-height: 30px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 1px solid var(--border-color, #d8e4f3) !important;
+	border-radius: 8px !important;
+	background: var(--control-bg, #f2f6fd) !important;
+	color: var(--primary, #0759e6) !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn > :is(.btn-open, .btn-clear):hover {
+	background: var(--subtle-accent, #eaf2ff) !important;
+	border-color: var(--primary, #0759e6) !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field input:is(.form-control, .input-with-feedback) {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	padding-right: 44px !important;
+}
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field:has(> .link-btn:not(.hide, [style*="display: none"], [style*="display:none"])
+> .btn-clear:not(.hide, [style*="display: none"], [style*="display:none"]))
+input:is(.form-control, .input-with-feedback) {
+	padding-right: 77px !important;
+}
+
+/* Native RTL dialog: pin actions physically left, but do not move the
+   actual text, autocomplete menu or Frappe event handling. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl)
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn {
+	right: auto !important;
+	left: 5px !important;
+	direction: ltr !important;
+	flex-direction: row-reverse !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl)
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field input:is(.form-control, .input-with-feedback) {
+	padding-right: 12px !important;
+	padding-left: 44px !important;
+	direction: rtl !important;
+	text-align: right !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl)
+body .modal .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field:has(> .link-btn:not(.hide, [style*="display: none"], [style*="display:none"])
+> .btn-clear:not(.hide, [style*="display: none"], [style*="display:none"]))
+input:is(.form-control, .input-with-feedback) {
+	padding-left: 77px !important;
+}

@@ -485,8 +485,7 @@
 	min-width: 0 !important;
 	max-width: 100% !important;
 }
-.es-menu .st-profile-menu-name,
-.es-menu .st-profile-menu-email {
+.es-menu .st-profile-menu-name {
 	display: block !important;
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
@@ -500,15 +499,57 @@
 	line-height: 1.3 !important;
 	color: var(--text-color, #1e3a54) !important;
 }
-.es-menu .st-profile-menu-email {
-	font-size: 11.5px !important;
-	font-weight: 470 !important;
-	line-height: 1.4 !important;
-	color: var(--text-muted, #73849a) !important;
-}
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
 	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
 .es-menu .st-profile-menu-identity {
 	direction: rtl !important;
 	text-align: right !important;
+}
+
+
+/* Username-only account header: fit INSIDE the actual Frappe popover.
+   Long translated names wrap (up to two lines); there is no email line,
+   no intrinsic width growth, and the account menu stays viewport-safe. */
+.es-menu:has(.st-profile-menu-identity) {
+	box-sizing: border-box !important;
+	max-width: calc(100vw - 16px) !important;
+}
+.es-menu .st-profile-menu-identity {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	overflow: hidden !important;
+	padding: 10px 10px 11px !important;
+	gap: 8px !important;
+}
+.es-menu .st-profile-menu-initial {
+	flex: 0 0 34px !important;
+	width: 34px !important;
+	height: 34px !important;
+}
+.es-menu .st-profile-menu-copy {
+	min-width: 0 !important;
+	max-width: 100% !important;
+	width: 0 !important; /* flex:1 expands only into remaining menu space */
+	flex: 1 1 0 !important;
+	overflow: hidden !important;
+}
+.es-menu .st-profile-menu-name {
+	display: -webkit-box !important;
+	-webkit-box-orient: vertical !important;
+	-webkit-line-clamp: 2 !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	max-height: 2.8em !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	white-space: normal !important;
+	overflow-wrap: anywhere !important;
+	word-break: normal !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	line-height: 1.4 !important;
+	font-size: 13px !important;
 }

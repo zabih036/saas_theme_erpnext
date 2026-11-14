@@ -1290,3 +1290,13 @@ acceptance requires an editable child table (multiple selected rows and
 bulk delete), a read-only table (no injected selectors), RTL horizontally
 scrollable grids, the native profile menu, desktop Collapse menu, and
 mobile navigation.
+
+### Quick Entry Link button, nested header utility gaps, and responsive profile username (14 Nov 2026)
+
+Three follow-up visual fixes, scoped to existing owners:
+
+- `popup_controls.css?v=2` adds selectors **only under `body .modal .frappe-control[data-fieldtype=Link|Dynamic Link]`**. Frappe v16 `ControlLink.make_input()` uses a native `span.link-btn` with `.btn-clear` and `.btn-open`, and its blur handler hides the wrapper. Early `form.css` paints the whole wrapper solid blue; later `ui_consolidation_v7.css` forces `display:inline-flex!important`, defeating Frappe's inline `display:none`. This correction makes the wrapper transparent and borderless, presents only the actual 30px Open/Clear actions as small quiet buttons, respects the native show/hide contract and preserves click targets/URL generation. LTR right padding and RTL left padding reserve 44px for one action and 77px for both. Ordinary Forms and child-row editors remain unaffected.
+- `desktop_navbar_refinement.css?v=3` balances the **Home** language, bell and profile buttons to identical 42×42 rounded-square controls (36×36 under 768px). Crucially the Language button is inserted before the bell **inside `.desktop-notifications`**, not as a direct sibling of the overall utility group; the new nested 9px/6px gaps fix the collision without rearranging notification badges, language saves or avatar-menu handlers. Both LTR and RTL retain their original side-of-header placement.
+- `brand_shell.js?v=5` removes the profile email element rather than just hiding a clipped email string. The existing Frappe menu receives only its avatar initial and safe-text username; its previous email node is cleaned up when a menu survives a hot refresh. `brand_shell.css?v=7` constrains the identity region to the dropdown width and up to two lines of long user names with safe wrapping. Settings, Language, Theme, Reload, and Logout remain original Frappe actions. The sidebar footer remains limited to the Collapse menu action.
+
+Automated source/layout guards: `scripts/test_modal_navbar_profile_responsive.py` and previous profile/grid/navbar/RTL tests remain wired into CI. Visual verification still required in Quick Entry (filled and blank Link fields), Home header, and the User dropdown at mobile and narrow desktop widths.
