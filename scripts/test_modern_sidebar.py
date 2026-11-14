@@ -29,7 +29,7 @@ def main() -> None:
     ):
         assert marker in nav_css, f"Missing sidebar design: {marker}"
     for marker in (
-        "__st_sidebar_awesomebar_search_v4__", "function makeSearch(panel)",
+        "__st_sidebar_awesomebar_search_v5__", "function makeSearch(panel)",
         "function plainLabel(value)",
         "form-refresh.st_sidebar_modern",
         "state.sidebar !== sidebar",
