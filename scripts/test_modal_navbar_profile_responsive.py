@@ -19,7 +19,7 @@ def rule_has(source, selector, declaration):
     return any(selector in sel and declaration in body for sel, body in rules(source))
 
 def main():
-    popup = read(CSS / "popup_controls.css")
+    popup = read(CSS / "modal_link_actions.css")
     navbar = read(CSS / "desktop_navbar_refinement.css")
     brand_css = read(CSS / "brand_shell.css")
     brand_js = read(JS / "brand_shell.js")
@@ -102,7 +102,7 @@ def main():
                 if isinstance(t, ast.Name) and t.id in ("app_include_css", "app_include_js"):
                     vals[t.id] = ast.literal_eval(n.value)
     expected_css = (
-        "/assets/saas_theme/css/popup_controls.css?v=2",
+        "/assets/saas_theme/css/modal_link_actions.css?v=1",
         "/assets/saas_theme/css/desktop_navbar_refinement.css?v=3",
         "/assets/saas_theme/css/brand_shell.css?v=7",
     )
