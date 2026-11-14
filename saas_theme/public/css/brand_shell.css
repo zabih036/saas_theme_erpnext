@@ -435,3 +435,80 @@
 		visibility: visible !important;
 	}
 }
+
+
+/* Profile is permanently available in the Desk header and Desktop Home.
+ * Avoid a second avatar/name/email block in the sidebar footer, so the
+ * Collapse menu action stays uncluttered in either LTR or RTL. */
+.body-sidebar-container .body-sidebar .body-sidebar-bottom > .dropdown-navbar-user {
+	display: none !important;
+}
+
+/* Actual account identity is rendered inside the existing Frappe user
+ * dropdown, ahead of Settings/Language/Theme/Reload/Logout. It is not
+ * a menu action, and cannot steal keyboard selection or close events. */
+.es-menu .st-profile-menu-identity {
+	box-sizing: border-box !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 10px !important;
+	padding: 13px 12px 12px !important;
+	margin: 0 0 5px !important;
+	border-bottom: 1px solid var(--border-color, #e4eaf3) !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	direction: inherit !important;
+	text-align: start !important;
+}
+.es-menu .st-profile-menu-initial {
+	box-sizing: border-box !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	flex: 0 0 38px !important;
+	width: 38px !important;
+	height: 38px !important;
+	border-radius: 50% !important;
+	background: var(--subtle-accent, #e6f7ee) !important;
+	color: var(--text-color, #176b4a) !important;
+	font-size: 14px !important;
+	font-weight: 750 !important;
+	letter-spacing: 0 !important;
+}
+.es-menu .st-profile-menu-copy {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: stretch !important;
+	justify-content: center !important;
+	gap: 3px !important;
+	flex: 1 1 0 !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+}
+.es-menu .st-profile-menu-name,
+.es-menu .st-profile-menu-email {
+	display: block !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+	text-align: start !important;
+	unicode-bidi: plaintext !important;
+}
+.es-menu .st-profile-menu-name {
+	font-size: 13px !important;
+	font-weight: 720 !important;
+	line-height: 1.3 !important;
+	color: var(--text-color, #1e3a54) !important;
+}
+.es-menu .st-profile-menu-email {
+	font-size: 11.5px !important;
+	font-weight: 470 !important;
+	line-height: 1.4 !important;
+	color: var(--text-muted, #73849a) !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.es-menu .st-profile-menu-identity {
+	direction: rtl !important;
+	text-align: right !important;
+}
