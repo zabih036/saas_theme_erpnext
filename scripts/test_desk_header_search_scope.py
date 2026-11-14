@@ -98,7 +98,7 @@ def main() -> None:
                     "app_include_css", "app_include_js"
                 ):
                     assets[target.id] = ast.literal_eval(node.value)
-    assert assets["app_include_css"][-2:] == [
+    assert assets["app_include_css"][-4:-2] == [
         P + "css/workspace_sidebar_design.css?v=4",
         P + "css/desk_header_finish.css?v=4",
     ]

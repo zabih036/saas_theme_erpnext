@@ -41,6 +41,7 @@ on:
       - 'scripts/test_modern_sidebar.js'
       - 'scripts/test_desk_header_search.js'
       - 'scripts/test_desk_header_search_scope.py'
+      - 'scripts/test_form_autocomplete_rtl.py'
       - 'scripts/check_theme_deployment.sh'
       - 'README.md'
       - 'scripts/test_search_report_refinements.js'
@@ -116,6 +117,7 @@ jobs:
           python3 scripts/test_desk_header_search_scope.py
           node --check saas_theme/public/js/desk_header_search.js
           node scripts/test_desk_header_search.js
+          python3 scripts/test_form_autocomplete_rtl.py
       - name: Validate deployment checker shell syntax
         run: bash -n scripts/check_theme_deployment.sh
       - name: Validate native Dashboard View card and chart styling

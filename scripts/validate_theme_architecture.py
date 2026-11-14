@@ -46,6 +46,8 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/native_dashboard_view_design.css?v=4",
     "/assets/saas_theme/css/workspace_sidebar_design.css?v=4",
     "/assets/saas_theme/css/desk_header_finish.css?v=4",
+    "/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
+    "/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
 ]
 
 EXPECTED_DESK_JS = [
@@ -111,6 +113,8 @@ KNOWN_CSS_FILES = {
     "workspace_dashboard_design.css",
     "workspace_sidebar_design.css",
     "desk_header_finish.css",
+    "form_autocomplete_layer.css",
+    "rtl_navbar_alignment.css",
     "native_dashboard_view_design.css",
     "native_dashboard_view.css",
 }
@@ -232,6 +236,26 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-theme="dark"]',
         '@media (max-width: 767px)',
         '@media (prefers-reduced-motion: reduce)',
+    ],
+    "form_autocomplete_layer.css": [
+        ".form-layout.st-section-card-form > .form-page > .form-section",
+        ":has(.awesomplete:focus-within)",
+        "overflow: visible !important;",
+        "z-index: 320 !important;",
+        "max-height: min(280px, 42vh)",
+        ".awesomplete > ul[hidden]",
+    ],
+    "rtl_navbar_alignment.css": [
+        'html[dir="rtl"]',
+        "html:dir(rtl)",
+        'html[lang^="ps"]',
+        ".desktop-wrapper .desktop-navbar > .navbar-home",
+        ".desktop-wrapper .desktop-navbar > .st-desktop-top-actions",
+        "margin-left: 0 !important;",
+        "margin-right: auto !important;",
+        ".st-home-language-button",
+        ".desktop-notifications",
+        ".desktop-avatar",
     ],
     "desk_header_finish.css": [
         ".page-head .st-page-utility-actions",
