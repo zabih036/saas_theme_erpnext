@@ -48,9 +48,9 @@ EXPECTED_DESK_CSS = [
     "/assets/saas_theme/css/desk_header_finish.css?v=4",
     "/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
     "/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
-    "/assets/saas_theme/css/rtl_workspace_kpi.css?v=1",
-    "/assets/saas_theme/css/rtl_dashboard_cards.css?v=1",
-    "/assets/saas_theme/css/rtl_form_link_actions.css?v=1",
+    "/assets/saas_theme/css/rtl_workspace_kpi.css?v=2",
+    "/assets/saas_theme/css/rtl_dashboard_cards.css?v=2",
+    "/assets/saas_theme/css/rtl_form_link_actions.css?v=2",
 ]
 
 EXPECTED_DESK_JS = [
@@ -255,6 +255,7 @@ REQUIRED_RUNTIME_GUARDS = {
         '[data-page-route="Workspaces"]',
         ".widget.number-widget-box.st-ws-kpi-v2",
         "clip-path: circle(0% at 0% 0%)",
+        "left: 58px !important;",
         "direction: ltr !important;",
         "unicode-bidi: isolate !important;",
         "border-radius: 16px 0 90px 0 !important;",
@@ -263,6 +264,7 @@ REQUIRED_RUNTIME_GUARDS = {
         "#page-dashboard-view .dashboard",
         ".widget.number-widget-box.st-dv-kpi-v2",
         ".report-summary .summary-label",
+        "left: 58px !important;",
         "font-size: 13.5px !important;",
         "white-space: normal !important;",
         "border-radius: 16px 0 90px 0 !important;",
@@ -273,8 +275,10 @@ REQUIRED_RUNTIME_GUARDS = {
         ".link-field > .link-btn",
         "left: 5px !important;",
         "right: auto !important;",
-        "padding-left: 72px !important;",
+        "padding-left: 44px !important;",
+        "padding-left: 76px !important;",
         "padding-right: 12px !important;",
+        "text-align: right !important;",
     ],
     "rtl_navbar_alignment.css": [
         'html[dir="rtl"]',

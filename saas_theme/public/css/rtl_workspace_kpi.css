@@ -46,9 +46,12 @@
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
 	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
 [data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave {
-	inset-inline-end: 17px !important;
-	left: 17px !important;
+	/* Place the waveform BESIDE the 25px Open icon, not beneath it.
+	   Old left:17px overlapped the icon's left:14px..39px footprint. */
+	inset-inline-end: 58px !important;
+	left: 58px !important;
 	right: auto !important;
+	width: min(72px, calc(100% - 88px)) !important;
 }
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
 	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])

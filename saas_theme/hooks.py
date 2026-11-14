@@ -46,9 +46,9 @@ app_include_css = [
 	"/assets/saas_theme/css/desk_header_finish.css?v=4",
 	"/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
 	"/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
-	"/assets/saas_theme/css/rtl_workspace_kpi.css?v=1",
-	"/assets/saas_theme/css/rtl_dashboard_cards.css?v=1",
-	"/assets/saas_theme/css/rtl_form_link_actions.css?v=1",
+	"/assets/saas_theme/css/rtl_workspace_kpi.css?v=2",
+	"/assets/saas_theme/css/rtl_dashboard_cards.css?v=2",
+	"/assets/saas_theme/css/rtl_form_link_actions.css?v=2",
 ]
 
 app_include_js = [
