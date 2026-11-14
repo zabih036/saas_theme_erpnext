@@ -80,14 +80,20 @@ def main() -> None:
         for icon in ("icon", "wave", "open"):
             assert rule_has(content, "." + prefix + "-" + icon,
                             "right: auto !important;"), f"{name} {icon} RTL location"
-        # In the reported screenshot the old wave began at left:17px,
-        # overlapping the decorative Open icon at left:14px (25px wide).
-        # Keep them as disjoint left-side elements on RTL cards.
-        assert rule_has(content, "." + prefix + "-wave", "left: 58px !important;")
-        assert rule_has(content, "." + prefix + "-wave",
-                        "inset-inline-end: 58px !important;")
+        # English sparkline stays right-anchored and rises on the right.
+        # RTL must be the true *mirror*: left:17px + scaleX(-1), with
+        # the rising edge near the left Open icon, safely ABOVE its top.
+        assert rule_has(content, "." + prefix + "-wave", "left: 17px !important;")
+        assert rule_has(content, "." + prefix + "-wave", "inset-inline-end: 17px !important;")
+        assert rule_has(content, "." + prefix + "-wave", "inset-block-end: 27px !important;")
+        assert rule_has(content, "." + prefix + "-wave svg",
+                        "transform: scaleX(-1) !important;")
         assert rule_has(content, "." + prefix + "-open", "left: 14px !important;")
-        assert 58 >= 14 + 25 + 12, f"{name}: RTL sparkline overlaps Open icon"
+        # At the left edge the path is at SVG y=3/34 of a 31px-high
+        # decoration. The icon occupies [bottom:12px, top:37px].
+        wave_left_tip_from_bottom = 27 + (34 - 3) * 31 / 34
+        open_icon_top_from_bottom = 12 + 25
+        assert wave_left_tip_from_bottom - open_icon_top_from_bottom > 15
         assert rule_has(content, card + " .number",
                         "unicode-bidi: isolate !important;")
         assert rule_has(content, card + " .number",
@@ -99,6 +105,25 @@ def main() -> None:
 
     # Profit & Loss: these are real ChartWidget .report-summary children,
     # including long Pashto/Dari translations. Labels must remain visible.
+    # English/LTR is a separate presentation contract: label and numeric
+    # value should be centered together, not stranded at the left.
+    for marker in (
+        ":root:dir(ltr) body:dir(ltr)",
+        "align-items: center !important;",
+        "justify-content: center !important;",
+        "text-align: center !important;",
+        "font-size: 13px !important;",
+        "font-weight: 690 !important;",
+        "direction: ltr !important;",
+        "unicode-bidi: isolate !important;",
+    ):
+        assert marker in dv_base, f"Missing English P&L layout: {marker}"
+    assert rule_has(dv_base, ".report-summary > .summary-item",
+                    "align-items: center !important;")
+    assert rule_has(dv_base, ".report-summary .summary-label",
+                    "text-align: center !important;")
+    assert rule_has(dv_base, ".report-summary :is(.summary-value, .summary-value div)",
+                    "text-align: center !important;")
     assert "> .report-summary" in dv_base
     assert rule_has(dv_base, ".summary-label", "font-size: 11.5px !important;")
     assert rule_has(dashboard, ".report-summary .summary-label",
@@ -127,6 +152,7 @@ def main() -> None:
         "left: 5px !important;",
         "right: auto !important;",
         "max-width: calc(100% - 10px) !important;",
+        "flex-direction: row-reverse !important;",
         "top: 50% !important;",
         "transform: translateY(-50%) !important;",
         "padding-left: 44px !important;",
@@ -151,6 +177,11 @@ def main() -> None:
     assert len(action_rules) == 1, "Exactly one positioning owner for RTL Link actions"
     assert "left: 5px !important;" in action_rules[0]
     assert "right: auto !important;" in action_rules[0]
+    assert "flex-direction: row-reverse !important;" in action_rules[0]
+    assert "direction: ltr !important;" in action_rules[0]
+    # A Frappe Link field uses Clear first and Open second in the DOM.
+    # Row-reverse makes the second child (Open) physically LEFT, even if
+    # a disabled Clear control retained width from older global CSS.
     assert "inset-inline-" not in action_rules[0], "Logical inset conflicts with LTR icon internals"
 
     # A 104px screenshot-width field now leaves actual text room:
@@ -170,9 +201,9 @@ def main() -> None:
         )
     )
     assert includes[-3:] == [
-        PREFIX + "rtl_workspace_kpi.css?v=2",
-        PREFIX + "rtl_dashboard_cards.css?v=2",
-        PREFIX + "rtl_form_link_actions.css?v=2",
+        PREFIX + "rtl_workspace_kpi.css?v=3",
+        PREFIX + "rtl_dashboard_cards.css?v=3",
+        PREFIX + "rtl_form_link_actions.css?v=3",
     ]
     assert len(set(includes)) == len(includes)
     manifest = ARCH.read_text(encoding="utf-8")

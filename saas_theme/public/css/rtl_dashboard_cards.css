@@ -42,12 +42,22 @@
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
 	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
 #page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave {
-	/* Place the waveform BESIDE the 25px Open icon, not beneath it.
-	   Old left:17px overlapped the icon's left:14px..39px footprint. */
-	inset-inline-end: 58px !important;
-	left: 58px !important;
+	/* Match the English composition after mirroring the SVG: the
+	   waveform rises above the left Open icon instead of shifting
+	   away from it or crossing its visible outline. */
+	inset-inline-end: 17px !important;
+	left: 17px !important;
 	right: auto !important;
-	width: min(88px, calc(100% - 88px)) !important;
+	inset-block-end: 27px !important; /* clear the Open icon's top edge */
+	width: 88px !important;
+}
+/* The original Frappe-independent decorative SVG rises on the RIGHT.
+   Flip its drawing in RTL, not the card or its native currency data. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave svg {
+	transform: scaleX(-1) !important;
+	transform-origin: center !important;
 }
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
 	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])

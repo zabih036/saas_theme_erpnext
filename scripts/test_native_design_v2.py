@@ -116,7 +116,7 @@ def main() -> None:
     js = variables["app_include_js"]
     expected_css = [
         ASSET_ROOT + "css/" + WS_STYLE + "?v=4",
-        ASSET_ROOT + "css/" + DV_STYLE + "?v=4",
+        ASSET_ROOT + "css/" + DV_STYLE + "?v=5",
         ASSET_ROOT + "css/workspace_sidebar_design.css?v=4",
     ]
     expected_js = [

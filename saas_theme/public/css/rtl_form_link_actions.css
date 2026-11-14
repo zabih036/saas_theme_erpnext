@@ -1,5 +1,5 @@
 /*
- * RTL native Form Link / Dynamic Link text-safe action geometry — v2.
+ * RTL native Form Link / Dynamic Link text-safe action geometry — v3.
  *
  * The Frappe v16 ControlLink template contains:
  *   .link-field > input.input-with-feedback.form-control + span.link-btn
@@ -46,6 +46,14 @@
 	padding: 1px !important;
 	max-width: calc(100% - 10px) !important;
 	direction: ltr !important;
+	/* Frappe DOM is Clear first, Open second. A hidden Clear could
+	   still consume space under older global display:inline-flex rules.
+	   Row-reverse pins Open nearest the LEFT edge regardless of that
+	   state; Clear remains immediately to its right when enabled. */
+	display: inline-flex !important;
+	flex-direction: row-reverse !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
 	white-space: nowrap !important;
 	z-index: 3 !important;
 }

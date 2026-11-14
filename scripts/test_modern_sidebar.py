@@ -87,7 +87,7 @@ def main() -> None:
     }
     assert vals["app_include_css"][-9:-5] == [
         P + "css/workspace_dashboard_design.css?v=4",
-        P + "css/native_dashboard_view_design.css?v=4",
+        P + "css/native_dashboard_view_design.css?v=5",
         P + "css/workspace_sidebar_design.css?v=4",
         P + "css/desk_header_finish.css?v=4",
     ]
