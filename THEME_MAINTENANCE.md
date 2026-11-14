@@ -1206,7 +1206,7 @@ with a native `input.grid-row-check` next to the 40px row index. Frappe
 for the row index, then uses checkbox click/checked state to activate
 the native `Delete row` / `Delete N rows` actions. Old theme
 `precision.css` overrode the cell minimum to 36px. Revised
-`child_table_ui.css?v=2`, loaded by `user_theme_menu.js?v=9`,
+`grid_and_action_alignment.css?v=3`, loaded directly in the Desk assets,
 restores the native 31/40 geometry, keeps enabled checkboxes visible
 and clickable, and pins the two cells at the **physical right** of
 horizontally scrolling RTL tables. It does not introduce deletion logic
@@ -1234,3 +1234,10 @@ Frappe still owns sidebar expanded/collapsed state and persistence.
 Test all three in Pashto/Dari and English, with a child table with
 editable rows, a disabled/read-only table, Dashboard / Accounts mobile
 at widths <768px, Home mobile, and desktop sidebar collapse.
+
+The initial implementation in PR #126 briefly edited the protected late-loaded
+`child_table_ui.css`; CI rejected that because the project audits its original
+compatibility asset. The final correction intentionally restores that file and
+`user_theme_menu.js` **byte-for-byte**, moving only the selection geometry
+to the already existing `grid_and_action_alignment.css?v=3` owner.
+The original late-loader checks continue to run unchanged.

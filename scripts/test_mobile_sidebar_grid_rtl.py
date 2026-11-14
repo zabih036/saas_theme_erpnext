@@ -13,7 +13,7 @@ def has_rule(src, selector, value):
     return any(selector in m.group(1) and value in m.group(2)
                for m in re.finditer(r"([^{}]+)\{([^{}]*)\}",stripped,re.S))
 def main():
-    grid=read(CSS/"child_table_ui.css")
+    grid=read(CSS/"grid_and_action_alignment.css")
     mobile=read(CSS/"mobile_shell.css")
     mjs=read(JS/"mobile_shell.js")
     brand=read(CSS/"brand_shell.css")
@@ -32,7 +32,7 @@ def main():
     assert has_rule(grid,".row-check:not(.search)","flex: 0 0 31px !important;")
     assert has_rule(grid,"input.grid-row-check:not(.invisible)","visibility: visible !important;")
     assert "onclick" not in grid and "Delete {0} rows" not in grid
-    assert 'child_table_ui.css?v=2' in late
+    assert 'child_table_ui.css?v=1' in late
 
     for token in (
         'function ensure_mobile_navigation_toggle()', 
@@ -90,19 +90,20 @@ def main():
                     values[t.id]=ast.literal_eval(n.value)
     for href in (
         '/assets/saas_theme/css/brand_shell.css?v=5',
+        '/assets/saas_theme/css/grid_and_action_alignment.css?v=3',
         '/assets/saas_theme/css/mobile_shell.css?v=2',
         '/assets/saas_theme/js/brand_shell.js?v=3',
         '/assets/saas_theme/js/mobile_shell.js?v=3',
-        '/assets/saas_theme/js/user_theme_menu.js?v=9',
+        '/assets/saas_theme/js/user_theme_menu.js?v=8',
     ):
         arr=values["app_include_css"] if "/css/" in href else values["app_include_js"]
         assert arr.count(href)==1, href
     assert len(set(values["app_include_css"])) == len(values["app_include_css"])
     assert len(set(values["app_include_js"])) == len(values["app_include_js"])
     arch=read(ROOT/"scripts/validate_theme_architecture.py")
-    for tok in ("child_table_ui.css?v=2", "brand_shell.css?v=5",
+    for tok in ("child_table_ui.css?v=1", "brand_shell.css?v=5",
                 "mobile_shell.css?v=2","brand_shell.js?v=3",
-                "mobile_shell.js?v=3","user_theme_menu.js?v=9"):
+                "mobile_shell.js?v=3","user_theme_menu.js?v=8"):
         assert tok in arch, f"architecture missing asset {tok}"
     print("Native grid row selection, mobile Desk drawer and RTL persistent menu contracts passed")
 
