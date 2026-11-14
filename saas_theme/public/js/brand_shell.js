@@ -352,6 +352,74 @@
 		});
 	}
 
+	/*
+	 * One readable identity block inside the existing top-right profile
+	 * Dropdown. The duplicate profile row at the bottom of the sidebar
+	 * is hidden by brand_shell.css; this keeps the name and email visible
+	 * where the user actually opens Settings / Language / Logout.
+	 *
+	 * Match the same three native Frappe user-menu actions used by the
+	 * existing language chooser. Never modify unrelated .es-menu menus.
+	 */
+	function ensure_profile_identity_menu(root) {
+		if (frappe.session?.user === "Guest") return;
+		const $root = root ? $(root) : $(document);
+		const menus = $root.filter(".es-menu")
+			.add($root.find(".es-menu"))
+			.add($root.closest(".es-menu"));
+		menus.each(function () {
+			const menu = this;
+			const rows = Array.from(menu.querySelectorAll(".es-menu__item"));
+			if (!rows.length) return;
+			const label = row => String(
+				row.querySelector(".es-menu__label")?.textContent || row.textContent || ""
+			).replace(/\s+/g, " ").trim();
+			const labels = new Set(rows.map(label));
+			if (![__("Settings"), __("Reload"), __("Logout")].every(value => labels.has(value))) {
+				return; // Not the standard Frappe account dropdown.
+			}
+			const name = String(
+				frappe.boot?.user?.full_name ||
+				frappe.boot?.user_info?.[frappe.session.user]?.fullname ||
+				frappe.session?.user_fullname ||
+				frappe.session.user
+			).trim();
+			const email = String(
+				frappe.boot?.user?.email ||
+				frappe.boot?.user_info?.[frappe.session.user]?.email ||
+				frappe.session.user
+			).trim();
+			const parent = rows[0].parentElement;
+			if (!parent) return;
+			let identity = menu.querySelector(".st-profile-menu-identity");
+			if (!identity) {
+				identity = document.createElement("div");
+				identity.className = "st-profile-menu-identity";
+				identity.setAttribute("role", "presentation");
+				const avatar = document.createElement("span");
+				avatar.className = "st-profile-menu-initial";
+				avatar.setAttribute("aria-hidden", "true");
+				const copy = document.createElement("span");
+				copy.className = "st-profile-menu-copy";
+				const title = document.createElement("span");
+				title.className = "st-profile-menu-name";
+				const address = document.createElement("span");
+				address.className = "st-profile-menu-email";
+				copy.append(title, address);
+				identity.append(avatar, copy);
+			}
+			identity.querySelector(".st-profile-menu-initial").textContent =
+				Array.from(name)[0]?.toLocaleUpperCase() || "U";
+			identity.querySelector(".st-profile-menu-name").textContent = name;
+			identity.querySelector(".st-profile-menu-email").textContent = email;
+			// Top of the existing menu group, before Settings. Frappe owns
+			// keyboard navigation, actions, and the menu's open/close state.
+			if (identity.parentElement !== parent || parent.firstElementChild !== identity) {
+				parent.insertBefore(identity, parent.firstElementChild);
+			}
+		});
+	}
+
 	function ensure_user_language_menu(root) {
 		const $root = root ? $(root) : $(document);
 		const $menus = $root.filter(".es-menu")
@@ -497,6 +565,7 @@
 		remove_desktop_about(root);
 		remove_open_sidebar_help(root);
 		ensure_user_language_menu(root);
+		ensure_profile_identity_menu(root);
 	}
 
 	function setup_observer() {

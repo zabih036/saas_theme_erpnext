@@ -1,0 +1,120 @@
+/*
+ * Native Frappe v16 child-grid row selection.
+ * Scoped exclusively to writable, deletable Form grids after their real
+ * grid controller has been verified by grid_row_selection_repair.js.
+ *
+ * Keep Frappe's own click delegation, doc.__checked, Delete row,
+ * pagination, permissions and read-only status fully intact.
+ */
+.form-grid.st-grid-row-selection-ready .grid-heading-row .row-check:not(.search),
+.form-grid.st-grid-row-selection-ready .grid-body .grid-row[data-name] .data-row > .row-check:not(.search) {
+	box-sizing: border-box !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	flex: 0 0 31px !important;
+	width: 31px !important;
+	min-width: 31px !important;
+	max-width: 31px !important;
+	height: auto !important;
+	min-height: 40px !important;
+	padding: 0 5px !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: sticky !important;
+	left: 0 !important;
+	right: auto !important;
+	z-index: 8 !important;
+}
+.form-grid.st-grid-row-selection-ready .grid-heading-row .row-check:not(.search) {
+	z-index: 10 !important;
+}
+.form-grid.st-grid-row-selection-ready .grid-body .grid-row[data-name] .row-index,
+.form-grid.st-grid-row-selection-ready .grid-heading-row .row-index {
+	box-sizing: border-box !important;
+	width: 40px !important;
+	min-width: 40px !important;
+	max-width: 40px !important;
+	flex: 0 0 40px !important;
+	position: sticky !important;
+	left: 31px !important;
+	right: auto !important;
+	z-index: 7 !important;
+}
+
+/* Use the browser's proven checkbox painting rather than relying on
+   a transparent SVG/image or an empty pseudo-element. The native
+   input remains the actual target handled by Frappe Grid.setup_check(). */
+.form-grid.st-grid-row-selection-ready :is(.grid-heading-row, .grid-body .grid-row[data-name])
+.row-check:not(.search) > input.grid-row-check {
+	-webkit-appearance: checkbox !important;
+	appearance: auto !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: relative !important;
+	inset: auto !important;
+	transform: none !important;
+	clip: auto !important;
+	clip-path: none !important;
+	pointer-events: auto !important;
+	width: 17px !important;
+	height: 17px !important;
+	min-width: 17px !important;
+	max-width: 17px !important;
+	min-height: 17px !important;
+	max-height: 17px !important;
+	margin: 0 auto !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 4px !important;
+	background: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	accent-color: var(--primary, #155de3) !important;
+	cursor: pointer !important;
+	z-index: 1 !important;
+}
+.form-grid.st-grid-row-selection-ready :is(.grid-heading-row, .grid-body .grid-row[data-name])
+.row-check:not(.search) > input.grid-row-check:focus-visible {
+	outline: 2px solid var(--primary, #155de3) !important;
+	outline-offset: 2px !important;
+}
+.form-grid.st-grid-row-selection-ready .grid-body .grid-row[data-name]:has(input.grid-row-check:checked)
+> .data-row :is(.row-check, .row-index, .grid-static-col) {
+	background-color: var(--subtle-accent, #edf4ff) !important;
+}
+
+/* The first (checkbox) and second (row index) cells mirror together
+   in Pashto/Dari. This also works when the field is horizontally
+   scrollable; do not reverse the entire grid or its business data. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.form-grid.st-grid-row-selection-ready :is(.grid-heading-row, .grid-body .grid-row[data-name])
+.row-check:not(.search) {
+	left: auto !important;
+	right: 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.form-grid.st-grid-row-selection-ready :is(.grid-heading-row, .grid-body .grid-row[data-name])
+.row-index {
+	left: auto !important;
+	right: 31px !important;
+}
+
+
+/* Crucial RTL collision: Frappe core pins the LAST action column at
+   physical right:0 for every language. The checkbox (first column)
+   also belongs at physical right:0 in RTL. Without mirroring the
+   action column, its opaque surface can cover the selector entirely.
+   Preserve actions, move only their sticky anchor to physical left. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.form-grid.st-grid-row-selection-ready .grid-row > .row
+> .col:last-child:not(.grid-data-last):not(.row-check):not(.row-index) {
+	right: auto !important;
+	left: 0 !important;
+	z-index: 4 !important;
+}

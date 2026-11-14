@@ -1241,3 +1241,52 @@ compatibility asset. The final correction intentionally restores that file and
 `user_theme_menu.js` **byte-for-byte**, moving only the selection geometry
 to the already existing `grid_and_action_alignment.css?v=3` owner.
 The original late-loader checks continue to run unchanged.
+
+
+### Child-grid native checkbox restored and profile identity consolidated (14 November 2026)
+
+Screenshots after PR #126 showed that a writable Frappe v16 child table still
+presented a **blank row-selection column** at the right, while its Delete row
+footer was visible. Moving only the first cell to \`right:0\` in RTL was not
+sufficient because Frappe's own grid.scss also pins the **last action column**
+at physical \`right:0\`; its opaque surface can cover the checkbox. The new
+\`grid_row_selection.css?v=1\` is scoped to
+\`.form-grid.st-grid-row-selection-ready\`, leaving read-only and
+cannot_delete_rows tables unchanged. It gives the existing browser-native
+checkbox a visible 17px painted control, maintains Frappe's 31px selector
+and 40px number geometry, and mirrors the final sticky **action column**
+to \`left:0\` when RTL while selector/index remain right-anchored.
+
+The accompanying \`grid_row_selection_repair.js?v=1\` resolves the actual
+\`cur_frm.fields_dict[fieldname].grid\` controller for each Form table and
+requires \`is_editable()\`, \`display_status === "Write"\`, valid native
+\`remove_rows_button\` and \`!df.cannot_delete_rows\`. On rerender, if a
+native \`input.grid-row-check\` was truly missing, it creates **only that
+input**, preserving the \`doc.__checked\` state and the Frappe grid row
+\`data-name\`. The Frappe **Grid.setup_check** delegated listener still
+owns clicks, selected children, bulk Delete/Copy/Edit actions, permission
+validation and confirmation. It does not introduce a delete handler or
+call server APIs; MutationObserver skips its own injected nodes. It also
+never injects a control into Grid filter/search rows.
+
+The separate user account fix hides the duplicate
+\`.body-sidebar-bottom > .dropdown-navbar-user\` only from the left
+sidebar; the existing avatar menu at the top right remains clickable.
+\`brand_shell.js?v=4\` locates **only the native Frappe user dropdown**
+using the existing translated Settings / Reload / Logout marker trio,
+and places a non-interactive avatar-initial + full-name/email identity
+header before its options. Values are assigned through \`textContent\`,
+never HTML, using the current session and Frappe boot user details;
+Settings, Language, Toggle Theme, Reload and Logout retain their own
+native handlers and keyboard behavior. \`brand_shell.css?v=6\` styles
+that identity in light/dark, LTR/RTL, while leaving the persistent
+Collapse menu control at the bottom of the sidebar.
+
+Keep the protected late-loaded \`child_table_ui.css\`,
+\`user_theme_menu.js\` and all existing Frappe/Grid form actions unchanged.
+The new assets are wired directly via \`hooks.py\`, with a source
+contract test and Node runtime fixture run by GitHub Actions. Browser
+acceptance requires an editable child table (multiple selected rows and
+bulk delete), a read-only table (no injected selectors), RTL horizontally
+scrollable grids, the native profile menu, desktop Collapse menu, and
+mobile navigation.
