@@ -1,0 +1,95 @@
+/*
+ * RTL presentation for native Workspace KPI cards only.
+ * LTR / Home / DashboardView remain under their separate owners.
+ *
+ * Frappe wraps formatted number/currency text in .number; RTL bidi
+ * currently reverses compact K/M suffixes, while the CSS still forces
+ * the translucent top-right accent to the physical RIGHT.  Keep real
+ * amounts, translations and onclick/menu handlers entirely native.
+ */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 {
+	direction: rtl !important;
+	text-align: right !important;
+}
+
+/* Mirror the decorative corner and the native hover reveal together. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2::before {
+	inset: -1px auto auto -1px !important;
+	right: auto !important;
+	left: -1px !important;
+	border-radius: 16px 0 90px 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:not(.st-ws-kpi-featured)::after {
+	clip-path: circle(0% at 0% 0%) !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2:not(.st-ws-kpi-featured):is(:hover, :focus-within)::after {
+	clip-path: circle(155% at 0% 0%) !important;
+}
+
+/* Mirror the existing decorative controls but do not change their
+   pointer-events, the real widget buttons or their event listeners. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-icon {
+	inset-inline-end: 0 !important;
+	right: auto !important;
+	left: 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-wave {
+	inset-inline-end: 17px !important;
+	left: 17px !important;
+	right: auto !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .st-ws-kpi-open {
+	inset-inline-end: 14px !important;
+	left: 14px !important;
+	right: auto !important;
+}
+
+/* Natural right-aligned Pashto/Dari labels and stable numeric ordering.
+   Isolate ONLY numeric content: translating the title must stay RTL. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 :is(.widget-head, .widget-body, .widget-content) {
+	direction: rtl !important;
+	text-align: right !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-label {
+	padding-inline-end: 42px !important; /* reserve left-side icon space */
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-title {
+	text-align: right !important;
+	font-size: 13px !important;
+	line-height: 1.5 !important;
+	overflow-wrap: anywhere;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .widget-content {
+	align-items: flex-start !important; /* RTL flex-start is physical right */
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+[data-page-route="Workspaces"] .widget.number-widget-box.st-ws-kpi-v2 .number {
+	direction: ltr !important;
+	unicode-bidi: isolate !important;
+	text-align: right !important;
+	font-variant-numeric: tabular-nums !important;
+	max-width: 100% !important;
+}

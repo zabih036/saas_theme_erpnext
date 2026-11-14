@@ -85,7 +85,7 @@ def main() -> None:
                       isinstance(t, ast.Name) and t.id == key for t in node.targets))
         for key in ("app_include_css", "app_include_js")
     }
-    assert vals["app_include_css"][-6:-2] == [
+    assert vals["app_include_css"][-9:-5] == [
         P + "css/workspace_dashboard_design.css?v=4",
         P + "css/native_dashboard_view_design.css?v=4",
         P + "css/workspace_sidebar_design.css?v=4",

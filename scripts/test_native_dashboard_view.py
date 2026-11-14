@@ -104,13 +104,13 @@ def main() -> None:
         )
     )
     assert css_hooks.count(URL) == 1
-    assert css_hooks[-7] == URL, "Native DashboardView base remains before the separate final design layers"
-    assert css_hooks[-6] == "/assets/saas_theme/css/workspace_dashboard_design.css?v=4"
-    assert css_hooks[-5] == "/assets/saas_theme/css/native_dashboard_view_design.css?v=4"
-    assert css_hooks[-4] == "/assets/saas_theme/css/workspace_sidebar_design.css?v=4"
-    assert css_hooks[-3] == "/assets/saas_theme/css/desk_header_finish.css?v=4"
-    assert css_hooks[-8] == "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
-    assert css_hooks[-2:] == [
+    assert css_hooks[-10] == URL, "Native DashboardView base remains before the separate final design layers"
+    assert css_hooks[-9] == "/assets/saas_theme/css/workspace_dashboard_design.css?v=4"
+    assert css_hooks[-8] == "/assets/saas_theme/css/native_dashboard_view_design.css?v=4"
+    assert css_hooks[-7] == "/assets/saas_theme/css/workspace_sidebar_design.css?v=4"
+    assert css_hooks[-6] == "/assets/saas_theme/css/desk_header_finish.css?v=4"
+    assert css_hooks[-11] == "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
+    assert css_hooks[-5:-3] == [
         "/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
         "/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
     ]

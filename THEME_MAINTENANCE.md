@@ -1079,3 +1079,41 @@ source of clipping, active-only promotion, native Frappe list visibility,
 RTL physical margins, original Desktop markup and asset load order.
 A final visual check is still required on live Form pages and Home in
 English, Pashto and Dari at desktop/mobile widths.
+
+### RTL KPI cards, Profit & Loss legibility and Link actions (14 November 2026)
+
+Reported screenshots after the prior RTL navbar correction showed three visual
+errors in Pashto/Dari:
+
+1. **Workspace and native Dashboard KPI cards:** The modern cards use
+   `:before` top-right circular accents and CSS animations with
+   `clip-path:circle(... at 100% 0%)`; the decorative icon/wave already
+   follow RTL via `inset-inline-end`. This mixes a physical-right corner
+   with an RTL-left icon and reverses the `K/M` currency suffix around a
+   mixed Arabic/LTR number. New independent files
+   `rtl_workspace_kpi.css?v=1` and `rtl_dashboard_cards.css?v=1`
+   mirror the corner and hover reveal to **physical left**, retain
+   existing action controls and native data, right-align translated
+   labels, and use isolated LTR numeric runs aligned at the physical right.
+   Only RTL contexts and corresponding real card selectors are targeted.
+2. **Form Link/Dynamic Link Open icon:** Earlier
+   `precision.css` and `ui_consolidation_v7.css` position the native
+   `.link-field > .link-btn` with `right:4-5px` and reserve
+   `padding-right:72px`. New `rtl_form_link_actions.css?v=1`
+   moves this group inside the **physical left** of standard RTL Form
+   Link inputs and reserves padding on the left. Open/Clear native
+   actions, Frappe visibility rules, and Grid/Modal editors remain intact.
+3. **Profit and Loss summary:** Frappe ChartWidget supplies real
+   `.report-summary > .summary-item` labels, whose previous CSS
+   forced 11.5px muted text. The RTL native Dashboard file now sets a
+   readable 13.5px, 700-weight, high-contrast Pashto/Dari label, allows
+   natural line wrapping, adds vertical breathing room, and isolates
+   the numeric value so currency and digits read in the correct order.
+   No value, green/red profitability color, filters or graph data change.
+
+Added source-level regression test
+`scripts/test_rtl_kpi_form_readability.py` and wired it into the
+architecture CI. Three independent stylesheet owners are appended after
+the existing styles so other areas and LTR are not touched. Validate
+visually on Buying/Accounts Dashboard, Profit & Loss chart and RTL
+standard Form Link fields before deployment.
