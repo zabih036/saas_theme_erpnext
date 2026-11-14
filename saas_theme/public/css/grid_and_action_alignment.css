@@ -519,3 +519,91 @@
 		min-width: 32px !important;
 	}
 }
+
+/* =========================================================
+   Native child-row selection / bulk removal (Frappe v16).
+   Frappe grid.js handles .grid-row-check:checked and changes
+   Delete row -> Delete N rows. Never add a surrogate click handler,
+   force a hidden Delete action visible, or enable readonly grids.
+
+   Frappe grid.js sticky_offsets assumes row-check = 31px,
+   row-index = 40px. The older 36px min-width in precision.css
+   displaced the check cell outside the visible RTL scroll edge.
+   ========================================================= */
+.form-grid .grid-heading-row .row-check:not(.search),
+.form-grid .grid-body .grid-row .row-check:not(.search) {
+	box-sizing: border-box !important;
+	display: flex !important;
+	flex: 0 0 31px !important;
+	width: 31px !important;
+	min-width: 31px !important;
+	max-width: 31px !important;
+	padding-inline: 4px !important;
+	align-items: center !important;
+	justify-content: center !important;
+	visibility: visible !important;
+	position: sticky !important;
+	left: 0 !important;
+	z-index: 5 !important;
+	background: var(--fg-color, #fff) !important;
+}
+.form-grid .grid-heading-row .row-check:not(.search) {
+	z-index: 8 !important;
+}
+.form-grid .grid-body .grid-row .row-index,
+.form-grid .grid-heading-row .row-index {
+	box-sizing: border-box !important;
+	flex: 0 0 40px !important;
+	width: 40px !important;
+	min-width: 40px !important;
+	max-width: 40px !important;
+	position: sticky !important;
+	left: 31px !important;
+	z-index: 4 !important;
+}
+.form-grid :is(.grid-heading-row, .grid-body .grid-row)
+.row-check:not(.search) input.grid-row-check:not(.invisible) {
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	margin: 0 auto !important;
+	padding: 0 !important;
+	cursor: pointer !important;
+	accent-color: var(--primary, #155de3) !important;
+}
+/* Native read-only/disabled state remains enforced by the browser. */
+.form-grid input.grid-row-check:disabled {
+	cursor: not-allowed !important;
+	opacity: .45 !important;
+}
+.form-grid .grid-body .grid-row:has(> .data-row .row-check input.grid-row-check:checked)
+> .data-row {
+	background: var(--subtle-accent, #eff5ff) !important;
+}
+
+/* Physical RTL end of a horizontally scrolling table is the RIGHT.
+   Pin selection/index there instead of leaving it offscreen at left:0.
+   Preserve native row data, pagination, click and deletion handlers. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.form-grid :is(.grid-heading-row, .grid-body .grid-row) .row-check:not(.search) {
+	left: auto !important;
+	right: 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.form-grid :is(.grid-heading-row, .grid-body .grid-row) .row-index {
+	left: auto !important;
+	right: 31px !important;
+}
+/* Fixed selection column must remain visible in narrow Form panels too. */
+@media (max-width: 767px) {
+	.form-grid :is(.grid-heading-row, .grid-body .grid-row) .row-check:not(.search) {
+		z-index: 7 !important;
+	}
+}

@@ -1195,3 +1195,49 @@ Open button sits 5px inside the left input border, Clear is hidden,
 the waveform's SVG uses a `matrix(-1,0,0,1,0,0)` transform in RTL,
 and the English summary labels compute to `text-align:center`.
 This is not a substitute for a live Frappe browser visual check.
+
+### Native child-row selection, mobile Desk menu and RTL sidebar footer (14 November 2026)
+
+New visual QA screenshots show three UI regressions.
+
+**Child table:** Frappe v16 `grid_row.js` creates a `.row-check`
+with a native `input.grid-row-check` next to the 40px row index. Frappe
+`grid.js` reserves **31px** for its sticky checkbox cell and **40px**
+for the row index, then uses checkbox click/checked state to activate
+the native `Delete row` / `Delete N rows` actions. Old theme
+`precision.css` overrode the cell minimum to 36px. Revised
+`grid_and_action_alignment.css?v=3`, loaded directly in the Desk assets,
+restores the native 31/40 geometry, keeps enabled checkboxes visible
+and clickable, and pins the two cells at the **physical right** of
+horizontally scrolling RTL tables. It does not introduce deletion logic
+or override permissions, read-only, or hidden button states.
+
+**Mobile Desk:** `desk_stability.css` had hidden the native page
+sidebar control, while `mobile_shell.css` converted the Sidebar into
+an off-canvas drawer. The mobile Dashboard screenshot had no way to
+open that drawer. `mobile_shell.js?v=3` adds one 36px accessible
+menu trigger to visible Desk page headers (and Desktop Home mobile
+navbar); it calls the **native `frappe.app.sidebar.open()/close()`**,
+respects `page_allows_sidebar`, updates `aria-expanded` and recovers
+after route changes. `mobile_shell.css?v=2` raises the drawer
+over the sticky header and mirrors its entry edge/backdrop for
+Pashto/Dari RTL. No duplicate navigation list or route permissions.
+
+**RTL Collapse menu:** The real `st-sidebar-persist-toggle` is
+attached inside the native sidebar bottom area by
+`brand_shell.js?v=3`. It now also exists while the mobile drawer
+is open (Close navigation), reverses chevron orientation for RTL,
+and keeps the label next to its icon; updated `brand_shell.css?v=5`
+ensures the RTL label/control remains visible in expanded state.
+Frappe still owns sidebar expanded/collapsed state and persistence.
+
+Test all three in Pashto/Dari and English, with a child table with
+editable rows, a disabled/read-only table, Dashboard / Accounts mobile
+at widths <768px, Home mobile, and desktop sidebar collapse.
+
+The initial implementation in PR #126 briefly edited the protected late-loaded
+`child_table_ui.css`; CI rejected that because the project audits its original
+compatibility asset. The final correction intentionally restores that file and
+`user_theme_menu.js` **byte-for-byte**, moving only the selection geometry
+to the already existing `grid_and_action_alignment.css?v=3` owner.
+The original late-loader checks continue to run unchanged.

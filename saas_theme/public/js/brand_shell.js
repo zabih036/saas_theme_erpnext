@@ -447,7 +447,12 @@
 
 		const expanded = sidebar.sidebar_expanded !== false;
 		const label = expanded ? __("Collapse menu") : __("Expand menu");
-		const icon = expanded ? "chevron-left" : "chevron-right";
+		const rtl = document.documentElement?.dir === "rtl" ||
+			["ps", "fa", "ar", "ur"].some(code =>
+				String(document.documentElement?.lang || "").toLowerCase().startsWith(code)
+			);
+		const icon = expanded ? (rtl ? "chevron-right" : "chevron-left")
+			: (rtl ? "chevron-left" : "chevron-right");
 
 		$toggle.attr({ title: label, "aria-label": label });
 		$toggle.find(".st-sidebar-persist-toggle-icon").html(
@@ -460,7 +465,7 @@
 	function ensure_sidebar_toggle() {
 		const sidebar = frappe.app?.sidebar;
 		const $bottom = $(".body-sidebar .body-sidebar-bottom").first();
-		if (!sidebar || !$bottom.length || frappe.is_mobile()) return;
+		if (!sidebar || !$bottom.length) return;
 
 		let $toggle = $bottom.children(".st-sidebar-persist-toggle").first();
 		if (!$toggle.length) {

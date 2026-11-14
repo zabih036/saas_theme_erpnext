@@ -384,3 +384,54 @@
 		transition: none;
 	}
 }
+
+
+/* Restore the persistent sidebar footer action in RTL after route or
+   language switches. The label belongs to Frappe's existing button,
+   not an overlay or duplicate navigation link. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.body-sidebar-container .body-sidebar .body-sidebar-bottom {
+	direction: rtl !important;
+	position: relative !important;
+	flex: 0 0 auto !important;
+	min-width: 0 !important;
+	overflow: visible !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.body-sidebar-container.expanded:not(.sidebar-hidden)
+.body-sidebar .st-sidebar-persist-toggle {
+	direction: rtl !important;
+	display: flex !important;
+	visibility: visible !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	gap: 9px !important;
+	padding-inline: 10px !important;
+	text-align: start !important;
+	min-width: 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+.body-sidebar-container.expanded:not(.sidebar-hidden)
+.body-sidebar .st-sidebar-persist-toggle-label {
+	display: inline !important;
+	visibility: visible !important;
+	direction: rtl !important;
+	text-align: start !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	white-space: normal !important;
+	overflow-wrap: anywhere !important;
+}
+
+/* Mobile drawer retains the same close action irrespective of language.
+   The closed drawer is hidden via the native .sidebar-hidden class. */
+@media screen and (max-width: 767px) {
+	.body-sidebar-container.expanded:not(.sidebar-hidden)
+	.body-sidebar .st-sidebar-persist-toggle {
+		display: flex !important;
+		visibility: visible !important;
+	}
+}

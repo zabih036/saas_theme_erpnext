@@ -382,3 +382,91 @@
 	background: #111821 !important;
 	border-right-color: #334155 !important;
 }
+
+
+/* Frappe's native page-header sidebar trigger is intentionally hidden by
+   the old desktop header treatment. Our mobile-only accessible button
+   calls Sidebar.open()/close() and does not replace its navigation links. */
+.st-mobile-navigation-toggle {
+	display: none !important;
+}
+@media screen and (max-width: 767px) {
+	.page-head .page-head-content > .st-mobile-navigation-toggle,
+	.desktop-navbar > .st-mobile-navigation-toggle {
+		display: inline-flex !important;
+		flex: 0 0 36px !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 36px !important;
+		min-width: 36px !important;
+		height: 36px !important;
+		margin: 0 4px !important;
+		padding: 0 !important;
+		border: 1px solid var(--border-color, #dae4f0) !important;
+		border-radius: 10px !important;
+		background: var(--fg-color, #fff) !important;
+		color: var(--text-color, #234865) !important;
+		box-shadow: 0 2px 5px rgba(23, 50, 81, .05) !important;
+		cursor: pointer !important;
+	}
+	.page-head .st-mobile-navigation-toggle svg,
+	.desktop-navbar .st-mobile-navigation-toggle svg {
+		width: 19px !important;
+		height: 19px !important;
+		stroke: currentColor !important;
+	}
+	.st-mobile-navigation-toggle:focus-visible {
+		outline: 2px solid var(--primary, #155de3) !important;
+		outline-offset: 2px !important;
+	}
+	.body-sidebar-container.expanded:not(.sidebar-hidden) {
+		/* Above the fixed/sticky page-head's z-index 1100, unlike old
+		   z-index:1050 which left the header obstructing the drawer. */
+		z-index: 1250 !important;
+	}
+	.body-sidebar-container.expanded:not(.sidebar-hidden) > .body-sidebar {
+		position: relative !important;
+		z-index: 2 !important;
+		overflow-y: auto !important;
+	}
+	.body-sidebar-container.expanded:not(.sidebar-hidden) > .overlay {
+		z-index: 1 !important;
+	}
+	/* The drawer needs an always-visible CLOSE control when the native
+	   bottom profile row is removed for the mobile header. */
+	.body-sidebar-container.expanded:not(.sidebar-hidden)
+	.body-sidebar .st-sidebar-persist-toggle {
+		display: flex !important;
+		visibility: visible !important;
+	}
+}
+/* Pashto/Dari/Arabic: mirror the drawer's physical ENTRY edge and
+   backdrop so it opens from the right, next to the RTL menu button. */
+@media screen and (max-width: 767px) {
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.body-sidebar-container:is(.sidebar-hidden, .expanded:not(.sidebar-hidden)) {
+		inset: 0 0 0 auto !important;
+		left: auto !important;
+		right: 0 !important;
+	}
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.body-sidebar-container.sidebar-hidden .body-sidebar {
+		transform: translateX(102%) !important;
+	}
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.body-sidebar-container.expanded:not(.sidebar-hidden) .overlay {
+		right: min(86vw, 300px) !important;
+		left: 0 !important;
+	}
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.page-head .page-head-content > .st-mobile-navigation-toggle,
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	.desktop-navbar > .st-mobile-navigation-toggle {
+		order: -1 !important;
+	}
+}

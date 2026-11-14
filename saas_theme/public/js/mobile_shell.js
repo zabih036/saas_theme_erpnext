@@ -110,6 +110,83 @@
 		return $parent;
 	}
 
+
+	/*
+	 * Mobile navigation is part of the standard Desk shell, including
+	 * DashboardView pages with no Workspace landing page. The old theme
+	 * hid Frappe's .sidebar-toggle-btn.navbar-brand globally, leaving
+	 * the off-canvas navigation unreachable on small screens. Provide
+	 * one accessible header trigger per active page, invoking Frappe's
+	 * EXISTING Sidebar.open()/close() rather than duplicating its links.
+	 */
+	function is_mobile_layout() {
+		return window.matchMedia?.("(max-width: 767px)")?.matches ?? !!frappe.is_mobile?.();
+	}
+
+	function navigation_icon() {
+		return icon("menu", "sm") ||
+			'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+	}
+
+	function make_mobile_navigation_toggle() {
+		const $button = $(
+			'<button type="button" class="btn-reset st-mobile-navigation-toggle" ' +
+			'aria-expanded="false" aria-label="' + __("Open navigation menu") + '" ' +
+			'title="' + __("Open navigation menu") + '"></button>'
+		);
+		$button.html(navigation_icon());
+		$button.on("click.saas_mobile_shell", event => {
+			event.preventDefault();
+			event.stopPropagation(); // Frappe's mobile outside-click handler
+			const sidebar = frappe.app?.sidebar;
+			if (!sidebar || !is_mobile_layout()) return;
+			const hidden = sidebar.wrapper?.hasClass?.("sidebar-hidden");
+			if (sidebar.sidebar_expanded && !hidden) sidebar.close?.();
+			else {
+				// Frappe intentionally keeps the drawer mounted but hidden on
+				// many pages. Respect its page visibility/permission rules.
+				sidebar.apply_page_visibility?.();
+				if (sidebar.page_allows_sidebar?.() !== false) sidebar.open?.();
+			}
+			sync_mobile_navigation_toggle();
+		});
+		return $button;
+	}
+
+	function sync_mobile_navigation_toggle() {
+		const sidebar = frappe.app?.sidebar;
+		const expanded = !!sidebar?.sidebar_expanded &&
+			!sidebar.wrapper?.hasClass?.("sidebar-hidden");
+		const text = expanded ? __("Close navigation menu") : __("Open navigation menu");
+		$(".st-mobile-navigation-toggle").attr({
+			"aria-label": text, title: text,
+			"aria-expanded": expanded ? "true" : "false",
+		});
+	}
+
+	function ensure_mobile_navigation_toggle() {
+		if (!is_mobile_layout() || !frappe.app?.sidebar) return;
+		const $drawer = $(".body-sidebar-container .body-sidebar").first();
+		if ($drawer.length) {
+			if (!$drawer.attr("id")) $drawer.attr("id", "st-mobile-navigation-drawer");
+		}
+
+		$(".page-head:visible .page-head-content").each(function () {
+			const $row = $(this);
+			if (!$row.children(".st-mobile-navigation-toggle").length) {
+				$row.prepend(make_mobile_navigation_toggle());
+			}
+		});
+		$(".desktop-navbar:visible").each(function () {
+			const $nav = $(this);
+			if (!$nav.children(".st-mobile-navigation-toggle").length) {
+				$nav.prepend(make_mobile_navigation_toggle());
+			}
+		});
+		$(".st-mobile-navigation-toggle").attr("aria-controls", "st-mobile-navigation-drawer");
+		sync_mobile_navigation_toggle();
+	}
+
 	function ensure_page_head_actions() {
 		$(".page-head:visible").each(function () {
 			const $head = $(this);
@@ -187,6 +264,7 @@
 		ensure_page_head_actions();
 		ensure_desktop_home_actions();
 		normalize_mobile_sidebar_state();
+		ensure_mobile_navigation_toggle();
 		sync_notification_count();
 	}
 
@@ -213,6 +291,10 @@
 	$(document)
 		.off("sidebar_setup.saas_mobile_shell")
 		.on("sidebar_setup.saas_mobile_shell", () => schedule_refresh(20));
+
+	$(document)
+		.off("sidebar-expand.saas_mobile_shell")
+		.on("sidebar-expand.saas_mobile_shell", () => schedule_refresh(20));
 
 	$(document)
 		.off("desktop_screen.saas_mobile_shell")
