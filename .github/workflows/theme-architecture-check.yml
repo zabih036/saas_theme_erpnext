@@ -45,6 +45,7 @@ on:
       - 'scripts/test_rtl_kpi_form_readability.py'
       - 'scripts/test_mobile_sidebar_grid_rtl.py'
       - 'scripts/test_grid_selection_profile_menu.py'
+      - 'scripts/test_modal_navbar_profile_responsive.py'
       - 'scripts/test_grid_selection_runtime.js'
       - 'scripts/check_theme_deployment.sh'
       - 'README.md'
@@ -125,6 +126,7 @@ jobs:
           python3 scripts/test_rtl_kpi_form_readability.py
           python3 scripts/test_mobile_sidebar_grid_rtl.py
           python3 scripts/test_grid_selection_profile_menu.py
+          python3 scripts/test_modal_navbar_profile_responsive.py
           node --check saas_theme/public/js/grid_row_selection_repair.js
           node scripts/test_grid_selection_runtime.js
           node --check saas_theme/public/js/mobile_shell.js

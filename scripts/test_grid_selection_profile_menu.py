@@ -78,15 +78,19 @@ def main() -> None:
         '__("Settings")', '__("Reload")', '__("Logout")',
         "parent.insertBefore(identity, parent.firstElementChild)",
         "identity.querySelector(\".st-profile-menu-name\").textContent = name;",
-        "identity.querySelector(\".st-profile-menu-email\").textContent = email;",
+        'identity.querySelector(".st-profile-menu-email")?.remove();',
         "ensure_profile_identity_menu(root);",
     ):
         assert token in brand, token
+    assert 'copy.append(title);' in brand
+    assert 'const address = document.createElement("span")' not in brand
+    assert 'frappe.boot?.user?.email' not in brand
+    assert '.st-profile-menu-email").textContent = email' not in brand
     assert "innerHTML = name" not in brand and "innerHTML = email" not in brand
     assert_rule(brand_css, ".body-sidebar-bottom > .dropdown-navbar-user",
                 "display: none !important;")
     assert_rule(brand_css, ".st-profile-menu-identity", "display: flex !important;")
-    for text in ("st-profile-menu-name", "st-profile-menu-email", "unicode-bidi: plaintext"):
+    for text in ("st-profile-menu-name", "overflow-wrap: anywhere", "unicode-bidi: plaintext"):
         assert text in brand_css
 
     tree = ast.parse(read(ROOT / "saas_theme/hooks.py"))
@@ -108,14 +112,14 @@ def main() -> None:
     assert js_assets.index(expected_js) > js_assets.index(
         "/assets/saas_theme/js/interaction_finish_v2.js?v=10"
     )
-    assert css_assets.count("/assets/saas_theme/css/brand_shell.css?v=6") == 1
-    assert js_assets.count("/assets/saas_theme/js/brand_shell.js?v=4") == 1
+    assert css_assets.count("/assets/saas_theme/css/brand_shell.css?v=7") == 1
+    assert js_assets.count("/assets/saas_theme/js/brand_shell.js?v=5") == 1
     assert len(set(css_assets)) == len(css_assets)
     assert len(set(js_assets)) == len(js_assets)
 
     manifest = read(ROOT / "scripts/validate_theme_architecture.py")
     for asset in ("grid_row_selection.css", "grid_row_selection_repair.js",
-                  "brand_shell.css?v=6", "brand_shell.js?v=4"):
+                  "brand_shell.css?v=7", "brand_shell.js?v=5"):
         assert asset in manifest
     print("Grid native selection repair and profile menu identity: source, permission and asset guards passed.")
 

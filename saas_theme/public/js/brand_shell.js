@@ -353,7 +353,7 @@
 	}
 
 	/*
-	 * One readable identity block inside the existing top-right profile
+	 * Only the signed-in full name inside the existing top-right profile
 	 * Dropdown. The duplicate profile row at the bottom of the sidebar
 	 * is hidden by brand_shell.css; this keeps the name and email visible
 	 * where the user actually opens Settings / Language / Logout.
@@ -384,11 +384,6 @@
 				frappe.session?.user_fullname ||
 				frappe.session.user
 			).trim();
-			const email = String(
-				frappe.boot?.user?.email ||
-				frappe.boot?.user_info?.[frappe.session.user]?.email ||
-				frappe.session.user
-			).trim();
 			const parent = rows[0].parentElement;
 			if (!parent) return;
 			let identity = menu.querySelector(".st-profile-menu-identity");
@@ -403,15 +398,14 @@
 				copy.className = "st-profile-menu-copy";
 				const title = document.createElement("span");
 				title.className = "st-profile-menu-name";
-				const address = document.createElement("span");
-				address.className = "st-profile-menu-email";
-				copy.append(title, address);
+				copy.append(title);
 				identity.append(avatar, copy);
 			}
 			identity.querySelector(".st-profile-menu-initial").textContent =
 				Array.from(name)[0]?.toLocaleUpperCase() || "U";
 			identity.querySelector(".st-profile-menu-name").textContent = name;
-			identity.querySelector(".st-profile-menu-email").textContent = email;
+			// Clean up a previously opened menu retained across a hot-reload.
+			identity.querySelector(".st-profile-menu-email")?.remove();
 			// Top of the existing menu group, before Settings. Frappe owns
 			// keyboard navigation, actions, and the menu's open/close state.
 			if (identity.parentElement !== parent || parent.firstElementChild !== identity) {

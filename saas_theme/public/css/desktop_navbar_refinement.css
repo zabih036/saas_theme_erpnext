@@ -395,3 +395,122 @@ body > .splash.centered::before {
 		min-width: 28px !important;
 	}
 }
+
+
+/* =========================================================
+   HOME HEADER — BALANCED LANGUAGE / BELL / ACCOUNT CONTROLS
+   =========================================================
+   The language trigger is inserted INSIDE .desktop-notifications,
+   immediately before .desktop-notification-icon (not as a child of
+   .st-desktop-top-actions). Parent gap therefore cannot separate the
+   language and bell buttons. Give the nested pair a real gap and all
+   three surfaces matching sizes, shapes and focus feedback.
+ */
+.desktop-wrapper .desktop-navbar .st-desktop-top-actions {
+	column-gap: 9px !important;
+}
+.desktop-wrapper .desktop-navbar .st-desktop-top-actions .desktop-notifications {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	flex: 0 0 auto !important;
+	width: auto !important;
+	min-width: 0 !important;
+	column-gap: 9px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+.desktop-wrapper .desktop-navbar :is(
+	.st-home-language-button, .desktop-notification-icon, .desktop-avatar
+) {
+	box-sizing: border-box !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	flex: 0 0 42px !important;
+	width: 42px !important;
+	height: 42px !important;
+	min-width: 42px !important;
+	min-height: 42px !important;
+	max-width: 42px !important;
+	max-height: 42px !important;
+	padding: 0 3px !important;
+	margin: 0 !important;
+	gap: 3px !important;
+	border: 1px solid var(--st-topbar-border, #dce5f1) !important;
+	border-radius: 11px !important;
+	background: var(--st-topbar-surface, #fff) !important;
+	color: var(--st-topbar-text, #1c3553) !important;
+	box-shadow: 0 2px 7px rgba(20, 33, 61, .045) !important;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-button {
+	direction: ltr !important;
+	letter-spacing: 0 !important;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-icon,
+.desktop-wrapper .desktop-navbar .st-home-language-icon svg {
+	flex: 0 0 16px !important;
+	width: 16px !important;
+	height: 16px !important;
+	max-width: 16px !important;
+}
+.desktop-wrapper .desktop-navbar .st-home-language-code {
+	flex: 0 0 auto !important;
+	font-size: 10px !important;
+	line-height: 1 !important;
+	font-weight: 730 !important;
+}
+.desktop-wrapper .desktop-navbar .desktop-avatar :is(.avatar, .avatar-frame, img) {
+	width: 32px !important;
+	height: 32px !important;
+	min-width: 32px !important;
+	max-width: 32px !important;
+	min-height: 32px !important;
+	max-height: 32px !important;
+	border-radius: 50% !important;
+}
+.desktop-wrapper .desktop-navbar :is(
+	.st-home-language-button, .desktop-notification-icon, .desktop-avatar
+):is(:hover, :focus-visible) {
+	border-color: var(--st-topbar-blue, #0b63d8) !important;
+	background: var(--st-topbar-soft, #f6f9fd) !important;
+	box-shadow: 0 0 0 3px rgba(6, 74, 219, .08) !important;
+	outline: none !important;
+}
+@media screen and (max-width: 767px) {
+	.desktop-wrapper .desktop-navbar .st-desktop-top-actions {
+		column-gap: 6px !important;
+	}
+	.desktop-wrapper .desktop-navbar .st-desktop-top-actions .desktop-notifications {
+		column-gap: 6px !important;
+	}
+	.desktop-wrapper .desktop-navbar :is(
+		.st-home-language-button, .desktop-notification-icon, .desktop-avatar
+	) {
+		flex-basis: 36px !important;
+		width: 36px !important;
+		height: 36px !important;
+		min-width: 36px !important;
+		min-height: 36px !important;
+		max-width: 36px !important;
+		max-height: 36px !important;
+		padding-inline: 1px !important;
+	}
+	.desktop-wrapper .desktop-navbar .st-home-language-icon,
+	.desktop-wrapper .desktop-navbar .st-home-language-icon svg {
+		width: 14px !important;
+		height: 14px !important;
+		flex-basis: 14px !important;
+	}
+	.desktop-wrapper .desktop-navbar .st-home-language-code {
+		font-size: 9px !important;
+	}
+	.desktop-wrapper .desktop-navbar .desktop-avatar :is(.avatar, .avatar-frame, img) {
+		width: 28px !important;
+		height: 28px !important;
+		min-width: 28px !important;
+		max-width: 28px !important;
+		min-height: 28px !important;
+		max-height: 28px !important;
+	}
+}
