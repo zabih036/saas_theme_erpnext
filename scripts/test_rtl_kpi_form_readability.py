@@ -80,6 +80,14 @@ def main() -> None:
         for icon in ("icon", "wave", "open"):
             assert rule_has(content, "." + prefix + "-" + icon,
                             "right: auto !important;"), f"{name} {icon} RTL location"
+        # In the reported screenshot the old wave began at left:17px,
+        # overlapping the decorative Open icon at left:14px (25px wide).
+        # Keep them as disjoint left-side elements on RTL cards.
+        assert rule_has(content, "." + prefix + "-wave", "left: 58px !important;")
+        assert rule_has(content, "." + prefix + "-wave",
+                        "inset-inline-end: 58px !important;")
+        assert rule_has(content, "." + prefix + "-open", "left: 14px !important;")
+        assert 58 >= 14 + 25 + 12, f"{name}: RTL sparkline overlaps Open icon"
         assert rule_has(content, card + " .number",
                         "unicode-bidi: isolate !important;")
         assert rule_has(content, card + " .number",
@@ -118,16 +126,37 @@ def main() -> None:
         ".link-field > .link-btn",
         "left: 5px !important;",
         "right: auto !important;",
-        "inset-inline-end: 5px !important;",
+        "max-width: calc(100% - 10px) !important;",
         "top: 50% !important;",
         "transform: translateY(-50%) !important;",
-        "padding-left: 72px !important;",
+        "padding-left: 44px !important;",
+        "padding-left: 76px !important;",
+        "padding-inline-end: 44px !important;",
+        "direction: rtl !important;",
+        "text-align: right !important;",
         "padding-right: 12px !important;",
         "direction: ltr !important;",
-        "@media (max-width: 480px)",
+        ':has(> .link-btn:not([style*="display: none"]',
+        '[style*="display:none"]',
     ):
         assert marker in link, f"Missing RTL Form Link alignment: {marker}"
-    assert "display: none" not in link
+    assert 'display: none !important;' in link
+    # Native Frappe .toggle(false) cannot be defeated by the generic !important CSS.
+    assert '.link-btn > .btn-clear:is(.hide,' in link
+    # Regression: direction:ltr on the link-btn makes logical inset-inline-end
+    # physically RIGHT; earlier RTL CSS specified both and lost left:5px.
+    cleaned = re.sub(r"/\*.*?\*/", "", link, flags=re.S)
+    action_rules = [body for selector, body in re.findall(r"([^{}]+)\{([^{}]*)\}", cleaned, re.S)
+                    if ".link-field > .link-btn" in selector and "position: absolute" in body]
+    assert len(action_rules) == 1, "Exactly one positioning owner for RTL Link actions"
+    assert "left: 5px !important;" in action_rules[0]
+    assert "right: auto !important;" in action_rules[0]
+    assert "inset-inline-" not in action_rules[0], "Logical inset conflicts with LTR icon internals"
+
+    # A 104px screenshot-width field now leaves actual text room:
+    # 104 - 44 (single action) - 12 (right padding) = 48px.
+    assert 104 - 44 - 12 >= 45
+    assert 44 >= 5 + 30 + 8  # button left + width + gap
     assert ".form-grid" not in link and ".modal" not in link
     assert '.st-home-dashboard' not in link
     assert "frappe." not in link and "url(" not in link
@@ -141,9 +170,9 @@ def main() -> None:
         )
     )
     assert includes[-3:] == [
-        PREFIX + "rtl_workspace_kpi.css?v=1",
-        PREFIX + "rtl_dashboard_cards.css?v=1",
-        PREFIX + "rtl_form_link_actions.css?v=1",
+        PREFIX + "rtl_workspace_kpi.css?v=2",
+        PREFIX + "rtl_dashboard_cards.css?v=2",
+        PREFIX + "rtl_form_link_actions.css?v=2",
     ]
     assert len(set(includes)) == len(includes)
     manifest = ARCH.read_text(encoding="utf-8")

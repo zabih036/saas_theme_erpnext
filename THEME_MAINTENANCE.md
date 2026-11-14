@@ -1117,3 +1117,34 @@ architecture CI. Three independent stylesheet owners are appended after
 the existing styles so other areas and LTR are not touched. Validate
 visually on Buying/Accounts Dashboard, Profit & Loss chart and RTL
 standard Form Link fields before deployment.
+
+### RTL Link input text and KPI sparkline non-overlap (14 November 2026)
+
+PR #123 mirrored the Workspace and Dashboard decorations but left the
+sparkline in the **same physical-left region** as the Open icon (the
+wave starts at left:17px, icon is left:14px and 25px wide). In the
+reported RTL screenshot the line visibly crosses the Open icon.
+
+The v2 owners `rtl_workspace_kpi.css` and `rtl_dashboard_cards.css`
+now place the decorative wave at physical left **58px**, leaving
+at least **19px of horizontal separation** from the icon's footprint
+(left:14–39px). The native KPI data, clicks, menus, charts and graph
+series stay unchanged.
+
+A second reproduced issue was RTL Form Link text disappearing under the
+Open action. In `rtl_form_link_actions.css?v=1`, a direction:ltr
+link-button wrapper was assigned `inset-inline-end:5px` alongside
+`left:5px`. On a direction:ltr wrapper, the logical end resolves
+to **physical right**, overriding the intended left pin. A headless
+Chromium geometry check reproduced right:5px and verified that removing
+the competing logical insets produces left:5px. The v2 CSS also
+reduces the default padding reserve from 72px to 44px for one native
+Open action, using 76px only when the native Clear action is visible.
+It explicitly preserves native Frappe inline display:none states,
+text-align:right, and an RTL input string. Form Grid and modal controls
+remain separate.
+
+`test_rtl_kpi_form_readability.py` now guards the exact physical
+left icon/wave separation, single/dual icon padding, native hide
+contracts, and the absence of conflicting logical insets. Browser
+acceptance is still needed in the user's actual Form and Workspace.

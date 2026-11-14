@@ -1,26 +1,37 @@
 /*
- * RTL-only Link / Dynamic Link action alignment on standard Frappe Forms.
- * precision.css and ui_consolidation_v7.css use physical right:4px and
- * padding-right:72px even in RTL. Move the native Open/Clear group inside
- * the physical LEFT of the matching field, reserve space for it and keep
- * the existing visibility, click handlers, and tooltip behavior untouched.
- * This intentionally does not target grid editor or modal Link controls.
+ * RTL native Form Link / Dynamic Link text-safe action geometry — v2.
+ *
+ * The Frappe v16 ControlLink template contains:
+ *   .link-field > input.input-with-feedback.form-control + span.link-btn
+ * and span.link-btn > a.btn-clear + a.btn-open.
+ *
+ * Original theme styles pin the action on the RIGHT and reserve 72px of
+ * padding-right. Our earlier RTL change moved the wrapper left but kept
+ * 72px left padding even for one visible 30px action. In narrow fields
+ * (like the screenshot) this leaves almost no room to display the value.
+ * Reserve 44px for one button, 76px only for two visible buttons; and
+ * respect native inline display:none / .hide on Open/Clear buttons.
+ *
+ * Keep normal forms separate from portaled Grid editors and Dialogs.
  */
-
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
-	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
 :is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
-.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"]) .link-field {
-	position: relative !important;
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field {
 	box-sizing: border-box !important;
+	position: relative !important;
 	width: 100% !important;
 	min-width: 0 !important;
+	direction: rtl !important;
 }
 
-/* The link-btn wrapper may have both an Open and a Clear action. Frappe
-   controls their display state; we set only physical positioning. */
+/* Override BOTH the physical-right precision.css selector and the generic
+   ui_consolidation_v7.css .link-field .link-btn declaration. */
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
-	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
 :is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
 .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
 .link-field > .link-btn {
@@ -28,39 +39,69 @@
 	top: 50% !important;
 	left: 5px !important;
 	right: auto !important;
-	inset-inline-end: 5px !important;
-	inset-inline-start: auto !important;
+	/* Do not combine RTL logical inset with direction:ltr on this
+	   wrapper: that would place it back on the physical RIGHT. */
 	transform: translateY(-50%) !important;
 	margin: 0 !important;
+	padding: 1px !important;
 	max-width: calc(100% - 10px) !important;
 	direction: ltr !important;
 	white-space: nowrap !important;
+	z-index: 3 !important;
 }
 
-/* Account for the icon(s) on the left rather than leaving a large empty
-   gap on the right. Both native .form-control and Awesomplete-backed inputs
-   occur in Frappe Link fields. */
+/* Preserve Frappe's toggle(false) contract. The bundled generic style uses
+   display:inline-flex!important, which otherwise overrides the native
+   inline "display: none" set on blur or when clearing is not permitted. */
 :is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
-	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn:is(.hide, [style*="display: none"], [style*="display:none"]),
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-btn > .btn-clear:is(.hide, [style*="display: none"], [style*="display:none"]) {
+	display: none !important;
+}
+
+/* Text is at the physical right, action at the physical left. Explicit
+   direction and padding also handle very narrow fields without overlap. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
 :is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
 .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
 .link-field input:is(.form-control, .input-with-feedback) {
 	box-sizing: border-box !important;
+	width: 100% !important;
 	min-width: 0 !important;
 	max-width: 100% !important;
-	padding-left: 72px !important;
+	direction: rtl !important;
+	text-align: right !important;
 	padding-right: 12px !important;
-	text-align: start !important;
+	padding-left: 44px !important;
+	padding-inline-start: 12px !important;
+	padding-inline-end: 44px !important;
+	text-overflow: ellipsis !important;
 }
 
-/* On narrow screens never let the reserved action space swallow the
-   whole input. The action itself remains accessible at 30x30. */
-@media (max-width: 480px) {
-	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
-		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
-	:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
-	.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
-	.link-field input:is(.form-control, .input-with-feedback) {
-		padding-left: 54px !important;
-	}
+/* The second clear button is optional. Reserve two action widths only
+   while Frappe actually makes it visible, never permanently. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"],
+	.form-page:dir(rtl), .form-layout:dir(rtl), .std-form-layout:dir(rtl))
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field:has(> .link-btn:not([style*="display: none"], [style*="display:none"], .hide)
+	> .btn-clear:not([style*="display: none"], [style*="display:none"], .hide))
+input:is(.form-control, .input-with-feedback) {
+	padding-left: 76px !important;
+	padding-inline-end: 76px !important;
 }
+
+/* Let the native input scroll its text on focus rather than hiding it
+   behind an oversized icon. No forced icon/menu positioning in grids. */
