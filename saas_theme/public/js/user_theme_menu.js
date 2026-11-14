@@ -40,7 +40,7 @@
 			const link = document.createElement("link");
 			link.id = "st-child-table-precision-v5-css";
 			link.rel = "stylesheet";
-			link.href = "/assets/saas_theme/css/child_table_ui.css?v=1";
+			link.href = "/assets/saas_theme/css/child_table_ui.css?v=2";
 			document.head.appendChild(link);
 		}
 
