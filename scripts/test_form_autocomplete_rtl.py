@@ -111,7 +111,7 @@ def main() -> None:
                     hooks[target.id] = ast.literal_eval(node.value)
     css = hooks["app_include_css"]
     js = hooks["app_include_js"]
-    assert css[-4:] == [
+    assert css[-7:-3] == [
         PREFIX + "css/workspace_sidebar_design.css?v=4",
         PREFIX + "css/desk_header_finish.css?v=4",
         PREFIX + "css/form_autocomplete_layer.css?v=1",

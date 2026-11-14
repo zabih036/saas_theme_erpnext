@@ -1,0 +1,66 @@
+/*
+ * RTL-only Link / Dynamic Link action alignment on standard Frappe Forms.
+ * precision.css and ui_consolidation_v7.css use physical right:4px and
+ * padding-right:72px even in RTL. Move the native Open/Clear group inside
+ * the physical LEFT of the matching field, reserve space for it and keep
+ * the existing visibility, click handlers, and tooltip behavior untouched.
+ * This intentionally does not target grid editor or modal Link controls.
+ */
+
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"]) .link-field {
+	position: relative !important;
+	box-sizing: border-box !important;
+	width: 100% !important;
+	min-width: 0 !important;
+}
+
+/* The link-btn wrapper may have both an Open and a Clear action. Frappe
+   controls their display state; we set only physical positioning. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field > .link-btn {
+	position: absolute !important;
+	top: 50% !important;
+	left: 5px !important;
+	right: auto !important;
+	inset-inline-end: 5px !important;
+	inset-inline-start: auto !important;
+	transform: translateY(-50%) !important;
+	margin: 0 !important;
+	max-width: calc(100% - 10px) !important;
+	direction: ltr !important;
+	white-space: nowrap !important;
+}
+
+/* Account for the icon(s) on the left rather than leaving a large empty
+   gap on the right. Both native .form-control and Awesomplete-backed inputs
+   occur in Frappe Link fields. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.link-field input:is(.form-control, .input-with-feedback) {
+	box-sizing: border-box !important;
+	min-width: 0 !important;
+	max-width: 100% !important;
+	padding-left: 72px !important;
+	padding-right: 12px !important;
+	text-align: start !important;
+}
+
+/* On narrow screens never let the reserved action space swallow the
+   whole input. The action itself remains accessible at 30x30. */
+@media (max-width: 480px) {
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	:is(.form-page .form-layout, .form-page, .form-layout, .std-form-layout)
+	.frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+	.link-field input:is(.form-control, .input-with-feedback) {
+		padding-left: 54px !important;
+	}
+}

@@ -123,14 +123,14 @@ def main() -> None:
         ASSET_ROOT + "js/" + DV_SCRIPT + "?v=4",
         ASSET_ROOT + "js/workspace_sidebar_design.js?v=5",
     ]
-    assert css[-6:-3] == expected_css, "Native design rules must remain ahead of final header polish"
+    assert css[-9:-6] == expected_css, "Native design rules must remain ahead of final header polish"
     assert js[-3:-1] == expected_js, "Native controllers remain ahead of Desk header search owner"
     assert js[-1] == ASSET_ROOT + "js/desk_header_search.js?v=1"
     assert all(css.count(path) == 1 for path in expected_css)
     assert all(js.count(path) == 1 for path in expected_js)
     assert css.index(ASSET_ROOT + "css/workspace_dashboard.css?v=1") < len(css) - 2
     assert css.index(ASSET_ROOT + "css/native_dashboard_view.css?v=1") < len(css) - 2
-    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 6
+    assert css.index(ASSET_ROOT + "css/home.css?v=13") < len(css) - 9
     assert ASSET_ROOT + "js/" + WS_SCRIPT + "?v=2" in js
 
     arch = ARCH.read_text(encoding="utf-8")

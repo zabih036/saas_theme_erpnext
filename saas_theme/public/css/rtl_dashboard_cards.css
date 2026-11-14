@@ -1,0 +1,151 @@
+/*
+ * RTL-only native DashboardView KPI and Profit & Loss summary typography.
+ * Frappe v16 actual route: #page-dashboard-view .dashboard .
+ * Distinct from Workspace and Home, with NO values, charts, filters, links
+ * or chart-menu handlers replaced.
+ */
+
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 {
+	direction: rtl !important;
+	text-align: right !important;
+}
+
+/* The neutral/featured corner is hard-coded physically right in the
+   existing native_dashboard_view_design.css. Mirror it with the icon. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2::before {
+	inset: -1px auto auto -1px !important;
+	right: auto !important;
+	left: -1px !important;
+	border-radius: 16px 0 90px 0 !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2:not(.st-dv-kpi-featured)::after {
+	clip-path: circle(0% at 0% 0%) !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2:not(.st-dv-kpi-featured):is(:hover, :focus-within)::after {
+	clip-path: circle(155% at 0% 0%) !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-icon {
+	inset-inline-end: 0 !important;
+	left: 0 !important;
+	right: auto !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-wave {
+	inset-inline-end: 17px !important;
+	left: 17px !important;
+	right: auto !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .st-dv-kpi-open {
+	inset-inline-end: 14px !important;
+	left: 14px !important;
+	right: auto !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 :is(.widget-head, .widget-body, .widget-content) {
+	direction: rtl !important;
+	text-align: right !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .widget-label {
+	padding-inline-end: 42px !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .widget-title {
+	text-align: right !important;
+	font-size: 13px !important;
+	line-height: 1.5 !important;
+	overflow-wrap: anywhere;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .widget-content {
+	align-items: flex-start !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.number-widget-box.st-dv-kpi-v2 .number {
+	direction: ltr !important;
+	unicode-bidi: isolate !important;
+	text-align: right !important;
+	font-variant-numeric: tabular-nums !important;
+	max-width: 100% !important;
+}
+
+/* Profit and Loss: the real ChartWidget summary is a sibling of widget-body.
+   Existing final CSS forces the label to just 11.5px muted text, so longer
+   Pashto and Dari labels read poorly. Provide proper line-height, contrast
+   and room for 2-line translations without changing data or chart height. */
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary {
+	direction: rtl !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary > .summary-item {
+	align-items: stretch !important;
+	justify-content: center !important;
+	min-width: 0 !important;
+	min-height: 102px !important;
+	padding: 14px 16px !important;
+	gap: 8px !important;
+	direction: rtl !important;
+	text-align: right !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary .summary-label {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-height: 1.5em !important;
+	margin: 0 !important;
+	color: var(--st-dv2-ink, #254b65) !important;
+	opacity: 1 !important;
+	font-size: 13.5px !important;
+	font-weight: 700 !important;
+	line-height: 1.5 !important;
+	letter-spacing: 0 !important;
+	white-space: normal !important;
+	word-break: normal !important;
+	overflow-wrap: break-word !important;
+	direction: rtl !important;
+	text-align: right !important;
+}
+:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+	html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary :is(.summary-value, .summary-value div) {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+	direction: ltr !important;
+	unicode-bidi: isolate !important;
+	text-align: right !important;
+	font-variant-numeric: tabular-nums !important;
+	font-size: clamp(21px, 1.8vw, 26px) !important;
+	font-weight: 760 !important;
+	line-height: 1.25 !important;
+}
+@media (max-width: 767px) {
+	:is(html[dir="rtl"], html:dir(rtl), body[dir="rtl"], body.rtl,
+		html[lang^="ps"], html[lang^="fa"], html[lang^="ar"], html[lang^="ur"])
+	#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary > .summary-item {
+		min-height: 92px !important;
+	}
+}
