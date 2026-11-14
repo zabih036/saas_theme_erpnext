@@ -707,3 +707,47 @@
 #page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary[style*="display: none"] {
 	display: none !important;
 }
+
+
+/* English/LTR financial summaries: centered labels and amounts as a
+   cohesive stat tile. The earlier generic .report-summary rules above
+   force align-items:flex-start and text-align:start even in English,
+   producing tiny top-left labels and disconnected bottom-left values.
+   This is ONLY the native DashboardView ChartWidget summary; not
+   Workspace KPI cards, charts themselves, or the Home overview. */
+:root:dir(ltr) body:dir(ltr)
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary > .summary-item {
+	align-items: center !important;
+	justify-content: center !important;
+	text-align: center !important;
+	gap: 7px !important;
+	min-width: 0 !important;
+	min-height: 94px !important;
+	padding: 14px 14px !important;
+}
+:root:dir(ltr) body:dir(ltr)
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary .summary-label {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	font-size: 13px !important;
+	font-weight: 690 !important;
+	line-height: 1.45 !important;
+	color: var(--st-dv2-ink, #254b65) !important;
+	text-align: center !important;
+	white-space: normal !important;
+	overflow-wrap: break-word !important;
+}
+:root:dir(ltr) body:dir(ltr)
+#page-dashboard-view .dashboard .widget.dashboard-widget-box > .report-summary :is(.summary-value, .summary-value div) {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+	font-size: clamp(21px, 1.8vw, 26px) !important;
+	line-height: 1.25 !important;
+	text-align: center !important;
+	direction: ltr !important;
+	unicode-bidi: isolate !important;
+	font-variant-numeric: tabular-nums !important;
+}
+/* Profit/loss positive/negative color classes remain as defined above. */

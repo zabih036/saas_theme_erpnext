@@ -1148,3 +1148,50 @@ remain separate.
 left icon/wave separation, single/dual icon padding, native hide
 contracts, and the absence of conflicting logical insets. Browser
 acceptance is still needed in the user's actual Form and Workspace.
+
+### Follow-up: RTL Link spacing, KPI decorative direction, LTR Profit & Loss (14 November 2026)
+
+Screenshots from the actual deployment exposed three remaining visual regressions
+after PR #124:
+
+1. **RTL Link action had a blank strip to its physical left.**
+   Frappe v16's `ControlLink.make_input()` inserts the optional Clear
+   anchor **before** the Open anchor inside `.link-btn`. Generic theme
+   rules may keep the Clear anchor in the flex layout even while it
+   appears visually hidden, pushing Open approximately one button-width
+   to the right. `rtl_form_link_actions.css?v=3` uses
+   `flex-direction:row-reverse` on the *RTL-scoped* Link action
+   container, placing Open nearest the left field border, with Clear
+   immediately to its right when visible. All Frappe selection
+   callbacks, blur/hide behavior, permissions and keyboard handling are
+   unchanged. Input padding remains 44px for Open only or 76px when
+   Clear is actually visible.
+2. **RTL KPI sparkline pointed in the wrong direction.**
+   The native decorative SVG rises toward the **right** and the LTR
+   design anchors it near the right Open icon. The preceding RTL patch
+   merely shifted the wave to `left:58px`, which changed spacing
+   but **did not mirror the shape**. `rtl_workspace_kpi.css?v=3`
+   and `rtl_dashboard_cards.css?v=3` now place the wave at the
+   matching mirrored edge `left:17px` and apply `scaleX(-1)`
+   **only to its decorative SVG**. `bottom:27px` keeps the
+   rising tip above the Open icon instead of drawing across it.
+   The actual KPI value, labels, chart datasets and native links are
+   not changed.
+3. **English Profit & Loss summary was left-biased.**
+   Earlier generic `native_dashboard_view_design.css` rules forced
+   `align-items:flex-start` and `text-align:start`, including for
+   English. Its v5 correction adds a
+   `:root:dir(ltr) body:dir(ltr)`-scoped rule for real native
+   DashboardView ChartWidget `.report-summary` tiles. The label and
+   value now center together with readable 13px labels and 21–26px
+   values. RTL/Pashto/Dari summary rules remain separate and unchanged,
+   including profit/loss green/red colors.
+
+The test `scripts/test_rtl_kpi_form_readability.py` now guards
+Frappe's native Clear/Open DOM order, RTL `row-reverse` positioning,
+SVG direction/vertical clearance, and centered **LTR** summary text.
+A local Chromium DOM/layout sanity rendering verified the first visible
+Open button sits 5px inside the left input border, Clear is hidden,
+the waveform's SVG uses a `matrix(-1,0,0,1,0,0)` transform in RTL,
+and the English summary labels compute to `text-align:center`.
+This is not a substitute for a live Frappe browser visual check.
