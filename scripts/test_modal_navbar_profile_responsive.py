@@ -111,9 +111,9 @@ def main():
     assert vals["app_include_js"].count("/assets/saas_theme/js/brand_shell.js?v=5") == 1
     assert len(set(vals["app_include_css"])) == len(vals["app_include_css"])
     assert len(set(vals["app_include_js"])) == len(vals["app_include_js"])
-    assert vals["app_include_css"].index(expected_css[0]) < vals["app_include_css"].index(
+    assert vals["app_include_css"].index(expected_css[0]) > vals["app_include_css"].index(
         "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
-    ), "popup CSS must have more specific modal selectors than the later generic link owner"
+    ), "modal CSS must load after the protected popup/ui_consolidation CSS pair"
     print("Dialog Link native show/hide, nested navbar gap + equal controls, responsive username-only dropdown validated")
 
 if __name__ == "__main__":
