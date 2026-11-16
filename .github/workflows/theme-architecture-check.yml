@@ -14,6 +14,7 @@ on:
       - 'scripts/validate_theme_late_loaders.py'
       - 'scripts/test_stability_runtime.js'
       - 'scripts/test_report_filter_geometry.js'
+      - 'scripts/test_report_list_readability.py'
       - 'scripts/test_home_dashboard.py'
       - 'scripts/test_home_dashboard_ui.js'
       - 'scripts/test_home_visuals_and_picker.js'
@@ -102,6 +103,8 @@ jobs:
         run: |
           node --check saas_theme/public/js/search_report_refinements.js
           node scripts/test_report_filter_geometry.js
+      - name: Validate List and Report View readability without DataTable geometry changes
+        run: python3 scripts/test_report_list_readability.py
       - name: Validate personal language switching and menu placement
         run: |
           python3 -m py_compile saas_theme/language.py
