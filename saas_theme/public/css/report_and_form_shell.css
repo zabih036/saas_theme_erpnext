@@ -460,3 +460,128 @@
 		border-radius: 10px !important;
 	}
 }
+
+/* =========================================================
+   REPORT DATA TABLE READABILITY — QUERY + NATIVE REPORT VIEW
+   Frappe DataTable owns column widths and the virtual row height.
+   Intentionally do not set widths or heights on its cells/rows.
+   ========================================================= */
+
+/* The native Report View (e.g. Journal Entry > Report View) uses a
+   .datatable-wrapper, not the Query/Script Report .report-wrapper. */
+.report-view .datatable-wrapper {
+	margin-block: 8px 12px;
+}
+
+.report-view .datatable-wrapper .datatable {
+	border: 1px solid var(--st-rf-border) !important;
+	border-radius: 12px !important;
+	background: var(--st-rf-surface) !important;
+	color: var(--st-rf-text) !important;
+	box-shadow: var(--st-rf-shadow-sm) !important;
+	font-size: 14.25px !important;
+}
+
+/* An extra .datatable qualifier ensures the original canonical owner
+   beats the historical, late-loaded v6/v6.2 report style rules. */
+#page-query-report .report-wrapper .datatable .dt-row-header .dt-cell,
+#page-query-report .report-wrapper .datatable .dt-cell--header,
+.report-view .datatable-wrapper .dt-row-header .dt-cell,
+.report-view .datatable-wrapper .dt-cell--header {
+	background: var(--st-rf-soft-blue) !important;
+	border-color: var(--st-rf-border) !important;
+}
+
+#page-query-report .report-wrapper .datatable .dt-row-header .dt-cell__content,
+#page-query-report .report-wrapper .datatable .dt-cell--header .dt-cell__content,
+.report-view .datatable-wrapper .dt-row-header .dt-cell__content,
+.report-view .datatable-wrapper .dt-cell--header .dt-cell__content {
+	padding-inline: 10px !important;
+	color: var(--st-rf-title) !important;
+	font-size: 14px !important;
+	font-weight: 650 !important;
+	line-height: 1.3 !important;
+	letter-spacing: 0 !important;
+}
+
+/* More legible account names, monetary amounts, dates, and voucher links,
+   without altering Frappe's calculated column/filter alignment. */
+#page-query-report .report-wrapper .datatable .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content,
+.report-view .datatable-wrapper .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content {
+	padding-inline: 9px !important;
+	color: var(--st-rf-text) !important;
+	font-size: 14.25px !important;
+	font-weight: 480 !important;
+	line-height: 1.3 !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+#page-query-report .report-wrapper .datatable .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content a,
+.report-view .datatable-wrapper .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content a {
+	color: var(--st-rf-primary) !important;
+	font-size: inherit !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+}
+
+#page-query-report .report-wrapper .datatable .dt-cell__content a:hover,
+.report-view .datatable-wrapper .dt-cell__content a:hover {
+	text-decoration: underline !important;
+	text-underline-offset: 2px !important;
+}
+
+/* Preserve the dedicated v6.2 zero-padding outer filter cells and utility
+   filter hiding. Only the visible input's typography is enlarged. */
+#page-query-report .report-wrapper .datatable .dt-row-filter input.dt-filter,
+.report-view .datatable-wrapper .dt-row-filter input.dt-filter {
+	color: var(--st-rf-text) !important;
+	font-size: 13.5px !important;
+	font-weight: 500 !important;
+	line-height: 1.25 !important;
+}
+
+.report-view .datatable-wrapper .dt-row-filter input.dt-filter {
+	height: 29px !important;
+	min-height: 29px !important;
+	padding: 4px 8px !important;
+	border: 1px solid var(--st-rf-border-strong) !important;
+	border-radius: 7px !important;
+	background: var(--st-rf-soft) !important;
+	box-sizing: border-box !important;
+}
+
+.report-view .datatable-wrapper .dt-row-filter input.dt-filter:focus-visible {
+	outline: 2px solid var(--st-rf-primary) !important;
+	outline-offset: 1px !important;
+}
+
+/* Report View's top quick filters are independent of Query Report filters. */
+.report-view .page-form .form-control,
+.report-view .page-form .input-with-feedback,
+.report-view .page-form select.form-control {
+	min-height: 38px !important;
+	height: 38px !important;
+	color: var(--st-rf-text) !important;
+	font-size: 13.5px !important;
+	line-height: 1.35 !important;
+}
+
+.report-view .page-form .btn {
+	font-size: 13.25px !important;
+}
+
+/* Keep the same readable scale in narrow/RTL report layouts. Let the native
+   DataTable scroll horizontally rather than squeezing its numeric columns. */
+@media (max-width: 767px) {
+	#page-query-report .report-wrapper .datatable .dt-row-header .dt-cell__content,
+	#page-query-report .report-wrapper .datatable .dt-cell--header .dt-cell__content,
+	.report-view .datatable-wrapper .dt-row-header .dt-cell__content,
+	.report-view .datatable-wrapper .dt-cell--header .dt-cell__content {
+		font-size: 13.5px !important;
+	}
+
+	#page-query-report .report-wrapper .datatable .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content,
+	.report-view .datatable-wrapper .dt-row:not(.dt-row-header):not(.dt-row-filter) .dt-cell__content {
+		font-size: 13.75px !important;
+	}
+}
