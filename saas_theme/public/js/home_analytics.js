@@ -168,7 +168,7 @@
 				</div>
 			</section>
 			<section class="st-v10-analytics-section" data-home-section="analytics">
-				<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("BUSINESS ANALYTICS")}</span><h2>${__("Performance & operations")}</h2></div><small>${__("Based on your accessible ERPNext records")}</small></div>
+				<div class="st-dashboard-section-title st-dashboard-section-title--charts"><div><span class="st-dashboard-eyebrow">${__("BUSINESS ANALYTICS")}</span><h2>${__("Performance & operations")}</h2></div><small>${__("Based on your accessible ERP records")}</small></div>
 				<div class="st-dash-insights">
 					<a hidden class="st-dash-card st-dash-revenue-card" data-dashboard-panel="trend" href="${esc(report_route("Profit and Loss Statement"))}" aria-label="${esc(__("View profit and loss report"))}">
 						<div class="st-dash-card-head"><div><strong>${__("Revenue & Expenses")}</strong><small>${__("Monthly totals · six months")}</small></div><div class="st-dash-card-meta"><span class="st-dash-period-pill">${__("6 months")}</span><div class="st-dash-legend" data-trend-legend></div></div></div>
