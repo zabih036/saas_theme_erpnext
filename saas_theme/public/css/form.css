@@ -258,12 +258,15 @@
 	transform: translateY(-1px);
 }
 
+/* Let Open and Clear icons follow their actual button foreground.
+   The old forced white SVG stroke made Clear nearly invisible against the
+   light neutral action background (including RTL and Quick Entry). */
 .form-page .frappe-control[data-fieldtype="Link"] .link-btn svg,
 .form-layout .frappe-control[data-fieldtype="Link"] .link-btn svg,
 .form-page .frappe-control[data-fieldtype="Dynamic Link"] .link-btn svg,
 .form-layout .frappe-control[data-fieldtype="Dynamic Link"] .link-btn svg {
-	color: #fff !important;
-	stroke: #fff !important;
+	color: inherit !important;
+	stroke: currentColor !important;
 }
 
 /* Awesomplete / autocomplete dropdown */
