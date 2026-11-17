@@ -62,6 +62,44 @@ assert "padding: 6px 9px !important;" in grid
 assert fix.count("padding: 6px") >= 2
 assert "grid-currency-has-value" not in grid.split(start, 1)[0]
 
+
+# Earlier symbol-width padding alone did not cover RTL child rows.
+# The new layout must keep the glyph in flow and the input's contents
+# independently visible, but only in the inline editable RTL surface.
+rtl_marker = "RTL INLINE CURRENCY — KEEP THE NUMBER AND SYMBOL SEPARATE"
+assert grid.count(rtl_marker) == 1, "RTL currency fix missing or duplicated"
+rtl_currency = grid.split(rtl_marker, 1)[1].split(
+    "/* Modern edit/settings actions in grid rows. */", 1
+)[0]
+for token in (
+    'html[dir="rtl"]',
+    'html[lang^="ps"]',
+    'html[lang^="fa"]',
+    "body.rtl",
+    ".form-grid .grid-body .editable-row .grid-currency-input",
+    "flex-direction: row !important;",
+    "flex: 1 1 0% !important;",
+    "width: 0 !important;",
+    "min-width: 0 !important;",
+    "gap: 4px !important;",
+    "direction: ltr !important;",
+    "unicode-bidi: plaintext !important;",
+    "text-align: left !important;",
+    "position: static !important;",
+    "display: inline-flex !important;",
+    "flex: 0 0 auto !important;",
+    ":focus-within",
+    "var(--st-ga-text)",
+    "var(--st-ga-border-strong)",
+):
+    assert token in rtl_currency, f"RTL inline Currency protection missing: {token}"
+assert ".form-grid .grid-body .editable-row" in rtl_currency
+assert ".grid-currency-has-value" in rtl_currency
+assert ".grid-currency-symbol-right" in rtl_currency
+assert "[data-theme=\"dark\"]" not in rtl_currency  # shared dark-compatible tokens
+for forbidden in ("set_value(", ".report-view", ".static-area", "location.href"):
+    assert forbidden not in rtl_currency
+
 # Both Link and Dynamic Link use the same native Clear/Open SVG control.
 link_svg = re.search(
     r'\.form-page \.frappe-control\[data-fieldtype="Link"\] \.link-btn svg,'
@@ -84,7 +122,7 @@ assert ".link-btn > .btn-clear:is(.hide," in rtl
 assert "display: none !important;" in rtl
 
 # Cache versions and canonical runtime architecture must be in lockstep.
-for file in ("form.css?v=4", "grid_and_action_alignment.css?v=4"):
+for file in ("form.css?v=4", "grid_and_action_alignment.css?v=5"):
     path = "/assets/saas_theme/css/" + file
     assert hooks.count(path) == 1, f"Missing stylesheet URL: {path}"
     assert arch.count(path) == 1, f"Missing manifest URL: {path}"
