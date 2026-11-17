@@ -344,6 +344,103 @@
 	pointer-events: none !important;
 }
 
+
+/* =========================================================
+   RTL INLINE CURRENCY — KEEP THE NUMBER AND SYMBOL SEPARATE
+   Frappe v16 absolutely positions AFN's glyph over an input that is
+   already subject to competing !important sizing/padding rules.
+   Pashto/Dari editable rows use a single bordered flex control:
+   the native glyph gets its own slot and the LTR numeric input gets
+   the remaining width. No JS value writes, formatting overrides,
+   column-width changes, or changes to the working English layout.
+   ========================================================= */
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input {
+	box-sizing: border-box !important;
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center !important;
+	gap: 4px !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	height: 34px !important;
+	padding: 0 9px !important;
+	direction: ltr !important;
+	border: 1px solid var(--st-ga-border-strong) !important;
+	border-radius: 7px !important;
+	background: var(--st-ga-surface) !important;
+}
+
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input > input.form-control,
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row
+.grid-currency-input.grid-currency-has-value:not(.grid-currency-symbol-right) > input.form-control,
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row
+.grid-currency-input.grid-currency-has-value.grid-currency-symbol-right > input.form-control {
+	box-sizing: border-box !important;
+	position: relative !important;
+	display: block !important;
+	flex: 1 1 0% !important;
+	width: 0 !important;
+	min-width: 0 !important;
+	height: 100% !important;
+	min-height: 0 !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: var(--st-ga-text) !important;
+	-webkit-text-fill-color: var(--st-ga-text) !important;
+	caret-color: var(--st-ga-text) !important;
+	direction: ltr !important;
+	unicode-bidi: plaintext !important;
+	text-align: left !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row
+.grid-currency-input.grid-currency-has-value :is(.grid-currency-prefix, .grid-currency-suffix) {
+	position: static !important;
+	transform: none !important;
+	display: inline-flex !important;
+	flex: 0 0 auto !important;
+	min-width: 0 !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	color: var(--st-ga-muted) !important;
+	pointer-events: none !important;
+}
+
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input:focus-within {
+	border-color: var(--st-ga-primary) !important;
+	box-shadow: var(--st-ga-focus) !important;
+}
+
+/* Other late form-control focus rules must not draw a second inner border. */
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input > input.form-control:focus,
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input > input.form-control:focus-visible {
+	border: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
 /* Modern edit/settings actions in grid rows. */
 .form-grid .grid-row .btn-open-row,
 .form-grid .grid-row .grid-row-edit,
