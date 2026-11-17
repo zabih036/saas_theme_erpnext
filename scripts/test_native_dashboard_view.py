@@ -112,7 +112,7 @@ def main() -> None:
     assert css_hooks[-12] == "/assets/saas_theme/css/ui_consolidation_v7.css?v=14"
     assert css_hooks[-11] == "/assets/saas_theme/css/modal_link_actions.css?v=1"
     assert css_hooks[-5:-3] == [
-        "/assets/saas_theme/css/form_autocomplete_layer.css?v=1",
+        "/assets/saas_theme/css/form_autocomplete_layer.css?v=2",
         "/assets/saas_theme/css/rtl_navbar_alignment.css?v=1",
     ]
     assert "/assets/saas_theme/css/workspace_dashboard.css?v=1" in css_hooks
