@@ -1348,3 +1348,29 @@ Note: the exact-content protected `popup_controls.css?v=1` was restored unchange
   direct keyboard text entry. Actual ERPNext browser verification remains
   necessary for Pashto/Dari Journal Entry/Payment Entry/Sales Invoice rows,
   negative values, compact columns, focus/blur, and dark mode.
+
+### Purchase Invoice Supplier autocomplete above Items grid (17 November 2026)
+
+A screenshot of an open Supplier Link menu showed the native Items table
+checkbox and row index painted through the third supplier suggestion. Frappe
+v16's sticky child grid reserves positive local stacking indices, while the
+earlier active-form-card promotion addressed only direct child `.form-section`
+cards. On tabbed layouts the standard form section lives **inside**
+`.form-tab-content`, so it was not consistently promoted above sticky
+grid cells.
+
+`form_autocomplete_layer.css?v=2` raises the active normal Form Link or
+Dynamic Link's **tab, section, and form-column** only while the field is
+focused or its native suggestion list is open. It also isolates inactive
+child-table grids into a lower stacking context while that menu is active.
+The list remains an opaque scrolling surface. Selectors use
+`.form-column > .frappe-control` to exclude inline child-grid controls;
+grid checkbox events, sticky anchors, row selection, keyboard navigation,
+scrolling, hidden menus, dialogs, mobile layouts, and RTL are untouched.
+
+A source-level regression guard in `test_form_autocomplete_rtl.py` verifies
+the scoped active state, the tabbed Form path, the grid containment and
+the original menu visibility behavior. Live ERPNext verification is still
+required for Supplier on Purchase Invoice, English/RTL, light/dark, narrow
+screens, and normal/empty suggestion lists.
+
