@@ -72,6 +72,37 @@ def main() -> None:
         popup,
     ), "Card must be raised only while its autocomplete is active"
 
+    # A standard Form Link (e.g. Purchase Invoice Supplier) can overlap the
+    # Items grid under tabbed .form-tab-content. Native sticky row selectors
+    # have their own z-indices; raising only the <ul> is insufficient.
+    # Scope promotion to the NORMAL form-column field, not editable grids.
+    for marker in (
+        "OPEN FORM LINK ABOVE STICKY CHILD GRID",
+        "body .form-page .form-tab-content:has(",
+        "body .form-page .form-section:has(",
+        "body .form-page .form-column:has(",
+        "body .form-page:has(",
+        '> .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])',
+        ".awesomplete:is(:focus-within, :has(> ul:not([hidden])))",
+        ".form-grid:not(:has(.awesomplete:focus-within))",
+        "position: relative !important;",
+        "z-index: 360 !important;",
+        "z-index: 80 !important;",
+        "z-index: 0 !important;",
+        "background: var(--st-v7-surface, #fff) !important;",
+        "isolation: isolate !important;",
+    ):
+        assert marker in popup, f"Supplier suggestions/grid layering contract missing: {marker}"
+    # No unscoped sticky-checkbox, grid row, dialogs or body portals changed.
+    extra = popup.split("OPEN FORM LINK ABOVE STICKY CHILD GRID", 1)[1]
+    assert "body .modal" not in extra
+    assert ".row-check" not in extra and ".row-index" not in extra
+    assert "pointer-events: none" not in extra
+    assert ".form-in-grid" not in extra
+    assert ".st-v7-inline-grid-popup" not in extra
+    assert "overflow-y: auto !important;" in popup
+    assert "body .form-layout .form-section .awesomplete > ul[hidden]" in popup
+
     # Exact Frappe Home markup is a navbar-home followed by a flex group;
     # mobile_shell.js relocates the native search into that group.
     assert '$right.addClass("st-desktop-top-actions")' in shell
@@ -114,7 +145,7 @@ def main() -> None:
     assert css[-7:-3] == [
         PREFIX + "css/workspace_sidebar_design.css?v=4",
         PREFIX + "css/desk_header_finish.css?v=4",
-        PREFIX + "css/form_autocomplete_layer.css?v=1",
+        PREFIX + "css/form_autocomplete_layer.css?v=2",
         PREFIX + "css/rtl_navbar_alignment.css?v=1",
     ]
     assert js[-2:] == [
