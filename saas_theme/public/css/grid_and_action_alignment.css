@@ -296,6 +296,54 @@
 	font-size: 12px !important;
 }
 
+/* Frappe v16 wraps editable Currency inputs in .grid-currency-input and
+   positions the AFN/other currency glyph inside the input. Its native
+   symbol-aware padding is NOT !important, while our generic editable-grid
+   padding above is; restore the space needed to keep typed digits visible.
+   Keep this scoped to live inline child rows (not static totals or reports). */
+.form-grid .grid-body :is(.editable-row, .grid-row-open) .grid-currency-input {
+	position: relative !important;
+	display: flex !important;
+	align-items: center !important;
+	width: 100% !important;
+	min-width: 0 !important;
+}
+
+.form-grid .grid-body :is(.editable-row, .grid-row-open) .grid-currency-input > input.form-control {
+	box-sizing: border-box !important;
+	position: relative !important;
+	z-index: 1 !important;
+	flex: 1 1 auto !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	color: var(--st-ga-text) !important;
+	-webkit-text-fill-color: currentColor !important;
+	caret-color: currentColor !important;
+	/* Financial numbers must not be reversed when a row is in Pashto/Dari. */
+	direction: ltr !important;
+	text-align: right !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+.form-grid .grid-body :is(.editable-row, .grid-row-open)
+.grid-currency-input.grid-currency-has-value:not(.grid-currency-symbol-right) > input.form-control {
+	padding: 6px 9px 6px calc(12px + var(--grid-currency-symbol-width, 1em)) !important;
+	text-align: left !important;
+}
+
+.form-grid .grid-body :is(.editable-row, .grid-row-open)
+.grid-currency-input.grid-currency-has-value.grid-currency-symbol-right > input.form-control {
+	padding: 6px calc(12px + var(--grid-currency-symbol-width, 1em)) 6px 9px !important;
+	text-align: right !important;
+}
+
+.form-grid .grid-body :is(.editable-row, .grid-row-open)
+.grid-currency-input :is(.grid-currency-prefix, .grid-currency-suffix) {
+	color: var(--st-ga-muted) !important;
+	white-space: nowrap !important;
+	pointer-events: none !important;
+}
+
 /* Modern edit/settings actions in grid rows. */
 .form-grid .grid-row .btn-open-row,
 .form-grid .grid-row .grid-row-edit,
