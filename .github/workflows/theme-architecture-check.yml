@@ -15,6 +15,7 @@ on:
       - 'scripts/test_stability_runtime.js'
       - 'scripts/test_report_filter_geometry.js'
       - 'scripts/test_report_list_readability.py'
+      - 'scripts/test_grid_currency_link_icon_visibility.py'
       - 'scripts/test_home_dashboard.py'
       - 'scripts/test_home_dashboard_ui.js'
       - 'scripts/test_home_visuals_and_picker.js'
@@ -105,6 +106,8 @@ jobs:
           node scripts/test_report_filter_geometry.js
       - name: Validate List and Report View readability without DataTable geometry changes
         run: python3 scripts/test_report_list_readability.py
+      - name: Validate inline Currency amounts and Link Clear icons
+        run: python3 scripts/test_grid_currency_link_icon_visibility.py
       - name: Validate personal language switching and menu placement
         run: |
           python3 -m py_compile saas_theme/language.py
