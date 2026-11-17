@@ -429,6 +429,18 @@
 	box-shadow: var(--st-ga-focus) !important;
 }
 
+/* Other late form-control focus rules must not draw a second inner border. */
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input > input.form-control:focus,
+:where(html[dir="rtl"], html:dir(rtl), html[lang^="ps"], html[lang^="fa"],
+       html[lang^="ar"], html[lang^="ur"], body[dir="rtl"], body.rtl)
+.form-grid .grid-body .editable-row .grid-currency-input > input.form-control:focus-visible {
+	border: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
 /* Modern edit/settings actions in grid rows. */
 .form-grid .grid-row .btn-open-row,
 .form-grid .grid-row .grid-row-edit,
