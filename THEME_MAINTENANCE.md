@@ -1302,3 +1302,28 @@ Three follow-up visual fixes, scoped to existing owners:
 Automated source/layout guards: `scripts/test_modal_navbar_profile_responsive.py` and previous profile/grid/navbar/RTL tests remain wired into CI. Visual verification still required in Quick Entry (filled and blank Link fields), Home header, and the User dropdown at mobile and narrow desktop widths.
 
 Note: the exact-content protected `popup_controls.css?v=1` was restored unchanged after CI blocked altering the bundled v3/v4 CSS. The final modal-only owner `modal_link_actions.css?v=1` loads directly **after** the protected adjacent `popup_controls.css?v=1` + `ui_consolidation_v7.css?v=14` pair, as required by `validate_phase3d_popup_bundle.py`. The old bundle retains its original bytes and the new rules target only actual `.modal` Link/Dynamic Link controls.
+
+### Editable child Currency values and Link Clear icon visibility (17 November 2026)
+
+- Frappe v16 wraps inline editable Currency inputs with
+  `.grid-currency-input`, adds `.grid-currency-prefix` or
+  `.grid-currency-suffix`, and applies symbol-width padding when the
+  input has digits. The theme's earlier
+  `grid_and_action_alignment.css?v=3` had forced `padding: 6px 9px
+  !important` on all editable fields, overriding native symbol spacing.
+  `grid_and_action_alignment.css?v=4` now restores the symbol-aware
+  padding with narrowly scoped rules for **inline editable rows** only.
+  It preserves the underlying numeric value, normal focus/blur behavior,
+  RTL page layout, LTR digit flow, and theme colors in dark mode.
+  No amount or total calculations have been modified.
+- `form.css?v=4` removes the forced white SVG color/stroke for Link
+  actions, so Frappe's native `.btn-clear` icon inherits its own
+  foreground color on the neutral action surface. This covers Link and
+  Dynamic Link in regular forms, Dialog/Quick Entry, and RTL layouts.
+  Frappe's existing click/blur and permission-based visibility are unchanged.
+- `scripts/test_grid_currency_link_icon_visibility.py` checks that both
+  currency-symbol positions have protected input room, text contrast
+  and digit direction, and that Clear Link SVG stroke is no longer white.
+  Live-browser QA is still needed for nonzero, decimal and negative AFN
+  amounts, focus/blur, empty fields, LTR/RTL, dark mode, and Clear Link
+  permission state.
