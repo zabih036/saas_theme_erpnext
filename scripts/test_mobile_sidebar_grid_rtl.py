@@ -90,7 +90,7 @@ def main():
                     values[t.id]=ast.literal_eval(n.value)
     for href in (
         '/assets/saas_theme/css/brand_shell.css?v=7',
-        '/assets/saas_theme/css/grid_and_action_alignment.css?v=4',
+        '/assets/saas_theme/css/grid_and_action_alignment.css?v=5',
         '/assets/saas_theme/css/mobile_shell.css?v=2',
         '/assets/saas_theme/js/brand_shell.js?v=5',
         '/assets/saas_theme/js/mobile_shell.js?v=3',
