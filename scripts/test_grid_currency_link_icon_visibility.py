@@ -89,6 +89,9 @@ for token in (
     "display: inline-flex !important;",
     "flex: 0 0 auto !important;",
     ":focus-within",
+    "input.form-control:focus-visible",
+    "border: 0 !important;",
+    "box-shadow: none !important;",
     "var(--st-ga-text)",
     "var(--st-ga-border-strong)",
 ):
