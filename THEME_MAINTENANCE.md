@@ -1327,3 +1327,24 @@ Note: the exact-content protected `popup_controls.css?v=1` was restored unchange
   Live-browser QA is still needed for nonzero, decimal and negative AFN
   amounts, focus/blur, empty fields, LTR/RTL, dark mode, and Clear Link
   permission state.
+
+### RTL inline Currency follow-up (17 November 2026)
+
+- Additional production screenshots show that the prior padding-only fix
+  (PR #130) displays English amounts but still leaves only the `؋` symbol
+  visible in Pashto inline child-table Currency fields. Frappe's absolute
+  symbol positioning interacts with important form/grid overrides.
+- `grid_and_action_alignment.css?v=5` uses a **Pashto/Dari/RTL-only** inline
+  editable-row fix. The native currency prefix/suffix occupies a nonshrinking
+  flex slot next to a numeric input that can shrink independently; their
+  common 34px wrapper draws the field border and focus ring. The number
+  runs LTR even in RTL form layout, and dark colors use the existing
+  `--st-ga-*` palette. Hidden/empty symbols stay hidden. The English
+  currency display, grid geometry, model values, totals, and Frappe's
+  native editing events are unchanged.
+- The existing currency regression guard now verifies the RTL slot geometry
+  and `v=5` registration. A local headless Chromium fixture with AFN
+  prefix and suffix verified the layout, both numeric directions, and
+  direct keyboard text entry. Actual ERPNext browser verification remains
+  necessary for Pashto/Dari Journal Entry/Payment Entry/Sales Invoice rows,
+  negative values, compact columns, focus/blur, and dark mode.
