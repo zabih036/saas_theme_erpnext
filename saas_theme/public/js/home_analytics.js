@@ -483,7 +483,7 @@
 
 		organize_existing_sections($home);
 		const name = String(user_name()).trim() || __("User");
-		$home.find(".st-hub-welcome").html(`<div class="st-dash-welcome-group"><button type="button" class="st-home-sidebar-toggle" aria-expanded="true" aria-label="${__("Hide Quick Access")}" title="${__("Hide Quick Access")}"><span class="st-home-sidebar-toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="st-dash-title"><h1>${__("Welcome")}, ${esc(name)}<span>👋</span></h1><p>${esc(greeting())} · ${__("Here is your business overview for today.")}</p></div></div><span class="st-dash-period">${__("Current month")}</span>`);
+		$home.find(".st-hub-welcome").html(`<div class="st-dash-welcome-group"><button type="button" class="st-home-sidebar-toggle" aria-expanded="true" aria-label="${__("Hide Quick Access")}" title="${__("Hide Quick Access")}"><span class="st-home-sidebar-toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="st-dash-title"><h1>${__("Welcome")}<span></span></h1><p>${esc(greeting())} · ${__("Here is your business overview for today.")}</p></div></div></span>`);
 		$home.find(".st-hub-metrics").replaceWith(dashboard_html());
 
 		const $main = $home.find('.st-hub-main').first();

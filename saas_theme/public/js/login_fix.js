@@ -65,6 +65,7 @@
 		const company = String(branding?.company || "").trim();
 		const logo = String(branding?.company_logo || "").trim();
 
+
 		if (logo) {
 			document.querySelectorAll(".page-card-head .app-logo, .login-content .app-logo").forEach((image) => {
 				if (!(image instanceof HTMLImageElement)) return;
