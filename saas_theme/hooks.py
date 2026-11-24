@@ -83,5 +83,5 @@ app_include_js = [
 web_include_css = "/assets/saas_theme/css/login_refinement.css?v=3"
 web_include_js = [
 	"/assets/saas_theme/js/route_loader.js?v=2",
-	"/assets/saas_theme/js/login_fix.js?v=2",
+	"/assets/saas_theme/js/login_fix.js?v=3",
 ]
