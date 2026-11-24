@@ -16,6 +16,10 @@ on:
       - 'scripts/test_report_filter_geometry.js'
       - 'scripts/test_report_list_readability.py'
       - 'scripts/test_grid_currency_link_icon_visibility.py'
+      - 'scripts/test_production_login_branding.py'
+      - 'saas_theme/www/login.html'
+      - 'saas_theme/www/login.py'
+      - 'saas_theme/public/css/login_production.css'
       - 'scripts/test_home_dashboard.py'
       - 'scripts/test_home_dashboard_ui.js'
       - 'scripts/test_home_visuals_and_picker.js'
@@ -62,6 +66,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate theme architecture
         run: python3 scripts/validate_theme_architecture.py
+      - name: Validate company-branded production login and native auth flows
+        run: |
+          python3 -m py_compile saas_theme/www/login.py
+          node --check saas_theme/public/js/login_fix.js
+          python3 scripts/test_production_login_branding.py
       - name: Validate late-loaded asset dependencies
         run: python3 scripts/validate_theme_late_loaders.py
       - name: Validate stability controller syntax and behavior

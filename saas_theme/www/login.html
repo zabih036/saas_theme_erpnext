@@ -41,7 +41,12 @@
 <div class="page-card-actions">
 	{% if not disable_user_pass_login %}
 	<button class="btn btn-sm btn-primary btn-block btn-login" type="submit">
-		{{ _("Login") }}</button>
+		<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+			stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+			<path d="M10 17l5-5-5-5M15 12H3M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+		</svg>
+		<span>{{ _("Login") }}</span>
+	</button>
 	{% endif %}
 	{% if ldap_settings and ldap_settings.enabled %}
 	<button class="btn btn-sm {{ "btn-primary" if disable_user_pass_login else "btn-default" }} btn-block btn-login btn-ldap-login">
@@ -53,18 +58,27 @@
 {% block head_include %}
 {{ include_style('login.bundle.css') }}
 <link rel="stylesheet" href="/assets/saas_theme/css/login.css?v=6">
+<link rel="stylesheet" href="/assets/saas_theme/css/login_production.css?v=1">
 {% endblock %}
 
-{% macro logo_section(title=null) %}
+{% macro logo_section(title=null) -%}
 <div class="page-card-head">
-	<img class="app-logo" src="{{ logo }}">
-	{% if title %}
-	<h4>{{ _(title)}}</h4>
-	{% else %}
-	<h4>{{ _('Login to {0}').format(app_name or _("Frappe")) }}</h4>
-	{% endif %}
+	<div class="st-login-brand">
+		<span class="st-login-logo-frame">
+			{% if company_logo %}
+			<img class="app-logo st-login-company-logo" src="{{ company_logo }}"
+				data-fallback-src="{{ logo_fallback or '' }}" alt="{{ company_name }}"
+				loading="eager" decoding="async">
+			{% endif %}
+			<span class="st-login-monogram" aria-hidden="true">{{ company_initial }}</span>
+		</span>
+		<span class="st-login-company-name" data-st-company-name>{{ company_name }}</span>
+	</div>
+	<span class="st-login-eyebrow">{{ _("A connected production workspace") }}</span>
+	<h1 class="st-login-heading">{{ _(title) if title else _("Production ERP System") }}</h1>
+	<p class="st-login-subheading">{{ _("Sign in to your account to continue") }}</p>
 </div>
-{% endmacro %}
+{%- endmacro %}
 
 {# Hide breadcrumbs on login page #}
 {% block breadcrumbs %}{% endblock %}
@@ -72,18 +86,17 @@
 {# Override page_container to remove <main> wrapper and control layout directly #}
 {% block page_container %}
 <!-- {{ for_test }} -->
+<div class="st-login-site">
 <div class="st-login-wrapper">
 	<!-- Left column: form -->
 	<div class="st-login-form-col">
-		<section class='for-login' style="min-width: 400px; max-width: 600px; width: full;">
+		<section class="for-login">
 			{{ logo_section() }}
 			<div class="login-content page-card">
 				<form class="form-signin form-login" role="form">
 					{%- if social_login or login_with_email_link -%}
-					<div class="page-card-body">
-						<form class="form-signin form-login" role="form">
-							{{ email_login_body() }}
-						</form>
+					<div class="st-login-with-options">
+						{{ email_login_body() }}
 						<div class="social-logins text-center">
 							{% if not disable_user_pass_login or (ldap_settings and ldap_settings.enabled) %}
 							<p class="text-muted login-divider">{{ _("or") }}</p>
@@ -223,23 +236,73 @@
 		</section>
 	</div>
 
-	<!-- Right column: brand panel -->
-	<div class="st-login-panel">
-		<div class="st-float-bar"></div>
-		<div class="st-float-bar"></div>
-		<div class="st-float-bar"></div>
+	<!-- Right column: illustrative manufacturing/production experience.
+	     No fake operational metrics: the dashboard graphic is decorative. -->
+	<aside class="st-login-panel" aria-label="{{ _('Production workspace introduction') }}">
+		<div class="st-panel-orbit st-panel-orbit-a" aria-hidden="true"></div>
+		<div class="st-panel-orbit st-panel-orbit-b" aria-hidden="true"></div>
 		<div class="st-panel-content">
-			<div class="st-panel-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-					<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-				</svg>
+			<div class="st-insight-scene" aria-hidden="true">
+				<div class="st-insight-card">
+					<div class="st-insight-card-top">
+						<span class="st-insight-card-title">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+								stroke-width="2" stroke-linecap="round">
+								<path d="M4 20V11h4v9M10 20V4h4v16M16 20v-7h4v7"/>
+							</svg>
+							{{ _("Workspace overview") }}
+						</span>
+						<span class="st-insight-pill">{{ _("Operations") }}</span>
+					</div>
+					<div class="st-insight-chart">
+						<i style="--bar:35%"></i><i style="--bar:56%"></i>
+						<i style="--bar:72%"></i><i style="--bar:46%"></i>
+						<i style="--bar:85%"></i><i style="--bar:64%"></i>
+						<i style="--bar:92%"></i><i style="--bar:76%"></i>
+					</div>
+					<div class="st-insight-chart-foot"><span></span><span></span><span></span></div>
+				</div>
+				<div class="st-insight-mini">
+					<div class="st-insight-ring">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<path d="m8 13 3 3 5-7"/><circle cx="12" cy="12" r="9"/>
+						</svg>
+					</div>
+					<span>{{ _("Connected") }}</span>
+				</div>
 			</div>
-			<h2>Welcome back</h2>
-			<p>Sign in to access your workspace, manage your projects, and stay on top of everything.</p>
+			<div class="st-panel-copy">
+				<span class="st-panel-kicker">{{ _("ONE CONNECTED PLATFORM") }}</span>
+				<h2>{{ _("Welcome to your production workspace") }}</h2>
+				<div class="st-panel-accent" aria-hidden="true"></div>
+				<p>{{ _("Bring production, inventory, purchasing and finance together with a clearer view of daily operations.") }}</p>
+				<div class="st-panel-benefits" aria-hidden="true">
+					<span>{{ _("Plan") }}</span><span>{{ _("Produce") }}</span><span>{{ _("Track") }}</span>
+				</div>
+			</div>
 		</div>
-	</div>
+		<svg class="st-industry-silhouette" viewBox="0 0 800 220" preserveAspectRatio="xMidYMax slice"
+			fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+			<path fill="currentColor" opacity=".16" d="M0 131 82 103l83 20 85-54 105 37 85-18 125 35 106-48 129 38V220H0Z"/>
+			<path fill="currentColor" opacity=".36"
+				d="M0 183h75v-44h40v-32h78v76h35v-57h43v57h26V95l50-27 50 27v88h26V119h33v64h33v-42h43v42h35v-71h32v71h26V95h48v88h29V143h45v40h66v37H0Z"/>
+			<path stroke="currentColor" opacity=".35" stroke-width="4"
+				d="M87 183v-45h94v45m123 0V96l43-28 43 28v87m152 0v-70h83v70m-255-24h70m-397-15h90"/>
+			<path fill="currentColor" opacity=".46"
+				d="M32 177h54v-15h16v15h18v9H32Zm412-9h39v-13h11v13h38v18h-88Zm174-41h25v-25h5v25h25v56h-55Z"/>
+			<path stroke="currentColor" opacity=".4" stroke-width="3"
+				d="M620 125h51m-51 17h51m-51 17h51m-35-54V80m-11 3h25"/>
+			<path fill="currentColor" opacity=".60" d="M0 183h800v37H0z"/>
+		</svg>
+		<div class="st-panel-bottom-brand" data-st-panel-company>{{ company_name }}</div>
+	</aside>
+
+</div>
+<footer class="st-login-footer">
+	<span>© {{ copyright_year }} <span data-st-footer-company>{{ company_name }}</span>. {{ _("All rights reserved.") }}</span>
+	<span>{{ _("Production ERP System") }}</span>
+</footer>
 </div>
 {% endblock %}
 

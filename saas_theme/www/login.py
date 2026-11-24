@@ -19,6 +19,8 @@ from frappe.utils.oauth import get_oauth2_authorize_url, get_oauth_keys, redirec
 from frappe.utils.password import get_decrypted_password
 from frappe.website.utils import get_home_page
 
+from saas_theme.branding import get_company_branding
+
 no_cache = True
 
 
@@ -53,6 +55,31 @@ def get_context(context):
 	context["app_name"] = (
 		frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or _("Frappe")
 	)
+
+	# Render the real site Company's identity on the first page response; the
+	# existing guest-safe branding endpoint is still used as a late refresh.
+	# A private File URL cannot be loaded by a Guest browser: fall back to the
+	# public Navbar/Website app logo, then to the text monogram in the template.
+	try:
+		branding = get_company_branding() or {}
+	except Exception:
+		# Never make the login page unavailable because optional ERPNext
+		# Company or Global Defaults settings are not configured.
+		branding = {}
+
+	configured_name = context["app_name"]
+	context["company_name"] = (
+		branding.get("company")
+		or (configured_name if configured_name != _("Frappe") else _("Production System"))
+	)
+	context["company_initial"] = str(context["company_name"]).strip()[:1].upper() or "P"
+	company_logo = branding.get("company_logo")
+	if company_logo and not str(company_logo).startswith("/private/"):
+		context["company_logo"] = company_logo
+	else:
+		context["company_logo"] = context["logo"] or None
+	context["logo_fallback"] = context["logo"] or None
+	context["copyright_year"] = frappe.utils.now_datetime().year
 
 	signup_form_template = frappe.get_hooks("signup_form_template")
 	if signup_form_template and len(signup_form_template):
