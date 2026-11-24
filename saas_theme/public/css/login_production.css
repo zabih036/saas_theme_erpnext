@@ -584,6 +584,71 @@ body[data-path="login"] .st-panel-copy p { margin:0; max-width:430px; font-size:
 	.st-insight-scene { height:185px; margin-bottom:20px; }
 	.st-insight-card { height:160px; }
 }
+/* Keep Frappe's invalid credential feedback visible after the modern input
+   surface overrides; never obscure authentication errors. */
+body[data-path="login"] .st-login-form-col .page-card-body.invalid
+:is(input[type="text"],input[type="email"],input[type="password"]) {
+	border-color: #d85656 !important;
+	box-shadow: 0 0 0 3px rgba(216, 86, 86, .12) !important;
+}
+
+/* A dark browser/theme keeps exactly the same structure and branded panel,
+   with appropriate contrast for the actual sign-in surface. */
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) {
+	--st-login-ink: #ecf7f8;
+	--st-login-muted: #a8c2cd;
+	--st-login-teal: #73d8d5;
+	--st-login-border: #34525c;
+	--st-login-surface: #182f38;
+	background: #0c1b24 !important;
+}
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-site {
+	background:
+		radial-gradient(ellipse at 7% 9%, rgba(14, 109, 120, .19), transparent 40%),
+		linear-gradient(150deg, #101e2a 0%, #112b33 53%, #0c1b25 100%);
+}
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-wrapper {
+	border-color: #29434d;
+	background: #122833;
+	box-shadow: 0 30px 68px rgba(0, 7, 12, .40);
+}
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-form-col {
+	background: #122833 !important;
+}
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-form-col
+.page-card-body :is(input[type="text"],input[type="email"],input[type="password"]) {
+	background: #1b3741 !important;
+	color: #eaf6f8 !important;
+	border-color: #375561 !important;
+}
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-form-col .page-card-body input:focus {
+	background: #193741 !important;
+	border-color: #52ccc7 !important;
+	box-shadow: 0 0 0 4px rgba(45, 199, 194, .18) !important;
+}
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-form-col .field-icon { color: #a5c5cd !important; }
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-monogram {
+	background: linear-gradient(150deg, #14505a, #143841);
+	color: #bff7f0;
+	border-color: #356a70;
+}
+
+:is(html[data-theme="dark"] body[data-path="login"],
+    body[data-path="login"][data-theme="dark"]) .st-login-footer { color: #aac3cb; }
+
 @media (prefers-reduced-motion:reduce) {
 	.st-login-site *, .st-login-site *::before, .st-login-site *::after { transition:none !important; animation:none !important; }
 }
