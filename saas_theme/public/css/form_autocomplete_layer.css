@@ -90,3 +90,53 @@ body .form-layout .form-section .awesomplete > ul[hidden],
 body .std-form-layout .form-section .awesomplete > ul[hidden] {
 	display: none !important;
 }
+
+/* =========================================================
+   OPEN FORM LINK ABOVE STICKY CHILD GRID — Purchase Invoice Supplier
+   Tabbed Frappe forms put .form-section inside .form-tab-content, so
+   the direct-child card promotion above misses those sections. A grid's
+   sticky row checkbox/index (z-index 7–10) can then paint THROUGH the
+   Supplier dropdown even though its own UL has an opaque background.
+   Promote the actual active standard Link *ancestors*, not the grid's
+   sticky cells, so row selection remains normal when the popup closes.
+   The > .frappe-control anchor excludes inline child-table controls.
+   ========================================================= */
+body .form-page .form-tab-content:has(
+	.form-column > .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+	.awesomplete:is(:focus-within, :has(> ul:not([hidden])))
+),
+body .form-page .form-section:has(
+	.form-column > .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+	.awesomplete:is(:focus-within, :has(> ul:not([hidden])))
+) {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: 360 !important;
+}
+
+body .form-page .form-column:has(
+	> .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+	.awesomplete:is(:focus-within, :has(> ul:not([hidden])))
+) {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: 80 !important;
+}
+
+/* Contain native sticky row selectors beneath the open normal-form
+   suggestion layer without hiding, repositioning, or disabling them. */
+body .form-page:has(
+	.form-column > .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+	.awesomplete:is(:focus-within, :has(> ul:not([hidden])))
+) .form-grid:not(:has(.awesomplete:focus-within)) {
+	position: relative !important;
+	z-index: 0 !important;
+}
+
+/* Keep the actual list opaque; don't alter its native item markup,
+   keyboard navigation, click handlers, scroll behavior, or [hidden]. */
+body .form-page .form-column > .frappe-control:is([data-fieldtype="Link"], [data-fieldtype="Dynamic Link"])
+.awesomplete > ul:not([hidden]) {
+	background: var(--st-v7-surface, #fff) !important;
+	isolation: isolate !important;
+}
