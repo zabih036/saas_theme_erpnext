@@ -81,7 +81,7 @@ EXPECTED_DESK_JS = [
 EXPECTED_WEB_CSS = "/assets/saas_theme/css/login_refinement.css?v=3"
 EXPECTED_WEB_JS = [
     "/assets/saas_theme/js/route_loader.js?v=2",
-    "/assets/saas_theme/js/login_fix.js?v=2",
+    "/assets/saas_theme/js/login_fix.js?v=3",
 ]
 
 KNOWN_CSS_FILES = {
@@ -105,6 +105,7 @@ KNOWN_CSS_FILES = {
     "list_view.css",
     "login.css",
     "login_refinement.css",
+    "login_production.css",
     "mobile_shell.css",
     "modal_link_actions.css",
     "overlay_layers.css",
