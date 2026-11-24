@@ -60,38 +60,77 @@
 		return branding_promise;
 	}
 
+	/* Keep company logos accessible even when a public Company image is
+	   missing, moved or stored privately. The initial text/monogram is
+	   server-rendered; the image is revealed only after an actual load. */
+	function prepare_company_logo(image) {
+		if (!(image instanceof HTMLImageElement)) return;
+		const frame = image.closest(".st-login-logo-frame");
+		if (!frame || image.dataset.stLogoObserved === "1") return;
+		image.dataset.stLogoObserved = "1";
+
+		const mark_loaded = () => frame.classList.toggle("has-logo", image.naturalWidth > 0);
+		image.addEventListener("load", mark_loaded);
+		image.addEventListener("error", () => {
+			frame.classList.remove("has-logo");
+			const fallback = String(image.dataset.fallbackSrc || "").trim();
+			if (fallback && image.dataset.stFallbackTried !== "1" && fallback !== image.getAttribute("src")) {
+				image.dataset.stFallbackTried = "1";
+				image.src = fallback;
+			}
+		});
+		if (image.complete) mark_loaded();
+	}
+
+	function prepare_login_logos() {
+		document.querySelectorAll(".st-login-logo-frame img.app-logo").forEach(prepare_company_logo);
+	}
+
 	async function apply_login_branding() {
+		prepare_login_logos();
 		const branding = await get_login_branding();
 		const company = String(branding?.company || "").trim();
 		const logo = String(branding?.company_logo || "").trim();
 
-
-		if (logo) {
-			document.querySelectorAll(".page-card-head .app-logo, .login-content .app-logo").forEach((image) => {
-				if (!(image instanceof HTMLImageElement)) return;
-				image.src = logo;
-				image.alt = company || "Company Logo";
-				image.classList.add("st-login-company-logo");
+		/* Do not overwrite recovery/signup flow headings: the company label
+		   is separate from the native form title in the production template. */
+		if (company) {
+			document.querySelectorAll("[data-st-company-name], [data-st-panel-company], [data-st-footer-company]").forEach((el) => {
+				el.textContent = company;
+			});
+			const first = company.codePointAt(0);
+			if (first) document.querySelectorAll(".st-login-monogram").forEach((el) => {
+				el.textContent = String.fromCodePoint(first).toUpperCase();
 			});
 		}
 
-		const title = company ? `Login to ${company}` : "Login";
-		const login_headings = document.querySelectorAll(
-			".for-login .page-card-head h4, .for-email-login .page-card-head h4, .st-login-form-col .page-card-head h4"
-		);
-		login_headings.forEach((heading) => {
-			heading.textContent = title;
-			heading.classList.add("st-login-company-title");
-		});
+		/* Public Company logos win; a private file URL is not accessible to
+		   Guest and must never be fetched or proxied on a login page. */
+		if (logo && !logo.startsWith("/private/")) {
+			document.querySelectorAll(".st-login-logo-frame img.app-logo").forEach((image) => {
+				prepare_company_logo(image);
+				if (image.getAttribute("src") !== logo) {
+					image.dataset.stFallbackTried = "0";
+					image.closest(".st-login-logo-frame")?.classList.remove("has-logo");
+					image.src = logo;
+				}
+				if (company) image.alt = company;
+			});
+		}
 
-		// Compatibility with older/custom login templates that render the literal
-		// "Login to Frappe" outside the standard page-card-head structure.
-		document.querySelectorAll("h1, h2, h3, h4").forEach((heading) => {
-			if (/^\s*login\s+to\s+frappe\s*$/i.test(heading.textContent || "")) {
-				heading.textContent = title;
-				heading.classList.add("st-login-company-title");
-			}
-		});
+		/* Compatibility with old login templates that do not have the new
+		   data-st-company-name branding element. */
+		if (company && !document.querySelector("[data-st-company-name]")) {
+			document.querySelectorAll(".page-card-head .app-logo").forEach((image) => {
+				if (logo && image instanceof HTMLImageElement && !logo.startsWith("/private/")) {
+					image.src = logo;
+					image.alt = company;
+				}
+			});
+			document.querySelectorAll(".for-login .page-card-head h4, .for-email-login .page-card-head h4").forEach((heading) => {
+				heading.textContent = `Login to ${company}`;
+			});
+		}
 	}
 
 	function patch_login() {
@@ -194,10 +233,12 @@
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", () => {
 			patch_login();
+			prepare_login_logos();
 			apply_login_branding();
 		}, { once: true });
 	} else {
 		patch_login();
+		prepare_login_logos();
 		apply_login_branding();
 	}
 
