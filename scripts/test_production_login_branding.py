@@ -108,6 +108,8 @@ for token in (
     "grid-template-columns:",
     "@media (max-width:820px)",
     "@media (max-width:490px)",
+    'html[data-theme="dark"] body[data-path="login"]',
+    ".page-card-body.invalid",
     "@media (prefers-reduced-motion:reduce)",
 ):
     assert token in css, f"Production layout guard missing: {token}"
